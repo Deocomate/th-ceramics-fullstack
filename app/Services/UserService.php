@@ -79,7 +79,7 @@ class UserService
             throw new \RuntimeException('Không thể xóa tài khoản superadmin.');
         }
 
-        if (auth()->id() === $user->id) {
+        if (auth()->$id() === $user->id) {
             throw new \RuntimeException('Bạn không thể tự xóa tài khoản của mình.');
         }
 
