@@ -6,36 +6,18 @@ use App\Helpers\FileUploadHelper;
 use App\Models\DauAnGachTrangTri;
 use App\Models\GachTrangTri;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class GachTrangTriService
 {
-    public function getAllPaginated(int $perPage = 15): LengthAwarePaginator
+    public function getFirstRecord(): GachTrangTri
     {
-        return GachTrangTri::with('dauAn')->latest()->paginate($perPage);
+        return GachTrangTri::with('dauAn')->firstOrFail();
     }
 
-    public function findById(int $id): GachTrangTri
+    public function update(array $data): GachTrangTri
     {
-        return GachTrangTri::with('dauAn')->findOrFail($id);
-    }
-
-    public function create(array $data): GachTrangTri
-    {
-        return DB::transaction(function () use ($data) {
-            $thumbnailMain = FileUploadHelper::upload($data['thumbnail_main'], 'gach_trang_tri/images');
-
-            return GachTrangTri::create([
-                'thumbnail_main' => $thumbnailMain,
-                'video'          => $data['video'] ?? null,
-            ]);
-        });
-    }
-
-    public function update(int $id, array $data): GachTrangTri
-    {
-        $model = $this->findById($id);
+        $model = $this->getFirstRecord();
 
         return DB::transaction(function () use ($model, $data) {
             $fillable = [];
@@ -56,25 +38,9 @@ class GachTrangTriService
         });
     }
 
-    public function delete(int $id): void
+    public function addDauAn(array $data): DauAnGachTrangTri
     {
-        $model = $this->findById($id);
-
-        DB::transaction(function () use ($model) {
-            foreach ($model->dauAn as $dauAn) {
-                FileUploadHelper::delete($dauAn->background);
-            }
-
-            FileUploadHelper::delete($model->thumbnail_main);
-            $model->delete();
-        });
-    }
-
-    // --- DẤU ẤN GẠCH TRANG TRÍ ---
-
-    public function addDauAn(int $gachId, array $data): DauAnGachTrangTri
-    {
-        $model = $this->findById($gachId);
+        $model = $this->getFirstRecord();
         
         $backgroundPath = FileUploadHelper::upload($data['background'], 'gach_trang_tri/dau_an');
 
@@ -90,7 +56,7 @@ class GachTrangTriService
     {
         $dauAn = DauAnGachTrangTri::findOrFail($dauAnId);
         
-        $fillable = [
+        $fillable =[
             'title'       => $data['title'] ?? $dauAn->title,
             'location'    => $data['location'] ?? $dauAn->location,
             'description' => $data['description'] ?? $dauAn->description,

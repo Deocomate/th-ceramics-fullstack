@@ -55,11 +55,14 @@
             <span class="w-1.5 h-1.5 rounded-full {{ $isPhuKienNgoi ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Phụ Kiện Ngói
         </a>
         
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Gạch Trang Trí
+        @php $isGachTrangTri = request()->routeIs('admin.gach-trang-tri.*'); @endphp
+        <a href="{{ route('admin.gach-trang-tri.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isGachTrangTri ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <span class="w-1.5 h-1.5 rounded-full {{ $isGachTrangTri ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Gạch Trang Trí
         </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Lan Can Gốm Sứ
+
+        @php $isLanCanGomXu = request()->routeIs('admin.lan-can-gom-xu.*'); @endphp
+        <a href="{{ route('admin.lan-can-gom-xu.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isLanCanGomXu ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <span class="w-1.5 h-1.5 rounded-full {{ $isLanCanGomXu ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Lan Can Gốm Sứ
         </a>
         <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
             <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Gạch Cổ Bát Tràng

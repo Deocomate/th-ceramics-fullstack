@@ -73,18 +73,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // 5. Gạch Trang Trí
-        Route::resource('gach-trang-tri', \App\Http\Controllers\Admin\GachTrangTriController::class)
-            ->parameters(['gach-trang-tri' => 'gachTrangTri']);
-        Route::post('gach-trang-tri/{gachTrangTri}/dau-an',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'storeDauAn'])->name('gach-trang-tri.dau-an.store');
-        Route::put('gach-trang-tri/dau-an/{dauAn}',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'updateDauAn'])->name('gach-trang-tri.dau-an.update');
-        Route::delete('gach-trang-tri/dau-an/{dauAn}',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'destroyDauAn'])->name('gach-trang-tri.dau-an.destroy');
+        Route::prefix('gach-trang-tri')->name('gach-trang-tri.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\GachTrangTriController::class, 'index'])->name('index');
+            Route::put('/',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'update'])->name('update');
+            Route::post('dau-an',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'storeDauAn'])->name('dau-an.store');
+            Route::put('dau-an/{dauAn}',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'updateDauAn'])->name('dau-an.update');
+            Route::delete('dau-an/{dauAn}',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'destroyDauAn'])->name('dau-an.destroy');
+        });
 
         // 6. Lan Can Gốm Sứ
-        Route::resource('lan-can-gom-xu', \App\Http\Controllers\Admin\LanCanGomXuController::class)
-            ->parameters(['lan-can-gom-xu' => 'lanCanGomXu']);
-        Route::post('lan-can-gom-xu/{lanCanGomXu}/gia-tri',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'storeGiaTri'])->name('lan-can-gom-xu.gia-tri.store');
-        Route::put('lan-can-gom-xu/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'updateGiaTri'])->name('lan-can-gom-xu.gia-tri.update');
-        Route::delete('lan-can-gom-xu/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'destroyGiaTri'])->name('lan-can-gom-xu.gia-tri.destroy');
+        Route::prefix('lan-can-gom-xu')->name('lan-can-gom-xu.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\LanCanGomXuController::class, 'index'])->name('index');
+            Route::put('/',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'update'])->name('update');
+            Route::post('gia-tri',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'storeGiaTri'])->name('gia-tri.store');
+            Route::put('gia-tri/{giaTri}',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'updateGiaTri'])->name('gia-tri.update');
+            Route::delete('gia-tri/{giaTri}',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'destroyGiaTri'])->name('gia-tri.destroy');
+        });
 
         // 7. Gạch Cổ Bát Tràng
         Route::resource('gach-co-bat-trang', \App\Http\Controllers\Admin\GachCoBatTrangController::class)

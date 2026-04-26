@@ -6,39 +6,21 @@ use App\Helpers\FileUploadHelper;
 use App\Models\GiaTriLanCanGomXu;
 use App\Models\LanCanGomXu;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class LanCanGomXuService
 {
-    public function getAllPaginated(int $perPage = 15): LengthAwarePaginator
+    public function getFirstRecord(): LanCanGomXu
     {
-        return LanCanGomXu::with('giaTri')->latest()->paginate($perPage);
+        return LanCanGomXu::with('giaTri')->firstOrFail();
     }
 
-    public function findById(int $id): LanCanGomXu
+    public function update(array $data): LanCanGomXu
     {
-        return LanCanGomXu::with('giaTri')->findOrFail($id);
-    }
-
-    public function create(array $data): LanCanGomXu
-    {
-        return DB::transaction(function () use ($data) {
-            $thumbnailMain = FileUploadHelper::upload($data['thumbnail_main'], 'lan_can_gom_xu/images');
-
-            return LanCanGomXu::create([
-                'thumbnail_main' => $thumbnailMain,
-                'video'          => $data['video'] ?? null,
-            ]);
-        });
-    }
-
-    public function update(int $id, array $data): LanCanGomXu
-    {
-        $model = $this->findById($id);
+        $model = $this->getFirstRecord();
 
         return DB::transaction(function () use ($model, $data) {
-            $fillable =[];
+            $fillable = [];
 
             if (isset($data['thumbnail_main']) && $data['thumbnail_main'] instanceof UploadedFile) {
                 $fillable['thumbnail_main'] = FileUploadHelper::replace($data['thumbnail_main'], $model->thumbnail_main, 'lan_can_gom_xu/images');
@@ -56,28 +38,9 @@ class LanCanGomXuService
         });
     }
 
-    public function delete(int $id): void
+    public function addGiaTri(array $data): GiaTriLanCanGomXu
     {
-        $model = $this->findById($id);
-
-        DB::transaction(function () use ($model) {
-            // Xóa file bảng phụ
-            foreach ($model->giaTri as $giaTri) {
-                FileUploadHelper::delete($giaTri->image);
-            }
-
-            // Xóa file chính
-            FileUploadHelper::delete($model->thumbnail_main);
-            
-            $model->delete();
-        });
-    }
-
-    // --- GIÁ TRỊ LAN CAN GỐM XỨ ---
-
-    public function addGiaTri(int $lanCanId, array $data): GiaTriLanCanGomXu
-    {
-        $model = $this->findById($lanCanId);
+        $model = $this->getFirstRecord();
         
         $imagePath = FileUploadHelper::upload($data['image'], 'lan_can_gom_xu/gia_tri');
 

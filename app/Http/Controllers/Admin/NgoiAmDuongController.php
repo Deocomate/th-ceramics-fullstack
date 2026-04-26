@@ -34,9 +34,12 @@ class NgoiAmDuongController extends Controller
     public function storeGiaTri(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'title'        => ['required', 'string', 'max:50'],
-            'desscription' =>['required', 'string'], 
+            'title'        =>['required', 'string', 'max:50'],
+            'desscription' => ['required', 'string'], 
             'image'        =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ],[
+            'title.max' => 'Tiêu đề không được vượt quá 50 ký tự.',
+            'image.max' => 'Hình ảnh không được vượt quá 5MB.',
         ]);
 
         $this->service->addGiaTri($data);
@@ -46,9 +49,12 @@ class NgoiAmDuongController extends Controller
     public function updateGiaTri(Request $request, int $giaTriId): RedirectResponse
     {
         $data = $request->validate([
-            'title'        =>['required', 'string', 'max:50'],
+            'title'        => ['required', 'string', 'max:50'],
             'desscription' => ['required', 'string'],
             'image'        =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ],[
+            'title.max' => 'Tiêu đề không được vượt quá 50 ký tự.',
+            'image.max' => 'Hình ảnh không được vượt quá 5MB.',
         ]);
 
         $this->service->updateGiaTri($giaTriId, $data);
