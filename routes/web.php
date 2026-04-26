@@ -37,18 +37,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // ── Product Types Routes ────────────────────────────────────────────────
         
         // 1. Ngói Âm Dương
-        Route::resource('ngoi-am-duong', \App\Http\Controllers\Admin\NgoiAmDuongController::class)
-            ->parameters(['ngoi-am-duong' => 'ngoiAmDuong']); // Model NgoiAmDuong binding
-        Route::post('ngoi-am-duong/{ngoiAmDuong}/gia-tri',[\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'storeGiaTri'])
-            ->name('ngoi-am-duong.gia-tri.store');
-        Route::put('ngoi-am-duong/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'updateGiaTri'])
-            ->name('ngoi-am-duong.gia-tri.update');
-        Route::delete('ngoi-am-duong/gia-tri/{giaTri}', [\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'destroyGiaTri'])
-            ->name('ngoi-am-duong.gia-tri.destroy');
+        Route::prefix('ngoi-am-duong')->name('ngoi-am-duong.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'index'])->name('index');
+            Route::put('/', [\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'update'])->name('update');
+            Route::post('gia-tri',[\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'storeGiaTri'])->name('gia-tri.store');
+            Route::put('gia-tri/{giaTri}',[\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'updateGiaTri'])->name('gia-tri.update');
+            Route::delete('gia-tri/{giaTri}',[\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'destroyGiaTri'])->name('gia-tri.destroy');
+        });
 
         // 2. Ngói Hài Văn Miếu
-        Route::resource('ngoi-hai-van-mieu', \App\Http\Controllers\Admin\NgoiHaiVanMieuController::class)
-            ->parameters(['ngoi-hai-van-mieu' => 'ngoiHaiVanMieu']);
+        Route::prefix('ngoi-hai-van-mieu')->name('ngoi-hai-van-mieu.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\NgoiHaiVanMieuController::class, 'index'])->name('index');
+            Route::put('/',[\App\Http\Controllers\Admin\NgoiHaiVanMieuController::class, 'update'])->name('update');
+        });
 
 
          // 3. Gạch Hoa Thông Gió
