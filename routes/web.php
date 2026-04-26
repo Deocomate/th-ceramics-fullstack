@@ -34,6 +34,73 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
         Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 
+        // ── Product Types Routes ────────────────────────────────────────────────
+        
+        // 1. Ngói Âm Dương
+        Route::resource('ngoi-am-duong', \App\Http\Controllers\Admin\NgoiAmDuongController::class)
+            ->parameters(['ngoi-am-duong' => 'ngoiAmDuong']); // Model NgoiAmDuong binding
+        Route::post('ngoi-am-duong/{ngoiAmDuong}/gia-tri',[\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'storeGiaTri'])
+            ->name('ngoi-am-duong.gia-tri.store');
+        Route::put('ngoi-am-duong/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'updateGiaTri'])
+            ->name('ngoi-am-duong.gia-tri.update');
+        Route::delete('ngoi-am-duong/gia-tri/{giaTri}', [\App\Http\Controllers\Admin\NgoiAmDuongController::class, 'destroyGiaTri'])
+            ->name('ngoi-am-duong.gia-tri.destroy');
+
+        // 2. Ngói Hài Văn Miếu
+        Route::resource('ngoi-hai-van-mieu', \App\Http\Controllers\Admin\NgoiHaiVanMieuController::class)
+            ->parameters(['ngoi-hai-van-mieu' => 'ngoiHaiVanMieu']);
+
+
+         // 3. Gạch Hoa Thông Gió
+        Route::resource('gach-hoa-thong-gio', \App\Http\Controllers\Admin\GachHoaThongGioController::class)
+            ->parameters(['gach-hoa-thong-gio' => 'gachHoaThongGio']);
+        // Sub-routes
+        Route::post('gach-hoa-thong-gio/{gachHoaThongGio}/anh',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'storeAnh'])->name('gach-hoa-thong-gio.anh.store');
+        Route::delete('gach-hoa-thong-gio/anh/{anh}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyAnh'])->name('gach-hoa-thong-gio.anh.destroy');
+        Route::post('gach-hoa-thong-gio/{gachHoaThongGio}/gia-tri',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'storeGiaTri'])->name('gach-hoa-thong-gio.gia-tri.store');
+        Route::put('gach-hoa-thong-gio/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'updateGiaTri'])->name('gach-hoa-thong-gio.gia-tri.update');
+        Route::delete('gach-hoa-thong-gio/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyGiaTri'])->name('gach-hoa-thong-gio.gia-tri.destroy');
+
+        // 4. Phụ Kiện Ngói
+        Route::resource('phu-kien-ngoi', \App\Http\Controllers\Admin\PhuKienNgoiController::class)
+            ->parameters(['phu-kien-ngoi' => 'phuKienNgoi']);
+        Route::delete('phu-kien-ngoi/{phuKienNgoi}/image',[\App\Http\Controllers\Admin\PhuKienNgoiController::class, 'destroyImage'])->name('phu-kien-ngoi.image.destroy');
+
+        // 5. Gạch Trang Trí
+        Route::resource('gach-trang-tri', \App\Http\Controllers\Admin\GachTrangTriController::class)
+            ->parameters(['gach-trang-tri' => 'gachTrangTri']);
+        Route::post('gach-trang-tri/{gachTrangTri}/dau-an',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'storeDauAn'])->name('gach-trang-tri.dau-an.store');
+        Route::put('gach-trang-tri/dau-an/{dauAn}',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'updateDauAn'])->name('gach-trang-tri.dau-an.update');
+        Route::delete('gach-trang-tri/dau-an/{dauAn}',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'destroyDauAn'])->name('gach-trang-tri.dau-an.destroy');
+
+        // 6. Lan Can Gốm Sứ
+        Route::resource('lan-can-gom-xu', \App\Http\Controllers\Admin\LanCanGomXuController::class)
+            ->parameters(['lan-can-gom-xu' => 'lanCanGomXu']);
+        Route::post('lan-can-gom-xu/{lanCanGomXu}/gia-tri',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'storeGiaTri'])->name('lan-can-gom-xu.gia-tri.store');
+        Route::put('lan-can-gom-xu/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'updateGiaTri'])->name('lan-can-gom-xu.gia-tri.update');
+        Route::delete('lan-can-gom-xu/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\LanCanGomXuController::class, 'destroyGiaTri'])->name('lan-can-gom-xu.gia-tri.destroy');
+
+        // 7. Gạch Cổ Bát Tràng
+        Route::resource('gach-co-bat-trang', \App\Http\Controllers\Admin\GachCoBatTrangController::class)
+            ->parameters(['gach-co-bat-trang' => 'gachCoBatTrang']);
+        Route::post('gach-co-bat-trang/{gachCoBatTrang}/anh',[\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'storeAnh'])->name('gach-co-bat-trang.anh.store');
+        Route::delete('gach-co-bat-trang/anh/{anh}', [\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'destroyAnh'])->name('gach-co-bat-trang.anh.destroy');
+
+        // 8. Linh Vật Phong Thủy
+        Route::resource('linh-vat-phong-thuy', \App\Http\Controllers\Admin\LinhVatPhongThuyController::class)
+            ->parameters(['linh-vat-phong-thuy' => 'linhVatPhongThuy']);
+        Route::post('linh-vat-phong-thuy/{linhVatPhongThuy}/linh-vat',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'storeLinhVat'])->name('linh-vat-phong-thuy.linh-vat.store');
+        Route::put('linh-vat-phong-thuy/linh-vat/{linhVat}',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'updateLinhVat'])->name('linh-vat-phong-thuy.linh-vat.update');
+        Route::delete('linh-vat-phong-thuy/linh-vat/{linhVat}',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'destroyLinhVat'])->name('linh-vat-phong-thuy.linh-vat.destroy');
+        Route::post('linh-vat-phong-thuy/{linhVatPhongThuy}/anh',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'storeAnh'])->name('linh-vat-phong-thuy.anh.store');
+        Route::delete('linh-vat-phong-thuy/anh/{anh}',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'destroyAnh'])->name('linh-vat-phong-thuy.anh.destroy');
+
+        // 9. Đèn Gốm Sứ
+        Route::resource('den-gom-su', \App\Http\Controllers\Admin\DenGomSuController::class)
+            ->parameters(['den-gom-su' => 'denGomSu']);
+        Route::post('den-gom-su/{denGomSu}/anh',[\App\Http\Controllers\Admin\DenGomSuController::class, 'storeAnh'])->name('den-gom-su.anh.store');
+        Route::delete('den-gom-su/anh/{anh}',[\App\Http\Controllers\Admin\DenGomSuController::class, 'destroyAnh'])->name('den-gom-su.anh.destroy');
+        
         // ── Superadmin-only: account management ──────────────────────────────
         Route::middleware('role:superadmin')->group(function () {
             Route::get('users', [UserController::class, 'index'])->name('users.index');
