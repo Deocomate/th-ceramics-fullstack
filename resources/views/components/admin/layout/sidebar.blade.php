@@ -45,12 +45,16 @@
             <span class="w-1.5 h-1.5 rounded-full {{ $isNgoiHaiVanMieu ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Ngói Hài Văn Miếu
         </a>
 
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Gạch Hoa Thông Gió
+        @php $isGachHoaThongGio = request()->routeIs('admin.gach-hoa-thong-gio.*'); @endphp
+        <a href="{{ route('admin.gach-hoa-thong-gio.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isGachHoaThongGio ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <span class="w-1.5 h-1.5 rounded-full {{ $isGachHoaThongGio ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Gạch Hoa Thông Gió
         </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Phụ Kiện Ngói
+
+        @php $isPhuKienNgoi = request()->routeIs('admin.phu-kien-ngoi.*'); @endphp
+        <a href="{{ route('admin.phu-kien-ngoi.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isPhuKienNgoi ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <span class="w-1.5 h-1.5 rounded-full {{ $isPhuKienNgoi ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Phụ Kiện Ngói
         </a>
+        
         <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
             <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Gạch Trang Trí
         </a>

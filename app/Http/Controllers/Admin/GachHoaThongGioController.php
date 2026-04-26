@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\GachHoaThongGio;
 use App\Services\GachHoaThongGioService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,65 +14,42 @@ class GachHoaThongGioController extends Controller
 
     public function index(): View
     {
-        $records = $this->service->getAllPaginated();
-        return view('admin.gach-hoa-thong-gio.index', compact('records'));
-    }
-
-    public function create(): View
-    {
-        return view('admin.gach-hoa-thong-gio.create');
-    }
-
-    public function store(Request $request): RedirectResponse
-    {
-        $data = $request->validate([
-            'image' =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'video' => ['nullable', 'string', 'max:500'],
-        ]);
-
-        $this->service->create($data);
-        return redirect()->route('admin.gach-hoa-thong-gio.index')->with('success', 'Thêm mới thành công.');
-    }
-
-    public function edit(GachHoaThongGio $gachHoaThongGio): View
-    {
-        $gachHoaThongGio->load(['anh', 'giaTri']);
+        $gachHoaThongGio = $this->service->getFirstRecord();
         return view('admin.gach-hoa-thong-gio.edit', compact('gachHoaThongGio'));
     }
 
-    public function update(Request $request, GachHoaThongGio $gachHoaThongGio): RedirectResponse
+    
+    public function update(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'image' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'video' => ['nullable', 'string', 'max:500'],
+            'new_images'   => ['nullable', 'array'],
+            'new_images.*' =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
-        $this->service->update($gachHoaThongGio->gach_hoa_thong_gio_id, $data);
-        return back()->with('success', 'Cập nhật thành công.');
-    }
-
-    public function destroy(GachHoaThongGio $gachHoaThongGio): RedirectResponse
-    {
-        $this->service->delete($gachHoaThongGio->gach_hoa_thong_gio_id);
-        return redirect()->route('admin.gach-hoa-thong-gio.index')->with('success', 'Đã xóa bản ghi.');
+        $this->service->update($data);
+        return back()->with('success', 'Cập nhật Background và Thư viện ảnh thành công.');
     }
 
     // --- Sub-routes: Ảnh ---
-    public function storeAnh(Request $request, GachHoaThongGio $gachHoaThongGio): RedirectResponse
+    public function storeAnh(Request $request): RedirectResponse
     {
-        $data = $request->validate(['image' =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);
-        $this->service->addAnh($gachHoaThongGio->gach_hoa_thong_gio_id, $data);
-        return back()->with('success', 'Thêm ảnh thành công.');
+        $data = $request->validate([
+            'image' =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']
+        ]);
+        $this->service->addAnh($data);
+        return back()->with('success', 'Thêm ảnh vào thư viện thành công.');
     }
 
     public function destroyAnh(int $anhId): RedirectResponse
     {
         $this->service->deleteAnh($anhId);
-        return back()->with('success', 'Đã xóa ảnh.');
+        return back()->with('success', 'Đã xóa ảnh khỏi thư viện.');
     }
 
     // --- Sub-routes: Giá Trị ---
-    public function storeGiaTri(Request $request, GachHoaThongGio $gachHoaThongGio): RedirectResponse
+    public function storeGiaTri(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'background'   =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
@@ -81,7 +57,7 @@ class GachHoaThongGioController extends Controller
             'title'        =>['required', 'string', 'max:50'],
             'desscription' => ['required', 'string'],
         ]);
-        $this->service->addGiaTri($gachHoaThongGio->gach_hoa_thong_gio_id, $data);
+        $this->service->addGiaTri($data);
         return back()->with('success', 'Thêm giá trị thành công.');
     }
 

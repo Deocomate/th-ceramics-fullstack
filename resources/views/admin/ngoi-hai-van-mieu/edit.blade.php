@@ -9,7 +9,7 @@
             
             <!-- Ảnh chính -->
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh đại diện chính toàn trang</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh nền</label>
                 <div class="aspect-[21/9] max-w-4xl w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
                     <img id="preview-main" src="{{ asset('storage/' . $ngoiHaiVanMieu->thumbnail_main) }}" onerror="this.src='https://placehold.co/1200x500?text=Chua+co+anh'" class="w-full h-full object-cover" alt="Ảnh chính">
                     <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

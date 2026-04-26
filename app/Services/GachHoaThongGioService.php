@@ -7,46 +7,40 @@ use App\Models\GachHoaThongGio;
 use App\Models\GachHoaThongGioAnh;
 use App\Models\GiaTriGachHoaThongGio;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class GachHoaThongGioService
 {
-    public function getAllPaginated(int $perPage = 15): LengthAwarePaginator
+    public function getFirstRecord(): GachHoaThongGio
     {
-        return GachHoaThongGio::with(['anh', 'giaTri'])->latest()->paginate($perPage);
+        return GachHoaThongGio::with(['anh', 'giaTri'])->firstOrFail();
     }
 
-    public function findById(int $id): GachHoaThongGio
+    public function update(array $data): GachHoaThongGio
     {
-        return GachHoaThongGio::with(['anh', 'giaTri'])->findOrFail($id);
-    }
-
-    public function create(array $data): GachHoaThongGio
-    {
-        return DB::transaction(function () use ($data) {
-            $image = FileUploadHelper::upload($data['image'], 'gach_hoa_thong_gio/images');
-
-            return GachHoaThongGio::create([
-                'image' => $image,
-                'video' => $data['video'] ?? null,
-            ]);
-        });
-    }
-
-    public function update(int $id, array $data): GachHoaThongGio
-    {
-        $model = $this->findById($id);
+        $model = $this->getFirstRecord();
 
         return DB::transaction(function () use ($model, $data) {
             $fillable =[];
 
+            // 1. Cập nhật Background
             if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
                 $fillable['image'] = FileUploadHelper::replace($data['image'], $model->image, 'gach_hoa_thong_gio/images');
             }
 
+            // 2. Cập nhật Video
             if (array_key_exists('video', $data)) {
                 $fillable['video'] = $data['video'];
+            }
+
+            // 3. Upload thêm Thư viện ảnh
+            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+                foreach ($data['new_images'] as $file) {
+                    if ($file instanceof UploadedFile) {
+                        $path = FileUploadHelper::upload($file, 'gach_hoa_thong_gio/gallery');
+                        $model->anh()->create(['image' => $path]);
+                    }
+                }
             }
 
             if (!empty($fillable)) {
@@ -57,34 +51,11 @@ class GachHoaThongGioService
         });
     }
 
-    public function delete(int $id): void
-    {
-        $model = $this->findById($id);
-
-        DB::transaction(function () use ($model) {
-            // Xóa file ảnh thư viện
-            foreach ($model->anh as $anh) {
-                FileUploadHelper::delete($anh->image);
-            }
-
-            // Xóa file ảnh giá trị
-            foreach ($model->giaTri as $giaTri) {
-                FileUploadHelper::delete($giaTri->image);
-                FileUploadHelper::delete($giaTri->background);
-            }
-
-            // Xóa ảnh chính
-            FileUploadHelper::delete($model->image);
-
-            $model->delete();
-        });
-    }
-
     // --- Xử lý Bảng Phụ: Ảnh ---
 
-    public function addAnh(int $gachId, array $data): GachHoaThongGioAnh
+    public function addAnh(array $data): GachHoaThongGioAnh
     {
-        $model = $this->findById($gachId);
+        $model = $this->getFirstRecord();
         $imagePath = FileUploadHelper::upload($data['image'], 'gach_hoa_thong_gio/gallery');
 
         return $model->anh()->create(['image' => $imagePath]);
@@ -99,9 +70,9 @@ class GachHoaThongGioService
 
     // --- Xử lý Bảng Phụ: Giá Trị ---
 
-    public function addGiaTri(int $gachId, array $data): GiaTriGachHoaThongGio
+    public function addGiaTri(array $data): GiaTriGachHoaThongGio
     {
-        $model = $this->findById($gachId);
+        $model = $this->getFirstRecord();
         
         $backgroundPath = FileUploadHelper::upload($data['background'], 'gach_hoa_thong_gio/gia_tri');
         $imagePath = FileUploadHelper::upload($data['image'], 'gach_hoa_thong_gio/gia_tri');
@@ -110,7 +81,7 @@ class GachHoaThongGioService
             'background'   => $backgroundPath,
             'image'        => $imagePath,
             'title'        => $data['title'],
-            'desscription' => $data['desscription'],
+            'desscription' => $data['desscription'], // Theo đúng tên trong DB
         ]);
     }
 

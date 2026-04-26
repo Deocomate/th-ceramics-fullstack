@@ -52,20 +52,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
 
-         // 3. Gạch Hoa Thông Gió
-        Route::resource('gach-hoa-thong-gio', \App\Http\Controllers\Admin\GachHoaThongGioController::class)
-            ->parameters(['gach-hoa-thong-gio' => 'gachHoaThongGio']);
-        // Sub-routes
-        Route::post('gach-hoa-thong-gio/{gachHoaThongGio}/anh',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'storeAnh'])->name('gach-hoa-thong-gio.anh.store');
-        Route::delete('gach-hoa-thong-gio/anh/{anh}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyAnh'])->name('gach-hoa-thong-gio.anh.destroy');
-        Route::post('gach-hoa-thong-gio/{gachHoaThongGio}/gia-tri',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'storeGiaTri'])->name('gach-hoa-thong-gio.gia-tri.store');
-        Route::put('gach-hoa-thong-gio/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'updateGiaTri'])->name('gach-hoa-thong-gio.gia-tri.update');
-        Route::delete('gach-hoa-thong-gio/gia-tri/{giaTri}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyGiaTri'])->name('gach-hoa-thong-gio.gia-tri.destroy');
+        // 3. Gạch Hoa Thông Gió
+        Route::prefix('gach-hoa-thong-gio')->name('gach-hoa-thong-gio.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'index'])->name('index');
+            Route::put('/', [\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'update'])->name('update');
+            // Thư viện ảnh
+            Route::post('anh',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'storeAnh'])->name('anh.store');
+            Route::delete('anh/{anh}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyAnh'])->name('anh.destroy');
+            // Giá trị nổi bật
+            Route::post('gia-tri',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'storeGiaTri'])->name('gia-tri.store');
+            Route::put('gia-tri/{giaTri}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'updateGiaTri'])->name('gia-tri.update');
+            Route::delete('gia-tri/{giaTri}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyGiaTri'])->name('gia-tri.destroy');
+        });
 
         // 4. Phụ Kiện Ngói
-        Route::resource('phu-kien-ngoi', \App\Http\Controllers\Admin\PhuKienNgoiController::class)
-            ->parameters(['phu-kien-ngoi' => 'phuKienNgoi']);
-        Route::delete('phu-kien-ngoi/{phuKienNgoi}/image',[\App\Http\Controllers\Admin\PhuKienNgoiController::class, 'destroyImage'])->name('phu-kien-ngoi.image.destroy');
+        Route::prefix('phu-kien-ngoi')->name('phu-kien-ngoi.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\PhuKienNgoiController::class, 'index'])->name('index');
+            Route::put('/',[\App\Http\Controllers\Admin\PhuKienNgoiController::class, 'update'])->name('update');
+            Route::delete('image',[\App\Http\Controllers\Admin\PhuKienNgoiController::class, 'destroyImage'])->name('image.destroy');
+        });
 
         // 5. Gạch Trang Trí
         Route::resource('gach-trang-tri', \App\Http\Controllers\Admin\GachTrangTriController::class)

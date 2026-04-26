@@ -174,8 +174,10 @@
 
     {{-- MODAL CHỈNH SỬA (SỬA GIÁ TRỊ) --}}
     <div id="editModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 transition-transform duration-300">
-            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+        <!-- Đã thêm max-h-[90vh] và flex flex-col để modal có thể cuộn được nếu màn hình thấp -->
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]">
+            
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center shrink-0">
                 <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     Cập nhật Giá trị
@@ -185,56 +187,41 @@
                 </button>
             </div>
             
-            <form id="editForm" method="POST" enctype="multipart/form-data" class="p-6">
-                @csrf @method('PUT')
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Ảnh Sửa -->
-                    <div class="lg:col-span-1">
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh minh họa</label>
-                        <div class="w-[300px] h-[460px] mx-auto rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
-                            <img id="preview-edit-giatri" src="" class="w-full h-full object-cover" alt="Preview">
-                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Đổi ảnh khác</span>
+            <!-- Vùng form có thể cuộn -->
+            <div class="p-6 overflow-y-auto">
+                <form id="editForm" method="POST" enctype="multipart/form-data">
+                    @csrf @method('PUT')
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Ảnh Sửa -->
+                        <div class="lg:col-span-1">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh minh họa</label>
+                            <!-- Đã sửa kích thước từ w-[300px] h-[460px] sang w-full aspect-[3/5] max-w-[280px] -->
+                            <div class="w-full aspect-[3/5] max-w-[280px] mx-auto rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
+                                <img id="preview-edit-giatri" src="" class="w-full h-full object-cover" alt="Preview">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Đổi ảnh khác</span>
+                                </div>
+                                <input type="file" name="image" accept="image/*" onchange="previewImage(event, 'preview-edit-giatri')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                             </div>
-                            <input type="file" name="image" accept="image/*" onchange="previewImage(event, 'preview-edit-giatri')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        </div>
+                        
+                        <!-- Thông tin Sửa -->
+                        <div class="lg:col-span-2 flex flex-col gap-5">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tiêu đề <span class="text-red-500">*</span></label>
+                                <input type="text" id="edit_title" name="title" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">
+                            </div>
+                            <div class="flex-1 flex flex-col">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Mô tả chi tiết <span class="text-red-500">*</span></label>
+                                <textarea id="edit_description" name="desscription" required class="w-full flex-1 min-h-[150px] px-4 py-3 text-sm border rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all resize-none"></textarea>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Thông tin Sửa -->
-                    <div class="lg:col-span-2 flex flex-col gap-5">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tiêu đề <span class="text-red-500">*</span></label>
-                            <input type="text" id="edit_title" name="title" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">
-                        </div>
-                        <div class="flex-1 flex flex-col">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Mô tả chi tiết <span class="text-red-500">*</span></label>
-                            <textarea id="edit_description" name="desscription" required class="w-full flex-1 min-h-[150px] px-4 py-3 text-sm border rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all resize-none"></textarea>
-                        </div>
+                    <div class="mt-8 flex justify-end gap-3 pt-5 border-t border-gray-100">
+                        <button type="button" onclick="closeEditModal()" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy bỏ</button>
+                        <button type="submit" class="px-8 py-2.5 text-sm font-bold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm">Lưu thay đổi</button>
                     </div>
-                </div>
-                
-                <div class="mt-8 flex justify-end gap-3 pt-5 border-t border-gray-100">
-                    <button type="button" onclick="closeEditModal()" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy bỏ</button>
-                    <button type="submit" class="px-8 py-2.5 text-sm font-bold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm">Lưu thay đổi</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- MODAL XÓA (XÓA GIÁ TRỊ) --}}
-    <div id="deleteModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 p-6 text-center">
-            <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
-                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Xác nhận xóa?</h3>
-            <p class="text-sm text-gray-500 mb-6">Hành động này không thể hoàn tác. Dữ liệu và hình ảnh của mục này sẽ bị xóa vĩnh viễn khỏi hệ thống.</p>
-            
-            <div class="flex justify-center gap-3">
-                <button type="button" onclick="closeDeleteModal()" class="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy</button>
-                <form id="deleteForm" method="POST" class="flex-1">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="w-full px-4 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm">Có, Xóa ngay</button>
                 </form>
             </div>
         </div>
