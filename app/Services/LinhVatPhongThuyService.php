@@ -7,36 +7,18 @@ use App\Models\LinhVat;
 use App\Models\LinhVatPhongThuy;
 use App\Models\LinhVatPhongThuyAnh;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class LinhVatPhongThuyService
 {
-    public function getAllPaginated(int $perPage = 15): LengthAwarePaginator
+    public function getFirstRecord(): LinhVatPhongThuy
     {
-        return LinhVatPhongThuy::with(['linhVat', 'anh'])->latest()->paginate($perPage);
+        return LinhVatPhongThuy::with(['linhVat', 'anh'])->firstOrFail();
     }
 
-    public function findById(int $id): LinhVatPhongThuy
+    public function update(array $data): LinhVatPhongThuy
     {
-        return LinhVatPhongThuy::with(['linhVat', 'anh'])->findOrFail($id);
-    }
-
-    public function create(array $data): LinhVatPhongThuy
-    {
-        return DB::transaction(function () use ($data) {
-            $thumbnailMain = FileUploadHelper::upload($data['thumbnail_main'], 'linh_vat_phong_thuy/images');
-
-            return LinhVatPhongThuy::create([
-                'thumbnail_main' => $thumbnailMain,
-                'video'          => $data['video'] ?? null,
-            ]);
-        });
-    }
-
-    public function update(int $id, array $data): LinhVatPhongThuy
-    {
-        $model = $this->findById($id);
+        $model = $this->getFirstRecord();
 
         return DB::transaction(function () use ($model, $data) {
             $fillable = [];
@@ -49,6 +31,15 @@ class LinhVatPhongThuyService
                 $fillable['video'] = $data['video'];
             }
 
+            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+                foreach ($data['new_images'] as $file) {
+                    if ($file instanceof UploadedFile) {
+                        $path = FileUploadHelper::upload($file, 'linh_vat_phong_thuy/gallery');
+                        $model->anh()->create(['image' => $path]);
+                    }
+                }
+            }
+
             if (!empty($fillable)) {
                 $model->update($fillable);
             }
@@ -57,32 +48,9 @@ class LinhVatPhongThuyService
         });
     }
 
-    public function delete(int $id): void
+    public function addLinhVat(array $data): LinhVat
     {
-        $model = $this->findById($id);
-
-        DB::transaction(function () use ($model) {
-            // Xóa file chi tiết Linh Vật
-            foreach ($model->linhVat as $item) {
-                FileUploadHelper::delete($item->image);
-            }
-
-            // Xóa file thư viện ảnh
-            foreach ($model->anh as $anh) {
-                FileUploadHelper::delete($anh->image);
-            }
-
-            // Xóa ảnh chính
-            FileUploadHelper::delete($model->thumbnail_main);
-            $model->delete();
-        });
-    }
-
-    // --- BẢNG PHỤ: LINH VẬT CHI TIẾT ---
-
-    public function addLinhVat(int $parentId, array $data): LinhVat
-    {
-        $model = $this->findById($parentId);
+        $model = $this->getFirstRecord();
         $imagePath = FileUploadHelper::upload($data['image'], 'linh_vat_phong_thuy/items');
 
         return $model->linhVat()->create([
@@ -96,7 +64,7 @@ class LinhVatPhongThuyService
     {
         $item = LinhVat::findOrFail($itemId);
 
-        $fillable = [
+        $fillable =[
             'title'       => $data['title'] ?? $item->title,
             'description' => $data['description'] ?? $item->description,
         ];
@@ -106,7 +74,6 @@ class LinhVatPhongThuyService
         }
 
         $item->update($fillable);
-
         return $item->fresh();
     }
 
@@ -115,16 +82,6 @@ class LinhVatPhongThuyService
         $item = LinhVat::findOrFail($itemId);
         FileUploadHelper::delete($item->image);
         $item->delete();
-    }
-
-    // --- BẢNG PHỤ: THƯ VIỆN ẢNH ---
-
-    public function addAnh(int $parentId, array $data): LinhVatPhongThuyAnh
-    {
-        $model = $this->findById($parentId);
-        $imagePath = FileUploadHelper::upload($data['image'], 'linh_vat_phong_thuy/gallery');
-
-        return $model->anh()->create(['image' => $imagePath]);
     }
 
     public function deleteAnh(int $anhId): void

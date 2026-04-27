@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\DenGomSu;
 use App\Services\DenGomSuService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,39 +14,11 @@ class DenGomSuController extends Controller
 
     public function index(): View
     {
-        $records = $this->service->getAllPaginated();
-        return view('admin.den-gom-su.index', compact('records'));
-    }
-
-    public function create(): View
-    {
-        return view('admin.den-gom-su.create');
-    }
-
-    public function store(Request $request): RedirectResponse
-    {
-        $data = $request->validate([
-            'thumbnail_main' =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'image1'         =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'image2'         =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'title2'         => ['nullable', 'string', 'max:30'],
-            'image3'         =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'title3'         => ['nullable', 'string', 'max:30'],
-            'image4'         =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'video'          => ['nullable', 'string', 'max:500'],
-        ]);
-
-        $this->service->create($data);
-        return redirect()->route('admin.den-gom-su.index')->with('success', 'Thêm mới thành công.');
-    }
-
-    public function edit(DenGomSu $denGomSu): View
-    {
-        $denGomSu->load('anh');
+        $denGomSu = $this->service->getFirstRecord();
         return view('admin.den-gom-su.edit', compact('denGomSu'));
     }
 
-    public function update(Request $request, DenGomSu $denGomSu): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'thumbnail_main' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
@@ -55,31 +26,23 @@ class DenGomSuController extends Controller
             'image2'         =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'title2'         => ['nullable', 'string', 'max:30'],
             'image3'         =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'title3'         =>['nullable', 'string', 'max:30'],
+            'title3'         => ['nullable', 'string', 'max:30'],
             'image4'         =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'video'          =>['nullable', 'string', 'max:500'],
+            'new_images'     => ['nullable', 'array'],
+            'new_images.*'   =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ],[
+            'title2.max' => 'Tiêu đề 2 không được vượt quá 30 ký tự.',
+            'title3.max' => 'Tiêu đề 3 không được vượt quá 30 ký tự.',
         ]);
 
-        $this->service->update($denGomSu->den_gom_su_id, $data);
-        return back()->with('success', 'Cập nhật thành công.');
-    }
-
-    public function destroy(DenGomSu $denGomSu): RedirectResponse
-    {
-        $this->service->delete($denGomSu->den_gom_su_id);
-        return redirect()->route('admin.den-gom-su.index')->with('success', 'Đã xóa bản ghi.');
-    }
-
-    public function storeAnh(Request $request, DenGomSu $denGomSu): RedirectResponse
-    {
-        $data = $request->validate(['image' =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);
-        $this->service->addAnh($denGomSu->den_gom_su_id, $data);
-        return back()->with('success', 'Thêm ảnh thành công.');
+        $this->service->update($data);
+        return back()->with('success', 'Cập nhật cấu hình Đèn Gốm Sứ thành công.');
     }
 
     public function destroyAnh(int $anhId): RedirectResponse
     {
         $this->service->deleteAnh($anhId);
-        return back()->with('success', 'Đã xóa ảnh.');
+        return back()->with('success', 'Đã xóa ảnh khỏi thư viện.');
     }
 }

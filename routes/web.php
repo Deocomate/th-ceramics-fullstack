@@ -91,25 +91,30 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // 7. Gạch Cổ Bát Tràng
-        Route::resource('gach-co-bat-trang', \App\Http\Controllers\Admin\GachCoBatTrangController::class)
-            ->parameters(['gach-co-bat-trang' => 'gachCoBatTrang']);
-        Route::post('gach-co-bat-trang/{gachCoBatTrang}/anh',[\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'storeAnh'])->name('gach-co-bat-trang.anh.store');
-        Route::delete('gach-co-bat-trang/anh/{anh}', [\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'destroyAnh'])->name('gach-co-bat-trang.anh.destroy');
+        Route::prefix('gach-co-bat-trang')->name('gach-co-bat-trang.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'index'])->name('index');
+            Route::put('/',[\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'update'])->name('update');
+            Route::delete('anh/{anh}',[\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'destroyAnh'])->name('anh.destroy');
+        });
 
         // 8. Linh Vật Phong Thủy
-        Route::resource('linh-vat-phong-thuy', \App\Http\Controllers\Admin\LinhVatPhongThuyController::class)
-            ->parameters(['linh-vat-phong-thuy' => 'linhVatPhongThuy']);
-        Route::post('linh-vat-phong-thuy/{linhVatPhongThuy}/linh-vat',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'storeLinhVat'])->name('linh-vat-phong-thuy.linh-vat.store');
-        Route::put('linh-vat-phong-thuy/linh-vat/{linhVat}',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'updateLinhVat'])->name('linh-vat-phong-thuy.linh-vat.update');
-        Route::delete('linh-vat-phong-thuy/linh-vat/{linhVat}',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'destroyLinhVat'])->name('linh-vat-phong-thuy.linh-vat.destroy');
-        Route::post('linh-vat-phong-thuy/{linhVatPhongThuy}/anh',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'storeAnh'])->name('linh-vat-phong-thuy.anh.store');
-        Route::delete('linh-vat-phong-thuy/anh/{anh}',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'destroyAnh'])->name('linh-vat-phong-thuy.anh.destroy');
+        Route::prefix('linh-vat-phong-thuy')->name('linh-vat-phong-thuy.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'index'])->name('index');
+            Route::put('/',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'update'])->name('update');
+            
+            Route::post('linh-vat',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'storeLinhVat'])->name('linh-vat.store');
+            Route::put('linh-vat/{linhVat}',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'updateLinhVat'])->name('linh-vat.update');
+            Route::delete('linh-vat/{linhVat}',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'destroyLinhVat'])->name('linh-vat.destroy');
+            
+            Route::delete('anh/{anh}',[\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'destroyAnh'])->name('anh.destroy');
+        });
 
         // 9. Đèn Gốm Sứ
-        Route::resource('den-gom-su', \App\Http\Controllers\Admin\DenGomSuController::class)
-            ->parameters(['den-gom-su' => 'denGomSu']);
-        Route::post('den-gom-su/{denGomSu}/anh',[\App\Http\Controllers\Admin\DenGomSuController::class, 'storeAnh'])->name('den-gom-su.anh.store');
-        Route::delete('den-gom-su/anh/{anh}',[\App\Http\Controllers\Admin\DenGomSuController::class, 'destroyAnh'])->name('den-gom-su.anh.destroy');
+        Route::prefix('den-gom-su')->name('den-gom-su.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DenGomSuController::class, 'index'])->name('index');
+            Route::put('/',[\App\Http\Controllers\Admin\DenGomSuController::class, 'update'])->name('update');
+            Route::delete('anh/{anh}',[\App\Http\Controllers\Admin\DenGomSuController::class, 'destroyAnh'])->name('anh.destroy');
+        });
         
         // ── Superadmin-only: account management ──────────────────────────────
         Route::middleware('role:superadmin')->group(function () {

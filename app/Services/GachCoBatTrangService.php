@@ -6,36 +6,18 @@ use App\Helpers\FileUploadHelper;
 use App\Models\GachCoBatTrang;
 use App\Models\GachCoBatTrangAnh;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class GachCoBatTrangService
 {
-    public function getAllPaginated(int $perPage = 15): LengthAwarePaginator
+    public function getFirstRecord(): GachCoBatTrang
     {
-        return GachCoBatTrang::with('anh')->latest()->paginate($perPage);
+        return GachCoBatTrang::with('anh')->firstOrFail();
     }
 
-    public function findById(int $id): GachCoBatTrang
+    public function update(array $data): GachCoBatTrang
     {
-        return GachCoBatTrang::with('anh')->findOrFail($id);
-    }
-
-    public function create(array $data): GachCoBatTrang
-    {
-        return DB::transaction(function () use ($data) {
-            $thumbnailMain = FileUploadHelper::upload($data['thumbnail_main'], 'gach_co_bat_trang/images');
-
-            return GachCoBatTrang::create([
-                'thumbnail_main' => $thumbnailMain,
-                'video'          => $data['video'] ?? null,
-            ]);
-        });
-    }
-
-    public function update(int $id, array $data): GachCoBatTrang
-    {
-        $model = $this->findById($id);
+        $model = $this->getFirstRecord();
 
         return DB::transaction(function () use ($model, $data) {
             $fillable = [];
@@ -48,36 +30,21 @@ class GachCoBatTrangService
                 $fillable['video'] = $data['video'];
             }
 
+            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+                foreach ($data['new_images'] as $file) {
+                    if ($file instanceof UploadedFile) {
+                        $path = FileUploadHelper::upload($file, 'gach_co_bat_trang/gallery');
+                        $model->anh()->create(['image' => $path]);
+                    }
+                }
+            }
+
             if (!empty($fillable)) {
                 $model->update($fillable);
             }
 
             return $model->fresh();
         });
-    }
-
-    public function delete(int $id): void
-    {
-        $model = $this->findById($id);
-
-        DB::transaction(function () use ($model) {
-            foreach ($model->anh as $anh) {
-                FileUploadHelper::delete($anh->image);
-            }
-
-            FileUploadHelper::delete($model->thumbnail_main);
-            $model->delete();
-        });
-    }
-
-    // --- THƯ VIỆN ẢNH GẠCH CỔ BÁT TRÀNG ---
-
-    public function addAnh(int $gachId, array $data): GachCoBatTrangAnh
-    {
-        $model = $this->findById($gachId);
-        $imagePath = FileUploadHelper::upload($data['image'], 'gach_co_bat_trang/gallery');
-
-        return $model->anh()->create(['image' => $imagePath]);
     }
 
     public function deleteAnh(int $anhId): void

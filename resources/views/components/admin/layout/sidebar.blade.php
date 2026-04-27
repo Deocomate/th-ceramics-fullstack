@@ -64,14 +64,20 @@
         <a href="{{ route('admin.lan-can-gom-xu.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isLanCanGomXu ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
             <span class="w-1.5 h-1.5 rounded-full {{ $isLanCanGomXu ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Lan Can Gốm Sứ
         </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Gạch Cổ Bát Tràng
+        
+        @php $isGachCoBatTrang = request()->routeIs('admin.gach-co-bat-trang.*'); @endphp
+        <a href="{{ route('admin.gach-co-bat-trang.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isGachCoBatTrang ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <span class="w-1.5 h-1.5 rounded-full {{ $isGachCoBatTrang ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Gạch Cổ Bát Tràng
         </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Linh Vật Phong Thủy
+
+        @php $isLinhVatPhongThuy = request()->routeIs('admin.linh-vat-phong-thuy.*'); @endphp
+        <a href="{{ route('admin.linh-vat-phong-thuy.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isLinhVatPhongThuy ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <span class="w-1.5 h-1.5 rounded-full {{ $isLinhVatPhongThuy ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Linh Vật Phong Thủy
         </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Đèn Gốm Sứ
+
+        @php $isDenGomSu = request()->routeIs('admin.den-gom-su.*'); @endphp
+        <a href="{{ route('admin.den-gom-su.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isDenGomSu ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <span class="w-1.5 h-1.5 rounded-full {{ $isDenGomSu ? 'bg-[#A31D1D]' : 'bg-gray-600' }}"></span> Đèn Gốm Sứ
         </a>
 
         {{-- Superadmin section --}}
