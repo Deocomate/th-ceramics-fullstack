@@ -37,9 +37,9 @@
                     </div>
                     @error('new_images.*') <p class="mb-4 text-xs text-red-600">{{ $message }}</p> @enderror
 
-                    <div class="h-[320px] bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner flex flex-col">
+                    <div class="h-[450px] bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner flex flex-col">
                         <div id="multiple-preview-container" class="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                            <div id="empty-preview-state" class="col-span-full h-full min-h-[250px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium gap-2">
+                            <div id="empty-preview-state" class="col-span-full h-full min-h-[380px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium gap-2">
                                 <span>Chưa có ảnh nào được chọn tải lên</span>
                             </div>
                         </div>
