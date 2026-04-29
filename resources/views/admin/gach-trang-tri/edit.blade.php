@@ -9,7 +9,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh đại diện chính</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh nền</label>
                     <div class="aspect-video w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
                         <img id="preview-main" src="{{ asset('storage/' . $gachTrangTri->thumbnail_main) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover" alt="Ảnh chính">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -55,7 +55,7 @@
                     @csrf
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div class="lg:col-span-1">
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">Hình nền (Background)<span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh nền<span class="text-red-500">*</span></label>
                             <div class="w-full aspect-[4/3] mx-auto rounded-xl border-2 border-dashed border-blue-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-blue-50/50 transition-colors">
                                 <img id="preview-new-bg" src="https://placehold.co/800x600?text=Chon+Background" class="w-full h-full object-cover" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -168,7 +168,7 @@
                     @csrf @method('PUT')
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div class="lg:col-span-1">
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">Hình nền (Background)</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh nền</label>
                             <div class="w-full aspect-[4/3] mx-auto rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
                                 <img id="preview-edit-bg" src="" class="w-full h-full object-cover" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

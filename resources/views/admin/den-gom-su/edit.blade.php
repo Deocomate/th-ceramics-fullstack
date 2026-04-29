@@ -11,7 +11,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="space-y-6">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh đại diện chính</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh nền</label>
                         <div class="aspect-video w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
                             <img id="preview-main" src="{{ asset('storage/' . $denGomSu->thumbnail_main) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

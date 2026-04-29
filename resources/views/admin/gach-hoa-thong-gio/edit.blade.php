@@ -144,7 +144,7 @@
                     @csrf
                     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                         <div class="lg:col-span-1">
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">Hình nền (Background)<span
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh nền<span
                                     class="text-red-500">*</span></label>
                             <div
                                 class="aspect-square w-full rounded-xl border-2 border-dashed border-blue-300 bg-white flex items-center justify-center overflow-hidden relative group">
@@ -163,7 +163,7 @@
                         </div>
 
                         <div class="lg:col-span-1">
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh Minh họa<span
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh<span
                                     class="text-red-500">*</span></label>
                             <div
                                 class="aspect-square w-full rounded-xl border-2 border-dashed border-blue-300 bg-white flex items-center justify-center overflow-hidden relative group">

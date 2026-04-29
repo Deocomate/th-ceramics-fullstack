@@ -218,7 +218,7 @@
                     @csrf @method('PUT')
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div class="lg:col-span-1">
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh minh họa</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh</label>
                             <div class="w-full aspect-[4/3] mx-auto rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
                                 <img id="preview-edit-img" src="" class="w-full h-full object-cover" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
