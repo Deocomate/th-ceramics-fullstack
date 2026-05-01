@@ -14,7 +14,15 @@ class GachHoaThongGio extends Model
     protected $fillable =[
         'image',
         'video',
+        'images',
     ];
+    
+    protected function casts(): array
+    {
+        return [
+            'images' => 'array',
+        ];
+    }
 
     public function anh(): HasMany
     {

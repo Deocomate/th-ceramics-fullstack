@@ -49,6 +49,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('ngoi-hai-van-mieu')->name('ngoi-hai-van-mieu.')->group(function () {
             Route::get('/',[\App\Http\Controllers\Admin\NgoiHaiVanMieuController::class, 'index'])->name('index');
             Route::put('/',[\App\Http\Controllers\Admin\NgoiHaiVanMieuController::class, 'update'])->name('update');
+            Route::delete('cong-doan-image',[\App\Http\Controllers\Admin\NgoiHaiVanMieuController::class, 'destroyCongDoanImage'])->name('cong-doan-image.destroy');
         });
 
         // 3. Gạch Hoa Thông Gió
@@ -62,6 +63,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('gia-tri',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'storeGiaTri'])->name('gia-tri.store');
             Route::put('gia-tri/{giaTri}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'updateGiaTri'])->name('gia-tri.update');
             Route::delete('gia-tri/{giaTri}',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyGiaTri'])->name('gia-tri.destroy');
+            Route::delete('cong-doan-image',[\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyCongDoanImage'])->name('cong-doan-image.destroy');
         });
 
         // 4. Phụ Kiện Ngói
@@ -78,6 +80,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('dau-an',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'storeDauAn'])->name('dau-an.store');
             Route::put('dau-an/{dauAn}',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'updateDauAn'])->name('dau-an.update');
             Route::delete('dau-an/{dauAn}',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'destroyDauAn'])->name('dau-an.destroy');
+            Route::delete('cong-doan-image',[\App\Http\Controllers\Admin\GachTrangTriController::class, 'destroyCongDoanImage'])->name('cong-doan-image.destroy');
         });
 
         // 6. Lan Can Gốm Sứ
@@ -91,6 +94,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/',[\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'index'])->name('index');
             Route::put('/',[\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'update'])->name('update');
             Route::delete('anh/{anh}',[\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'destroyAnh'])->name('anh.destroy');
+            Route::delete('cong-doan-image',[\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'destroyCongDoanImage'])->name('cong-doan-image.destroy');
         });
 
         // 8. Linh Vật Phong Thủy

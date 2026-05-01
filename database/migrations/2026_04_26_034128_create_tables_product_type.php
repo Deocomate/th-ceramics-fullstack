@@ -46,6 +46,7 @@ return new class extends Migration
             $table->string('title3', 50);
             $table->string('thumbnail3');
             $table->string('video');
+            $table->json('images')->nullable();
             $table->timestamps();
         });
         // ==========================================
@@ -55,6 +56,7 @@ return new class extends Migration
             $table->id('gach_hoa_thong_gio_id');
             $table->string('image');
             $table->string('video')->nullable();
+            $table->json('images')->nullable();
             $table->timestamps();
         });
         Schema::create('gach_hoa_thong_gio_anh', function (Blueprint $table) {
@@ -88,6 +90,7 @@ return new class extends Migration
             $table->id('gach_trang_tri_id');
             $table->string('thumbnail_main');
             $table->string('video')->nullable();
+            $table->json('images')->nullable();
             $table->timestamps();
         });
         Schema::create('dau_an_gach_trang_tri', function (Blueprint $table) {
@@ -115,6 +118,7 @@ return new class extends Migration
             $table->id('gach_co_bat_trang_id');
             $table->string('thumbnail_main');
             $table->string('video')->nullable();
+            $table->json('images')->nullable();
             $table->timestamps();
         });
         Schema::create('gach_co_bat_trang_anh', function (Blueprint $table) {

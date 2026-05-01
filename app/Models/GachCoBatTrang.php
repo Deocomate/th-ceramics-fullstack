@@ -14,7 +14,15 @@ class GachCoBatTrang extends Model
     protected $fillable =[
         'thumbnail_main',
         'video',
+        'images',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'images' => 'array',
+        ];
+    }
 
     public function anh(): HasMany
     {

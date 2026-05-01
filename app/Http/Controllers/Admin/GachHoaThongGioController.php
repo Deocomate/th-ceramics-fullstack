@@ -18,25 +18,27 @@ class GachHoaThongGioController extends Controller
         return view('admin.gach-hoa-thong-gio.edit', compact('gachHoaThongGio'));
     }
 
-    
+
     public function update(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'image' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'video' => ['nullable', 'string', 'max:500'],
             'new_images'   => ['nullable', 'array'],
-            'new_images.*' =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'new_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'cong_doan_images'   => ['nullable', 'array'],
+            'cong_doan_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         $this->service->update($data);
-        return back()->with('success', 'Cập nhật Background và Thư viện ảnh thành công.');
+        return back()->with('success', 'Cập nhật thành công.');
     }
 
     // --- Sub-routes: Ảnh ---
     public function storeAnh(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'image' =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']
+            'image' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']
         ]);
         $this->service->addAnh($data);
         return back()->with('success', 'Thêm ảnh vào thư viện thành công.');
@@ -52,9 +54,9 @@ class GachHoaThongGioController extends Controller
     public function storeGiaTri(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'background'   =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'image'        =>['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'title'        =>['required', 'string', 'max:50'],
+            'background'   => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'image'        => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'title'        => ['required', 'string', 'max:50'],
             'desscription' => ['required', 'string'],
         ]);
         $this->service->addGiaTri($data);
@@ -64,9 +66,9 @@ class GachHoaThongGioController extends Controller
     public function updateGiaTri(Request $request, int $giaTriId): RedirectResponse
     {
         $data = $request->validate([
-            'background'   =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'image'        =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'title'        =>['required', 'string', 'max:50'],
+            'background'   => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'image'        => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'title'        => ['required', 'string', 'max:50'],
             'desscription' => ['required', 'string'],
         ]);
         $this->service->updateGiaTri($giaTriId, $data);
@@ -77,5 +79,12 @@ class GachHoaThongGioController extends Controller
     {
         $this->service->deleteGiaTri($giaTriId);
         return back()->with('success', 'Đã xóa giá trị.');
+    }
+
+    public function destroyCongDoanImage(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate(['image_path' => ['required', 'string']]);
+        $this->service->removeImageFromJson($request->input('image_path'));
+        return back()->with('success', 'Đã xóa ảnh công đoạn chế tác khỏi danh sách.');
     }
 }

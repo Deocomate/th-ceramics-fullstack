@@ -34,6 +34,16 @@ class GachTrangTriService
                 $model->update($fillable);
             }
 
+            if (!empty($data['cong_doan_images']) && is_array($data['cong_doan_images'])) {
+                $currentImages = is_array($model->images) ? $model->images : [];
+                foreach ($data['cong_doan_images'] as $file) {
+                    if ($file instanceof \Illuminate\Http\UploadedFile) {
+                        $currentImages[] = \App\Helpers\FileUploadHelper::upload($file, 'gach_trang_tri/cong_doan_che_tac');
+                    }
+                }
+                $fillable['images'] = $currentImages;
+            }
+
             return $model->fresh();
         });
     }
@@ -41,7 +51,7 @@ class GachTrangTriService
     public function addDauAn(array $data): DauAnGachTrangTri
     {
         $model = $this->getFirstRecord();
-        
+
         $backgroundPath = FileUploadHelper::upload($data['background'], 'gach_trang_tri/dau_an');
 
         return $model->dauAn()->create([
@@ -55,8 +65,8 @@ class GachTrangTriService
     public function updateDauAn(int $dauAnId, array $data): DauAnGachTrangTri
     {
         $dauAn = DauAnGachTrangTri::findOrFail($dauAnId);
-        
-        $fillable =[
+
+        $fillable = [
             'title'       => $data['title'] ?? $dauAn->title,
             'location'    => $data['location'] ?? $dauAn->location,
             'description' => $data['description'] ?? $dauAn->description,
@@ -76,5 +86,21 @@ class GachTrangTriService
         $dauAn = DauAnGachTrangTri::findOrFail($dauAnId);
         FileUploadHelper::delete($dauAn->background);
         $dauAn->delete();
+    }
+
+    public function removeImageFromJson(string $imagePathToRemove)
+    {
+        $model = $this->getFirstRecord();
+        $currentImages = is_array($model->images) ? $model->images : [];
+
+        $newImages = array_filter($currentImages, function ($path) use ($imagePathToRemove) {
+            return $path !== $imagePathToRemove;
+        });
+        $newImages = array_values($newImages); // Reset index
+
+        $model->update(['images' => empty($newImages) ? null : $newImages]);
+        \App\Helpers\FileUploadHelper::delete($imagePathToRemove);
+
+        return $model->fresh();
     }
 }

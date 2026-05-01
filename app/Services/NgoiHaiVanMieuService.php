@@ -11,7 +11,7 @@ class NgoiHaiVanMieuService
 {
     public function getFirstRecord(): NgoiHaiVanMieu
     {
-        return NgoiHaiVanMieu::firstOrFail();
+        return NgoiHaiVanMieu::query()->firstOrFail();
     }
 
     public function update(array $data): NgoiHaiVanMieu
@@ -19,7 +19,7 @@ class NgoiHaiVanMieuService
         $ngoiHai = $this->getFirstRecord();
 
         return DB::transaction(function () use ($ngoiHai, $data) {
-            $fillable =[
+            $fillable = [
                 'title1' => $data['title1'] ?? $ngoiHai->title1,
                 'title2' => $data['title2'] ?? $ngoiHai->title2,
                 'title3' => $data['title3'] ?? $ngoiHai->title3,
@@ -41,8 +41,34 @@ class NgoiHaiVanMieuService
                 $fillable['video'] = $data['video'];
             }
 
+            if (!empty($data['cong_doan_images']) && is_array($data['cong_doan_images'])) {
+                $currentImages = is_array($ngoiHai->images) ? $ngoiHai->images : [];
+                foreach ($data['cong_doan_images'] as $file) {
+                    if ($file instanceof \Illuminate\Http\UploadedFile) {
+                        $currentImages[] = \App\Helpers\FileUploadHelper::upload($file, 'ngoi_hai_van_mieu/cong_doan_che_tac');
+                    }
+                }
+                $fillable['images'] = $currentImages;
+            }
+
             $ngoiHai->update($fillable);
             return $ngoiHai->fresh();
         });
+    }
+
+    public function removeImageFromJson(string $imagePathToRemove)
+    {
+        $model = $this->getFirstRecord();
+        $currentImages = is_array($model->images) ? $model->images : [];
+
+        $newImages = array_filter($currentImages, function ($path) use ($imagePathToRemove) {
+            return $path !== $imagePathToRemove;
+        });
+        $newImages = array_values($newImages); // Reset index
+
+        $model->update(['images' => empty($newImages) ? null : $newImages]);
+        \App\Helpers\FileUploadHelper::delete($imagePathToRemove);
+
+        return $model->fresh();
     }
 }

@@ -10,7 +10,7 @@ class NgoiHaiVanMieu extends Model
 
     protected $primaryKey = 'ngoi_hai_van_mieu_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'thumbnail_main',
         'title1',
         'thumbnail1',
@@ -19,5 +19,13 @@ class NgoiHaiVanMieu extends Model
         'title3',
         'thumbnail3',
         'video',
+        'images',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'images' => 'array',
+        ];
+    }
 }

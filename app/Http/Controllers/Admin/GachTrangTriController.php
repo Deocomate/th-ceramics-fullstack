@@ -23,6 +23,8 @@ class GachTrangTriController extends Controller
         $data = $request->validate([
             'thumbnail_main' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'video'          =>['nullable', 'string', 'max:500'],
+            'cong_doan_images'   => ['nullable', 'array'],
+            'cong_doan_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         $this->service->update($data);
@@ -59,5 +61,12 @@ class GachTrangTriController extends Controller
     {
         $this->service->deleteDauAn($dauAnId);
         return back()->with('success', 'Đã xóa Dấu Ấn khỏi danh sách.');
+    }
+
+    public function destroyCongDoanImage(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate(['image_path' => ['required', 'string']]);
+        $this->service->removeImageFromJson($request->input('image_path'));
+        return back()->with('success', 'Đã xóa ảnh công đoạn chế tác khỏi danh sách.');
     }
 }

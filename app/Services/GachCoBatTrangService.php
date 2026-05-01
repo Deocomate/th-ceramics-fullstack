@@ -39,6 +39,16 @@ class GachCoBatTrangService
                 }
             }
 
+            if (!empty($data['cong_doan_images']) && is_array($data['cong_doan_images'])) {
+                $currentImages = is_array($model->images) ? $model->images : [];
+                foreach ($data['cong_doan_images'] as $file) {
+                    if ($file instanceof \Illuminate\Http\UploadedFile) {
+                        $currentImages[] = \App\Helpers\FileUploadHelper::upload($file, 'gach_co_bat_trang/cong_doan_che_tac');
+                    }
+                }
+                $fillable['images'] = $currentImages;
+            }
+
             if (!empty($fillable)) {
                 $model->update($fillable);
             }
@@ -52,5 +62,21 @@ class GachCoBatTrangService
         $anh = GachCoBatTrangAnh::findOrFail($anhId);
         FileUploadHelper::delete($anh->image);
         $anh->delete();
+    }
+
+    public function removeImageFromJson(string $imagePathToRemove)
+    {
+        $model = $this->getFirstRecord();
+        $currentImages = is_array($model->images) ? $model->images : [];
+
+        $newImages = array_filter($currentImages, function ($path) use ($imagePathToRemove) {
+            return $path !== $imagePathToRemove;
+        });
+        $newImages = array_values($newImages); // Reset index
+
+        $model->update(['images' => empty($newImages) ? null : $newImages]);
+        \App\Helpers\FileUploadHelper::delete($imagePathToRemove);
+
+        return $model->fresh();
     }
 }

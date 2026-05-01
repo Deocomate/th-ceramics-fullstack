@@ -14,7 +14,15 @@ class GachTrangTri extends Model
     protected $fillable =[
         'thumbnail_main',
         'video',
+        'images',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'images' => 'array',
+        ];
+    }
 
     public function dauAn(): HasMany
     {
