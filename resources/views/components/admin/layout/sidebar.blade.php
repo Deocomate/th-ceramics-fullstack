@@ -174,6 +174,8 @@
                 'admin.dinh-muc-gach-hoa-thong-gio.*',
                 'admin.gach-trang-tri-ct.*',
                 'admin.dinh-muc-gach-trang-tri.*',
+                'admin.gach-co-bat-trang-ct.*',
+                'admin.dinh-muc-gach-co-bat-trang.*',
             ]);
         @endphp
         <div>
@@ -266,6 +268,19 @@
                             </a>
                             <a href="{{ route('admin.dinh-muc-gach-trang-tri.index') }}"
                                 class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-gach-trang-tri.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
+                                Quản lý Định mức
+                            </a>
+                        </div>
+
+                        <!-- Nhóm Gạch Cổ Bát Tràng -->
+                        <div class="space-y-1">
+                            <p class="px-2 text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 mt-3">Gạch Cổ Bát Tràng</p>
+                            <a href="{{ route('admin.gach-co-bat-trang-ct.index') }}"
+                                class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.gach-co-bat-trang-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
+                                Danh sách sản phẩm
+                            </a>
+                            <a href="{{ route('admin.dinh-muc-gach-co-bat-trang.index') }}"
+                                class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-gach-co-bat-trang.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
                                 Quản lý Định mức
                             </a>
                         </div>

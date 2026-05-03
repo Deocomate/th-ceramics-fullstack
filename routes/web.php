@@ -211,6 +211,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('cong-doan-image', [\App\Http\Controllers\Admin\GachTrangTriController::class, 'destroyCongDoanImage'])->name('cong-doan-image.destroy');
         });
 
+        // 5.1 Chi tiết Gạch Cổ Bát Tràng
+        Route::prefix('gach-co-bat-trang-ct')->name('gach-co-bat-trang-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\GachCoBatTrangCtController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\GachCoBatTrangCtController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\GachCoBatTrangCtController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\GachCoBatTrangCtController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\GachCoBatTrangCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\GachCoBatTrangCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\GachCoBatTrangCtController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/image',[\App\Http\Controllers\Admin\GachCoBatTrangCtController::class, 'destroyImage'])->name('image.destroy');
+        });
+
+        // 5.2 Định mức Gạch Cổ Bát Tràng
+        Route::prefix('dinh-muc-gach-co-bat-trang')->name('dinh-muc-gach-co-bat-trang.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DinhMucGachCoBatTrangController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\DinhMucGachCoBatTrangController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\DinhMucGachCoBatTrangController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DinhMucGachCoBatTrangController::class, 'destroy'])->name('destroy');
+        });
+
         // 6. Lan Can Gốm Sứ
         Route::prefix('lan-can-gom-xu')->name('lan-can-gom-xu.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\LanCanGomXuController::class, 'index'])->name('index');
