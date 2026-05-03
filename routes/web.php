@@ -59,6 +59,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}/image', [\App\Http\Controllers\Admin\NgoiAmDuongCtController::class, 'destroyImage'])->name('image.destroy');
         });
 
+        // 1.2 Màu sắc Ngói Âm Dương
+        Route::prefix('mau-sac-ngoi-am-duong-ct')->name('mau-sac-ngoi-am-duong-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\MauSacNgoiAmDuongCtController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\MauSacNgoiAmDuongCtController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\MauSacNgoiAmDuongCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\MauSacNgoiAmDuongCtController::class, 'destroy'])->name('destroy');
+        });
+
+        // 1.3 Định mức Ngói Âm Dương
+        Route::prefix('dinh-muc-ngoi-am-duong')->name('dinh-muc-ngoi-am-duong.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DinhMucNgoiAmDuongController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\DinhMucNgoiAmDuongController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\DinhMucNgoiAmDuongController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DinhMucNgoiAmDuongController::class, 'destroy'])->name('destroy');
+        });
+
         // 2. Ngói Hài Văn Miếu
         Route::prefix('ngoi-hai-van-mieu')->name('ngoi-hai-van-mieu.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\NgoiHaiVanMieuController::class, 'index'])->name('index');

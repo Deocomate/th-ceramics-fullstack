@@ -90,7 +90,7 @@
 
         <!-- 3. DANH SÁCH SẢN PHẨM CHI TIẾT (Dropdown) -->
         @php
-            $isProductDetail = request()->routeIs(['admin.ngoi-am-duong-ct.*']);
+            $isProductDetail = request()->routeIs(['admin.ngoi-am-duong-ct.*', 'admin.mau-sac-ngoi-am-duong-ct.*', 'admin.dinh-muc-ngoi-am-duong.*']);
         @endphp
         <div>
             <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('submenu-product-detail', this)">
@@ -102,12 +102,20 @@
             </button>
             <div id="submenu-product-detail" class="grid transition-all duration-300 ease-in-out {{ $isProductDetail ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
                 <div class="overflow-hidden">
-                    <div class="pl-9 pr-3 space-y-1 pb-1">
-                        <!-- Menu Ngói Âm Dương nằm bên trong -->
-                        <a href="{{ route('admin.ngoi-am-duong-ct.index') }}" class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.ngoi-am-duong-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Ngói Âm Dương
-                        </a>
-                        <!-- Sau này bạn có thể thêm Ngói Hài Cổ, Gạch Trang Trí vào đây -->
+                    <div class="pl-7 pr-3 space-y-3 pb-2 pt-1">
+                        <!-- Nhóm Ngói Âm Dương -->
+                        <div class="space-y-1">
+                            <p class="px-2 text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Ngói Âm Dương</p>
+                            <a href="{{ route('admin.ngoi-am-duong-ct.index') }}" class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.ngoi-am-duong-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
+                                Danh sách sản phẩm
+                            </a>
+                            <a href="{{ route('admin.mau-sac-ngoi-am-duong-ct.index') }}" class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.mau-sac-ngoi-am-duong-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
+                                Quản lý màu sắc
+                            </a>
+                            <a href="{{ route('admin.dinh-muc-ngoi-am-duong.index') }}" class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-ngoi-am-duong.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
+                                Quản lý định mức
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
