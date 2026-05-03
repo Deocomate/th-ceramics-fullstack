@@ -201,6 +201,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('image', [\App\Http\Controllers\Admin\PhuKienNgoiController::class, 'destroyImage'])->name('image.destroy');
         });
 
+        // 4.1 Chi tiết Ngói Bò Nóc
+        Route::prefix('ngoi-bo-noc-ct')->name('ngoi-bo-noc-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\NgoiBoNocCtController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\NgoiBoNocCtController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\NgoiBoNocCtController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\NgoiBoNocCtController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\NgoiBoNocCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\NgoiBoNocCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\NgoiBoNocCtController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/image',[\App\Http\Controllers\Admin\NgoiBoNocCtController::class, 'destroyImage'])->name('image.destroy');
+        });
+
+        // 4.2 Phân loại Ngói Bò Nóc
+        Route::prefix('phan-loai-ngoi-bo-noc-ct')->name('phan-loai-ngoi-bo-noc-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\PhanLoaiNgoiBoNocCtController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\PhanLoaiNgoiBoNocCtController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\PhanLoaiNgoiBoNocCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\PhanLoaiNgoiBoNocCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\PhanLoaiNgoiBoNocCtController::class, 'restore'])->name('restore');
+        });
+
         // 5. Gạch Trang Trí
         Route::prefix('gach-trang-tri')->name('gach-trang-tri.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\GachTrangTriController::class, 'index'])->name('index');

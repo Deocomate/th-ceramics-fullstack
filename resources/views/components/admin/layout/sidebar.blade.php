@@ -177,6 +177,8 @@
                 'admin.gach-co-bat-trang-ct.*',
                 'admin.dinh-muc-gach-co-bat-trang.*',
                 'admin.linh-vat-phong-thuy-ct.*',
+                'admin.ngoi-bo-noc-ct.*',
+                'admin.phan-loai-ngoi-bo-noc-ct.*',
             ]);
         @endphp
         <div>
@@ -291,6 +293,15 @@
                             <p class="px-2 text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 mt-3">Linh Vật Phong Thủy</p>
                             <a href="{{ route('admin.linh-vat-phong-thuy-ct.index') }}"
                                 class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.linh-vat-phong-thuy-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
+                                Danh sách sản phẩm
+                            </a>
+                        </div>
+
+                        <!-- Nhóm Ngói Bò Nóc -->
+                        <div class="space-y-1">
+                            <p class="px-2 text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 mt-3">Ngói Bò Nóc</p>
+                            <a href="{{ route('admin.ngoi-bo-noc-ct.index') }}"
+                                class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs(['admin.ngoi-bo-noc-ct.*', 'admin.phan-loai-ngoi-bo-noc-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
                                 Danh sách sản phẩm
                             </a>
                         </div>
