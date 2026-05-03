@@ -21,6 +21,7 @@ return new class extends Migration
             $table->json('des')->nullable();
             $table->string('size')->nullable();
             $table->string('size_image')->nullable();
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
         });
 
@@ -54,10 +55,11 @@ return new class extends Migration
             $table->json('des')->nullable();
             $table->string('size')->nullable();
             $table->string('size_image')->nullable();
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
         });
 
-        // 5. Table dinh_muc_ngoi_hai_co (MỚI)
+        // 5. Table dinh_muc_ngoi_hai_co
         Schema::create('dinh_muc_ngoi_hai_co', function (Blueprint $table) {
             $table->id('dinh_muc_ngoi_hai_co_id');
             $table->string('roof_type')->unique();
@@ -74,6 +76,7 @@ return new class extends Migration
             $table->string('code', 50)->unique();
             $table->integer('price');
             $table->unsignedBigInteger('ngoi_hai_co_ct_id');
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
 
             // Foreign Key
@@ -90,12 +93,13 @@ return new class extends Migration
             $table->unsignedBigInteger('mau_sac_id'); 
             $table->string('size')->nullable();
             $table->string('size_image')->nullable();
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
         });
 
-        // 8. Table dinh_muc_ngoi_hai_van_mieu (MỚI)
+        // 8. Table dinh_muc_ngoi_hai_van_mieu
         Schema::create('dinh_muc_ngoi_hai_van_mieu', function (Blueprint $table) {
-            $table->id('dinh_muc_ngoi_hai_van_mieu_id'); // Đã sửa tên ID cho chuẩn
+            $table->id('dinh_muc_ngoi_hai_van_mieu_id'); 
             $table->string('roof_type');
             $table->integer('ngoi_tren_mai_go');
             $table->integer('ngoi_tren_mai_be_tong');
@@ -110,6 +114,7 @@ return new class extends Migration
             $table->string('code', 50)->unique();
             $table->integer('price');
             $table->unsignedBigInteger('ngoi_hai_van_mieu_ct_id');
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
 
             // Foreign Key
@@ -126,14 +131,15 @@ return new class extends Migration
             $table->json('des')->nullable();
             $table->string('size')->nullable();
             $table->string('size_image')->nullable();
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
         });
 
-        // 11. Table dinh_muc_gach_hoa_thong_gio (MỚI)
+        // 11. Table dinh_muc_gach_hoa_thong_gio
         Schema::create('dinh_muc_gach_hoa_thong_gio', function (Blueprint $table) {
             $table->id('dinh_muc_gach_hoa_thong_gio_id');
             $table->string('brick_type')->unique();
-            $table->integer('value')->nullable(); // Không có [not null] nên để nullable
+            $table->integer('value')->nullable(); 
             $table->timestamps();
         });
 
@@ -147,10 +153,11 @@ return new class extends Migration
             $table->json('des')->nullable();
             $table->string('size')->nullable();
             $table->string('size_image')->nullable();
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
         });
 
-        // 13. Table dinh_muc_gach_trang_tri (MỚI)
+        // 13. Table dinh_muc_gach_trang_tri
         Schema::create('dinh_muc_gach_trang_tri', function (Blueprint $table) {
             $table->id('dinh_muc_gach_trang_tri_id');
             $table->string('brick_type')->unique();
@@ -168,10 +175,11 @@ return new class extends Migration
             $table->json('des')->nullable();
             $table->string('size')->nullable();
             $table->string('size_image')->nullable();
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
         });
 
-        // 15. Table dinh_muc_gach_co_bat_trang (MỚI)
+        // 15. Table dinh_muc_gach_co_bat_trang
         Schema::create('dinh_muc_gach_co_bat_trang', function (Blueprint $table) {
             $table->id('dinh_muc_gach_co_bat_trang_id');
             $table->string('brick_type')->unique();
@@ -190,6 +198,7 @@ return new class extends Migration
             $table->string('size')->nullable();
             $table->string('size_image')->nullable();
             $table->json('size_des')->nullable();
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
         });
 
@@ -202,6 +211,7 @@ return new class extends Migration
             $table->string('size')->nullable();
             $table->string('size_image')->nullable();
             $table->json('size_des')->nullable();
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
         });
 
@@ -212,6 +222,7 @@ return new class extends Migration
             $table->string('code', 50)->unique();
             $table->integer('price');
             $table->unsignedBigInteger('ngoi_bo_noc_ct_id');
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
 
             // Foreign Key
@@ -227,6 +238,7 @@ return new class extends Migration
             $table->string('size')->nullable();
             $table->string('size_image')->nullable();
             $table->json('size_des')->nullable();
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
         });
 
@@ -237,6 +249,7 @@ return new class extends Migration
             $table->string('code', 50)->unique();
             $table->integer('price');
             $table->unsignedBigInteger('bo_noc_chu_van_ct_id');
+            $table->boolean('is_delete')->default(0)->comment('0: Active, 1: Deleted');
             $table->timestamps();
 
             // Foreign Key

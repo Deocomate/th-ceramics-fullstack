@@ -88,11 +88,30 @@
             </div>
         </div>
 
-        <!-- 3. DANH SÁCH SẢN PHẨM CHI TIẾT (Top-level) -->
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]">
-            <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-            DS sản phẩm chi tiết <span class="ml-auto text-[9px] bg-white/10 px-1.5 py-0.5 rounded text-gray-400">Sắp có</span>
-        </a>
+        <!-- 3. DANH SÁCH SẢN PHẨM CHI TIẾT (Dropdown) -->
+        @php
+            $isProductDetail = request()->routeIs(['admin.ngoi-am-duong-ct.*']);
+        @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('submenu-product-detail', this)">
+                <div class="flex items-center gap-3">
+                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                    DS Sản phẩm chi tiết
+                </div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isProductDetail ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="submenu-product-detail" class="grid transition-all duration-300 ease-in-out {{ $isProductDetail ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden">
+                    <div class="pl-9 pr-3 space-y-1 pb-1">
+                        <!-- Menu Ngói Âm Dương nằm bên trong -->
+                        <a href="{{ route('admin.ngoi-am-duong-ct.index') }}" class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.ngoi-am-duong-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Ngói Âm Dương
+                        </a>
+                        <!-- Sau này bạn có thể thêm Ngói Hài Cổ, Gạch Trang Trí vào đây -->
+                    </div>
+                </div>
+            </div>
+        </div>
 
         {{-- Superadmin section --}}
         @if (auth()->user()?->isSuperAdmin())
