@@ -154,6 +154,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('cong-doan-image', [\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyCongDoanImage'])->name('cong-doan-image.destroy');
         });
 
+        // 3.1 Chi tiết Gạch Hoa Thông Gió
+        Route::prefix('gach-hoa-thong-gio-ct')->name('gach-hoa-thong-gio-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\GachHoaThongGioCtController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\GachHoaThongGioCtController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\GachHoaThongGioCtController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\GachHoaThongGioCtController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\GachHoaThongGioCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\GachHoaThongGioCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\GachHoaThongGioCtController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/image',[\App\Http\Controllers\Admin\GachHoaThongGioCtController::class, 'destroyImage'])->name('image.destroy');
+        });
+
+        // 3.2 Định mức Gạch Hoa Thông Gió
+        Route::prefix('dinh-muc-gach-hoa-thong-gio')->name('dinh-muc-gach-hoa-thong-gio.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DinhMucGachHoaThongGioController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\DinhMucGachHoaThongGioController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\DinhMucGachHoaThongGioController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DinhMucGachHoaThongGioController::class, 'destroy'])->name('destroy');
+        });
+
         // 4. Phụ Kiện Ngói
         Route::prefix('phu-kien-ngoi')->name('phu-kien-ngoi.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\PhuKienNgoiController::class, 'index'])->name('index');
