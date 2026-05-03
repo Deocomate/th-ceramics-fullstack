@@ -111,6 +111,35 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}',[\App\Http\Controllers\Admin\DinhMucNgoiHaiCoController::class, 'destroy'])->name('destroy');
         });
 
+        // 2.4 Chi tiết Ngói Hài Văn Miếu (Bạn thêm vào vị trí thích hợp)
+        Route::prefix('ngoi-hai-van-mieu-ct')->name('ngoi-hai-van-mieu-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\NgoiHaiVanMieuCtController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\NgoiHaiVanMieuCtController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\NgoiHaiVanMieuCtController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\NgoiHaiVanMieuCtController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\NgoiHaiVanMieuCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\NgoiHaiVanMieuCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\NgoiHaiVanMieuCtController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/image',[\App\Http\Controllers\Admin\NgoiHaiVanMieuCtController::class, 'destroyImage'])->name('image.destroy');
+        });
+
+        // 2.5 Màu sắc Ngói Hài Văn Miếu
+        Route::prefix('mau-sac-ngoi-hai-van-mieu-ct')->name('mau-sac-ngoi-hai-van-mieu-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\MauSacNgoiHaiVanMieuCtController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\MauSacNgoiHaiVanMieuCtController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\MauSacNgoiHaiVanMieuCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\MauSacNgoiHaiVanMieuCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\MauSacNgoiHaiVanMieuCtController::class, 'restore'])->name('restore');
+        });
+
+        // 2.6 Định mức Ngói Hài Văn Miếu
+        Route::prefix('dinh-muc-ngoi-hai-van-mieu')->name('dinh-muc-ngoi-hai-van-mieu.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DinhMucNgoiHaiVanMieuController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\DinhMucNgoiHaiVanMieuController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\DinhMucNgoiHaiVanMieuController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DinhMucNgoiHaiVanMieuController::class, 'destroy'])->name('destroy');
+        });
+
         // 3. Gạch Hoa Thông Gió
         Route::prefix('gach-hoa-thong-gio')->name('gach-hoa-thong-gio.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'index'])->name('index');

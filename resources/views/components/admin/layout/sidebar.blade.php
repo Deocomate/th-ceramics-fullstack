@@ -164,6 +164,12 @@
                 'admin.ngoi-am-duong-ct.*',
                 'admin.mau-sac-ngoi-am-duong-ct.*',
                 'admin.dinh-muc-ngoi-am-duong.*',
+                'admin.ngoi-hai-co-ct.*',
+                'admin.mau-sac-ngoi-hai-co-ct.*',
+                'admin.dinh-muc-ngoi-hai-co.*',
+                'admin.ngoi-hai-van-mieu-ct.*',
+                'admin.mau-sac-ngoi-hai-van-mieu-ct.*',
+                'admin.dinh-muc-ngoi-hai-van-mieu.*',
             ]);
         @endphp
         <div>
@@ -216,6 +222,20 @@
 
                             <a href="{{ route('admin.dinh-muc-ngoi-hai-co.index') }}"
                                 class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-ngoi-hai-co.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
+                                Quản lý Định mức
+                            </a>
+                        </div>
+
+                        <!-- Nhóm Ngói Hài Văn Miếu -->
+                        <div class="space-y-1">
+                            <p class="px-2 text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 mt-3">Ngói
+                                Hài Văn Miếu</p>
+                            <a href="{{ route('admin.ngoi-hai-van-mieu-ct.index') }}"
+                                class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs(['admin.ngoi-hai-van-mieu-ct.*', 'admin.mau-sac-ngoi-hai-van-mieu-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
+                                Danh sách sản phẩm
+                            </a>
+                            <a href="{{ route('admin.dinh-muc-ngoi-hai-van-mieu.index') }}"
+                                class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-ngoi-hai-van-mieu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
                                 Quản lý Định mức
                             </a>
                         </div>
