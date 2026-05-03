@@ -176,6 +176,7 @@
                 'admin.dinh-muc-gach-trang-tri.*',
                 'admin.gach-co-bat-trang-ct.*',
                 'admin.dinh-muc-gach-co-bat-trang.*',
+                'admin.linh-vat-phong-thuy-ct.*',
             ]);
         @endphp
         <div>
@@ -282,6 +283,15 @@
                             <a href="{{ route('admin.dinh-muc-gach-co-bat-trang.index') }}"
                                 class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-gach-co-bat-trang.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
                                 Quản lý Định mức
+                            </a>
+                        </div>
+
+                        <!-- Nhóm Linh Vật Phong Thủy -->
+                        <div class="space-y-1">
+                            <p class="px-2 text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 mt-3">Linh Vật Phong Thủy</p>
+                            <a href="{{ route('admin.linh-vat-phong-thuy-ct.index') }}"
+                                class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.linh-vat-phong-thuy-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">
+                                Danh sách sản phẩm
                             </a>
                         </div>
                     </div>

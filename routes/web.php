@@ -255,6 +255,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('anh/{anh}', [\App\Http\Controllers\Admin\LinhVatPhongThuyController::class, 'destroyAnh'])->name('anh.destroy');
         });
 
+        // 8.1 Chi tiết Linh Vật Phong Thủy
+        Route::prefix('linh-vat-phong-thuy-ct')->name('linh-vat-phong-thuy-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\LinhVatPhongThuyCtController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\LinhVatPhongThuyCtController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\LinhVatPhongThuyCtController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\LinhVatPhongThuyCtController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\LinhVatPhongThuyCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\LinhVatPhongThuyCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\LinhVatPhongThuyCtController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/image',[\App\Http\Controllers\Admin\LinhVatPhongThuyCtController::class, 'destroyImage'])->name('image.destroy');
+        });
+
         // 9. Đèn Gốm Sứ
         Route::prefix('den-gom-su')->name('den-gom-su.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\DenGomSuController::class, 'index'])->name('index');
