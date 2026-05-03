@@ -1,0 +1,234 @@
+<x-admin.layout.app title="Cập nhật Ngói Hài Cổ" breadcrumb="Admin › DS Sản phẩm chi tiết › Chỉnh sửa">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Cập nhật Sản Phẩm: {{ $product->name }}</h2>
+        </div>
+        <form method="POST" action="{{ route('admin.ngoi-hai-co-ct.update', $product->ngoi_hai_co_ct_id) }}" enctype="multipart/form-data" class="p-6">
+            @csrf @method('PUT')
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- CỘT THÔNG TIN CHUNG -->
+                <div class="lg:col-span-2 space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tên dáng ngói <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" value="{{ old('name', $product->name) }}" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                            @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kích thước</label>
+                            <input type="text" name="size" value="{{ old('size', $product->size) }}" placeholder="VD: L200 x W200 x D20 mm" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <!-- BLOCKS THÔNG SỐ -->
+                    <div class="bg-gray-50/80 rounded-xl border border-gray-200 p-5">
+                        <div class="flex items-center justify-between mb-4 border-b border-gray-200 pb-3">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-800">Danh sách Thông số / Mô tả</label>
+                                <p class="text-xs text-gray-500 mt-0.5">Mỗi khối tương ứng với 1 gạch đầu dòng trên Website.</p>
+                            </div>
+                            <button type="button" onclick="addDesBlock()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-50 hover:text-[#A31D1D] hover:border-[#A31D1D] transition-colors shadow-sm flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                Thêm dòng mới
+                            </button>
+                        </div>
+                        <div id="des-blocks-container" class="space-y-2.5">
+                            <!-- JS render -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CỘT HÌNH ẢNH KÍCH THƯỚC -->
+                <div class="lg:col-span-1">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Ảnh bản vẽ / Kích thước</label>
+                    <div class="aspect-square w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
+                        <img id="preview-size" src="{{ $product->size_image ? asset('storage/' . $product->size_image) : 'https://placehold.co/400x400?text=Chon+Ban+Ve' }}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay ảnh mới</span>
+                        </div>
+                        <input type="file" name="size_image" accept="image/*" onchange="previewImage(event, 'preview-size')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    </div>
+                    @error('size_image') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                </div>
+            </div>
+
+            <!-- CHỌN THÊM ẢNH MỚI -->
+            <hr class="border-gray-100 my-8">
+            <div class="flex flex-col h-full border border-gray-200 rounded-xl p-6 bg-gray-50/50">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Thêm Hình Ảnh Chung Mới</label>
+                <div class="relative mb-4">
+                    <input type="file" id="multipleImagesInput" name="new_images[]" multiple accept="image/*" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white" onchange="handleMultipleFiles(event)">
+                </div>
+                <div class="h-[180px] bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner flex flex-col">
+                    <div id="multiple-preview-container" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-3">
+                        <div id="empty-preview-state" class="col-span-full h-full min-h-[100px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium gap-2">
+                            <span>Chưa chọn thêm ảnh nào</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 mt-8 flex justify-end gap-3 border-t border-gray-100">
+                <a href="{{ route('admin.ngoi-hai-co-ct.index') }}" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy bỏ</a>
+                <button type="submit" class="px-8 py-2.5 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'" onmouseout="this.style.background='#A31D1D'">
+                    Lưu Thay Đổi
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- DANH SÁCH ẢNH HIỆN TẠI -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Hình ảnh chung hiện tại</h2>
+            @if(is_array($product->images))
+                <span class="text-xs font-medium text-gray-500">Đang có {{ count($product->images) }} ảnh</span>
+            @endif
+        </div>
+        <div class="p-6">
+            @if(is_array($product->images) && count($product->images) > 0)
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    @foreach($product->images as $path)
+                        <div class="relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100">
+                            <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                <button type="button" onclick="openDeleteImageModal('{{ $path }}')" class="px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm">
+                                    Xóa ảnh này
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-gray-500 text-sm text-center py-6">Sản phẩm này chưa có hình ảnh chung nào.</p>
+            @endif
+        </div>
+    </div>
+
+    {{-- MODAL XÓA ẢNH HIỆN TẠI --}}
+    <div id="deleteImageModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 p-6 text-center">
+            <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Xác nhận xóa?</h3>
+            <p class="text-sm text-gray-500 mb-6">Ảnh này sẽ bị xóa khỏi danh sách ảnh chung của sản phẩm.</p>
+            <div class="flex justify-center gap-3">
+                <button type="button" onclick="closeDeleteImageModal()" class="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy</button>
+                <form id="deleteImageForm" method="POST" action="{{ route('admin.ngoi-hai-co-ct.image.destroy', $product->ngoi_hai_co_ct_id) }}" class="flex-1">
+                    @csrf @method('DELETE')
+                    <input type="hidden" name="image_path" id="deleteImagePathInput" value="">
+                    <button type="submit" class="w-full px-4 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm">Có, Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        function previewImage(event, targetId) {
+            const file = event.target.files[0];
+            if (file) document.getElementById(targetId).src = URL.createObjectURL(file);
+        }
+
+        const desContainer = document.getElementById('des-blocks-container');
+        const existingDes = @json(is_array($product->des) ? $product->des :[]);
+        
+        function addDesBlock(value = '', autoFocus = true) {
+            const div = document.createElement('div');
+            div.className = 'flex items-center bg-white rounded-lg border border-gray-200 shadow-sm group focus-within:border-[#A31D1D] focus-within:ring-1 focus-within:ring-[#A31D1D] transition-all overflow-hidden';
+            div.innerHTML = `
+                <div class="pl-3 pr-2 text-gray-300 cursor-move">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
+                </div>
+                <input type="text" name="des[]" value="${value.replace(/"/g, '&quot;')}" placeholder="VD: Trọng lượng: 1kg / viên" class="flex-1 py-2.5 px-2 text-sm border-none focus:ring-0 outline-none text-gray-700 bg-transparent placeholder-gray-400">
+                <button type="button" onclick="this.parentElement.remove()" class="px-3 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100" title="Xóa dòng này">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            `;
+            desContainer.appendChild(div);
+            if(autoFocus && value === '') div.querySelector('input').focus();
+        }
+
+        if (existingDes && existingDes.length > 0) {
+            existingDes.forEach(item => {
+                let textValue = '';
+                if (typeof item === 'string') textValue = item;
+                else if (typeof item === 'object' && item !== null) {
+                    let name = item.name ? item.name.trim() : '';
+                    let val = item.value ? item.value.trim() : '';
+                    if (name && val) textValue = name + ': ' + val;
+                    else if (name) textValue = name;
+                    else if (val) textValue = val;
+                }
+                if (textValue.trim() !== '') addDesBlock(textValue, false);
+            });
+        } else {
+            addDesBlock('', false);
+        }
+
+        let selectedFiles =[];
+        const multipleImagesInput = document.getElementById('multipleImagesInput');
+        const previewContainer = document.getElementById('multiple-preview-container');
+        const emptyState = document.getElementById('empty-preview-state');
+
+        function handleMultipleFiles(event) {
+            const files = Array.from(event.target.files);
+            if (files.length > 0) {
+                selectedFiles = selectedFiles.concat(files);
+                updateFileInput();
+                renderPreviews();
+            }
+        }
+        function renderPreviews() {
+            const existingPreviews = previewContainer.querySelectorAll('.image-preview-item');
+            existingPreviews.forEach(item => item.remove());
+            if (selectedFiles.length === 0) {
+                emptyState.style.display = 'flex';
+            } else {
+                emptyState.style.display = 'none';
+                selectedFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'image-preview-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100';
+                        div.innerHTML = `
+                            <img src="${e.target.result}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                <button type="button" onclick="removeFile(${index})" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                            </div>
+                        `;
+                        previewContainer.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileInput();
+            renderPreviews();
+        }
+        function updateFileInput() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            multipleImagesInput.files = dataTransfer.files;
+        }
+
+        const deleteImageModal = document.getElementById('deleteImageModal');
+        const deleteImageModalInner = deleteImageModal.querySelector('.bg-white');
+        function openDeleteImageModal(imagePath) {
+            document.getElementById('deleteImagePathInput').value = imagePath;
+            deleteImageModal.classList.remove('hidden'); deleteImageModal.classList.add('flex');
+            void deleteImageModal.offsetWidth;
+            deleteImageModal.classList.remove('opacity-0'); deleteImageModalInner.classList.remove('scale-95');
+        }
+        function closeDeleteImageModal() {
+            deleteImageModal.classList.add('opacity-0'); deleteImageModalInner.classList.add('scale-95');
+            setTimeout(() => { deleteImageModal.classList.add('hidden'); deleteImageModal.classList.remove('flex'); }, 300);
+        }
+    </script>
+    @endpush
+</x-admin.layout.app>
