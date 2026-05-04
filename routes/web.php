@@ -295,6 +295,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('anh/{anh}', [\App\Http\Controllers\Admin\DenGomSuController::class, 'destroyAnh'])->name('anh.destroy');
         });
 
+        // Chi tiết Bò Nóc Chữ Vạn
+        Route::prefix('bo-noc-chu-van-ct')->name('bo-noc-chu-van-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\BoNocChuVanCtController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\BoNocChuVanCtController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\BoNocChuVanCtController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\BoNocChuVanCtController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\BoNocChuVanCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\BoNocChuVanCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\BoNocChuVanCtController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/image',[\App\Http\Controllers\Admin\BoNocChuVanCtController::class, 'destroyImage'])->name('image.destroy');
+        });
+
+        // Phân loại Bò Nóc Chữ Vạn
+        Route::prefix('phan-loai-bo-noc-chu-van-ct')->name('phan-loai-bo-noc-chu-van-ct.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\PhanLoaiBoNocChuVanCtController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\PhanLoaiBoNocChuVanCtController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\PhanLoaiBoNocChuVanCtController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\PhanLoaiBoNocChuVanCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\PhanLoaiBoNocChuVanCtController::class, 'restore'])->name('restore');
+        });
+
         // ── Superadmin-only: account management ──────────────────────────────
         Route::middleware('role:superadmin')->group(function () {
             Route::get('users', [UserController::class, 'index'])->name('users.index');
