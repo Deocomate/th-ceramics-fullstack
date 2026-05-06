@@ -1,0 +1,189 @@
+<x-layouts.client title="Linh Vật Phong Thủy" data-page="products" main-class="bg-background-secondary">
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Lavishly+Yours&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Ephesis&family=Italianno&display=swap");
+</style>
+@endpush
+
+<x-catalog-button />
+
+@include('clients.products.linh-vat-phong-thuy.partials.banner-section')
+
+<div class="w-[85%] max-w-[1320px] mx-auto">
+  <!-- Breadcrumb -->
+  <div class="pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
+    <x-products.breadcrumb current-label="Linh Vật Phong Thủy" />
+  </div>
+  <hr class="border-t border-black/10 mb-4 w-full" />
+
+  <!-- Product Grid Section -->
+  <section class="md:pb-8" data-aos="fade-up">
+    <!-- Filter Button -->
+    <div class="mb-[20px] md:mb-10 block">
+      <button
+        class="flex items-center gap-3 text-textPrimary hover:text-secondary transition-colors font-bold uppercase tracking-[0.05em] text-[13px]">
+        <div class="w-8 h-8 flex items-center justify-center border border-black/60 rounded text-black/60">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
+            </path>
+          </svg>
+        </div>
+        BỘ LỌC SẢN PHẨM
+      </button>
+    </div>
+
+    @php
+      $linhVatItems = $config->linhVat ?? collect();
+      $nghe = $linhVatItems->get(0);
+      $phuong = $linhVatItems->get(1);
+      $dauRong = $linhVatItems->get(2);
+    @endphp
+
+    <!-- Nghê Intro Section -->
+    @if($nghe)
+    <section class="mb-[50px] md:mb-24 relative" data-aos="fade-up">
+      <div class="flex flex-col md:flex-row items-center">
+        <!-- Image Container -->
+        <div class="w-full h-full max-h-[438px] md:max-h-full md:w-[68%] z-0">
+          <div class="h-full md:aspect-auto overflow-hidden rounded-sm shadow-xl">
+            <img src="{{ $nghe->image ? Storage::url($nghe->image) : asset('assets/images/nghe.png') }}" alt="Linh vật Nghê" class="w-full h-full object-cover"
+              onerror="this.src = '{{ asset('assets/images/ngoi-01.jpg') }}'" />
+          </div>
+        </div>
+        <!-- Content Box (Teal background) -->
+        <div
+          class="w-[90%] md:w-[38%] mt-[-60px] md:mt-0 md:ml-[-6%] bg-[#5D8482] p-8 md:p-12 lg:p-16 text-white shadow-2xl z-10 rounded-sm">
+          <h2 class="font-lavishly text-[48px] md:text-[56px] lg:text-[64px] mb-12 leading-none">{{ $nghe->title }}</h2>
+          <p class="font-light text-justify text-base md:text-lg lg:text-[20px] leading-8 md:leading-9 tracking-normal">
+            {{ $nghe->description }}
+          </p>
+        </div>
+      </div>
+    </section>
+    @endif
+
+    @include('clients.products.linh-vat-phong-thuy.partials.nghe-featured-products')
+
+    <!-- Phượng Intro Section -->
+    @if($phuong)
+    <section class="mt-8 mb-20 relative" data-aos="fade-up">
+      <div class="flex flex-col md:flex-row-reverse items-center">
+        <!-- Image Container -->
+        <div class="w-full md:w-[68%] z-0">
+          <div class="aspect-[6/5] md:aspect-auto overflow-hidden rounded-sm shadow-xl">
+            <img src="{{ $phuong->image ? Storage::url($phuong->image) : asset('assets/images/phuong.png') }}" alt="Linh vật Phượng" class="w-full h-full object-cover"
+              onerror="this.src = '{{ asset('assets/images/ngoi-05.jpg') }}'" />
+          </div>
+        </div>
+        <!-- Content Box (Gold background) -->
+        <div
+          class="w-[90%] md:w-[38%] mt-[-60px] md:mt-0 md:mr-[-6%] bg-[#D2A35C] p-8 md:p-12 lg:p-16 text-white shadow-2xl z-10 rounded-sm">
+          <h2 class="font-lavishly text-[48px] md:text-[56px] lg:text-[64px] mb-12 leading-none">{{ $phuong->title }}</h2>
+          <p class="font-light text-justify text-base md:text-lg lg:text-[20px] leading-8 md:leading-9 tracking-normal">
+            {{ $phuong->description }}
+          </p>
+        </div>
+      </div>
+    </section>
+    @endif
+
+    @include('clients.products.linh-vat-phong-thuy.partials.nghe-featured-products')
+
+    <!-- Đầu Rồng Intro Section -->
+    @if($dauRong)
+    <section class="mt-8 mb-8 md:mb-20 relative" data-aos="fade-up">
+      <div class="flex flex-col md:flex-row items-center">
+        <!-- Image Container -->
+        <div class="w-full md:w-[68%] z-0">
+          <div class="aspect-[5/6] md:aspect-auto overflow-hidden rounded-sm shadow-xl">
+            <img src="{{ $dauRong->image ? Storage::url($dauRong->image) : asset('assets/images/dau-rong.png') }}" alt="Linh vật Đầu Rồng" class="w-full h-full object-cover"
+              onerror="this.src = '{{ asset('assets/images/ngoi-07.jpg') }}'" />
+          </div>
+        </div>
+        <!-- Content Box (Terracotta background) -->
+        <div
+          class="w-[90%] md:w-[38%] mt-[-60px] md:mt-0 md:ml-[-6%] bg-[#B36E6E] p-8 md:p-12 lg:p-16 text-white shadow-2xl z-10 rounded-sm">
+          <h2 class="font-lavishly text-[48px] md:text-[56px] lg:text-[64px] mb-12 leading-none">{{ $dauRong->title }}</h2>
+          <p class="font-light text-justify text-base md:text-lg lg:text-[20px] leading-8 md:leading-9 tracking-normal">
+            {{ $dauRong->description }}
+          </p>
+        </div>
+      </div>
+    </section>
+    @endif
+
+    @include('clients.products.linh-vat-phong-thuy.partials.nghe-featured-products')
+  </section>
+</div>
+
+<!-- Product Grid Section -->
+@if($products->isNotEmpty())
+<section class="mt-8 md:mt-auto relative mx-auto pb-8 overflow-visible">
+  <div class="relative w-[85%] md:w-full max-w-[1920px] mx-auto z-10">
+    <div class="md:ml-[15.5%] grid grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-8 gap-y-[30px] lg:gap-y-6"
+      data-aos="fade-up">
+      @foreach($products as $index => $product)
+        @php
+          $productImage = (!empty($product->images) && is_array($product->images)) ? $product->images[0] : null;
+          $delay = 100 + ($index * 100);
+          $isFirst = $index === 0;
+        @endphp
+        <div class="flex flex-col {{ $isFirst ? 'col-span-2 lg:col-span-2' : '' }} group cursor-pointer" data-aos="fade-up" data-aos-delay="{{ $delay }}"
+          onclick="window.location.href = '{{ route('client.products.linh-vat-phong-thuy.detail', $product->linh_vat_phong_thuy_ct_id) }}'">
+          <div
+            class="product-card relative w-full {{ $isFirst ? 'aspect-[2/1] md:aspect-[18.8/10]' : 'aspect-[1.1/1] md:aspect-[9/10]' }} shadow mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1">
+            <img src="{{ $productImage ? Storage::url($productImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
+            <div class="product-overlay">
+              <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
+              <span>Xem chi tiết</span>
+            </div>
+          </div>
+          <h3
+            class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary">
+            {{ $product->name }}</h3>
+          <p class="text-gray-500 text-[12px] lg:text-[13px] mb-1">MSP: {{ $product->code }}</p>
+          <p class="font-bold text-[#C47526] text-[13px] lg:text-[14px]">{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}</p>
+        </div>
+      @endforeach
+    </div>
+  </div>
+</section>
+@endif
+
+<x-products.fabrication-process />
+<x-products.journey-video :hide-title="true" />
+<x-products.recommendations />
+
+<!-- FAQ Section -->
+<section class="w-full relative pb-[70px] md:pb-32 bg-background-secondary overflow-visible" data-aos="fade-up">
+  <x-products.faq-content />
+</section>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (typeof GLightbox !== "undefined") {
+      document.querySelectorAll(".glightbox").forEach((anchor) => {
+        const image = anchor.querySelector("img");
+        if (image) {
+          anchor.setAttribute("href", image.currentSrc || image.src);
+        }
+      });
+      GLightbox({
+        touchNavigation: true,
+        loop: true,
+        autoplayVideos: true,
+      });
+    }
+  });
+</script>
+@endpush
+
+</x-layouts.client>

@@ -1,0 +1,268 @@
+<x-layouts.client title="Gạch Hoa Thông Gió" data-page="products" main-class="bg-background-secondary overflow-hidden">
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Italianno&display=swap");
+
+  /* Force GLightbox images to be large even if low-res */
+  .glightbox-container .gslide-image {
+    min-width: 30vw !important;
+    max-width: 95vw !important;
+  }
+
+  .glightbox-container .gslide-image img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 90vh !important;
+    object-fit: contain !important;
+  }
+</style>
+<style>
+  @media (max-width: 767.98px) {
+    .page-gach-hoa-thong-gio .gach-hoa-hero-brand {
+      color: #1f2937;
+      font-size: 24px;
+      font-family: "Charm", cursive;
+      font-weight: 400;
+      line-height: 32px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-hero-title {
+      color: #c76e00;
+      font-size: 48px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: 60px;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-hero-copy {
+      color: #2e2f2a;
+      font-family: "Italianno", cursive;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: 0.75px;
+      text-shadow: 0px 1px 0px rgba(255, 255, 255, 1);
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-collage-section .collage-pagination {
+      font-size: 12px;
+      line-height: 25.5px;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-collage-section .collage-pagination .swiper-pagination-bullet {
+      color: rgba(0, 0, 0, 0.4);
+      font-size: 12px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 700;
+      line-height: 25.5px;
+      border-bottom: 0;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-collage-section .collage-pagination .swiper-pagination-bullet-active {
+      color: #000;
+      text-decoration: underline;
+      border-bottom: 0 !important;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-video-title,
+    .page-gach-hoa-thong-gio .gach-hoa-value-title {
+      color: #c76e00;
+      font-size: 24px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      line-height: 32px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-value-heading {
+      color: #2e2f2a;
+      font-size: 22px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 700;
+      line-height: 30.25px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-value-copy {
+      color: #2e2f2a;
+      font-size: 14px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 500;
+      line-height: 22.75px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-value-slider {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-value-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-process-section>section:first-of-type h2 {
+      color: #c76e00;
+      font-size: 28px;
+      font-family: "Italianno", cursive;
+      font-weight: 400;
+      line-height: 45px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-process-section>section:first-of-type>div:last-child p {
+      color: #2e2f2a;
+      font-size: 10px;
+      font-family: "Archivo", sans-serif;
+      font-style: italic;
+      font-weight: 100;
+      line-height: 18px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-product-showcase-section .gach-hoa-breadcrumb {
+      color: rgba(46, 47, 42, 0.6);
+      font-size: 12px;
+      line-height: 16px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-product-showcase-section .gach-hoa-breadcrumb-current {
+      color: #2e2f2a;
+      font-size: 12px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      line-height: 16px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-product-showcase-section .gach-hoa-product-grid-shell .product-filter-trigger {
+      font-size: 13px;
+      line-height: 19.5px;
+      letter-spacing: 0.65px;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-product-showcase-section .gach-hoa-product-grid-shell>section>div.grid>a>h3 {
+      color: #000;
+      font-size: 14px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 600;
+      line-height: 20px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-product-showcase-section .gach-hoa-product-grid-shell>section>div.grid>a>p:first-of-type {
+      color: #6b7280;
+      font-size: 12px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 400;
+      line-height: 20px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-product-showcase-section .gach-hoa-product-grid-shell>section>div.grid>a>p:last-of-type {
+      color: #c76e00;
+      font-size: 14px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 700;
+      line-height: 20px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-faq-section [data-faq-component]>div:first-child h2 {
+      color: #c76e00;
+      font-size: 20px;
+      font-family: "Archivo", sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      line-height: 36px;
+      overflow-wrap: break-word;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-faq-section .faq-button span {
+      font-size: 14px;
+      line-height: 21px;
+    }
+
+    .page-gach-hoa-thong-gio .gach-hoa-faq-section .faq-content,
+    .page-gach-hoa-thong-gio .gach-hoa-faq-section .faq-content a {
+      font-size: 14px;
+      line-height: 22.75px;
+    }
+  }
+</style>
+@endpush
+
+<x-catalog-button />
+
+@include('clients.products.gach-hoa-thong-gio.partials.hero')
+@include('clients.products.gach-hoa-thong-gio.partials.collage-carousel')
+@include('clients.products.gach-hoa-thong-gio.partials.product-showcase')
+@include('clients.products.gach-hoa-thong-gio.partials.video-section')
+@include('clients.products.gach-hoa-thong-gio.partials.value-section')
+@include('clients.products.gach-hoa-thong-gio.partials.process-section')
+@include('clients.products.gach-hoa-thong-gio.partials.faq-section')
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  // Initialize Product Collage Swiper
+  document.addEventListener("DOMContentLoaded", () => {
+    new Swiper(".product-collage-swiper", {
+      loop: true,
+      grabCursor: true,
+      navigation: {
+        nextEl: ".collage-button-next",
+        prevEl: ".collage-button-prev",
+      },
+      pagination: {
+        el: ".collage-pagination",
+        clickable: true,
+        renderBullet: function (index, className) {
+          return `<span class="${className} text-black/40 hover:text-black transition-colors px-1 cursor-pointer inline-block">${index + 1}</span>`;
+        },
+      },
+      on: {
+        init: function () {
+          // Inject styling for active bullet
+          const style = document.createElement("style");
+          style.innerHTML = `
+              .collage-pagination .swiper-pagination-bullet { background: transparent; opacity: 1; width: auto; height: auto; border-radius: 0; margin: 0 !important; }
+              .collage-pagination .swiper-pagination-bullet-active { color: #000; border-bottom: 2px solid #000; }
+            `;
+          document.head.appendChild(style);
+        },
+      },
+    });
+
+    // Ensure lightbox links use resolved build paths instead of /src/assets URLs.
+    document.querySelectorAll(".glightbox").forEach((anchor) => {
+      const image = anchor.querySelector("img");
+      if (image) {
+        anchor.setAttribute("href", image.currentSrc || image.src);
+      }
+    });
+
+    // Initialize GLightbox
+    const lightbox = GLightbox({
+      selector: ".glightbox",
+      touchNavigation: true,
+      loop: true,
+      zoomable: true,
+      draggable: true,
+      width: "auto",
+      height: "auto",
+    });
+  });
+</script>
+@endpush
+</x-layouts.client>

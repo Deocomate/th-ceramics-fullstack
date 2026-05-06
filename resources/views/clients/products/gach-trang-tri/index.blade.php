@@ -1,0 +1,491 @@
+<x-layouts.client title="Gạch Trang Trí" data-page="products" main-class="bg-background-secondary" :hide-newsletter="true">
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Lavishly+Yours&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Italianno&display=swap");
+
+  .project-showcase-swiper {
+    --project-side-width: 10%;
+    --project-center-width: 50%;
+    --project-height: 780px;
+    --project-radius: 80px;
+    width: 100%;
+    height: var(--project-height);
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  .project-showcase-swiper .swiper-wrapper {
+    align-items: stretch;
+  }
+
+  .project-showcase-swiper .swiper-slide {
+    width: var(--project-side-width) !important;
+    height: var(--project-height);
+    border-radius: var(--project-radius);
+    overflow: hidden;
+    flex-shrink: 0;
+    will-change: width;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .project-showcase-swiper.is-dragging .swiper-slide {
+    transition: none !important;
+  }
+
+  .project-showcase-swiper .swiper-slide-active {
+    width: var(--project-center-width) !important;
+  }
+
+  .project-showcase-swiper:not(.swiper-initialized) .swiper-slide:first-child {
+    width: var(--project-center-width) !important;
+  }
+
+  .project-showcase-swiper .project-overlay {
+    opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+
+  .project-showcase-swiper .project-content {
+    left: 80px;
+    bottom: 65px;
+    opacity: 0;
+    transform: translateY(16px);
+    pointer-events: none;
+    transition: all 0.7s ease;
+  }
+
+  .project-showcase-swiper .swiper-slide-active .project-overlay {
+    opacity: 1;
+  }
+
+  .project-showcase-swiper .swiper-slide-active .project-content {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .project-showcase-swiper:not(.swiper-initialized) .swiper-slide:first-child .project-overlay {
+    opacity: 1;
+  }
+
+  .project-showcase-swiper:not(.swiper-initialized) .swiper-slide:first-child .project-content {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  @media (max-width: 1023px) {
+    .project-showcase-swiper {
+      --project-side-width: min(76vw, 420px);
+      --project-center-width: min(76vw, 420px);
+      --project-height: 520px;
+      --project-radius: 42px;
+    }
+
+    .project-showcase-swiper .swiper-slide {
+      width: var(--project-side-width) !important;
+      height: var(--project-height);
+      border-radius: var(--project-radius);
+    }
+
+    .project-showcase-swiper .project-content {
+      left: 28px;
+      bottom: 28px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .project-showcase-swiper {
+      --project-side-width: min(82vw, 320px);
+      --project-center-width: min(82vw, 320px);
+      --project-height: 380px;
+      --project-radius: 30px;
+    }
+
+    .project-showcase-swiper .swiper-slide {
+      width: var(--project-side-width) !important;
+      height: var(--project-height);
+      border-radius: var(--project-radius);
+    }
+
+    .project-showcase-swiper .project-content {
+      left: 20px;
+      bottom: 20px;
+    }
+  }
+
+  .project-dot {
+    background-color: rgba(199, 110, 0, 0.3);
+  }
+
+  .project-dot.active {
+    background-color: #c76e00;
+    width: 8px;
+  }
+</style>
+@endpush
+
+<x-catalog-button />
+
+<!-- Top Banner -->
+<section
+  class="relative w-full min-h-[322px] md:min-h-[500px] lg:min-h-[600px] flex items-center md:pb-8 overflow-hidden">
+  <!-- Background Image with Dark Overlay -->
+  <div class="absolute inset-0 z-0">
+    <img src="{{ $config && $config->thumbnail_main ? Storage::url($config->thumbnail_main) : asset('assets/images/gach-trang-tri-banner.png') }}" alt="Gạch Trang Trí Banner"
+      class="w-full h-full object-cover object-center" />
+    <!-- Slight dark overlay to make text readable -->
+    <div class="absolute inset-0 bg-black/30"></div>
+  </div>
+
+  <!-- Content Container -->
+  <div class="relative z-10 xl:w-[50%] w-[85%] max-w-[1320px] mx-auto text-white">
+    <div data-aos="fade-up" data-aos-duration="1000">
+      <h1
+        class="text-6xl md:text-8xl lg:text-[130px] leading-none mb-6 md:mb-8 drop-shadow-md font-lavishly font-normal">
+        Gạch trang trí
+      </h1>
+      <p
+        class="text-[14px] leading-[22.75px] md:text-base lg:text-lg max-w-lg mb-6 md:mb-8 drop-shadow md:leading-relaxed font-archivo text-white">
+        Cùng bạn viết nên tuyệt tác<br />
+        trên những mảng tường.
+      </p>
+      <a href="#"
+        class="inline-block border border-white md:border-2 text-white px-6 py-2 md:px-8 md:py-3 uppercase text-[12px] leading-4 md:leading-normal font-bold tracking-[1.2px] md:tracking-widest font-archivo hover:bg-white hover:text-black transition-colors duration-300">TÌM
+        HIỂU THÊM</a>
+    </div>
+  </div>
+</section>
+
+<!-- Ứng dụng đa dạng Section -->
+<section class="max-w-[1320px] w-[85%] mx-auto pb-4 pt-8 md:py-12" data-aos="fade-up">
+  <h2
+    class="font-archivo text-[20px] sm:text-[24px] md:text-[32px] font-semibold uppercase text-secondary leading-[36px] sm:leading-[44px] md:leading-[80px] mb-5 sm:mb-6 md:mb-10 text-left">
+    Ứng dụng đa dạng
+  </h2>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 sm:gap-6 md:gap-8 lg:gap-16">
+    <!-- Left large box -->
+    <div class="flex flex-col">
+      <div class="w-full aspect-[23/25] bg-[#E2E2E2] shadow-lg"></div>
+      <p
+        class="mt-0 sm:mt-[11px] flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-left text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
+        Tường trang trí
+      </p>
+    </div>
+
+    <!-- Right 2x2 grid -->
+    <div class="flex flex-col justify-between gap-0 sm:gap-5 h-full">
+      <!-- Top Row -->
+      <div class="grid grid-cols-2 gap-[10px] sm:gap-4 md:gap-8 lg:gap-16">
+        <div class="flex flex-col">
+          <div class="w-full aspect-[179/192] sm:aspect-square bg-[#E2E2E2] shadow-lg"></div>
+          <p
+            class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
+            Lát nền
+          </p>
+        </div>
+        <div class="flex flex-col">
+          <div class="w-full aspect-[179/192] sm:aspect-square bg-[#E2E2E2] shadow-lg"></div>
+          <p
+            class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
+            Phòng khách
+          </p>
+        </div>
+      </div>
+      <!-- Bottom Row -->
+      <div class="grid grid-cols-2 gap-[10px] sm:gap-4 md:gap-8 lg:gap-16">
+        <div class="flex flex-col">
+          <div class="w-full aspect-[179/192] sm:aspect-square bg-[#E2E2E2] shadow-lg"></div>
+          <p
+            class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
+            Ngoài trời
+          </p>
+        </div>
+        <div class="flex flex-col">
+          <div class="w-full aspect-[179/192] sm:aspect-square bg-[#E2E2E2] shadow-lg"></div>
+          <p
+            class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
+            Phòng tắm
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Breadcrumb -->
+<div class="w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
+  <x-products.breadcrumb current-label="Gạch Trang Trí" />
+</div>
+
+<x-products.product-filter />
+<x-products.product-grid category="gach-trang-tri" :products="$products" routeName="client.products.gach-trang-tri.detail" />
+<x-products.trang-tri-process />
+
+<!-- Công đoạn chế tác -->
+<section class="relative w-full overflow-hidden py-12 md:py-20" data-aos="fade-up">
+  <!-- Họa tiết trang trí background -->
+  <div
+    class="absolute right-0 top-1/3 -translate-y-1/2 w-[100px] md:w-[200px] lg:w-[300px] pointer-events-none z-0 opacity-90">
+    <img src="{{ asset('assets/images/gtt-decorate.svg') }}" alt="Decor Background" class="w-full h-auto" />
+  </div>
+
+  <!-- Content Container -->
+  <div class="max-w-[1320px] w-[85%] mx-auto relative z-10">
+    <h2
+      class="font-archivo text-[20px] md:text-[32px] font-semibold uppercase text-secondary leading-[36px] md:leading-[45px] mb-8 md:mb-12 text-left">
+      Công đoạn chế tác
+    </h2>
+    <div class="flex justify-center items-center w-full">
+      <img src="{{ asset('assets/images/gtt-process.svg') }}" alt="Công đoạn chế tác"
+        class="w-full md:max-w-[95%] h-auto relative z-10 drop-shadow-sm scale-[1.1]" />
+    </div>
+  </div>
+</section>
+
+<x-products.journey-video :hide-title="true" />
+
+<!-- Nâng tầm giá trị nghệ thuật Section -->
+<section class="max-w-[1320px] w-[85%] mx-auto md:pb-20" data-aos="fade-up">
+  <h2
+    class="font-archivo text-[20px] md:text-[32px] font-semibold uppercase text-secondary leading-[36px] md:leading-[45px] mb-8 md:mb-12 text-left">
+    Nâng tầm giá trị nghệ thuật
+  </h2>
+
+  <div class="swiper art-value-swiper -mx-[7.5vw] px-[7.5vw] md:mx-0 md:px-0 md:overflow-visible pb-12 md:pb-0">
+    <div class="swiper-wrapper md:!grid md:grid-cols-3 md:gap-8 lg:gap-14 md:items-start">
+      <!-- Card 1 -->
+      <div
+        class="swiper-slide h-auto md:!w-auto bg-white px-8 md:px-12 pt-8 md:pt-12 pb-8 md:pb-36 shadow-lg flex flex-col items-center text-center transition-transform hover:-translate-y-2 duration-300 group">
+        <img src="{{ asset('assets/images/gtt-hand.svg') }}" alt="Chế tác thủ công"
+          class="w-16 md:w-20 mb-6 object-contain transition-transform group-hover:scale-110 duration-300" />
+        <h3 class="text-[18px] leading-[28px] md:text-xl font-bold text-primary mb-4">Chế tác thủ công</h3>
+        <p class="font-archivo text-[15px] font-light leading-[25px] tracking-[0.3px] text-black text-justify">
+          Mỗi viên gạch đều được tạo hình, tráng men và chăm chút tỉ mỉ bằng tay. Quy trình thủ công thuần túy tạo nên
+          chiều sâu và cá tính riêng biệt. Chúng tôi trân trọng vẻ đẹp từ những khiếm khuyết tự nhiên.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div
+        class="swiper-slide h-auto md:!w-auto bg-white pt-8 md:pt-12 px-8 md:px-12 pb-8 md:pb-24 shadow-lg flex flex-col items-center text-center transition-transform hover:-translate-y-2 duration-300 group">
+        <img src="{{ asset('assets/images/gtt-fire.svg') }}" alt="Tinh hoa hỏa biến"
+          class="w-16 md:w-20 mb-6 object-contain transition-transform group-hover:scale-110 duration-300" />
+        <h3 class="text-[18px] leading-[28px] md:text-xl font-bold text-primary mb-4">Tinh hoa hỏa biến</h3>
+        <p class="font-archivo text-[15px] font-light leading-[25px] tracking-[0.3px] text-black text-justify">
+          Sử dụng nguồn đất tuyển chọn kỹ lưỡng, gạch được nung ở nhiệt độ cao lên đến 1300°C. Quy trình này giúp xương
+          gạch đạt độ cứng vượt trội, chống thấm và chịu được những điều kiện thời tiết khắc nghiệt nhất. Ngoài ra,
+          nhiệt độ cao và không đồng đều trong lò nung cũng tạo ra sự biến chuyển cho màu sắc độc đáo.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div
+        class="swiper-slide h-auto md:!w-auto bg-white px-8 md:px-12 pt-8 md:pt-12 pb-8 md:pb-24 shadow-lg flex flex-col items-center text-center transition-transform hover:-translate-y-2 duration-300 group">
+        <img src="{{ asset('assets/images/gtt-brush.svg') }}" alt="Tùy biến độc bản"
+          class="w-16 md:w-20 mb-6 object-contain transition-transform group-hover:scale-110 duration-300" />
+        <h3 class="text-[18px] leading-[28px] md:text-xl font-bold text-primary mb-4">Tùy biến độc bản</h3>
+        <p class="font-archivo text-[15px] font-light leading-[25px] tracking-[0.3px] text-black text-justify">
+          Chúng tôi kiến tạo những mảng gạch tùy chỉnh theo mong muốn và yêu cầu của bạn, phá vỡ mọi giới hạn nghệ
+          thuật. Với khả năng tùy biến không giới hạn về màu sắc và hình khối, mỗi không gian sẽ trở thành một tác phẩm
+          thị giác sống động, đậm chất cá nhân.
+        </p>
+      </div>
+    </div>
+    <div class="swiper-pagination art-value-pagination md:!hidden !bottom-0"></div>
+  </div>
+</section>
+
+<!-- Dấu ấn trên những công trình Section -->
+<section class="max-w-[1320px] w-[85%] mx-auto overflow-x-hidden mt-5 md:mt-auto" data-aos="fade-up">
+  <h2
+    class="font-archivo text-[20px] md:text-[32px] font-semibold uppercase text-secondary leading-[36px] md:leading-[45px] mb-6 md:mb-10 text-left">
+    Dấu ấn trên những công trình
+  </h2>
+
+  <div class="swiper project-showcase-swiper w-full">
+    <div class="swiper-wrapper">
+      @if($config && $config->dauAn && $config->dauAn->count() > 0)
+        @foreach($config->dauAn as $dauAn)
+        <div class="swiper-slide project-item group relative cursor-pointer">
+          <img src="{{ $dauAn->background ? Storage::url($dauAn->background) : asset('assets/images/trang-tri-slide-01.jpg') }}" alt="{{ $dauAn->title ?? 'Công trình' }}"
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          <div class="project-overlay absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent"></div>
+          <div class="project-content absolute bottom-[65px] left-[80px] text-white z-10 min-w-[130px] md:min-w-[400px]">
+            <h3 class="font-bold text-base md:text-lg lg:text-xl mb-1 md:mb-2 leading-tight">{{ $dauAn->title ?? '' }}</h3>
+            <p class="text-xs md:text-sm lg:text-base"><span class="font-bold">Địa điểm:</span> {{ $dauAn->location ?? '' }}</p>
+            <p class="text-xs md:text-sm lg:text-base"><span class="font-bold">Sản phẩm:</span> {{ $dauAn->description ?? '' }}</p>
+          </div>
+        </div>
+        @endforeach
+      @else
+        {{-- Fallback static slides when no dauAn data --}}
+        <div class="swiper-slide project-item group relative cursor-pointer">
+          <img src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}" alt="Công trình 1"
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          <div class="project-overlay absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent"></div>
+          <div class="project-content absolute bottom-[65px] left-[80px] text-white z-10 min-w-[130px] md:min-w-[400px]">
+            <h3 class="font-bold text-base md:text-lg lg:text-xl mb-1 md:mb-2 leading-tight">CHÙA BÁI ĐÍNH</h3>
+            <p class="text-xs md:text-sm lg:text-base"><span class="font-bold">Địa điểm:</span> Ninh Bình</p>
+            <p class="text-xs md:text-sm lg:text-base"><span class="font-bold">Sản phẩm:</span> Ngói âm dương nâu đen</p>
+          </div>
+        </div>
+      @endif
+    </div>
+  </div>
+
+  <!-- Pagination Dots -->
+  <div class="flex justify-center gap-[7px] md:gap-3 mt-6 md:hidden">
+    @php $dauAnCount = $config && $config->dauAn ? $config->dauAn->count() : 5; @endphp
+    @for($i = 0; $i < max($dauAnCount, 5); $i++)
+    <button class="project-dot {{ $i === 0 ? 'active' : '' }} w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 cursor-pointer"
+      data-index="{{ $i }}"></button>
+    @endfor
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="w-full relative pt-[40px] pb-20 md:pt-[150px] md:pb-[120px] bg-background-secondary overflow-hidden"
+  data-aos="fade-up">
+  <img src="{{ asset('assets/images/gtt-decorate-left.svg') }}"
+    class="absolute top-[38%] -translate-y-1/3 md:left-12 -left-1/2 w-[42%] object-contain opacity-80 pointer-events-none z-0"
+    alt="" />
+  <img src="{{ asset('assets/images/gtt-decorate-right.svg') }}"
+    class="absolute top-[38%] -translate-y-1/3 md:right-12 -right-1/2 w-[42%] object-contain opacity-80 pointer-events-none z-0"
+    alt="" />
+  <x-products.faq-content />
+</section>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // --- Init GLightbox ---
+    if (typeof GLightbox !== "undefined") {
+      document.querySelectorAll(".glightbox").forEach((anchor) => {
+        const image = anchor.querySelector("img");
+        if (image) {
+          anchor.setAttribute("href", image.currentSrc || image.src);
+        }
+      });
+      GLightbox({
+        touchNavigation: true,
+        loop: true,
+        autoplayVideos: true,
+      });
+    }
+
+    // --- Init Project Showcase Swiper ---
+    var projectShowcaseEl = document.querySelector(".project-showcase-swiper");
+    if (projectShowcaseEl && typeof Swiper !== "undefined") {
+      var wrapperEl = projectShowcaseEl.querySelector(".swiper-wrapper");
+      if (wrapperEl) {
+        var originalSlides = Array.from(wrapperEl.children);
+        var targetSlideCount = 10;
+
+        if (originalSlides.length > 0 && originalSlides.length < targetSlideCount) {
+          var cloneIndex = 0;
+          while (wrapperEl.children.length < targetSlideCount) {
+            var sourceSlide = originalSlides[cloneIndex % originalSlides.length];
+            var cloneSlide = sourceSlide.cloneNode(true);
+            cloneSlide.setAttribute("data-fake-slide", "true");
+            wrapperEl.appendChild(cloneSlide);
+            cloneIndex += 1;
+          }
+        }
+
+        var finalSlideCount = wrapperEl.children.length;
+        var initialSlide = finalSlideCount > 2 ? 2 : 0;
+
+        var projectShowcaseSwiper = new Swiper(projectShowcaseEl, {
+          slidesPerView: "auto",
+          slidesPerGroup: 1,
+          centeredSlides: true,
+          initialSlide: initialSlide,
+          slideToClickedSlide: true,
+          grabCursor: true,
+          watchSlidesProgress: true,
+          speed: 520,
+          loop: finalSlideCount >= 5,
+          spaceBetween: 33,
+          allowTouchMove: true,
+          threshold: 8,
+          longSwipesRatio: 0.15,
+          resistanceRatio: 0.85,
+          observer: true,
+          observeParents: true,
+          watchOverflow: false,
+          roundLengths: true,
+          breakpoints: {
+            0: { spaceBetween: 12 },
+            768: { spaceBetween: 20 },
+            1024: { spaceBetween: 33 },
+          },
+          on: {
+            sliderFirstMove: function () { projectShowcaseEl.classList.add("is-dragging"); },
+            touchStart: function () { projectShowcaseEl.classList.add("is-dragging"); },
+            touchEnd: function () {
+              window.setTimeout(function () { projectShowcaseEl.classList.remove("is-dragging"); }, 80);
+            },
+            transitionEnd: function () { projectShowcaseEl.classList.remove("is-dragging"); },
+          },
+        });
+
+        // Project showcase dots handler
+        var projectDots = document.querySelectorAll(".project-dot");
+        if (projectDots.length) {
+          projectShowcaseSwiper.on("slideChange", function () {
+            var realIndex = projectShowcaseSwiper.realIndex || 0;
+            var dotIndex = realIndex % originalSlides.length;
+            projectDots.forEach((dot, index) => {
+              dot.classList.toggle("active", index === dotIndex);
+            });
+          });
+
+          projectDots.forEach((dot) => {
+            dot.addEventListener("click", () => {
+              var index = parseInt(dot.dataset.index);
+              projectShowcaseSwiper.slideToLoop(index);
+            });
+          });
+        }
+      }
+    }
+
+    // --- Init Art Value Swiper ---
+    var artValueSwiperEl = document.querySelector(".art-value-swiper");
+    if (artValueSwiperEl && typeof Swiper !== "undefined") {
+      var artValueSwiperInstance = null;
+
+      function initArtValueSwiper() {
+        var isMobile = window.innerWidth < 768;
+        if (isMobile && !artValueSwiperInstance) {
+          artValueSwiperInstance = new Swiper(artValueSwiperEl, {
+            slidesPerView: 1.15,
+            spaceBetween: 20,
+            grabCursor: true,
+            pagination: {
+              el: ".art-value-pagination",
+              clickable: true,
+            },
+          });
+        } else if (!isMobile && artValueSwiperInstance) {
+          artValueSwiperInstance.destroy(true, true);
+          artValueSwiperInstance = null;
+        }
+      }
+
+      initArtValueSwiper();
+      window.addEventListener("resize", initArtValueSwiper);
+    }
+  });
+</script>
+@endpush
+
+</x-layouts.client>

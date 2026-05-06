@@ -1,0 +1,290 @@
+<section
+  class="w-full bg-background-secondary pb-12 md:pb-16 relative overflow-visible animate-fade-in-up xl:min-h-[760px]"
+  data-aos="fade-up"
+>
+  @push('styles')
+  <style>
+    .product-works-swiper .swiper-wrapper {
+      display: flex;
+      align-items: flex-end;
+      transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important;
+      will-change: transform;
+    }
+
+    .product-works-swiper .swiper-slide {
+      width: 85vw;
+      aspect-ratio: 4 / 3;
+      opacity: 0.55;
+      overflow: hidden;
+      flex-shrink: 0;
+      cursor: pointer;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      will-change: width, opacity;
+      contain: layout paint;
+      transition:
+        width 1200ms cubic-bezier(0.25, 1, 0.5, 1),
+        opacity 1200ms cubic-bezier(0.25, 1, 0.5, 1) !important;
+    }
+
+    @media (min-width: 1280px) {
+      .product-works-swiper .swiper-slide {
+        opacity: 1;
+        width: 360px;
+      }
+    }
+
+    .product-works-swiper .swiper-slide-active {
+      width: 85vw;
+      opacity: 1;
+      z-index: 2;
+    }
+
+    @media (min-width: 1280px) {
+      .product-works-swiper .swiper-slide-active {
+        width: 720px;
+      }
+    }
+
+    .product-works-swiper .swiper-slide img {
+      transform: translateZ(0) scale(1.1) !important;
+      transition: transform 1200ms cubic-bezier(0.25, 1, 0.5, 1) !important;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+
+    .product-works-swiper .swiper-slide-active img {
+      transform: translateZ(0) scale(1) !important;
+    }
+
+    .slide-text-transition {
+      transition-property: opacity, transform !important;
+      transition-duration: 400ms !important;
+      transition-timing-function: ease-in-out !important;
+      will-change: opacity, transform;
+    }
+  </style>
+  @endpush
+
+  <div class="text-center mb-8 md:mb-16">
+    <h2
+      class="text-[20px] md:text-3xl font-semibold text-secondary uppercase drop-shadow-sm"
+    >
+      Dấu ấn trên những công trình
+    </h2>
+  </div>
+
+  <div class="relative w-full flex flex-col md:block">
+    <div
+      class="swiper product-works-swiper w-full pb-[15px] md:pb-10 pr-[20%] order-1"
+    >
+      <div class="swiper-wrapper flex items-end">
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/work-01.jpg') }}"
+            alt="Chùa Bái Đính"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/about-01.png') }}"
+            alt="Thiền Viện Trúc Lâm"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/work-03.jpg') }}"
+            alt="Đền Trần"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/work-01.jpg') }}"
+            alt="Chùa Bái Đính"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/about-01.png') }}"
+            alt="Thiền Viện Trúc Lâm"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/work-03.jpg') }}"
+            alt="Đền Trần"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/work-01.jpg') }}"
+            alt="Chùa Bái Đính"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/about-01.png') }}"
+            alt="Thiền Viện Trúc Lâm"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/work-03.jpg') }}"
+            alt="Đền Trần"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/work-01.jpg') }}"
+            alt="Chùa Bái Đính"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/about-01.png') }}"
+            alt="Thiền Viện Trúc Lâm"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ asset('assets/images/work-03.jpg') }}"
+            alt="Đền Trần"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="w-full px-4 relative xl:absolute xl:inset-x-0 xl:top-0 xl:pointer-events-none z-10 order-2"
+    >
+      <div
+        class="xl:absolute xl:top-0 xl:right-[max(1rem,calc(60%-808px))] w-full xl:max-w-[400px] bg-transparent pt-8 pointer-events-auto"
+      >
+        <div
+          class="flex justify-between items-start pb-4 border-b border-black/10 xl:border-none"
+        >
+          <h3
+            id="slide-title"
+            class="text-base font-bold uppercase tracking-wide slide-text-transition"
+          >
+            CHÙA BÁI ĐÍNH
+          </h3>
+        </div>
+
+        <div
+          class="space-y-3 text-[15px] mt-[13px] mb-[15px] md:mt-8 md:mb-12 slide-text-transition"
+          id="slide-meta"
+        >
+          <p>
+            <span class="font-bold">Địa điểm:</span>
+            <span id="slide-location">Ninh Bình</span>
+          </p>
+          <p>
+            <span class="font-bold">Sản phẩm:</span>
+            <span id="slide-product">Ngói âm dương nâu đen</span>
+          </p>
+        </div>
+
+        <a
+          href="#"
+          id="slide-link"
+          class="font-bold text-black border-b-[1.5px] border-black inline-block hover:text-secondary hover:border-secondary tracking-[0.05em] text-[13px] slide-text-transition"
+          >See more</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+@push('scripts')
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var swiperEl = document.querySelector(".product-works-swiper");
+    if (!swiperEl) return;
+
+    var slideData = [
+      { title: "CHÙA BÁI ĐÍNH", location: "Ninh Bình", product: "Ngói âm dương nâu đen", link: "#baidinh" },
+      { title: "THIỀN VIỆN TRÚC LÂM", location: "Sapa", product: "Ngói âm dương tráng men", link: "#truclam" },
+      { title: "ĐỀN TRẦN", location: "Nam Định", product: "Ngói âm dương cổ", link: "#dentran" },
+      { title: "CHÙA BÁI ĐÍNH", location: "Ninh Bình", product: "Ngói âm dương nâu đen", link: "#baidinh" },
+      { title: "THIỀN VIỆN TRÚC LÂM", location: "Sapa", product: "Ngói âm dương tráng men", link: "#truclam" },
+      { title: "ĐỀN TRẦN", location: "Nam Định", product: "Ngói âm dương cổ", link: "#dentran" },
+      { title: "CHÙA BÁI ĐÍNH", location: "Ninh Bình", product: "Ngói âm dương nâu đen", link: "#baidinh" },
+      { title: "THIỀN VIỆN TRÚC LÂM", location: "Sapa", product: "Ngói âm dương tráng men", link: "#truclam" },
+      { title: "ĐỀN TRẦN", location: "Nam Định", product: "Ngói âm dương cổ", link: "#dentran" },
+      { title: "CHÙA BÁI ĐÍNH", location: "Ninh Bình", product: "Ngói âm dương nâu đen", link: "#baidinh" },
+      { title: "THIỀN VIỆN TRÚC LÂM", location: "Sapa", product: "Ngói âm dương tráng men", link: "#truclam" },
+      { title: "ĐỀN TRẦN", location: "Nam Định", product: "Ngói âm dương cổ", link: "#dentran" },
+    ];
+
+    var titleEl = document.getElementById("slide-title");
+    var locationEl = document.getElementById("slide-location");
+    var productEl = document.getElementById("slide-product");
+    var linkEl = document.getElementById("slide-link");
+    var metaEl = document.getElementById("slide-meta");
+    var textRevealTimeout;
+
+    var productWorksSwiper = new Swiper(".product-works-swiper", {
+      slidesPerView: "auto",
+      centeredSlides: true,
+      slideToClickedSlide: true,
+      watchSlidesProgress: true,
+      spaceBetween: 32,
+      speed: 1200,
+      autoplay: { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true },
+    });
+
+    function setTextVisibility(isVisible) {
+      var opacity = isVisible ? "1" : "0";
+      var transform = isVisible ? "translateY(0)" : "translateY(12px)";
+      if (titleEl) { titleEl.style.opacity = opacity; titleEl.style.transform = transform; }
+      if (metaEl) { metaEl.style.opacity = opacity; metaEl.style.transform = transform; }
+      if (linkEl) { linkEl.style.opacity = opacity; linkEl.style.transform = transform; }
+    }
+
+    function updateTextBlock(index) {
+      var currentData = slideData[index];
+      if (!currentData) return;
+      if (titleEl) titleEl.textContent = currentData.title;
+      if (locationEl) locationEl.textContent = currentData.location;
+      if (productEl) productEl.textContent = currentData.product;
+      if (linkEl) linkEl.href = currentData.link;
+    }
+
+    updateTextBlock(productWorksSwiper.realIndex);
+    setTextVisibility(true);
+
+    productWorksSwiper.on("slideChange", function (swiper) {
+      setTextVisibility(false);
+      if (textRevealTimeout) clearTimeout(textRevealTimeout);
+      textRevealTimeout = setTimeout(function () {
+        updateTextBlock(swiper.realIndex);
+        requestAnimationFrame(function () { setTextVisibility(true); });
+      }, 400);
+    });
+  });
+</script>
+@endpush

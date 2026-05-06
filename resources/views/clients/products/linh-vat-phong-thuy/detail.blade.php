@@ -1,0 +1,112 @@
+<x-layouts.client title="Chi tiết Linh Vật Phong Thủy" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+
+@push('styles')
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Italianno&display=swap");
+</style>
+@endpush
+
+<!-- Top Banner for Detail -->
+<section class="hidden md:flex relative w-full h-[180px] md:h-[210px] items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <img src="{{ asset('assets/images/detail-banner.png') }}" alt="Linh Vật Phong Thủy Banner" class="w-full h-full object-cover" />
+    </div>
+    <div class="relative z-10 text-center text-white px-4 pt-4">
+        <h1 class="text-2xl md:text-3xl font-bold mb-2.5 uppercase">
+            {{ $product->name }}
+        </h1>
+        <p class="text-xs md:text-sm text-white/80">
+            <a href="{{ route('client.home') }}" class="hover:text-white transition-colors">Trang chủ</a>
+            <svg class="w-2.5 h-2.5 inline-block mx-2 fill-current opacity-80" viewBox="0 0 35 35" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M11.5797 31.4214C11.1695 31.0111 10.9391 30.4548 10.9391 29.8747C10.9391 29.2946 11.1695 28.7383 11.5797 28.3281L22.4078 17.5L11.5797 6.67184C11.1937 6.25726 10.9836 5.70915 10.9936 5.14283C11.0036 4.5765 11.2328 4.03612 11.6331 3.63539C12.0334 3.23465 12.5735 3.0048 13.1399 2.99421C13.7062 2.98361 14.2545 3.1931 14.6695 3.57858L27.046 15.9516C27.4561 16.3618 27.6865 16.9182 27.6865 17.4983C27.6865 18.0783 27.4561 18.6347 27.046 19.0449L14.6729 31.4214C14.2627 31.8315 13.7064 32.0619 13.1263 32.0619C12.5462 32.0619 11.9899 31.8315 11.5797 31.4214Z"
+                    fill="currentColor" />
+            </svg>
+            <a href="{{ route('client.products.linh-vat-phong-thuy.index') }}" class="hover:text-white transition-colors">Linh vật phong thủy</a>
+        </p>
+    </div>
+</section>
+
+<!-- Sub Breadcrumb -->
+<div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
+    <x-products.breadcrumb current-label="{{ $product->name }}" parent-label="Linh Vật Phong Thủy" parent-href="{{ route('client.products.linh-vat-phong-thuy.index') }}" />
+    <hr class="border-t border-black/10 mt-4 w-full" />
+</div>
+
+<!-- Product Detail Container -->
+<x-products.product-detail-container
+    title="{!! $product->name !!}"
+    price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
+    sku="{{ $product->code }}"
+    :features="$product->des && is_array($product->des) ? $product->des : null"
+/>
+
+<!-- Product Images Section -->
+@if(!empty($product->images) && is_array($product->images))
+<section class="w-[85%] max-w-[1320px] mx-auto pb-[40px] md:pb-16" data-aos="fade-up">
+    <h2 class="text-[20px] leading-[32px] tracking-[0.6px] md:text-3xl md:leading-normal md:tracking-wide font-semibold text-center text-secondary mb-6 md:mb-12 uppercase break-words">
+        Hình ảnh sản phẩm
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        @foreach($product->images as $image)
+        <div class="aspect-square overflow-hidden rounded-sm shadow-md">
+            <img src="{{ Storage::url($image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
+        </div>
+        @endforeach
+    </div>
+</section>
+@endif
+
+<!-- Size Des Section -->
+@if(!empty($product->size_des) && is_array($product->size_des))
+<section class="w-[85%] max-w-[1320px] mx-auto pb-[40px] md:pb-16" data-aos="fade-up">
+    <h2 class="text-[20px] leading-[32px] tracking-[0.6px] md:text-3xl md:leading-normal md:tracking-wide font-semibold text-center text-secondary mb-6 md:mb-12 uppercase break-words">
+        Thông tin kích thước
+    </h2>
+    <ul class="list-disc pl-5 space-y-2 max-w-2xl mx-auto text-[#2E2F2A] text-[14px] md:text-lg leading-relaxed">
+        @foreach($product->size_des as $item)
+        <li>{{ $item }}</li>
+        @endforeach
+    </ul>
+</section>
+@endif
+
+<x-products.journey-video :hide-title="true" />
+<x-products.works />
+<x-products.recommendations />
+
+<!-- Related Products -->
+@if($relatedProducts->isNotEmpty())
+<section class="w-[85%] max-w-[1320px] mx-auto pb-[50px] md:pb-24" data-aos="fade-up">
+    <h2 class="text-[20px] leading-[32px] tracking-[0.6px] md:text-3xl md:leading-normal md:tracking-wide font-semibold text-center text-secondary mb-6 md:mb-12 uppercase break-words">
+        Sản phẩm liên quan
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 sm:gap-x-6 sm:gap-y-10">
+        @foreach($relatedProducts as $related)
+            @php
+                $relatedImage = (!empty($related->images) && is_array($related->images)) ? $related->images[0] : null;
+            @endphp
+            <a href="{{ route('client.products.linh-vat-phong-thuy.detail', $related->linh_vat_phong_thuy_ct_id) }}" class="flex flex-col group cursor-pointer">
+                <div class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square transition-all duration-300 group-hover:-translate-y-1">
+                    <img src="{{ $relatedImage ? Storage::url($relatedImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $related->name }}" class="w-full h-full object-cover mix-blend-multiply" />
+                    <div class="product-overlay">
+                        <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
+                        <span>Xem chi tiết</span>
+                    </div>
+                </div>
+                <h3 class="text-primary font-semibold text-sm uppercase mb-2 transition-colors group-hover:text-secondary">
+                    {{ $related->name }}
+                </h3>
+                <p class="text-gray-500 text-[13px] mb-2">MSP: {{ $related->code }}</p>
+                <p class="text-secondary font-bold text-[14px]">Giá: {{ $related->price > 0 ? number_format($related->price) . 'đ' : 'Liên hệ' }}</p>
+            </a>
+        @endforeach
+    </div>
+</section>
+@endif
+
+<x-products.faq2 />
+
+</x-layouts.client>

@@ -1,0 +1,162 @@
+<x-layouts.client title="Ngói Âm Dương" data-page="products" main-class="bg-background-secondary" :hide-newsletter="true">
+
+    @push('styles')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
+            @import url("https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Italianno&display=swap");
+
+            .size-options-scroll {
+                overflow-x: auto;
+                scroll-behavior: smooth;
+            }
+
+            .size-options-scroll .size-img {
+                width: 200%;
+            }
+
+            @media (min-width: 768px) {
+                .size-options-scroll {
+                    overflow-x: visible;
+                }
+
+                .size-options-scroll .size-img {
+                    width: 100%;
+                }
+            }
+        </style>
+    @endpush
+
+    <x-catalog-button />
+
+    <!-- SECTION 1: TOP BANNER -->
+    <section class="relative min-h-[675px] md:min-h-[600px] flex items-center md:pt-24 md:pb-8 overflow-hidden">
+        <!-- Lớp hình nền chính của dải banner -->
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('assets/images/ngoi-am-duong-banner.jpg') }}" alt="Ngói Âm Dương Banner"
+                class="w-full h-full object-cover object-bottom" />
+            <div class="absolute inset-0 bg-black/70"></div>
+            <div
+                class="absolute bottom-0 left-0 right-0 h-3/5 md:h-3/5 bg-[linear-gradient(to_top,#EFE4DE_10%,white_25%,white_60%,transparent_100%)]">
+            </div>
+        </div>
+
+        <!-- Khung chứa toàn bộ nội dung của banner -->
+        <div class="z-10 w-[85%] max-w-[1320px] mx-auto flex flex-col h-full justify-between mt-[45px] md:mt-0">
+            <!-- Khối Tiêu đề chính và slogan -->
+            <div class="text-center pb-12 md:pb-24 space-y-4 md:space-y-8">
+                <h1 class="text-[24px] leading-[32px] md:text-4xl lg:text-[44px] font-bold mb-0 md:mb-4 uppercase text-white drop-shadow-md"
+                    data-aos="fade-up" data-aos-duration="1000">
+                    Ngói Âm Dương
+                </h1>
+                <p class="font-italianno text-[30px] leading-[37.5px] md:text-5xl lg:text-[48px] md:leading-tight text-white/80 drop-shadow-md max-w-4xl mx-auto text-nowrap"
+                    data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+                    "Chưng cất tinh đất, tôi luyện qua lửa<br />Thanh Hải kiến tạo dáng hình di sản trong<br
+                        class="block md:hidden" />
+                    từng lớp ngói âm dương"
+                </p>
+            </div>
+
+            <!-- Khối Nội dung phía dưới banner -->
+            <div
+                class="flex flex-col-reverse md:flex-row items-center md:items-end justify-between gap-8 md:gap-12 w-full mt-auto pb-4">
+                <!-- Bên trái: Đoạn thơ giới thiệu sản phẩm -->
+                <div class="w-full md:w-1/2 text-center md:text-left z-20 pb-4 md:pb-10 lg:ml-12" data-aos="fade-right"
+                    data-aos-delay="400">
+                    <p
+                        class="text-nowrap font-charm text-[24px] leading-[39px] tracking-[0.6px] md:text-[32px] md:leading-relaxed md:tracking-wide text-primary font-medium">
+                        Âm dương hòa hợp, đất hóa linh<br />
+                        Thanh Hải kết tinh, vạn công trình<br />
+                        Mái ngói nghiêng soi hình dáng cổ<br />
+                        Vững bền năm tháng, trọn niềm tin
+                    </p>
+                </div>
+
+                <!-- Bên phải: Khối hình ảnh bổ trợ kép -->
+                <div class="w-full md:w-1/2 flex justify-center md:justify-end z-20" data-aos="fade-left"
+                    data-aos-delay="400">
+                    <div
+                        class="bg-white p-3 gap-3 md:p-6 md:gap-6 flex w-full max-w-[860px] transform translate-y-0 md:-translate-y-8 rounded md:shadow-none">
+                        <div class="w-1/2 aspect-[167/138] md:aspect-square flex items-center justify-center">
+                            <img src="{{ asset('assets/images/ngoi-am-duong-01.jpg') }}" alt="Ngói Âm Dương 01"
+                                class="w-full h-full object-cover" />
+                        </div>
+                        <div class="w-1/2 aspect-[167/138] md:aspect-square flex items-center justify-center">
+                            <img src="{{ asset('assets/images/ngoi-am-duong-02.png') }}" alt="Ngói Âm Dương 02"
+                                class="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: BREADCRUMB -->
+    <div class="w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
+        <x-products.breadcrumb current-label="Ngói Âm Dương" />
+    </div>
+
+    <!-- SECTION 3: PRODUCT GRID -->
+    <x-products.product-filter />
+    <x-products.product-grid category="ngoi-am-duong" :products="$products" routeName="client.products.ngoi-am-duong.detail" />
+
+    <!-- SECTION 4: SIZE OPTIONS -->
+    <section class="w-[85%] max-w-[1320px] mx-auto pb-[40px] md:pb-16 pt-1" data-aos="fade-up">
+        <h2
+            class="text-[20px] leading-[32px] tracking-[0.6px] md:text-3xl md:leading-normal md:tracking-wide font-bold text-center text-secondary mb-6 md:mb-12 uppercase break-words">
+            Đa dạng kích thước -<br class="block md:hidden" />
+            phong phú chọn lựa
+        </h2>
+        <div class="size-options-scroll mobile-scroll-visible w-full pb-2 overflow-x-scroll md:overflow-x-hidden">
+            <img src="{{ asset('assets/images/ngoi-am-duong-size.png') }}" alt="Đa dạng kích thước ngói âm dương"
+                class="size-img h-auto object-contain max-w-none w-[200%] md:w-full"
+                onload="window.dispatchEvent(new Event('resize'))" />
+        </div>
+    </section>
+
+    <!-- SECTION 5: ACCESSORIES -->
+    <section class="w-[85%] max-w-[1320px] mx-auto pb-12 md:pb-20" data-aos="fade-up">
+        <h2 class="text-[20px] md:text-3xl font-bold text-center text-secondary mb-6 md:mb-12 uppercase tracking-wide">
+            Phụ kiện ngói
+        </h2>
+        <div class="w-full flex justify-center">
+            <img src="{{ asset('assets/images/ngoi-am-duong-pk.png') }}" alt="Phụ kiện ngói âm dương"
+                class="w-[100%] h-auto object-contain" />
+        </div>
+    </section>
+
+    <!-- Các Component dùng chung của Layout Sản phẩm -->
+    <x-products.outstanding-value />
+    <x-products.journey-video />
+    <x-products.works />
+
+    <!-- SECTION 6: FAQ -->
+    <section class="w-full relative pb-20 md:pb-32 bg-background-secondary overflow-hidden" data-aos="fade-up">
+        <img src="{{ asset('assets/images/background-decorate-03.svg') }}"
+            class="absolute top-[20%] -translate-y-1/2 md:left-4 -left-[20%] md:translate-x-[10%] translate-x-0 w-auto object-contain opacity-100 pointer-events-none z-0"
+            alt="" />
+        <img src="{{ asset('assets/images/background-decorate-02.svg') }}"
+            class="absolute md:top-[62%] top-[80%] -translate-y-1/2 right-0 translate-x-[60%] w-auto object-contain opacity-50 pointer-events-none z-0"
+            alt="" />
+        <x-products.faq-content />
+    </section>
+
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+        <script>
+            if (typeof GLightbox !== "undefined") {
+                document.querySelectorAll(".glightbox").forEach((anchor) => {
+                    const image = anchor.querySelector("img");
+                    if (image) {
+                        anchor.setAttribute("href", image.currentSrc || image.src);
+                    }
+                });
+                GLightbox({
+                    touchNavigation: true,
+                    loop: true,
+                    autoplayVideos: true,
+                });
+            }
+        </script>
+    @endpush
+</x-layouts.client>

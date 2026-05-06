@@ -1,0 +1,87 @@
+<section class="w-full bg-background-secondary" data-aos="fade-up">
+  <div class="w-[85%] max-w-[1320px] mx-auto">
+    <h2
+      class="text-[20px] md:text-3xl font-bold text-center text-secondary mb-5 md:mb-12 uppercase tracking-[0.6px] leading-[32px] md:tracking-wide w-full flex justify-center"
+    >
+      ỨNG DỤNG ĐA DẠNG
+    </h2>
+
+    <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 mb-4 md:mb-12 w-full pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:grid md:grid-cols-3 items-start">
+      <div class="relative group overflow-hidden shadow-[0px_4px_15px_-3px_rgba(0,0,0,0.1)] w-full md:w-auto shrink-0 snap-center aspect-square md:aspect-auto">
+        <img
+          src="{{ asset('assets/images/am-duong-detail-01.png') }}"
+          alt="Ốp mái"
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2">
+          <div class="border border-white/60 bg-black/20 backdrop-blur-sm px-10 py-2">
+            <span class="text-white font-semibold text-[14px] leading-[20px] tracking-[2.8px] md:tracking-[0.2em] uppercase whitespace-nowrap">ỐP MÁI</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group overflow-hidden shadow-[0px_4px_15px_-3px_rgba(0,0,0,0.1)] w-full md:w-auto shrink-0 snap-center aspect-square md:aspect-auto">
+        <img
+          src="{{ asset('assets/images/am-duong-detail-02.png') }}"
+          alt="Bờ rào"
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2">
+          <div class="border border-white/60 bg-black/20 backdrop-blur-sm px-10 py-2">
+            <span class="text-white font-semibold text-[14px] leading-[20px] tracking-[2.8px] md:tracking-[0.2em] uppercase whitespace-nowrap">BỜ RÀO</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group overflow-hidden shadow-[0px_4px_15px_-3px_rgba(0,0,0,0.1)] w-full md:w-auto shrink-0 snap-center aspect-square md:aspect-auto">
+        <img
+          src="{{ asset('assets/images/am-duong-detail-03.png') }}"
+          alt="Trang trí tường"
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2">
+          <div class="border border-white/60 bg-black/20 backdrop-blur-sm px-10 py-2 flex justify-center items-center">
+            <span class="text-white font-semibold text-[12px] md:text-[14px] leading-[20px] tracking-[1.5px] md:tracking-[0.2em] uppercase whitespace-nowrap text-center">TRANG TRÍ TƯỜNG</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-start md:grid md:grid-cols-5 gap-2 md:gap-8 overflow-hidden w-full px-2">
+      <div class="flex flex-col items-center gap-3 md:gap-6 group cursor-pointer w-[60px] md:w-auto">
+        <div class="w-[44px] h-[44px] md:w-16 md:h-16 flex items-center justify-center">
+          <img src="{{ asset('assets/images/tu-gia.svg') }}" alt="Tư gia" class="w-full h-full object-contain" />
+        </div>
+        <span class="text-secondary font-bold text-[10px] md:text-lg md:tracking-wide group-hover:text-primary transition-colors text-center leading-tight whitespace-nowrap md:whitespace-normal">Tư gia</span>
+      </div>
+
+      <div class="flex flex-col items-center gap-3 md:gap-6 group cursor-pointer w-[60px] md:w-auto">
+        <div class="w-[44px] h-[44px] md:w-16 md:h-16 flex items-center justify-center">
+          <img src="{{ asset('assets/images/den-chua.svg') }}" alt="Đền chùa" class="w-full h-full object-contain" />
+        </div>
+        <span class="text-secondary font-bold text-[10px] md:text-lg md:tracking-wide group-hover:text-primary transition-colors text-center leading-tight whitespace-nowrap md:whitespace-normal">Đền chùa</span>
+      </div>
+
+      <div class="flex flex-col items-center gap-3 md:gap-6 group cursor-pointer w-[60px] md:w-auto">
+        <div class="w-[44px] h-[44px] md:w-16 md:h-16 flex items-center justify-center">
+          <img src="{{ asset('assets/images/resort.svg') }}" alt="Resort - Khách sạn" class="w-full h-full object-contain text-secondary fill-secondary" />
+        </div>
+        <span class="text-secondary font-bold text-[10px] md:text-lg md:tracking-wide group-hover:text-primary transition-colors text-center leading-tight">Resort<br class="md:hidden" /> Khách sạn</span>
+      </div>
+
+      <div class="flex flex-col items-center gap-3 md:gap-6 group cursor-pointer w-[60px] md:w-auto">
+        <div class="w-[44px] h-[44px] md:w-16 md:h-16 flex items-center justify-center">
+          <img src="{{ asset('assets/images/nha-hang.svg') }}" alt="Nhà hàng" class="w-full h-full object-contain" />
+        </div>
+        <span class="text-secondary font-bold text-[10px] md:text-lg md:tracking-wide group-hover:text-primary transition-colors text-center leading-tight whitespace-nowrap md:whitespace-normal">Nhà hàng</span>
+      </div>
+
+      <div class="flex flex-col items-center gap-3 md:gap-6 group cursor-pointer w-[60px] md:w-auto">
+        <div class="w-[44px] h-[44px] md:w-16 md:h-16 flex items-center justify-center">
+          <img src="{{ asset('assets/images/mieu-mo.svg') }}" alt="Miếu mộ" class="w-full h-full object-contain" />
+        </div>
+        <span class="text-secondary font-bold text-[10px] md:text-lg md:tracking-wide group-hover:text-primary transition-colors text-center leading-tight whitespace-nowrap md:whitespace-normal">Miếu mộ</span>
+      </div>
+    </div>
+  </div>
+</section>

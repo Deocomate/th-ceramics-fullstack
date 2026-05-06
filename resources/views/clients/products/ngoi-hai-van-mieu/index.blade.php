@@ -1,0 +1,607 @@
+<x-layouts.client title="Ngói Hài Văn Miếu" data-page="products" main-class="bg-background-secondary page-ngoi-hai-van-mieu" :hide-newsletter="true">
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<style>
+  /* Đã gộp 3 font vào 1 request để tăng tốc độ tải trang */
+  @import url("https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Italianno&family=Playfair+Display:wght@400;500;600;700&display=swap");
+
+  @media (max-width: 767.98px) {
+    .page-ngoi-hai-van-mieu .ngoi-hai-mobile-title {
+      color: #fff;
+      font-family: Archivo, sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 42px;
+      text-transform: uppercase;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-mobile-name {
+      color: #2e2f2a;
+      font-family: Charm, cursive;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-mobile-name--tall {
+      line-height: 30px;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-breadcrumb-scope p,
+    .page-ngoi-hai-van-mieu .ngoi-hai-breadcrumb-scope a,
+    .page-ngoi-hai-van-mieu .ngoi-hai-breadcrumb-scope span {
+      font-family: Archivo, sans-serif;
+      font-size: 12px;
+      line-height: 16px;
+      text-transform: uppercase;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-breadcrumb-scope p>a,
+    .page-ngoi-hai-van-mieu .ngoi-hai-breadcrumb-scope p>span:not(:last-child) {
+      color: rgba(46, 47, 42, 0.6);
+      font-weight: 700;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-breadcrumb-scope p>span:last-child {
+      color: #2e2f2a;
+      font-weight: 600;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope button {
+      color: #2e2f2a;
+      font-family: Archivo, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 19.5px;
+      letter-spacing: 0.65px;
+      text-transform: uppercase;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope h3 {
+      color: #000;
+      font-family: Archivo, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      text-transform: lowercase;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope h3::first-letter {
+      text-transform: uppercase;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope p.text-gray-500 {
+      color: #6b7280;
+      font-family: Archivo, sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 20px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope p.text-secondary {
+      color: #c76e00;
+      font-family: Archivo, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope .mt-\[50px\] a,
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope .mt-\[50px\] span {
+      font-family: Archivo, sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 25.5px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope .mt-\[50px\] a.text-black {
+      color: #000;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope .mt-\[50px\] a.text-black\/40,
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope .mt-\[50px\] span.text-black\/40 {
+      color: rgba(0, 0, 0, 0.4);
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-product-grid-scope .mt-\[50px\] span.tracking-widest {
+      letter-spacing: 1.7px;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-difference-title {
+      color: #c76e00;
+      font-family: Archivo, sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 32px;
+      text-transform: uppercase;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-difference-heading {
+      color: #333;
+      font-family: Archivo, sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 36px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-difference-copy {
+      color: #444;
+      font-family: Archivo, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 21.13px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-journey-scope h2,
+    .page-ngoi-hai-van-mieu .ngoi-hai-works-scope h2 {
+      color: #c76e00;
+      font-family: Archivo, sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 32px;
+      text-transform: uppercase;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-works-scope #slide-title {
+      color: #000;
+      font-family: Archivo, sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-works-scope #slide-meta {
+      color: #000;
+      font-family: Archivo, sans-serif;
+      font-size: 15px;
+      line-height: 22.5px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-works-scope #slide-meta .font-bold {
+      font-weight: 700;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-works-scope #slide-meta span:not(.font-bold) {
+      font-weight: 400;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-works-scope #slide-link {
+      color: #000;
+      font-family: Archivo, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 19.5px;
+      letter-spacing: 0.65px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-faq-scope h2 {
+      color: #c76e00;
+      font-family: Archivo, sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 36px;
+      text-transform: uppercase;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-faq-scope .faq-button span:first-child {
+      color: #2e2f2a;
+      font-family: Archivo, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 21px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-faq-scope .faq-content {
+      color: #4b5563;
+      font-family: Archivo, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22.75px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-faq-scope .faq-content .font-bold {
+      color: #2e2f2a;
+      font-weight: 700;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-faq-scope .faq-content a {
+      color: #2e2f2a;
+      font-family: Archivo, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 22.75px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-faq-scope .mt-8.text-right a {
+      color: #2e2f2a;
+      font-family: Archivo, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 21px;
+      word-wrap: break-word;
+    }
+
+    /* Các css của .ngoi-hai-footer-scope đã được giữ nguyên */
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope h2 {
+      color: #efe4de;
+      font-family: Archivo, sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 35px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope input::placeholder {
+      color: #9ca3af;
+      font-family: Archivo, sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope .text-\[15px\].leading-\[26px\] p {
+      color: #fff;
+      font-family: Archivo, sans-serif;
+      font-size: 15px;
+      line-height: 26px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope .text-\[15px\].leading-\[26px\] p:first-child {
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope .text-\[15px\].leading-\[26px\] p:not(:first-child) {
+      font-weight: 400;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope h3 {
+      color: #fff;
+      font-family: Archivo, sans-serif;
+      font-weight: 600;
+      line-height: 26px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope h3.text-\[14px\] {
+      font-size: 14px;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope h3.text-\[16px\] {
+      font-size: 16px;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope .leading-\[30px\] a {
+      color: #fff;
+      font-family: Archivo, sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 30px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope .border-t .text-\[\#909090\].text-\[12px\] {
+      color: #909090;
+      font-family: Archivo, sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 26px;
+      word-wrap: break-word;
+    }
+
+    .page-ngoi-hai-van-mieu .ngoi-hai-footer-scope .border-t .text-\[\#909090\].text-\[12px\] span {
+      color: #909090;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 26px;
+      word-wrap: break-word;
+    }
+  }
+</style>
+@endpush
+
+<x-catalog-button />
+
+<!-- Top Banner -->
+<section class="relative w-full pt-0 md:pt-20 pb-0 md:pb-8 lg:pb-10">
+  <!-- Mobile Top Banner -->
+  <div class="md:hidden relative h-[403px] overflow-hidden">
+    <div class="absolute inset-x-0 top-0 h-[245px] z-0">
+      <img src="{{ $config && $config->thumbnail_main ? Storage::url($config->thumbnail_main) : asset('assets/images/ngoi-hai-van-mieu-banner.jpg') }}" alt="Ngói Hài Văn Miếu Banner"
+        class="w-full h-full object-cover object-center" />
+      <div class="absolute inset-0" style="
+                background: linear-gradient(
+                  188deg,
+                  #000 -7.92%,
+                  rgba(0, 0, 0, 0) 94.09%
+                );
+              "></div>
+    </div>
+
+    <div class="absolute inset-x-0 top-[245px] h-[158px] bg-background-secondary z-0"></div>
+
+    <div class="relative z-10 h-full w-full">
+      <h1
+        class="ngoi-hai-mobile-title pt-[75px] text-center text-[30px] font-archivo font-bold uppercase text-white leading-[42px]"
+        data-aos="fade-up" data-aos-duration="1000">
+        Ngói Hài Văn Miếu
+      </h1>
+
+      <div class="w-full max-w-[340px] absolute left-1/2 top-[165px] z-20 grid grid-cols-3 gap-[51px] -translate-x-1/2">
+        <div class="flex flex-col items-center">
+          <div class="relative w-[82px]">
+            <div
+              class="absolute -top-[5px] -left-[5px] right-[5px] bottom-[5px] border border-white pointer-events-none">
+            </div>
+            <img src="{{ $config && $config->thumbnail1 ? Storage::url($config->thumbnail1) : asset('assets/images/ngoi-hai-01.png') }}" alt="{{ $config->title1 ?? 'Ngói văn miếu tròn' }}"
+              class="relative z-10 block w-full h-[136px] object-cover" />
+          </div>
+          <h3
+            class="ngoi-hai-mobile-name mt-[20px] text-center text-[16px] font-charm font-normal text-textPrimary leading-[24px]">
+            {!! nl2br(e($config->title1 ?? 'Ngói văn miếu tròn')) !!}
+          </h3>
+        </div>
+
+        <div class="mt-[35px] flex flex-col items-center">
+          <div class="relative w-[82px]">
+            <div
+              class="absolute -top-[5px] -left-[5px] right-[5px] bottom-[5px] border border-white pointer-events-none">
+            </div>
+            <img src="{{ $config && $config->thumbnail2 ? Storage::url($config->thumbnail2) : asset('assets/images/ngoi-hai-02.png') }}" alt="{{ $config->title2 ?? 'Ngói văn miếu mũi' }}"
+              class="relative z-10 block w-full h-[136px] object-cover" />
+          </div>
+          <h3
+            class="ngoi-hai-mobile-name mt-[20px] text-center text-[16px] font-charm font-normal text-textPrimary leading-[24px]">
+            {!! nl2br(e($config->title2 ?? 'Ngói văn miếu mũi')) !!}
+          </h3>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <div class="relative w-[82px]">
+            <div
+              class="absolute -top-[5px] -left-[5px] right-[5px] bottom-[5px] border border-white pointer-events-none">
+            </div>
+            <img src="{{ $config && $config->thumbnail3 ? Storage::url($config->thumbnail3) : asset('assets/images/ngoi-hai-03.png') }}" alt="{{ $config->title3 ?? 'Ngói hài cổ' }}"
+              class="relative z-10 block w-full h-[136px] object-cover" />
+          </div>
+          <h3
+            class="ngoi-hai-mobile-name ngoi-hai-mobile-name--tall mt-[20px] text-center text-[16px] font-charm font-normal text-textPrimary leading-[30px]">
+            {!! nl2br(e($config->title3 ?? 'Ngói hài cổ')) !!}
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Top Banner -->
+  <div class="hidden md:block">
+    <!-- Background Image with Dark Overlay -->
+    <div class="absolute inset-x-0 top-0 h-[65%] lg:h-[75%] z-0">
+      <img src="{{ $config && $config->thumbnail_main ? Storage::url($config->thumbnail_main) : asset('assets/images/ngoi-hai-van-mieu-banner.jpg') }}" alt="Ngói Hài Văn Miếu Banner"
+        class="w-full h-full object-cover object-center" />
+      <div class="absolute inset-0" style="
+                background: linear-gradient(
+                  188deg,
+                  #000 -7.92%,
+                  rgba(0, 0, 0, 0) 94.09%
+                );
+              "></div>
+      <div class="absolute bottom-0 left-0 right-0 h-32 bg-background-secondary"></div>
+    </div>
+
+    <!-- Content Container -->
+    <div class="relative z-10 w-[85%] max-w-[1320px] mx-auto flex flex-col items-center">
+      <!-- Title -->
+      <h1
+        class="ngoi-hai-mobile-title text-[30px] md:text-[40px] font-archivo font-bold uppercase text-white leading-[42px] md:leading-[55px] mb-8 md:mb-16 text-center"
+        data-aos="fade-up" data-aos-duration="1000">
+        Ngói Hài Văn Miếu
+      </h1>
+
+      <!-- 3 Images Layout -->
+      <div class="flex flex-row justify-center items-start gap-6 md:gap-8 lg:gap-10 w-full max-w-[1200px]">
+        <!-- Item 1 -->
+        <div class="flex flex-col items-center w-full md:w-1/3 md:mt-8 pl-4 pt-4 sm:pl-5 sm:pt-5 pr-2"
+          data-aos="fade-up" data-aos-delay="100">
+          <div class="relative w-full mb-6">
+            <div
+              class="absolute -top-2 -left-2 sm:-top-3 sm:-left-3 w-full h-full border border-white/80 z-20 pointer-events-none">
+            </div>
+            <img src="{{ $config && $config->thumbnail1 ? Storage::url($config->thumbnail1) : asset('assets/images/ngoi-hai-01.png') }}" alt="{{ $config->title1 ?? 'Ngói văn miếu tròn' }}"
+              class="relative z-10 w-full h-auto aspect-[3/5] object-cover shadow-2xl" />
+          </div>
+          <h3
+            class="ngoi-hai-mobile-name font-charm text-[20px] lg:text-[32px] text-textPrimary text-center drop-shadow-sm -translate-x-2">
+            {{ $config->title1 ?? 'Ngói văn miếu tròn' }}
+          </h3>
+        </div>
+
+        <!-- Item 2 (Center, shifted down) -->
+        <div class="flex flex-col items-center w-full md:w-1/3 mt-8 md:mt-24 pl-4 pt-4 sm:pl-5 sm:pt-5 pr-2"
+          data-aos="fade-up" data-aos-delay="250">
+          <div class="relative w-full mb-6">
+            <div
+              class="absolute -top-2 -left-2 sm:-top-3 sm:-left-3 w-full h-full border border-white/80 z-20 pointer-events-none">
+            </div>
+            <img src="{{ $config && $config->thumbnail2 ? Storage::url($config->thumbnail2) : asset('assets/images/ngoi-hai-02.png') }}" alt="{{ $config->title2 ?? 'Ngói văn miếu mũi' }}"
+              class="relative z-10 w-full h-auto aspect-[3/5] object-cover shadow-2xl" />
+          </div>
+          <h3
+            class="ngoi-hai-mobile-name font-charm text-[20px] lg:text-[32px] text-textPrimary text-center drop-shadow-sm -translate-x-2">
+            {{ $config->title2 ?? 'Ngói văn miếu mũi' }}
+          </h3>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="flex flex-col items-center w-full md:w-1/3 md:mt-8 pl-4 pt-4 sm:pl-5 sm:pt-5 pr-2"
+          data-aos="fade-up" data-aos-delay="400">
+          <div class="relative w-full mb-6">
+            <div
+              class="absolute -top-2 -left-2 sm:-top-3 sm:-left-3 w-full h-full border border-white/80 z-20 pointer-events-none">
+            </div>
+            <img src="{{ $config && $config->thumbnail3 ? Storage::url($config->thumbnail3) : asset('assets/images/ngoi-hai-03.png') }}" alt="{{ $config->title3 ?? 'Ngói hài cổ' }}"
+              class="relative z-10 w-full h-auto aspect-[3/5] object-cover shadow-2xl" />
+          </div>
+          <h3
+            class="ngoi-hai-mobile-name ngoi-hai-mobile-name--tall font-charm text-[20px] lg:text-[32px] text-textPrimary text-center drop-shadow-sm -translate-x-2">
+            {{ $config->title3 ?? 'Ngói hài cổ' }}
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Breadcrumb -->
+<div class="ngoi-hai-breadcrumb-scope w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
+  <x-products.breadcrumb current-label="Ngói Hài Văn Miếu" />
+</div>
+
+<div class="ngoi-hai-product-grid-scope">
+  <x-products.product-filter />
+  <x-products.product-grid category="ngoi-hai-van-mieu" :products="$products" routeName="client.products.ngoi-hai-van-mieu.detail" />
+</div>
+
+<!-- Difference Section -->
+<section class="relative w-full overflow-hidden bg-background-secondary mb-[35px] md:mb-16">
+  <!-- Section Title -->
+  <div class="w-[85%] max-w-[1320px] mx-auto text-center mb-[17px] md:mb-16">
+    <h2
+      class="ngoi-hai-difference-title max-w-[235px] md:max-w-full m-auto text-[20px] md:text-3xl font-semibold text-secondary uppercase mt-1">
+      Điều gì khiến ngói hài Thanh Hải khác biệt?
+    </h2>
+  </div>
+  <!-- Full width Background Image -->
+  <div class="absolute inset-x-0 w-full h-full z-0">
+    <img src="{{ asset('assets/images/khac-biet.png') }}" alt="Khác biệt"
+      class="hidden md:block w-full h-full object-cover object-center" />
+
+    <img src="{{ asset('assets/images/khac-biet-1.png') }}" alt="Khác biệt" class="md:hidden w-full h-full" />
+    <div class="absolute inset-x-0 top-0 md:h-24"></div>
+  </div>
+
+  <!-- Content Container -->
+  <div class="relative z-10 w-[85%] max-w-[1320px] mx-auto py-16 md:py-24">
+    <!-- Grid for Text Items (Left side of the background) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-16 lg:gap-24">
+      <!-- Left Column (Text Content) -->
+      <div class="md:col-span-2 flex flex-col justify-center items-start space-y-24 lg:space-y-40 md:pr-8 lg:pr-16">
+        <!-- Item 1 -->
+        <div class="text-left md:text-center pr-12 md:pr-0 lg:pl-[5%]" data-aos="fade-up">
+          <h3 class="ngoi-hai-difference-heading text-2xl lg:text-[36px] font-bold text-[#333] mb-4 leading-normal">
+            Xương sứ vĩnh cửu,<br />thách thức thời gian
+          </h3>
+          <p
+            class="ngoi-hai-difference-copy text-[#444] text-[13px] md:text-[16px] font-medium leading-relaxed md:max-w-xl max-w-xs mr-auto md:mx-auto">
+            Nung ở 1.300C giúp xương ngói đanh hóa sành, độ hút nước cực
+            thấp 0,87% (vượt xa tiêu chuẩn TCVN 9133:2011). Chỉ số này
+            giúp ngói chống thấm tuyệt đối, không bị nứt vỡ do giãn nở
+            nhiệt hay đóng băng bào tử rêu.
+          </p>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="ps-[27px] md:ps-0 text-left md:text-center pr-12 md:pr-0 md:pl-16 lg:pl-[20%]" data-aos="fade-up"
+          data-aos-delay="200">
+          <h3 class="ngoi-hai-difference-heading text-2xl lg:text-[36px] font-bold text-[#333] mb-4 leading-normal">
+            Tuyệt tác men hỏa biến<br />kháng rêu mốc vĩnh cửu
+          </h3>
+          <p
+            class="ngoi-hai-difference-copy text-[#444] text-[13px] md:text-[16px] font-medium leading-relaxed md:max-w-2xl max-w-xs mr-auto md:mx-auto">
+            Lớp men dày dặn đóng vai trò như màng chắn thủy tinh siêu
+            cứng, ngăn chặn bụi bẩn và rêu mốc bám dính. Nhờ độ trơn bóng
+            cao, mái nhà có khả năng "tự làm sạch" hoàn toàn sau mưa, giữ
+            vững vẻ thẩm mỹ tôn nghiêm hàng trăm năm.
+          </p>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="text-left md:text-center pr-12 md:pr-0 lg:pl-[5%]" data-aos="fade-up" data-aos-delay="400">
+          <h3 class="ngoi-hai-difference-heading text-2xl lg:text-[36px] font-bold text-[#333] mb-4 leading-normal">
+            Khả năng chịu lực và<br />Giải pháp kinh tế thông minh
+          </h3>
+          <p
+            class="ngoi-hai-difference-copy text-[#444] text-[13px] md:text-[16px] font-medium leading-relaxed md:max-w-2xl max-w-xs mr-auto md:mx-auto">
+            Tải trọng uốn gãy đạt 628 N/cm, vượt mức tiêu chuẩn quốc gia
+            (540 N/cm), đảm bảo an toàn khi thi công. Trọng lượng nhẹ (0,7
+            - 0,8 kg/viên) giúp giảm áp lực kết cấu và tiết kiệm 30% chi
+            phí điện năng nhờ hệ số cách nhiệt vượt trội.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Column (Empty to let the background image's right side show) -->
+      <div class="hidden md:block">
+        <!-- The right side of khac-biet.png (the rough clay texture) will be visible here -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ngoi-hai-journey-scope">
+  <x-products.journey-video />
+</div>
+
+<div class="ngoi-hai-works-scope">
+  <x-products.works />
+</div>
+
+<!-- FAQ Section -->
+<section class="w-full relative pb-[65px] md:pb-32 bg-background-secondary overflow-hidden" data-aos="fade-up">
+  <!-- Background Decoration -->
+  <img src="{{ asset('assets/images/background-decorate-03.svg') }}"
+    class="absolute top-[20%] -translate-y-1/2 md:left-4 -left-[20%] md:translate-x-[10%] translate-x-0 w-auto object-contain opacity-100 pointer-events-none z-0"
+    alt="" />
+  <img src="{{ asset('assets/images/background-decorate-02.svg') }}"
+    class="absolute md:top-[62%] top-[80%] -translate-y-1/2 right-0 translate-x-[60%] w-auto object-contain opacity-50 pointer-events-none z-0"
+    alt="" />
+
+  <div class="ngoi-hai-faq-scope">
+    <x-products.faq-content />
+  </div>
+</section>
+
+<div class="ngoi-hai-footer-scope"></div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  if (typeof GLightbox !== "undefined") {
+    document.querySelectorAll(".glightbox").forEach((anchor) => {
+      const image = anchor.querySelector("img");
+      if (image) {
+        anchor.setAttribute("href", image.currentSrc || image.src);
+      }
+    });
+    GLightbox({
+      touchNavigation: true,
+      loop: true,
+      autoplayVideos: true,
+    });
+  }
+</script>
+@endpush
+</x-layouts.client>
