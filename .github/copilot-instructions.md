@@ -1,4 +1,6 @@
 # Rule dự án
+- Trong dự án gốm sứ này có 9 loại sản phẩm riêng biệt nên phải tách thành 9 bảng khác nhau -> 9 bảng sản phẩm chi tiết khác nhau. Không tìm các phương án gộp bảng phức tạp.
+
 - Trong Controller luôn luôn sử dụng $request->validate() để validate request. Không cần phải tạo các FormRequest riêng làm cấu trúc thêm phức tạp
 
 
