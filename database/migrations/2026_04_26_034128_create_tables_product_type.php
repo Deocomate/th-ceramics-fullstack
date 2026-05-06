@@ -45,7 +45,7 @@ return new class extends Migration
             $table->string('thumbnail2');
             $table->string('title3', 50);
             $table->string('thumbnail3');
-            $table->string('video');
+            $table->string('video')->nullable();
             $table->json('images')->nullable();
             $table->timestamps();
         });

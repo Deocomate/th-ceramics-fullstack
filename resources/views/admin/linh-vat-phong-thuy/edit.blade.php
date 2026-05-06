@@ -59,7 +59,7 @@
     @if (count($linhVatPhongThuy->anh) > 0)
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-                <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Thư viện ảnh đã lưu</h2>
+                <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Thư viện ảnh công đoạn chế tác</h2>
                 <span class="text-xs text-gray-500 font-medium">Tổng số: {{ count($linhVatPhongThuy->anh) }} ảnh</span>
             </div>
 
