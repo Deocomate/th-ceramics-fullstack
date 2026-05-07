@@ -1,7 +1,7 @@
 ---
 phase: 3
 title: "Contact & FAQ Admin Panels"
-status: pending
+status: completed
 priority: P2
 effort: "4h"
 dependencies: ["phase-01-database-setup"]

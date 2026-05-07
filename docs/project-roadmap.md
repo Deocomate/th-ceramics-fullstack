@@ -10,7 +10,7 @@
 | 100% | Service layer | 33 service classes with business logic |
 | 100% | Admin authentication | Login, logout, forgot/reset password |
 | 100% | Admin dashboard | Overview page |
-| 100% | Admin CRUD: section pages | 10 single-record section controllers (index + update) |
+| 100% | Admin CRUD: section pages | 13 single-record section controllers (index + update) — includes 3 page config panels (Factory/Contact/FAQ) |
 | 100% | Admin CRUD: detail items | 14 detail controllers (full CRUD + restore) |
 | 100% | Admin CRUD: sub-resources | Colors, classifications, ratings, galleries, hallmarks |
 | 100% | Image upload system | FileUploadHelper with replace/delete |
@@ -42,10 +42,11 @@
 | 100% | Client routing | Vietnamese SEO URLs with 301 redirects from English paths |
 | 100% | Client layout | Tailwind CDN, Swiper.js, AOS, Google Fonts, responsive design |
 | 100% | Home page | Featured products, services, brand highlights |
-| 100% | About / Factory / Contact | Static content pages |
+| 100% | About / Factory / Contact / FAQ | Dynamic content pages bound to DB via page config admin panels |
 | 100% | Product listing pages | 9 category index views |
 | 100% | Product detail pages | 9 category detail views with images, specs, pricing |
 | ~80% | Data binding | Client controllers wired to services; some views pending |
+| 100% | Page config admin panels | Factory (5-tab Alpine.js + TinyMCE), Contact (form), FAQ (banner + FAQ items CRUD with modal) |
 | 0% | SEO meta tags | Per-page title/description via `@props` |
 | 0% | News pages | Controller + routes exist, views need implementation |
 | 0% | Projects pages | Controller + routes exist, views need implementation |
@@ -91,11 +92,11 @@
 ```
 Phase 1: Core Setup & Admin CRUD     ████████████████████ 100%
 Phase 2: Product Seeding              ████████████████████ 100%
-Phase 3: Client Product Pages         ████████░░░░░░░░░░░░  40%
+Phase 3: Client Product Pages         ██████████░░░░░░░░░░  50%
 Phase 4: Cart & Checkout              ░░░░░░░░░░░░░░░░░░░░   0%
 Phase 5: Advanced Features            ░░░░░░░░░░░░░░░░░░░░   0%
                                     ─────────────────────
-Total:                                ████░░░░░░░░░░░░░░░░  28%
+Total:                                █████░░░░░░░░░░░░░░░  33%
 ```
 
 ## Key Milestones
@@ -105,6 +106,7 @@ Total:                                ████░░░░░░░░░░
 | 2026-04-26 | First migration (product type tables) |
 | 2026-05-01 | Detail migrations + model/service creation |
 | 2026-05-06 | Admin CRUD complete, client data binding started |
+| 2026-05-07 | Page configuration admin panels complete; Factory/Contact/FAQ pages dynamic |
 | TBD | Client product pages complete |
 | TBD | Cart/checkout MVP |
 | TBD | Public launch |

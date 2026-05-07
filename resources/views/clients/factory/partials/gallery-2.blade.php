@@ -44,26 +44,19 @@
   >
     <div class="swiper slider-final-swiper overflow-visible">
       <div class="swiper-wrapper">
-        <!-- Slide 1 -->
-        <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
-          <div class="aspect-[2/1] overflow-hidden shadow-lg bg-neutral-1">
-            <img
-              src="{{ asset('assets/images/factory-04.jpg') }}"
-              alt="Phối cảnh"
-              class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
-            />
-          </div>
-        </div>
-        <!-- Slide 2 -->
-        <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
-          <div class="aspect-[2/1] overflow-hidden shadow-lg bg-neutral-1">
-            <img
-              src="{{ asset('assets/images/trang-tri-slide-02.jpg') }}"
-              alt="Trang trí"
-              class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
-            />
-          </div>
-        </div>
+        @if(!empty($factory->gallery_1))
+          @foreach($factory->gallery_1 as $image)
+            <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
+              <div class="aspect-[2/1] overflow-hidden shadow-lg bg-neutral-1">
+                <img
+                  src="{{ asset('storage/' . $image) }}"
+                  alt="Gallery image"
+                  class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
+                />
+              </div>
+            </div>
+          @endforeach
+        @endif
       </div>
     </div>
   </div>

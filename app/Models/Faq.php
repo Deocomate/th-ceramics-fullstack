@@ -24,7 +24,13 @@ class Faq extends Model
         'answer',
         'sort_order',
         'is_active',
+        'is_delete',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'faq_id';
+    }
 
     protected function casts(): array
     {

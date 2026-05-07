@@ -32,27 +32,39 @@
             </div>
             <div class="flex flex-col">
               <span class="text-white text-base font-archivo leading-6">Đặt hàng ngay</span>
-              <span class="text-white text-[18px] lg:text-xl font-semibold font-archivo leading-7">Hotline: 0966 55
-                8808</span>
+              <span class="text-white text-[18px] lg:text-xl font-semibold font-archivo leading-7">Hotline: {{ $contact->hotline ?? '0966 55 8808' }}</span>
             </div>
           </div>
 
-          <div class="flex items-center gap-5">
-            <div class="w-16 h-16 rounded-full bg-[#3D3E39] flex items-center justify-center flex-shrink-0">
-              <img src="{{ asset('assets/images/zalo2.png') }}" alt="Zalo" class="w-12 h-12 rounded-full object-cover" />
+          @if(!empty($contact->zalo_link))
+            <a href="{{ $contact->zalo_link }}" target="_blank" class="flex items-center gap-5">
+              <div class="w-16 h-16 rounded-full bg-[#3D3E39] flex items-center justify-center flex-shrink-0">
+                @if(!empty($contact->zalo_image))
+                  <img src="{{ asset('storage/' . $contact->zalo_image) }}" alt="Zalo" class="w-12 h-12 rounded-full object-cover" />
+                @else
+                  <img src="{{ asset('assets/images/zalo2.png') }}" alt="Zalo" class="w-12 h-12 rounded-full object-cover" />
+                @endif
+              </div>
+              <div class="flex-1">
+                <span class="text-white text-[18px] lg:text-xl font-semibold font-archivo leading-7">Chat với chúng tôi</span>
+              </div>
+            </a>
+          @else
+            <div class="flex items-center gap-5">
+              <div class="w-16 h-16 rounded-full bg-[#3D3E39] flex items-center justify-center flex-shrink-0">
+                <img src="{{ asset('assets/images/zalo2.png') }}" alt="Zalo" class="w-12 h-12 rounded-full object-cover" />
+              </div>
+              <div class="flex-1">
+                <span class="text-white text-[18px] lg:text-xl font-semibold font-archivo leading-7">Chat với chúng tôi</span>
+              </div>
             </div>
-            <div class="flex-1">
-              <span class="text-white text-[18px] lg:text-xl font-semibold font-archivo leading-7">Chat với chúng
-                tôi</span>
-            </div>
-          </div>
+          @endif
         </div>
 
         <!-- Form Section -->
         <div data-aos="fade-up" data-aos-delay="200" class="max-w-[540px]">
           <h1 class="text-[#EFE4DE] text-[24px] lg:text-[32px] mb-8 leading-[1.2] font-semibold font-archivo">
-            Hãy nói với chúng tôi <br />
-            những mong muốn của bạn
+            {!! $contact->form_title ?? 'Hãy nói với chúng tôi <br /> những mong muốn của bạn' !!}
           </h1>
 
           <form action="#" class="space-y-8 w-full lg:max-w-[80%] font-archivo">
@@ -95,7 +107,9 @@
         class="relative mt-10 h-[420px] overflow-hidden bg-gray-900 lg:absolute lg:top-0 lg:right-0 lg:mt-0 lg:h-full lg:w-1/2"
         data-aos="fade-left">
         <div class="h-full w-full lg:absolute lg:left-0 lg:top-0 lg:w-[50vw] lg:h-full">
-          <img src="{{ asset('assets/images/contact-map.png') }}" alt="Contact Map" class="w-full h-full object-cover object-center" />
+          @if(!empty($contact->map_image))
+            <img src="{{ asset('storage/' . $contact->map_image) }}" alt="Contact Map" class="w-full h-full object-cover object-center" />
+          @endif
         </div>
       </div>
     </div>

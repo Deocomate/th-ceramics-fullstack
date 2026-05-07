@@ -7,37 +7,19 @@
     >
       <div class="swiper section4-swiper overflow-visible">
         <div class="swiper-wrapper">
-          <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
-            <div class="aspect-[12/5] overflow-hidden shadow-lg bg-neutral-1">
-              <img
-                src="{{ asset('assets/images/factory-03.png') }}"
-                onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
-                alt="Phân xưởng"
-                class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
-              />
-            </div>
-          </div>
-          <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
-            <div class="aspect-[12/5] overflow-hidden shadow-lg bg-neutral-1">
-              <img
-                src="{{ asset('assets/images/factory-04.jpg') }}"
-                onerror="this.src = '{{ asset('assets/images/trang-tri-slide-01.jpg') }}'"
-                alt="Phân xưởng"
-                class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
-              />
-            </div>
-          </div>
-          <!-- Slide 3 -->
-          <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
-            <div class="aspect-[12/5] overflow-hidden shadow-lg bg-neutral-1">
-              <img
-                src="{{ asset('assets/images/factory-04.jpg') }}"
-                onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
-                alt="Phân xưởng"
-                class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
-              />
-            </div>
-          </div>
+          @if(!empty($factory->material_slider))
+            @foreach($factory->material_slider as $image)
+              <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
+                <div class="aspect-[12/5] overflow-hidden shadow-lg bg-neutral-1">
+                  <img
+                    src="{{ asset('storage/' . $image) }}"
+                    alt="Phân xưởng"
+                    class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
+                  />
+                </div>
+              </div>
+            @endforeach
+          @endif
         </div>
       </div>
     </div>
@@ -78,7 +60,7 @@
         <span
           id="section4-step-number"
           class="text-[48px] md:text-[80px] lg:text-[96px] leading-none text-[#909090] font-arbutus select-none"
-          >1</span
+          >{{ !empty($factory->material_steps) ? ($factory->material_steps[0]['number'] ?? '1') : '1' }}</span
         >
       </div>
 
@@ -93,7 +75,7 @@
             id="section4-step-title"
             class="text-[15px] md:text-[16px] font-bold uppercase leading-[24px]"
           >
-            LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)
+            {{ !empty($factory->material_steps) ? ($factory->material_steps[0]['title'] ?? 'LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)') : 'LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)' }}
           </h3>
 
           <div class="hidden md:flex gap-4 shrink-0">
@@ -136,31 +118,23 @@
           class="text-[15px]/[24px] md:text-base/9 text-black/75 space-y-4 text-left max-w-xl font-extralight pt-10 md:pt-0"
         >
           <p id="section4-step-description">
-            Đây là bước quan trọng nhất quyết định độ bền của sản phẩm. Thanh
-            Hải tuyển chọn những loại đất sét có độ dẻo cao, khả năng chịu nhiệt
-            tốt (thường từ các vùng nguyên liệu nổi tiếng như Trúc Thôn). Đất
-            được xử lý qua hệ thống bể lọc để loại bỏ tạp chất, sau đó pha trộn
-            theo tỷ lệ bí truyền để tạo ra "xương" gốm vững chắc.
+            {{ !empty($factory->material_steps) ? ($factory->material_steps[0]['description'] ?? '') : '' }}
           </p>
         </div>
       </div>
     </div>
 
     <!-- Dots Pagination - Mobile Only -->
-    <div class="flex justify-center gap-2 mt-2 md:mt-12 md:hidden">
-      <button
-        class="material-dot active w-2 h-2 rounded-full transition-all duration-300 cursor-pointer"
-        data-index="0"
-      ></button>
-      <button
-        class="material-dot w-2 h-2 rounded-full transition-all duration-300 cursor-pointer"
-        data-index="1"
-      ></button>
-      <button
-        class="material-dot w-2 h-2 rounded-full transition-all duration-300 cursor-pointer"
-        data-index="2"
-      ></button>
-    </div>
+    @if(!empty($factory->material_steps) && count($factory->material_steps) > 1)
+      <div class="flex justify-center gap-2 mt-2 md:mt-12 md:hidden">
+        @foreach($factory->material_steps as $index => $step)
+          <button
+            class="material-dot w-2 h-2 rounded-full transition-all duration-300 cursor-pointer {{ $index === 0 ? 'active' : '' }}"
+            data-index="{{ $index }}"
+          ></button>
+        @endforeach
+      </div>
+    @endif
   </div>
 </section>
 
@@ -176,26 +150,7 @@
         "section4-step-description",
       );
 
-      const section4Steps = [
-        {
-          number: "1",
-          title: "LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)",
-          description:
-            'Đây là bước quan trọng nhất quyết định độ bền của sản phẩm. Thanh Hải tuyển chọn những loại đất sét có độ dẻo cao, khả năng chịu nhiệt tốt (thường từ các vùng nguyên liệu nổi tiếng như Trúc Thôn). Đất được xử lý qua hệ thống bể lọc để loại bỏ tạp chất, sau đó pha trộn theo tỷ lệ bí truyền để tạo ra "xương" gốm vững chắc.',
-        },
-        {
-          number: "2",
-          title: "TẠO HÌNH VÀ HOÀN THIỆN MỘC",
-          description:
-            "Sau khi đạt chuẩn độ dẻo, đất được đưa vào công đoạn tạo hình bằng khuôn hoặc thủ công tùy từng dòng sản phẩm. Mỗi viên ngói, viên gạch đều được chỉnh sửa tỉ mỉ các cạnh và bề mặt trước khi chuyển sang giai đoạn sấy nhằm bảo đảm tính thẩm mỹ và độ đồng đều.",
-        },
-        {
-          number: "3",
-          title: "NUNG Ở NHIỆT ĐỘ CAO",
-          description:
-            "Sản phẩm sau khi tạo hình sẽ được sấy khô tự nhiên để loại bỏ độ ẩm, sau đó đưa vào lò nung với nhiệt độ lên đến 1200°C. Quá trình nung này giúp đất sét hóa cứng, tạo ra độ bền cơ học cao và khả năng chống thấm nước vượt trội cho ngói và gạch.",
-        },
-      ];
+      const section4Steps = {{ Js::from($factory->material_steps ?? []) }};
 
       const updateSection4Text = (index) => {
         if (

@@ -45,7 +45,7 @@
 ┌────────────────────▼─────────────────────────────┐
 │              Model / ORM Layer                    │
 │  ┌─────────────────────────────────────────────┐ │
-│  │ Eloquent Models (38): relationships, scopes, │ │
+│  │ Eloquent Models (42): relationships, scopes, │ │
 │  │ custom PKs, casts, fillable/hidden attrs     │ │
 │  └─────────────────────────────────────────────┘ │
 └────────────────────┬─────────────────────────────┘
@@ -54,7 +54,7 @@
 │              Database Layer                       │
 │  ┌─────────────────────────────────────────────┐ │
 │  │ MariaDB (th_ceramics_fullstack)              │ │
-│  │ 38 tables across 5 migrations               │ │
+│  │ 42 tables across 9 migrations               │ │
 │  │ Session, Cache, Queue: database driver      │ │
 │  └─────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────┘
@@ -75,18 +75,18 @@ Two route files loaded under a single `web` middleware group in `bootstrap/app.p
 - Guest/Auth redirects configured in `bootstrap/app.php`
 
 ### 3. Controller Layer
-- **Admin controllers** (32 files): Thin controllers that validate requests, delegate to services, and return redirect responses with flash messages
-- **Client controllers** (10 + 9 product pages): Query services, return view responses with data
+- **Admin controllers** (36 files): Thin controllers that validate requests, delegate to services, and return redirect responses with flash messages
+- **Client controllers** (13 + 9 product pages): Query services, return view responses with data
 - All use constructor DI with `private readonly` service properties
 
 ### 4. Service Layer
-- **33 service classes**: One per major model
+- **36 service classes**: One per major model
 - Contains business logic including file upload handling, transaction management, and code uniqueness checks
 - No repository pattern — services interact directly with Eloquent models
 - `GlobalProductCodeService`: Cross-table uniqueness validation for product codes
 
 ### 5. Model Layer
-- **38 Eloquent models**: Map to database tables with custom primary keys
+- **42 Eloquent models**: Map to database tables with custom primary keys
 - Define relationships, query scopes, attribute casting, and fillable/hidden attributes
 - Single-record pattern for product section models (no create/delete)
 
@@ -179,6 +179,12 @@ Sub-items with hierarchy:
    BoNocChuVanCt ─ PhanLoaiBoNocChuVanCt (classifications)
 ```
 
+Page Configuration Tables (static pages, single-record sections)
+│
+├── PageFactory (factory tour page, 14+ fields)
+├── PageContact (contact page, 5 fields)
+└── PageFaq -- Faqs (FAQ items, 5 fields)
+
 Users table (separate, for admin auth)
 
 ## Routing Strategy
@@ -191,8 +197,14 @@ Users table (separate, for admin auth)
 /admin/{category}-ct      → Detail items CRUD (e.g., ngoi-am-duong-ct)
 /admin/mau-sac-{ct}       → Colors CRUD (e.g., mau-sac-ngoi-am-duong-ct)
 /admin/dinh-muc-{ct}      → Ratings CRUD (e.g., dinh-muc-ngoi-am-duong)
+/admin/pages/factory       → Factory page config (single-record edit)
+/admin/pages/contact       → Contact page config (single-record edit)
+/admin/pages/faq           → FAQ page config + FAQ items CRUD
 
 /                          → Home page
+/xuong-san-xuat             → Factory tour (dynamic from DB)
+/lien-he                    → Contact page (dynamic from DB)
+/cau-hoi-thuong-gap          → FAQ page (dynamic from DB)
 /ve-chung-toi              → About
 /san-pham/{category}       → Product listing
 /san-pham/{category}/{id}  → Product detail
@@ -200,7 +212,6 @@ Users table (separate, for admin auth)
 /du-an                     → Projects listing
 /gio-hang                  → Cart
 /thanh-toan                → Checkout
-/dich-vu/{page}            → Customer service pages
 ```
 
 ## Authentication Flow

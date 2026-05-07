@@ -38,41 +38,10 @@
         data-aos="fade-up"
       >
         <h3 class="text-lg md:text-[20px] font-bold uppercase mb-6">
-          QUY TRÌNH <br class="md:hidden">"KHOA HỌC - NGĂN NẮP - TÁCH BIỆT"
+          {!! $factory->process_title ?? 'QUY TRÌNH <br class="md:hidden">"KHOA HỌC - NGĂN NẮP - TÁCH BIỆT"' !!}
         </h3>
-        <div
-          class="text-[15px]/[1.6] md:text-base/9 text-primary space-y-6 md:space-y-2 text-justify"
-        >
-          <p>
-            Điểm khác biệt lớn nhất giúp khách hàng luôn an tâm khi đặt hàng tại
-            Thanh Hải chính là sự chuyên nghiệp trong cách bố trí nhà xưởng.
-            Chúng tôi hiểu rằng, một sản phẩm gốm sứ hoàn hảo phải được ra đời
-            từ một môi trường làm việc kỷ luật:
-          </p>
-          <ul
-            class="space-y-1 list-decimal marker:font-bold marker:text-primary marker:mr-1 ml-5"
-          >
-            <li>
-              <strong class="text-primary font-bold"
-                >Khu vực tạo cốt và pha men:</strong
-              >
-              Được tách biệt hoàn toàn để tránh bụi bẩn ảnh hưởng đến các khâu
-              sau.
-            </li>
-            <li>
-              <strong class="text-primary font-bold"
-                >Khu vực chế tác & tạo hình:</strong
-              >
-              Nơi những nghệ nhân tập trung cao độ để thổi hồn vào đất.
-            </li>
-            <li>
-              <strong class="text-primary font-bold"
-                >Khu vực nung & kiểm định:</strong
-              >
-              Được bố trí lối đi rộng rãi, giúp quy trình vận chuyển bán thành
-              phẩm diễn ra trơn tru, hạn chế tối đa nứt vỡ.
-            </li>
-          </ul>
+        <div class="rich-text-content text-justify">
+          {!! $factory->process_description !!}
         </div>
       </div>
 
@@ -121,30 +90,21 @@
         <!-- Swiper -->
         <div class="swiper section3-swiper overflow-hidden shadow-lg">
           <div class="swiper-wrapper">
-            <!-- Slide 1 -->
-            <div class="swiper-slide w-full">
-              <div
-                class="aspect-[3/4] md:aspect-[4/5] object-cover bg-neutral-1"
-              >
-                <img
-                  src="{{ asset('assets/images/factory-02.png') }}"
-                  alt="Khu vực nhà xưởng"
-                  class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
-                />
-              </div>
-            </div>
-            <!-- Slide 2 -->
-            <div class="swiper-slide w-full">
-              <div
-                class="aspect-[3/4] md:aspect-[4/5] object-cover bg-neutral-1"
-              >
-                <img
-                  src="{{ asset('assets/images/den-gom-01.png') }}"
-                  alt="Gốm sứ Thanh Hải"
-                  class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
-                />
-              </div>
-            </div>
+            @if(!empty($factory->process_slider))
+              @foreach($factory->process_slider as $image)
+                <div class="swiper-slide w-full">
+                  <div
+                    class="aspect-[3/4] md:aspect-[4/5] object-cover bg-neutral-1"
+                  >
+                    <img
+                      src="{{ asset('storage/' . $image) }}"
+                      alt="Khu vực nhà xưởng"
+                      class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
+                    />
+                  </div>
+                </div>
+              @endforeach
+            @endif
           </div>
         </div>
       </div>
@@ -161,22 +121,10 @@
         data-aos-delay="200"
       >
         <h3 class="text-[15px] md:text-base font-bold uppercase mb-8 md:mb-4">
-          SỨC MẠNH CỦA SỰ KẾT HỢP:
-          <br class="md:hidden" />MÁY MÓC HIỆN ĐẠI & BÀN TAY NGHỆ NHÂN
+          {!! $factory->process_bottom_title ?? 'SỨC MẠNH CỦA SỰ KẾT HỢP: <br class="md:hidden" />MÁY MÓC HIỆN ĐẠI & BÀN TAY NGHỆ NHÂN' !!}
         </h3>
-        <div class="text-[15px]/[1.6] md:text-base/9 text-primary text-justify">
-          <p>
-            Dù sở hữu hệ thống máy móc hỗ trợ vừa phải và hiện đại để đảm bảo độ
-            chuẩn xác về thông số kỹ thuật (như độ nén, độ bền uốn theo tiêu
-            chuẩn ISO), nhưng tại Thanh Hải, giá trị cốt lõi vẫn nằm ở đôi bàn
-            tay con người.
-          </p>
-          <p class="mt-6">
-            Chúng tôi kiên trì giữ vững phương thức thủ công truyền thống trong
-            các khâu quan trọng. Mỗi sản phẩm đều mang dấu ấn riêng biệt, có
-            chiều sâu và sự ấm áp mà những dây chuyền công nghiệp đại trà không
-            bao giờ có được.
-          </p>
+        <div class="rich-text-content">
+          {!! $factory->process_bottom_desc !!}
         </div>
       </div>
     </div>
@@ -187,13 +135,15 @@
       data-aos="fade-up"
       data-aos-delay="200"
     >
-      <div class="aspect-[2/1] object-cover bg-neutral-1">
-        <img
-          src="{{ asset('assets/images/gach-co-work-2.jpg') }}"
-          alt="Gốm sứ Thanh Hải"
-          class="w-full h-full object-cover"
-        />
-      </div>
+      @if(!empty($factory->process_bottom_image))
+        <div class="aspect-[2/1] object-cover bg-neutral-1">
+          <img
+            src="{{ asset('storage/' . $factory->process_bottom_image) }}"
+            alt="Gốm sứ Thanh Hải"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      @endif
     </div>
   </div>
 </section>

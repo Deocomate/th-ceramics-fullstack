@@ -45,7 +45,7 @@
           class="text-[36px] md:text-[52px] lg:text-[64px] leading-[40px] md:leading-[1.2] tracking-tight font-medium font-arima"
           data-aos="fade-up"
         >
-          Nhà xưởng
+          {{ $factory->intro_title ?? 'Nhà xưởng' }}
         </h2>
       </div>
       <!-- Right col -->
@@ -54,21 +54,14 @@
           class="text-base md:text-xl font-semibold uppercase mb-10 md:mb-6 leading-[24px]"
           data-aos="fade-up"
         >
-          QUY MÔ ẤN TƯỢNG: 5000M² - 3 TẦNG VẬN HÀNH CHUYÊN BIỆT
+          {{ $factory->intro_subtitle ?? 'QUY MÔ ẤN TƯỢNG: 5000M² - 3 TẦNG VẬN HÀNH CHUYÊN BIỆT' }}
         </h3>
         <p
           class="text-base md:text-base/9 font-extralight text-primary text-left md:text-justify leading-[24px]"
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          Để đáp ứng những đơn hàng lớn cho các công trình trọng điểm như đình
-          chùa, biệt thự hay khu nghỉ dưỡng, Thanh Hải đã đầu tư hệ thống nhà
-          xưởng với tổng diện tích lên đến 5.000m², được thiết kế tối ưu với 3
-          tầng sản xuất. Việc mở rộng không gian không chỉ khẳng định năng lực
-          cung ứng mạnh mẽ mà còn giúp chúng tôi kiểm soát chất lượng sản phẩm
-          một cách khắt khe nhất. Mỗi tầng đều được quy hoạch bài bản, đảm bảo
-          diện tích lưu kho và khu vực chế tác luôn thông thoáng, đáp ứng mọi
-          tiến độ gấp gáp từ khách hàng.
+          {{ $factory->intro_description ?? '' }}
         </p>
 
         <!-- Mobile Divider -->

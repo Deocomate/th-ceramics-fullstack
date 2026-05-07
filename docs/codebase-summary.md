@@ -2,7 +2,7 @@
 
 ## Overview
 
-Laravel 12 monolith with Blade frontend. 38 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths.
+Laravel 12 monolith with Blade frontend. 42 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js + TinyMCE.
 
 ## Directory Tree
 
@@ -13,23 +13,24 @@ th-ceramics-fullstack/
 │   │   └── FileUploadHelper.php          # Image upload/replace/delete
 │   ├── Http/
 │   │   ├── Controllers/
-│   │   │   ├── Admin/                    # 32 files: CRUD per product category
+│   │   │   ├── Admin/                    # 36 files: CRUD per product category + page config panels
 │   │   │   └── Client/
-│   │   │       └── ProductPages/         # 9 product page controllers
+│   │   │       ├── ProductPages/         # 9 product page controllers
+│   │   │       └── FactoryController, ContactController, FaqController  # 3 dynamic page controllers
 │   │   ├── Middleware/
 │   │   │   └── RoleMiddleware.php        # RBAC: superadmin, admin
-│   │   └── Requests/                     # 10 form validation classes
-│   ├── Models/                           # 38 Eloquent models
+│   │   └── Requests/                     # 13 form validation classes
+│   ├── Models/                           # 42 Eloquent models
 │   ├── Providers/
 │   │   └── AppServiceProvider.php        # Empty registration
-│   └── Services/                         # 33 service classes (business logic)
+│   └── Services/                         # 36 service classes (business logic)
 ├── bootstrap/
 │   ├── app.php                           # Middleware, routing, exception config
 │   └── providers.php                     # Service provider registration
 ├── config/                               # 10 Laravel config files
 ├── database/
 │   ├── factories/
-│   ├── migrations/                       # 5 files → 38 tables
+│   ├── migrations/                       # 9 files → 42 tables
 │   └── seeders/                          # 4 files (User, ProductType, ProductDetail)
 ├── public/
 │   └── assets/
@@ -60,22 +61,22 @@ th-ceramics-fullstack/
 
 | Directory | Count | Description |
 |-----------|-------|-------------|
-| `app/Models/` | 38 | Eloquent models mapping to DB tables |
-| `app/Services/` | 33 | Business logic layer |
-| `app/Http/Controllers/Admin/` | 32 | Admin CRUD controllers |
-| `app/Http/Controllers/Client/` | 10 | Public page controllers |
+| `app/Models/` | 42 | Eloquent models mapping to DB tables |
+| `app/Services/` | 36 | Business logic layer |
+| `app/Http/Controllers/Admin/` | 36 | Admin CRUD controllers |
+| `app/Http/Controllers/Client/` | 13 | Public page controllers |
 | `app/Http/Controllers/Client/ProductPages/` | 9 | Product page controllers |
-| `app/Http/Requests/` | 10 | Form request validators |
+| `app/Http/Requests/` | 13 | Form request validators |
 | `app/Helpers/` | 1 | FileUploadHelper |
 | `app/Http/Middleware/` | 1 | RoleMiddleware |
-| `routes/` | 3 | web.php, client.php, console.php |
-| `database/migrations/` | 5 | 5 migration files = 38 tables |
+| `routes/` | 3 | web.php (/admin + /admin/pages/*), client.php, console.php |
+| `database/migrations/` | 9 | 9 migration files = 42 tables |
 | `database/seeders/` | 4 | User, ProductType, ProductDetail seeders |
-| `resources/views/admin/` | 58 | Admin Blade templates |
+| `resources/views/admin/` | 61 | Admin Blade templates |
 | `resources/views/clients/` | 134 | Client Blade templates |
 | `resources/views/components/` | 28 | Shared Blade components |
 | `config/` | 10 | App, database, cache, session, etc. |
-| `tests/` | 4 | Pest test files |
+| `tests/` | 7 | Pest test files (14 tests, 31 assertions, all passing) |
 
 ## Models Breakdown
 
@@ -90,6 +91,9 @@ Multi-row product items: `NgoiAmDuongCt`, `NgoiHaiCoCt`, `NgoiHaiVanMieuCt`, `Ga
 
 ### Dinh Muc Models (6)
 Rating/estimation tables: `DinhMucNgoiAmDuong`, `DinhMucNgoiHaiCo`, `DinhMucNgoiHaiVanMieu`, `DinhMucGachHoaThongGio`, `DinhMucGachTrangTri`, `DinhMucGachCoBatTrang`
+
+### Page Configuration Models (4)
+Single-row config for static pages: `PageFactory` (14+ fields for factory tour page), `PageContact` (5 fields for contact page), `PageFaq` (FAQ page config), `Faq` (FAQ items with WYSIWYG answers)
 
 ### System Models (1)
 `User` — authentication with role-based access

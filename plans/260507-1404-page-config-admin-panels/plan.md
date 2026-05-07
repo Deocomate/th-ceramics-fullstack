@@ -1,7 +1,7 @@
 ---
 title: "Page Configuration Admin Panels (Factory, Contact, FAQ)"
 description: "Build admin CRUD for 3 single pages: Factory (Xưởng Sản Xuất), Contact (Liên Hệ), FAQ (Câu Hỏi Thường Gặp) with JSON repeater fields, WYSIWYG editor, image preview, and client-side data binding."
-status: pending
+status: completed
 priority: P2
 branch: "main"
 tags: ["admin", "page-config", "factory", "contact", "faq", "json-fields", "file-upload"]
@@ -26,10 +26,10 @@ Follows existing single-record pattern (`DenGomSu`, `NgoiAmDuong`): one row per 
 
 | Phase | Name | Status | Effort |
 |-------|------|--------|--------|
-| 1 | [Database & Setup](./phase-01-database-setup.md) | Pending | 2h |
-| 2 | [Factory Admin Panel](./phase-02-factory-admin-panel.md) | Pending | 6h |
-| 3 | [Contact & FAQ Admin Panels](./phase-03-contact-faq-admin-panels.md) | Pending | 4h |
-| 4 | [Client Binding & Testing](./phase-04-client-binding-testing.md) | Pending | 4h |
+| 1 | [Database & Setup](./phase-01-database-setup.md) | Completed | 2h |
+| 2 | [Factory Admin Panel](./phase-02-factory-admin-panel.md) | Completed | 6h |
+| 3 | [Contact & FAQ Admin Panels](./phase-03-contact-faq-admin-panels.md) | Completed | 4h |
+| 4 | [Client Binding & Testing](./phase-04-client-binding-testing.md) | Completed | 4h |
 
 ## Dependencies
 
