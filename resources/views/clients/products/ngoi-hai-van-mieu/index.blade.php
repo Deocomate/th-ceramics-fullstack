@@ -330,7 +330,7 @@
   <!-- Mobile Top Banner -->
   <div class="md:hidden relative h-[403px] overflow-hidden">
     <div class="absolute inset-x-0 top-0 h-[245px] z-0">
-      <img src="{{ $config && $config->thumbnail_main ? Storage::url($config->thumbnail_main) : asset('assets/images/ngoi-hai-van-mieu-banner.jpg') }}" alt="Ngói Hài Văn Miếu Banner"
+      <img src="{{ $config && $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/ngoi-hai-van-mieu-banner.jpg') }}" alt="Ngói Hài Văn Miếu Banner"
         class="w-full h-full object-cover object-center" />
       <div class="absolute inset-0" style="
                 background: linear-gradient(
@@ -356,7 +356,7 @@
             <div
               class="absolute -top-[5px] -left-[5px] right-[5px] bottom-[5px] border border-white pointer-events-none">
             </div>
-            <img src="{{ $config && $config->thumbnail1 ? Storage::url($config->thumbnail1) : asset('assets/images/ngoi-hai-01.png') }}" alt="{{ $config->title1 ?? 'Ngói văn miếu tròn' }}"
+            <img src="{{ $config && $config->thumbnail1 ? asset('storage/' . $config->thumbnail1) : asset('assets/images/ngoi-hai-01.png') }}" alt="{{ $config->title1 ?? 'Ngói văn miếu tròn' }}"
               class="relative z-10 block w-full h-[136px] object-cover" />
           </div>
           <h3
@@ -370,7 +370,7 @@
             <div
               class="absolute -top-[5px] -left-[5px] right-[5px] bottom-[5px] border border-white pointer-events-none">
             </div>
-            <img src="{{ $config && $config->thumbnail2 ? Storage::url($config->thumbnail2) : asset('assets/images/ngoi-hai-02.png') }}" alt="{{ $config->title2 ?? 'Ngói văn miếu mũi' }}"
+            <img src="{{ $config && $config->thumbnail2 ? asset('storage/' . $config->thumbnail2) : asset('assets/images/ngoi-hai-02.png') }}" alt="{{ $config->title2 ?? 'Ngói văn miếu mũi' }}"
               class="relative z-10 block w-full h-[136px] object-cover" />
           </div>
           <h3
@@ -384,7 +384,7 @@
             <div
               class="absolute -top-[5px] -left-[5px] right-[5px] bottom-[5px] border border-white pointer-events-none">
             </div>
-            <img src="{{ $config && $config->thumbnail3 ? Storage::url($config->thumbnail3) : asset('assets/images/ngoi-hai-03.png') }}" alt="{{ $config->title3 ?? 'Ngói hài cổ' }}"
+            <img src="{{ $config && $config->thumbnail3 ? asset('storage/' . $config->thumbnail3) : asset('assets/images/ngoi-hai-03.png') }}" alt="{{ $config->title3 ?? 'Ngói hài cổ' }}"
               class="relative z-10 block w-full h-[136px] object-cover" />
           </div>
           <h3
@@ -400,7 +400,7 @@
   <div class="hidden md:block">
     <!-- Background Image with Dark Overlay -->
     <div class="absolute inset-x-0 top-0 h-[65%] lg:h-[75%] z-0">
-      <img src="{{ $config && $config->thumbnail_main ? Storage::url($config->thumbnail_main) : asset('assets/images/ngoi-hai-van-mieu-banner.jpg') }}" alt="Ngói Hài Văn Miếu Banner"
+      <img src="{{ $config && $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/ngoi-hai-van-mieu-banner.jpg') }}" alt="Ngói Hài Văn Miếu Banner"
         class="w-full h-full object-cover object-center" />
       <div class="absolute inset-0" style="
                 background: linear-gradient(
@@ -430,7 +430,7 @@
             <div
               class="absolute -top-2 -left-2 sm:-top-3 sm:-left-3 w-full h-full border border-white/80 z-20 pointer-events-none">
             </div>
-            <img src="{{ $config && $config->thumbnail1 ? Storage::url($config->thumbnail1) : asset('assets/images/ngoi-hai-01.png') }}" alt="{{ $config->title1 ?? 'Ngói văn miếu tròn' }}"
+            <img src="{{ $config && $config->thumbnail1 ? asset('storage/' . $config->thumbnail1) : asset('assets/images/ngoi-hai-01.png') }}" alt="{{ $config->title1 ?? 'Ngói văn miếu tròn' }}"
               class="relative z-10 w-full h-auto aspect-[3/5] object-cover shadow-2xl" />
           </div>
           <h3
@@ -446,7 +446,7 @@
             <div
               class="absolute -top-2 -left-2 sm:-top-3 sm:-left-3 w-full h-full border border-white/80 z-20 pointer-events-none">
             </div>
-            <img src="{{ $config && $config->thumbnail2 ? Storage::url($config->thumbnail2) : asset('assets/images/ngoi-hai-02.png') }}" alt="{{ $config->title2 ?? 'Ngói văn miếu mũi' }}"
+            <img src="{{ $config && $config->thumbnail2 ? asset('storage/' . $config->thumbnail2) : asset('assets/images/ngoi-hai-02.png') }}" alt="{{ $config->title2 ?? 'Ngói văn miếu mũi' }}"
               class="relative z-10 w-full h-auto aspect-[3/5] object-cover shadow-2xl" />
           </div>
           <h3
@@ -462,7 +462,7 @@
             <div
               class="absolute -top-2 -left-2 sm:-top-3 sm:-left-3 w-full h-full border border-white/80 z-20 pointer-events-none">
             </div>
-            <img src="{{ $config && $config->thumbnail3 ? Storage::url($config->thumbnail3) : asset('assets/images/ngoi-hai-03.png') }}" alt="{{ $config->title3 ?? 'Ngói hài cổ' }}"
+            <img src="{{ $config && $config->thumbnail3 ? asset('storage/' . $config->thumbnail3) : asset('assets/images/ngoi-hai-03.png') }}" alt="{{ $config->title3 ?? 'Ngói hài cổ' }}"
               class="relative z-10 w-full h-auto aspect-[3/5] object-cover shadow-2xl" />
           </div>
           <h3
@@ -561,8 +561,10 @@
   </div>
 </section>
 
+<x-products.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" />
+
 <div class="ngoi-hai-journey-scope">
-  <x-products.journey-video />
+  <x-products.journey-video :video="$config->video ?? null" />
 </div>
 
 <div class="ngoi-hai-works-scope">

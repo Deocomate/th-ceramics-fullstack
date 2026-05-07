@@ -1,0 +1,10 @@
+<section class="py-16 md:py-24 bg-neutral-2">
+  <div class="w-[85%] max-w-[1320px] mx-auto flex flex-col gap-12 md:gap-32">
+    @include('clients.news.partials.main-content-category-cam-nang')
+    <div class="border-t border-gray-200 pt-3 md:pt-0"></div>
+    @include('clients.news.partials.main-content-category-gom-su-thanh-hai')
+    <div class="border-t border-gray-200 pt-3 md:pt-0"></div>
+    @include('clients.news.partials.main-content-category-cong-trinh-du-an')
+    <div class="border-t border-gray-200 pt-3 md:pt-0"></div>
+  </div>
+</section>

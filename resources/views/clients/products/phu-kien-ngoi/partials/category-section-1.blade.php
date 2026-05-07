@@ -12,7 +12,7 @@
         @endphp
         <div
           class="w-full flex-grow relative shadow-xl overflow-hidden bg-black/5 min-h-[400px] lg:min-h-[500px] border border-black/10">
-          <img src="{{ $featuredImage ? Storage::url($featuredImage) : asset('assets/images/lan-can-bau.png') }}" alt="" class="absolute inset-0 w-full h-full object-cover" />
+          <img src="{{ $featuredImage ? asset('storage/' . $featuredImage) : asset('assets/images/lan-can-bau.png') }}" alt="" class="absolute inset-0 w-full h-full object-cover" />
           <div
             class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-[560px] z-10 hover:scale-105 transition-transform duration-300">
             <div class="relative w-full flex items-center justify-center">
@@ -37,7 +37,7 @@
             <div class="flex flex-col group cursor-pointer" onclick="window.location.href = '{{ route('client.products.phu-kien-ngoi.detail', $product->ngoi_bo_noc_ct_id) }}'">
               <div
                 class="product-card relative w-full aspect-square mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1 shadow-md">
-                <img src="{{ $productImage ? Storage::url($productImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
+                <img src="{{ $productImage ? asset('storage/' . $productImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
                 <div class="product-overlay">
                   <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
                   <span>Xem chi tiết</span>

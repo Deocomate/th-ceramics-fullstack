@@ -237,7 +237,7 @@
 </section>
 
 <x-products.outstanding-value />
-<x-products.journey-video />
+<x-products.journey-video :video="$config->video" />
 <x-products.works />
 
 <!-- FAQ Section -->

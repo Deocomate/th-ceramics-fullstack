@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
 use App\Services\DinhMucNgoiHaiVanMieuService;
+use App\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiHaiVanMieuCtService;
 use App\Services\NgoiHaiVanMieuCtService;
 use App\Services\NgoiHaiVanMieuService;
@@ -15,15 +16,17 @@ class NgoiHaiVanMieuController extends Controller
         private readonly NgoiHaiVanMieuCtService $ngoiHaiVanMieuCtService,
         private readonly MauSacNgoiHaiVanMieuCtService $mauSacService,
         private readonly DinhMucNgoiHaiVanMieuService $dinhMucService,
+        private readonly GiaTriVuotTroiService $giaTriVuotTroiService,
     ) {}
 
     public function index()
     {
         $config = $this->ngoiHaiVanMieuService->getFirstRecord();
         $products = $this->ngoiHaiVanMieuCtService->getAll('active');
+        $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();
 
         return view('clients.products.ngoi-hai-van-mieu.index', compact(
-            'config', 'products'
+            'config', 'products', 'giaTriVuotTroi'
         ));
     }
 

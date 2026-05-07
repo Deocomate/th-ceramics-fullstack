@@ -31,10 +31,10 @@
 
     <!-- SECTION 1: TOP BANNER -->
     <section class="relative min-h-[675px] md:min-h-[600px] flex items-center md:pt-24 md:pb-8 overflow-hidden">
-        <!-- Lớp hình nền chính của dải banner -->
+        <!-- Lớp hình nền chính của dải banner (Data binding: $config->thumbnail_main) -->
         <div class="absolute inset-0 z-0">
-            <img src="{{ asset('assets/images/ngoi-am-duong-banner.jpg') }}" alt="Ngói Âm Dương Banner"
-                class="w-full h-full object-cover object-bottom" />
+            <img src="{{ $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/ngoi-am-duong-banner.jpg') }}"
+                alt="Ngói Âm Dương Banner" class="w-full h-full object-cover object-bottom" />
             <div class="absolute inset-0 bg-black/70"></div>
             <div
                 class="absolute bottom-0 left-0 right-0 h-3/5 md:h-3/5 bg-[linear-gradient(to_top,#EFE4DE_10%,white_25%,white_60%,transparent_100%)]">
@@ -78,12 +78,14 @@
                     <div
                         class="bg-white p-3 gap-3 md:p-6 md:gap-6 flex w-full max-w-[860px] transform translate-y-0 md:-translate-y-8 rounded md:shadow-none">
                         <div class="w-1/2 aspect-[167/138] md:aspect-square flex items-center justify-center">
-                            <img src="{{ asset('assets/images/ngoi-am-duong-01.jpg') }}" alt="Ngói Âm Dương 01"
-                                class="w-full h-full object-cover" />
+                            <!-- Data binding: $config->thumbnail1 -->
+                            <img src="{{ $config->thumbnail1 ? asset('storage/' . $config->thumbnail1) : asset('assets/images/ngoi-am-duong-01.jpg') }}"
+                                alt="Ngói Âm Dương 01" class="w-full h-full object-cover" />
                         </div>
                         <div class="w-1/2 aspect-[167/138] md:aspect-square flex items-center justify-center">
-                            <img src="{{ asset('assets/images/ngoi-am-duong-02.png') }}" alt="Ngói Âm Dương 02"
-                                class="w-full h-full object-cover" />
+                            <!-- Data binding: $config->thumbnail2 -->
+                            <img src="{{ $config->thumbnail2 ? asset('storage/' . $config->thumbnail2) : asset('assets/images/ngoi-am-duong-02.png') }}"
+                                alt="Ngói Âm Dương 02" class="w-full h-full object-cover" />
                         </div>
                     </div>
                 </div>
@@ -98,7 +100,8 @@
 
     <!-- SECTION 3: PRODUCT GRID -->
     <x-products.product-filter />
-    <x-products.product-grid category="ngoi-am-duong" :products="$products" routeName="client.products.ngoi-am-duong.detail" />
+    <x-products.product-grid category="ngoi-am-duong" :products="$products"
+        routeName="client.products.ngoi-am-duong.detail" />
 
     <!-- SECTION 4: SIZE OPTIONS -->
     <section class="w-[85%] max-w-[1320px] mx-auto pb-[40px] md:pb-16 pt-1" data-aos="fade-up">
@@ -125,9 +128,13 @@
         </div>
     </section>
 
-    <!-- Các Component dùng chung của Layout Sản phẩm -->
-    <x-products.outstanding-value />
-    <x-products.journey-video />
+    <!-- Các Component dùng chung của Layout Sản phẩm (Data binding) -->
+    <!-- Truyền $giaTriVuotTroi vào component -->
+    <x-products.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi" />
+
+    <!-- Truyền $config->video vào component -->
+    <x-products.journey-video :video="$config->video" />
+
     <x-products.works />
 
     <!-- SECTION 6: FAQ -->

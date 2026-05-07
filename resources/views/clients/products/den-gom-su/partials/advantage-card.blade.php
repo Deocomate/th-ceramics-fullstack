@@ -9,7 +9,7 @@
   >
     <!-- Hình nền của card -->
     <img
-      src="{{ asset('assets/images/den-gom-bg.png') }}"
+      src="{{ isset($bgImage) ? asset('storage/' . $bgImage) : asset('assets/images/den-gom-bg.png') }}"
       class="absolute inset-0 w-full h-full object-cover z-0 opacity-100 scale-[1.02]"
       alt="background"
     />

@@ -14,7 +14,8 @@
 <!-- Top Banner for Detail -->
 <section class="hidden md:flex relative w-full h-[180px] md:h-[210px] items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('assets/images/detail-banner.png') }}" alt="Phụ Kiện Ngói Banner" class="w-full h-full object-cover" />
+        @php $detailBanner = (!empty($product->images) && is_array($product->images)) ? $product->images[0] : null; @endphp
+        <img src="{{ $detailBanner ? asset('storage/' . $detailBanner) : asset('assets/images/detail-banner.png') }}" alt="Phụ Kiện Ngói Banner" class="w-full h-full object-cover" />
     </div>
     <div class="relative z-10 text-center text-white px-4 pt-4">
         <h1 class="text-2xl md:text-3xl font-bold mb-2.5 uppercase">
@@ -85,7 +86,7 @@
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         @foreach($product->images as $image)
         <div class="aspect-square overflow-hidden rounded-sm shadow-md">
-            <img src="{{ Storage::url($image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
+            <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
         </div>
         @endforeach
     </div>
@@ -99,7 +100,7 @@
         Bảng kích thước
     </h2>
     <div class="size-options-scroll mobile-scroll-visible w-full pb-2 overflow-x-scroll md:overflow-x-hidden">
-        <img src="{{ Storage::url($product->size_image) }}" alt="Kích thước {{ $product->name }}"
+        <img src="{{ asset('storage/' . $product->size_image) }}" alt="Kích thước {{ $product->name }}"
             class="h-auto object-contain max-w-none w-[200%] md:w-full"
             onload="window.dispatchEvent(new Event('resize'))" />
     </div>
@@ -138,7 +139,7 @@
             @endphp
             <a href="{{ route('client.products.phu-kien-ngoi.detail', $relatedId) }}" class="flex flex-col group cursor-pointer">
                 <div class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square transition-all duration-300 group-hover:-translate-y-1">
-                    <img src="{{ $relatedImage ? Storage::url($relatedImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $related->name }}" class="w-full h-full object-cover mix-blend-multiply" />
+                    <img src="{{ $relatedImage ? asset('storage/' . $relatedImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $related->name }}" class="w-full h-full object-cover mix-blend-multiply" />
                     <div class="product-overlay">
                         <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
                         <span>Xem chi tiết</span>

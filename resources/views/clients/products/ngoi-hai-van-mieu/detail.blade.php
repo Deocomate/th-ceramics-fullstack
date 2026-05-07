@@ -10,7 +10,7 @@
 <!-- Top Banner for Detail -->
 <section class="hidden md:flex relative w-full h-[180px] md:h-[210px] items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('assets/images/detail-banner.png') }}" alt="Ngói Hài Văn Miếu Banner" class="w-full h-full object-cover" />
+        <img src="{{ !empty($product->images) && is_array($product->images) && isset($product->images[0]) ? asset('storage/' . $product->images[0]) : asset('assets/images/detail-banner.png') }}" alt="{{ $product->name ?? 'Ngói Hài Văn Miếu' }} Banner" class="w-full h-full object-cover" />
     </div>
     <div class="relative z-10 text-center text-white px-4 pt-4">
         <h1 class="text-2xl md:text-3xl font-bold mb-2.5 uppercase">Ngói Hài Văn Miếu</h1>
@@ -37,11 +37,11 @@
 <x-products.product-detail-container
     title="{{ $product->name ?? 'Ngói Hài Văn Miếu' }}"
     price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
-    :colors="$colors->map(fn($c) => ['name' => $c->name, 'colorCode' => '#D9D9D9', 'image' => $c->image ? Storage::url($c->image) : null])->toArray()"
+    :colors="$colors->map(fn($c) => ['name' => $c->name, 'colorCode' => '#D9D9D9', 'image' => $c->image ? asset('storage/' . $c->image) : null])->toArray()"
 />
 
 <x-products.hai-vm-calculator
-    image="{{ $product->size_image ? Storage::url($product->size_image) : asset('assets/images/gach-bat-size-1.png') }}"
+    image="{{ $product->size_image ? asset('storage/' . $product->size_image) : asset('assets/images/gach-bat-size-1.png') }}"
     label1="Ngói trên mái gỗ"
     rate1="{{ $dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_go ? $dinhMuc->first()->ngoi_tren_mai_go . ' viên/m²' : '125 viên/m²' }}"
     label2="Ngói trên mái bê tông"

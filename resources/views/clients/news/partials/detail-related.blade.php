@@ -1,0 +1,18 @@
+<!-- Related Articles for News Detail -->
+<section class="pb-8 md:pb-16">
+    <div class="w-[85%] max-w-[1320px] mx-auto">
+
+        <div>
+            <h2
+                class="text-sm md:text-base font-archivo font-bold text-secondary uppercase mb-6 tracking-wide"
+                data-aos="fade-right"
+            >
+                Bài viết liên quan
+            </h2>
+
+            @include('clients.news.partials.related-articles-grid')
+            @include('clients.news.partials.related-articles-pagination')
+        </div>
+
+    </div>
+</section>

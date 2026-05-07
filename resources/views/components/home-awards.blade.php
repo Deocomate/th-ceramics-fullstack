@@ -1,0 +1,704 @@
+@push('styles')
+<style>
+  .awards-component .awards-swiper {
+    overflow: hidden;
+    perspective: 1400px;
+  }
+
+  .awards-component .awards-swiper .swiper-wrapper {
+    align-items: center;
+    transform-style: preserve-3d;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+
+  .awards-component .awards-swiper .swiper-slide {
+    --aw-width: 198px;
+    --aw-height: 439px;
+    --aw-tx: 0px;
+    --aw-ty: 14px;
+    --aw-tz: -170px;
+    --aw-ry: 0deg;
+    --aw-opacity: 0;
+    width: var(--aw-width) !important;
+    height: var(--aw-height) !important;
+    aspect-ratio: auto;
+    opacity: var(--aw-opacity);
+    transform-origin: center center;
+    transform-style: preserve-3d;
+    transform: translate3d(var(--aw-tx), var(--aw-ty), var(--aw-tz))
+      rotateY(var(--aw-ry));
+    backface-visibility: hidden;
+    will-change: width, height, transform, opacity;
+    transition:
+      width 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+      height 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.45s ease;
+  }
+
+  .awards-component .awards-swiper .swiper-slide:has(+ .swiper-slide-prev),
+  .awards-component .awards-swiper .swiper-slide-next + .swiper-slide {
+    --aw-width: 198px;
+    --aw-height: 439px;
+    --aw-opacity: 1;
+  }
+
+  .awards-component .awards-swiper .swiper-slide:has(+ .swiper-slide-prev) {
+    --aw-tx: -50px;
+    --aw-ty: 14px;
+    --aw-tz: -150px;
+    --aw-ry: 42deg;
+  }
+
+  .awards-component .awards-swiper .swiper-slide-prev,
+  .awards-component .awards-swiper .swiper-slide-next {
+    --aw-width: 258px;
+    --aw-height: 515px;
+    --aw-opacity: 1;
+  }
+
+  .awards-component .awards-swiper .swiper-slide-prev {
+    --aw-tx: -14px;
+    --aw-ty: 8px;
+    --aw-tz: -70px;
+    --aw-ry: 26deg;
+  }
+
+  .awards-component .awards-swiper .swiper-slide-active {
+    --aw-width: 341px;
+    --aw-height: 579px;
+    --aw-tx: 0px;
+    --aw-ty: 0px;
+    --aw-tz: 0px;
+    --aw-ry: 0deg;
+    --aw-opacity: 1;
+  }
+
+  .awards-component .awards-swiper .swiper-slide-next {
+    --aw-tx: 14px;
+    --aw-ty: 8px;
+    --aw-tz: -70px;
+    --aw-ry: -26deg;
+  }
+
+  .awards-component .awards-swiper .swiper-slide-next + .swiper-slide {
+    --aw-tx: 50px;
+    --aw-ty: 14px;
+    --aw-tz: -150px;
+    --aw-ry: -42deg;
+  }
+
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .awards-component .awards-swiper .swiper-slide:has(+ .swiper-slide-prev),
+    .awards-component .awards-swiper .swiper-slide-next + .swiper-slide {
+      --aw-width: 160px;
+      --aw-height: 355px;
+    }
+
+    .awards-component .awards-swiper .swiper-slide:has(+ .swiper-slide-prev) {
+      --aw-tx: -18px;
+      --aw-ty: 12px;
+      --aw-tz: -120px;
+      --aw-ry: 38deg;
+    }
+
+    .awards-component .awards-swiper .swiper-slide-prev,
+    .awards-component .awards-swiper .swiper-slide-next {
+      --aw-width: 210px;
+      --aw-height: 420px;
+    }
+
+    .awards-component .awards-swiper .swiper-slide-prev {
+      --aw-tx: -10px;
+      --aw-ty: 6px;
+      --aw-tz: -55px;
+      --aw-ry: 22deg;
+    }
+
+    .awards-component .awards-swiper .swiper-slide-active {
+      --aw-width: 278px;
+      --aw-height: 472px;
+      --aw-tx: 0px;
+      --aw-ty: 0px;
+      --aw-tz: 0px;
+      --aw-ry: 0deg;
+    }
+
+    .awards-component .awards-swiper .swiper-slide-next {
+      --aw-tx: 10px;
+      --aw-ty: 6px;
+      --aw-tz: -55px;
+      --aw-ry: -22deg;
+    }
+
+    .awards-component .awards-swiper .swiper-slide-next + .swiper-slide {
+      --aw-tx: 18px;
+      --aw-ty: 12px;
+      --aw-tz: -120px;
+      --aw-ry: -38deg;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .awards-component .awards-swiper .swiper-slide,
+    .awards-component .awards-swiper .swiper-slide:has(+ .swiper-slide-prev),
+    .awards-component .awards-swiper .swiper-slide-prev,
+    .awards-component .awards-swiper .swiper-slide-active,
+    .awards-component .awards-swiper .swiper-slide-next,
+    .awards-component .awards-swiper .swiper-slide-next + .swiper-slide {
+      --aw-width: 304px;
+      --aw-height: 516px;
+      --aw-tx: 0px;
+      --aw-ty: 0px;
+      --aw-tz: 0px;
+      --aw-ry: 0deg;
+      --aw-opacity: 1;
+      aspect-ratio: 304 / 516;
+    }
+
+    .awards-component .awards-swiper .swiper-slide > img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 304px;
+      height: 516px;
+      object-fit: cover;
+      background: #d9d9d9;
+      transition:
+        top 0.78s cubic-bezier(0.22, 1, 0.36, 1),
+        height 0.78s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: top, height, transform;
+    }
+
+    .awards-component .awards-swiper .swiper-slide-prev > img,
+    .awards-component .awards-swiper .swiper-slide-next > img {
+      top: 27px;
+      height: 461px;
+    }
+
+    .awards-component
+      .awards-swiper
+      .swiper-slide
+      > div.absolute.bottom-0.left-0.right-0 {
+      top: 0;
+      bottom: 0;
+      padding: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.7) 100%
+      );
+      transition:
+        margin-top 0.78s cubic-bezier(0.22, 1, 0.36, 1),
+        margin-bottom 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: margin-top, margin-bottom;
+    }
+
+    .awards-component
+      .awards-swiper
+      .swiper-slide-prev
+      > div.absolute.bottom-0.left-0.right-0,
+    .awards-component
+      .awards-swiper
+      .swiper-slide-next
+      > div.absolute.bottom-0.left-0.right-0 {
+      margin-top: 25px;
+      margin-bottom: 25px;
+    }
+
+    .awards-component
+      .awards-swiper
+      .swiper-slide
+      > div.absolute.bottom-0.left-0.right-0
+      > p {
+      position: absolute;
+      left: 21px;
+      width: 261px;
+      color: #fff;
+      font-family: "Archivo", sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    .awards-component
+      .awards-swiper
+      .swiper-slide-active
+      > div.absolute.bottom-0.left-0.right-0
+      > p {
+      bottom: 23px;
+    }
+
+    .awards-component
+      .awards-swiper
+      .swiper-slide-prev
+      > div.absolute.bottom-0.left-0.right-0
+      > p,
+    .awards-component
+      .awards-swiper
+      .swiper-slide-next
+      > div.absolute.bottom-0.left-0.right-0
+      > p {
+      bottom: 23px;
+    }
+
+    .awards-mobile-lightbox {
+      transition: opacity 0.3s ease;
+    }
+
+    .awards-mobile-lightbox.is-open {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    .awards-mobile-lightbox-image,
+    .awards-mobile-lightbox-close {
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+    }
+
+    .awards-mobile-lightbox.is-open .awards-mobile-lightbox-image,
+    .awards-mobile-lightbox.is-open .awards-mobile-lightbox-close {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+</style>
+@endpush
+
+<div
+  class="awards-component w-full max-w-[1320px] mx-auto relative px-0 lg:px-0"
+>
+  <div class="swiper awards-swiper w-full py-0 lg:py-10">
+    <div class="swiper-wrapper">
+      <!-- Slide 1 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/award-01.jpg') }}"
+          alt="Award 1"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
+            Nội trao tặng
+          </p>
+        </div>
+      </div>
+      <!-- Slide 2 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/ceo.jpg') }}"
+          alt="Award 2"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội
+            trao tặng
+          </p>
+        </div>
+      </div>
+      <!-- Slide 3 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/award-03.jpg') }}"
+          alt="Award 3"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
+            Nội trao tặng
+          </p>
+        </div>
+      </div>
+      <!-- Slide 4 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/award-02.jpg') }}"
+          alt="Award 4"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội
+            trao tặng
+          </p>
+        </div>
+      </div>
+      <!-- Slide 5 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/award-05.jpg') }}"
+          alt="Award 5"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
+            Nội trao tặng
+          </p>
+        </div>
+      </div>
+      <!-- Slide 6 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/award-01.jpg') }}"
+          alt="Award 1"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
+            Nội trao tặng
+          </p>
+        </div>
+      </div>
+      <!-- Slide 7 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/ceo.jpg') }}"
+          alt="Award 2"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội
+            trao tặng
+          </p>
+        </div>
+      </div>
+      <!-- Slide 8 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/award-03.jpg') }}"
+          alt="Award 3"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
+            Nội trao tặng
+          </p>
+        </div>
+      </div>
+      <!-- Slide 9 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/award-02.jpg') }}"
+          alt="Award 4"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội
+            trao tặng
+          </p>
+        </div>
+      </div>
+      <!-- Slide 10 -->
+      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
+        <img
+          src="{{ asset('assets/images/award-05.jpg') }}"
+          alt="Award 5"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
+        >
+          <p class="text-white font-medium text-sm">
+            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
+            Nội trao tặng
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Swiper Navigation -->
+  <div
+    class="awards-prev hidden lg:flex absolute -left-[20%] lg:-left-[6%] top-[50%] -translate-y-1/2 z-20 w-10 h-10 border border-black/50 rounded-full items-center justify-center text-black/70 hover:border-black hover:text-black transition-all cursor-pointer"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 19l-7-7 7-7"
+      ></path>
+    </svg>
+  </div>
+
+  <div
+    class="awards-next hidden lg:flex absolute -right-[20%] lg:-right-[6%] top-[50%] -translate-y-1/2 z-20 w-10 h-10 border border-black/50 rounded-full items-center justify-center text-black/70 hover:border-black hover:text-black transition-all cursor-pointer"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 5l7 7-7 7"
+      ></path>
+    </svg>
+  </div>
+
+  <div
+    id="awards-mobile-lightbox"
+    class="awards-mobile-lightbox fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 p-4 opacity-0 pointer-events-none lg:hidden"
+    aria-hidden="true"
+  >
+    <button
+      id="awards-mobile-lightbox-close"
+      type="button"
+      aria-label="Close image preview"
+      class="awards-mobile-lightbox-close absolute right-4 top-4 text-white text-4xl leading-none opacity-0 translate-y-2 scale-95"
+    >
+      &times;
+    </button>
+    <img
+      id="awards-mobile-lightbox-image"
+      src=""
+      alt=""
+      class="awards-mobile-lightbox-image max-w-[95vw] max-h-[88vh] object-contain opacity-0 scale-95 translate-y-2 shadow-2xl"
+    />
+  </div>
+</div>
+
+@push('scripts')
+<script>
+  (function () {
+    function initAwardsComponent(root) {
+      if (!root || root.dataset.awardsInitDone === "true") {
+        return;
+      }
+
+      if (typeof Swiper === "undefined") {
+        return;
+      }
+
+      var swiperEl = root.querySelector(".awards-swiper");
+      var prevEl = root.querySelector(".awards-prev");
+      var nextEl = root.querySelector(".awards-next");
+
+      if (!swiperEl || !prevEl || !nextEl) {
+        return;
+      }
+
+      var isAboutPage = window.location.pathname.indexOf("/about") === 0;
+      var isMobile = window.matchMedia("(max-width: 767px)").matches;
+      var transitionSpeed = isMobile ? 780 : 620;
+      var swiper = new Swiper(swiperEl, {
+        effect: "slide",
+        speed: transitionSpeed,
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: "auto",
+        spaceBetween: 15,
+        initialSlide: isMobile ? 0 : 1,
+        loop: true,
+        loopedSlides: 5,
+        roundLengths: true,
+        navigation: {
+          nextEl: nextEl,
+          prevEl: prevEl,
+        },
+        autoplay: {
+          delay: isAboutPage ? 3000 : 1000000,
+          disableOnInteraction: false,
+        },
+        breakpoints: {
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 14,
+          },
+          1024: {
+            slidesPerView: "auto",
+            spaceBetween: 12,
+          },
+          1280: {
+            slidesPerView: "auto",
+            spaceBetween: 16,
+          },
+        },
+      });
+
+      root.dataset.awardsInitDone = "true";
+
+      if (!window.__awardsSwiperInstances) {
+        window.__awardsSwiperInstances = [];
+      }
+      window.__awardsSwiperInstances.push(swiper);
+
+      if (isMobile) {
+        var mobileLightbox = root.querySelector("#awards-mobile-lightbox");
+        var mobileLightboxImage = root.querySelector(
+          "#awards-mobile-lightbox-image",
+        );
+        var mobileLightboxClose = root.querySelector(
+          "#awards-mobile-lightbox-close",
+        );
+        var awardSlides = Array.from(root.querySelectorAll(".swiper-slide"));
+
+        if (
+          mobileLightbox &&
+          mobileLightboxImage &&
+          mobileLightboxClose &&
+          awardSlides.length
+        ) {
+          var closeMobileLightbox = function () {
+            mobileLightbox.classList.remove("is-open");
+            document.body.classList.remove("overflow-hidden");
+
+            window.setTimeout(function () {
+              mobileLightbox.classList.add("pointer-events-none");
+              mobileLightboxImage.src = "";
+              mobileLightboxImage.alt = "";
+            }, 260);
+          };
+
+          var openMobileLightbox = function (source, alt) {
+            mobileLightboxImage.src = source;
+            mobileLightboxImage.alt = alt || "Award image preview";
+            mobileLightbox.classList.remove("pointer-events-none");
+            requestAnimationFrame(function () {
+              mobileLightbox.classList.add("is-open");
+              document.body.classList.add("overflow-hidden");
+            });
+          };
+
+          var triggerLightboxFromSlide = function (slide, event) {
+            if (!slide || !window.matchMedia("(max-width: 767px)").matches) {
+              return;
+            }
+
+            var slideImage = slide.querySelector("img");
+            if (!slideImage) {
+              return;
+            }
+
+            if (event && typeof event.preventDefault === "function") {
+              event.preventDefault();
+            }
+
+            if (event && typeof event.stopPropagation === "function") {
+              event.stopPropagation();
+            }
+
+            openMobileLightbox(
+              slideImage.currentSrc || slideImage.src,
+              slideImage.alt,
+            );
+          };
+
+          var triggerLightboxFromTarget = function (target, event) {
+            if (!target || typeof target.closest !== "function") {
+              return;
+            }
+
+            var slide = target.closest(".swiper-slide");
+            triggerLightboxFromSlide(slide, event);
+          };
+
+          awardSlides.forEach(function (slide) {
+            slide.classList.add("cursor-zoom-in");
+            slide.setAttribute("role", "button");
+            slide.setAttribute("tabindex", "0");
+
+            slide.addEventListener("keydown", function (event) {
+              if (event.key === "Enter" || event.key === " ") {
+                triggerLightboxFromSlide(slide, event);
+              }
+            });
+          });
+
+          swiperEl.addEventListener("click", function (event) {
+            triggerLightboxFromTarget(event.target, event);
+          });
+
+          if (typeof swiper.on === "function") {
+            swiper.on("tap", function (swiperInstance, event) {
+              if (event && event.target) {
+                triggerLightboxFromTarget(event.target, event);
+                return;
+              }
+
+              triggerLightboxFromSlide(swiperInstance.clickedSlide, event);
+            });
+          }
+
+          mobileLightboxClose.addEventListener("click", closeMobileLightbox);
+          mobileLightbox.addEventListener("click", function (event) {
+            if (event.target === mobileLightbox) {
+              closeMobileLightbox();
+            }
+          });
+
+          document.addEventListener("keydown", function (event) {
+            if (
+              event.key === "Escape" &&
+              mobileLightbox.classList.contains("is-open")
+            ) {
+              closeMobileLightbox();
+            }
+          });
+        }
+      }
+
+      setTimeout(function () {
+        swiper.update();
+      }, 30);
+    }
+
+    function initAllAwardsComponents() {
+      document
+        .querySelectorAll(".awards-component")
+        .forEach(initAwardsComponent);
+    }
+
+    if (!window.__awardsComponentRefreshBound) {
+      window.addEventListener("awards:refresh", function () {
+        if (!window.__awardsSwiperInstances) {
+          return;
+        }
+
+        window.__awardsSwiperInstances.forEach(function (swiper) {
+          if (swiper && typeof swiper.update === "function") {
+            swiper.update();
+          }
+        });
+      });
+
+      window.__awardsComponentRefreshBound = true;
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initAllAwardsComponents);
+    } else {
+      initAllAwardsComponents();
+    }
+  })();
+</script>
+@endpush

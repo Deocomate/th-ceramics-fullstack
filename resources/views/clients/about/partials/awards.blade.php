@@ -1,0 +1,10 @@
+<!-- Section 6: Awards / Giải thưởng & Thành tựu -->
+<div class="mt-8 md:mt-24 mb-16 w-full">
+  <h3
+    class="text-[20px] leading-[24px] md:text-4xl font-bold text-center text-[#C76E00] mb-5 md:mb-10 uppercase tracking-normal"
+    data-aos="fade-up"
+  >
+    GIẢI THƯỞNG & THÀNH TỰU
+  </h3>
+  <x-home-awards />
+</div>

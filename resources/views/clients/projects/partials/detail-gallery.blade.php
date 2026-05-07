@@ -1,0 +1,222 @@
+<!-- Tệp: projects/partials/detail-gallery.html -->
+<div class="py-16 lg:py-24 bg-white">
+  <div class="w-[85%] max-w-[1320px] mx-auto">
+    <!-- Section Title -->
+    <div class="mb-10 lg:mb-16" data-aos="fade-up">
+      <p
+        class="text-[12px] font-bold text-primary opacity-60 uppercase tracking-widest mb-4"
+      >
+        Bộ Sưu Tập Hình Ảnh
+      </p>
+      <h2
+        class="text-[30px] lg:text-[40px] font-arima font-medium text-primary mb-6"
+      >
+        Không gian đa chiều
+      </h2>
+      <p
+        class="max-w-2xl text-[15px] text-primary/80 leading-relaxed font-light"
+      >
+        Từ mặt tiền kiến trúc, không gian sảnh đến chi tiết trang trí nội thất,
+        mỗi góc của Thanh Hải Plaza đều được thiết kế để phản ánh sự tinh tế và
+        bền vững.
+      </p>
+    </div>
+
+    <!-- Desktop Grid Gallery -->
+    <div
+      class="hidden md:grid grid-cols-4 grid-rows-2 gap-4 h-[500px] lg:h-[600px]"
+      data-aos="fade-up"
+    >
+      <!-- Slide 1 (Ảnh To Nhất) -->
+      <div
+        class="col-span-2 row-span-2 h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+      >
+        <a
+          href="{{ asset('assets/images/factory-03.png') }}"
+          class="glightbox h-full w-full block"
+          data-gallery="project-gallery-desktop"
+        >
+          <img
+            src="{{ asset('assets/images/factory-03.png') }}"
+            alt="Gallery 1"
+            onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+          />
+        </a>
+      </div>
+      <!-- Slide 2 -->
+      <div
+        class="col-span-1 row-span-1 h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+      >
+        <a
+          href="{{ asset('assets/images/factory-04.jpg') }}"
+          class="glightbox h-full w-full block"
+          data-gallery="project-gallery-desktop"
+        >
+          <img
+            src="{{ asset('assets/images/factory-04.jpg') }}"
+            alt="Gallery 2"
+            onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+          />
+        </a>
+      </div>
+      <!-- Slide 3 -->
+      <div
+        class="col-span-1 row-span-1 h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+      >
+        <a
+          href="{{ asset('assets/images/factory-01.jpg') }}"
+          class="glightbox h-full w-full block"
+          data-gallery="project-gallery-desktop"
+        >
+          <img
+            src="{{ asset('assets/images/factory-01.jpg') }}"
+            alt="Gallery 3"
+            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+          />
+        </a>
+      </div>
+      <!-- Slide 4 -->
+      <div
+        class="col-span-1 row-span-1 h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+      >
+        <a
+          href="{{ asset('assets/images/factory-03.png') }}"
+          class="glightbox h-full w-full block"
+          data-gallery="project-gallery-desktop"
+        >
+          <img
+            src="{{ asset('assets/images/factory-03.png') }}"
+            alt="Gallery 4"
+            onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+          />
+        </a>
+      </div>
+      <!-- Slide 5 -->
+      <div
+        class="col-span-1 row-span-1 h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+      >
+        <a
+          href="{{ asset('assets/images/factory-04.jpg') }}"
+          class="glightbox h-full w-full block"
+          data-gallery="project-gallery-desktop"
+        >
+          <img
+            src="{{ asset('assets/images/factory-04.jpg') }}"
+            alt="Gallery 5"
+            onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+          />
+        </a>
+      </div>
+    </div>
+
+    <!-- Mobile Swiper Gallery -->
+    <div class="md:hidden block" data-aos="fade-up">
+      <div class="swiper detail-gallery-swiper relative">
+        <div class="swiper-wrapper pb-10">
+          <!-- Slide 1 -->
+          <div class="swiper-slide h-[300px]">
+            <div
+              class="h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+            >
+              <a
+                href="{{ asset('assets/images/factory-03.png') }}"
+                class="glightbox h-full w-full block"
+                data-gallery="project-gallery-mobile"
+              >
+                <img
+                  src="{{ asset('assets/images/factory-03.png') }}"
+                  alt="Gallery 1"
+                  onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+                  class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+                />
+              </a>
+            </div>
+          </div>
+          <!-- Slide 2 -->
+          <div class="swiper-slide h-[300px]">
+            <div
+              class="h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+            >
+              <a
+                href="{{ asset('assets/images/factory-04.jpg') }}"
+                class="glightbox h-full w-full block"
+                data-gallery="project-gallery-mobile"
+              >
+                <img
+                  src="{{ asset('assets/images/factory-04.jpg') }}"
+                  alt="Gallery 2"
+                  onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+                  class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+                />
+              </a>
+            </div>
+          </div>
+          <!-- Slide 3 -->
+          <div class="swiper-slide h-[300px]">
+            <div
+              class="h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+            >
+              <a
+                href="{{ asset('assets/images/factory-01.jpg') }}"
+                class="glightbox h-full w-full block"
+                data-gallery="project-gallery-mobile"
+              >
+                <img
+                  src="{{ asset('assets/images/factory-01.jpg') }}"
+                  alt="Gallery 3"
+                  class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+                />
+              </a>
+            </div>
+          </div>
+          <!-- Slide 4 -->
+          <div class="swiper-slide h-[300px]">
+            <div
+              class="h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+            >
+              <a
+                href="{{ asset('assets/images/factory-03.png') }}"
+                class="glightbox h-full w-full block"
+                data-gallery="project-gallery-mobile"
+              >
+                <img
+                  src="{{ asset('assets/images/factory-03.png') }}"
+                  alt="Gallery 4"
+                  onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+                  class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+                />
+              </a>
+            </div>
+          </div>
+          <!-- Slide 5 -->
+          <div class="swiper-slide h-[300px]">
+            <div
+              class="h-full overflow-hidden rounded-lg shadow-lg group cursor-pointer"
+            >
+              <a
+                href="{{ asset('assets/images/factory-04.jpg') }}"
+                class="glightbox h-full w-full block"
+                data-gallery="project-gallery-mobile"
+              >
+                <img
+                  src="{{ asset('assets/images/factory-04.jpg') }}"
+                  alt="Gallery 5"
+                  onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+                  class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Pagination Dots -->
+        <div
+          class="swiper-pagination projects-pagination flex justify-center !bottom-0 !mt-2"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

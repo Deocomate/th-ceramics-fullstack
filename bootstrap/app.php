@@ -6,7 +6,11 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
+        // Truyền một mảng chứa cả 2 file route vào middleware 'web'
+        web: [
+            __DIR__.'/../routes/web.php',     // Route cho Admin
+            __DIR__.'/../routes/client.php',  // Route cho Client
+        ],
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )

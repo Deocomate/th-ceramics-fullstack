@@ -1,0 +1,26 @@
+@props([
+    'href' => '',
+    'image' => '',
+    'title' => '',
+    'code' => '',
+    'price' => '',
+])
+
+<a href="{{ $href }}" class="flex flex-col group cursor-pointer">
+  <div
+    class="bg-white shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1)] overflow-hidden aspect-square"
+  >
+    <img
+      src="{{ $image }}"
+      alt="{{ $title }}"
+      class="w-full h-full object-containmix-blend-multiply"
+    />
+  </div>
+  <h3
+    class="mt-3 text-black font-semibold text-[14px] leading-[20px] lowercase first-letter:uppercase"
+  >
+    <span class="block">{{ $title }}</span>
+  </h3>
+  <p class="text-gray-500 text-[12px] leading-[20px]">{{ $code }}</p>
+  <p class="text-secondary font-bold text-[14px] leading-[20px]">{{ $price }}</p>
+</a>

@@ -1,0 +1,248 @@
+<x-layouts.client title="Chi tiết dự án" data-page="project-detail-2" main-class="bg-background-secondary overflow-x-hidden">
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+@endpush
+
+<!-- ======================= HERO BANNER ======================= -->
+<section class="relative w-full h-[300px] md:h-[380px] flex items-center justify-center overflow-hidden">
+  <!-- Background image -->
+  <div class="absolute inset-0 z-0">
+    <img src="{{ asset('assets/images/factory-03.png') }}" alt="Dự án banner" class="w-full h-full object-cover"
+      onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'" />
+    <div class="absolute inset-0 bg-primary/60"></div>
+  </div>
+
+  <!-- Text -->
+  <div class="relative z-10 text-center text-white px-4 pt-0 md:pt-12" data-aos="fade-up">
+    <p class="text-[11px] md:text-xs font-bold uppercase tracking-widest text-white/70 mb-3">
+      Dự Án Nổi Bật
+    </p>
+    <h1 class="text-2xl md:text-[36px] lg:text-[48px] font-arima font-medium leading-tight drop-shadow-lg mb-4">
+      Tòa nhà văn phòng Thanh Hải Plaza
+    </h1>
+    <!-- Breadcrumb -->
+    <p class="text-[11px] md:text-sm text-white/80 drop-shadow-md">
+      <a href="{{ route('client.home') }}" class="hover:text-secondary transition-colors">Trang chủ</a>
+      <svg class="w-2.5 h-2.5 inline-block mx-2 fill-current opacity-70" viewBox="0 0 35 35"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M11.5797 31.4214C11.1695 31.0111 10.9391 30.4548 10.9391 29.8747C10.9391 29.2946 11.1695 28.7383 11.5797 28.3281L22.4078 17.5L11.5797 6.67184C11.1937 6.25726 10.9836 5.70915 10.9936 5.14283C11.0036 4.5765 11.2328 4.03612 11.6331 3.63539C12.0334 3.23465 12.5735 3.0048 13.1399 2.99421C13.7062 2.98361 14.2545 3.1931 14.6695 3.57858L27.046 15.9516C27.4561 16.3618 27.6865 16.9182 27.6865 17.4983C27.6865 18.0783 27.4561 18.6347 27.046 19.0449L14.6729 31.4214C14.2627 31.8315 13.7064 32.0619 13.1263 32.0619C12.5462 32.0619 11.9899 31.8315 11.5797 31.4214Z"
+          fill="currentColor" />
+      </svg>
+      <a href="{{ route('client.projects.index') }}" class="hover:text-secondary transition-colors">Dự án</a>
+      <svg class="w-2.5 h-2.5 inline-block mx-2 fill-current opacity-70" viewBox="0 0 35 35"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M11.5797 31.4214C11.1695 31.0111 10.9391 30.4548 10.9391 29.8747C10.9391 29.2946 11.1695 28.7383 11.5797 28.3281L22.4078 17.5L11.5797 6.67184C11.1937 6.25726 10.9836 5.70915 10.9936 5.14283C11.0036 4.5765 11.2328 4.03612 11.6331 3.63539C12.0334 3.23465 12.5735 3.0048 13.1399 2.99421C13.7062 2.98361 14.2545 3.1931 14.6695 3.57858L27.046 15.9516C27.4561 16.3618 27.6865 16.9182 27.6865 17.4983C27.6865 18.0783 27.4561 18.6347 27.046 19.0449L14.6729 31.4214C14.2627 31.8315 13.7064 32.0619 13.1263 32.0619C12.5462 32.0619 11.9899 31.8315 11.5797 31.4214Z"
+          fill="currentColor" />
+      </svg>
+      <span class="text-white/60">Thanh Hải Plaza</span>
+    </p>
+  </div>
+</section>
+
+<!-- ======================= PROJECT META ======================= -->
+<section class="bg-white border-b border-neutral-200">
+  <div class="w-[85%] max-w-[1320px] mx-auto py-6 flex flex-wrap gap-x-10 gap-y-3 items-center" data-aos="fade-up">
+    <div class="flex items-center gap-3">
+      <span class="text-[11px] font-bold text-primary/50 uppercase tracking-widest">Địa điểm</span>
+      <span class="w-px h-4 bg-primary/20"></span>
+      <span class="text-sm font-arima text-primary font-medium">Hà Nội</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-[11px] font-bold text-primary/50 uppercase tracking-widest">Năm</span>
+      <span class="w-px h-4 bg-primary/20"></span>
+      <span class="text-sm font-arima text-primary font-medium">2023</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-[11px] font-bold text-primary/50 uppercase tracking-widest">Sản phẩm</span>
+      <span class="w-px h-4 bg-primary/20"></span>
+      <span class="text-sm font-arima text-primary font-medium">Ngói âm dương, Gạch cổ Bát Tràng</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PHOTO GALLERY GRID ======================= -->
+<section class="py-14 lg:py-20 bg-background-secondary">
+  <div class="w-[90%] max-w-[1400px] mx-auto">
+
+    <!-- Section heading -->
+    <div class="mb-10 lg:mb-14 text-center" data-aos="fade-up">
+      <p class="text-[11px] font-bold text-primary/50 uppercase tracking-widest mb-3">Bộ sưu tập hình ảnh</p>
+      <h2 class="text-[26px] md:text-[34px] font-arima font-medium text-primary">Không gian đa chiều</h2>
+    </div>
+
+    <!-- ---- Desktop Gallery Grid (md+) ---- -->
+    <!-- Row 1: 3 cols -->
+    <div class="hidden md:grid grid-cols-3 gap-3 mb-3" data-aos="fade-up">
+      <!-- Large featured image -->
+      <a href="{{ asset('assets/images/factory-03.png') }}" class="glightbox col-span-2 aspect-[16/9] overflow-hidden block group"
+        data-gallery="project-gallery">
+        <img src="{{ asset('assets/images/factory-03.png') }}" alt="Thanh Hải Plaza — mặt tiền"
+          onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </a>
+      <!-- Tall side image -->
+      <a href="{{ asset('assets/images/factory-04.jpg') }}" class="glightbox aspect-[16/9] overflow-hidden block group"
+        data-gallery="project-gallery">
+        <img src="{{ asset('assets/images/factory-04.jpg') }}" alt="Thanh Hải Plaza — sảnh"
+          onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </a>
+    </div>
+
+    <!-- Row 2: 4 equal cols -->
+    <div class="hidden md:grid grid-cols-4 gap-3 mb-3" data-aos="fade-up" data-aos-delay="80">
+      <a href="{{ asset('assets/images/factory-01.jpg') }}" class="glightbox aspect-square overflow-hidden block group"
+        data-gallery="project-gallery">
+        <img src="{{ asset('assets/images/factory-01.jpg') }}" alt="Chi tiết 1"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </a>
+      <a href="{{ asset('assets/images/factory-03.png') }}" class="glightbox aspect-square overflow-hidden block group"
+        data-gallery="project-gallery">
+        <img src="{{ asset('assets/images/factory-03.png') }}" alt="Chi tiết 2" onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </a>
+      <a href="{{ asset('assets/images/factory-04.jpg') }}" class="glightbox aspect-square overflow-hidden block group"
+        data-gallery="project-gallery">
+        <img src="{{ asset('assets/images/factory-04.jpg') }}" alt="Chi tiết 3" onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </a>
+      <a href="{{ asset('assets/images/factory-01.jpg') }}" class="glightbox aspect-square overflow-hidden block group"
+        data-gallery="project-gallery">
+        <img src="{{ asset('assets/images/factory-01.jpg') }}" alt="Chi tiết 4"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </a>
+    </div>
+
+    <!-- Row 3: 3 cols — reversed featured -->
+    <div class="hidden md:grid grid-cols-3 gap-3" data-aos="fade-up" data-aos-delay="160">
+      <a href="{{ asset('assets/images/factory-04.jpg') }}" class="glightbox aspect-[16/9] overflow-hidden block group"
+        data-gallery="project-gallery">
+        <img src="{{ asset('assets/images/factory-04.jpg') }}" alt="Góc nhìn 1" onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </a>
+      <a href="{{ asset('assets/images/factory-01.jpg') }}" class="glightbox col-span-2 aspect-[16/9] overflow-hidden block group"
+        data-gallery="project-gallery">
+        <img src="{{ asset('assets/images/factory-01.jpg') }}" alt="Góc nhìn 2"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </a>
+    </div>
+
+    <!-- ---- Mobile: Swiper carousel ---- -->
+    <div class="md:hidden" data-aos="fade-up">
+      <div class="swiper detail2-gallery-swiper relative">
+        <div class="swiper-wrapper pb-10">
+          <div class="swiper-slide h-[260px]">
+            <a href="{{ asset('assets/images/factory-03.png') }}" class="glightbox h-full w-full block"
+              data-gallery="project-gallery-mobile">
+              <img src="{{ asset('assets/images/factory-03.png') }}" alt="Ảnh 1" onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+                class="w-full h-full object-cover" />
+            </a>
+          </div>
+          <div class="swiper-slide h-[260px]">
+            <a href="{{ asset('assets/images/factory-04.jpg') }}" class="glightbox h-full w-full block"
+              data-gallery="project-gallery-mobile">
+              <img src="{{ asset('assets/images/factory-04.jpg') }}" alt="Ảnh 2" onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+                class="w-full h-full object-cover" />
+            </a>
+          </div>
+          <div class="swiper-slide h-[260px]">
+            <a href="{{ asset('assets/images/factory-01.jpg') }}" class="glightbox h-full w-full block"
+              data-gallery="project-gallery-mobile">
+              <img src="{{ asset('assets/images/factory-01.jpg') }}" alt="Ảnh 3" class="w-full h-full object-cover" />
+            </a>
+          </div>
+          <div class="swiper-slide h-[260px]">
+            <a href="{{ asset('assets/images/factory-03.png') }}" class="glightbox h-full w-full block"
+              data-gallery="project-gallery-mobile">
+              <img src="{{ asset('assets/images/factory-03.png') }}" alt="Ảnh 4" onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+                class="w-full h-full object-cover" />
+            </a>
+          </div>
+          <div class="swiper-slide h-[260px]">
+            <a href="{{ asset('assets/images/factory-04.jpg') }}" class="glightbox h-full w-full block"
+              data-gallery="project-gallery-mobile">
+              <img src="{{ asset('assets/images/factory-04.jpg') }}" alt="Ảnh 5" onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+                class="w-full h-full object-cover" />
+            </a>
+          </div>
+          <div class="swiper-slide h-[260px]">
+            <a href="{{ asset('assets/images/factory-01.jpg') }}" class="glightbox h-full w-full block"
+              data-gallery="project-gallery-mobile">
+              <img src="{{ asset('assets/images/factory-01.jpg') }}" alt="Ảnh 6" class="w-full h-full object-cover" />
+            </a>
+          </div>
+        </div>
+        <!-- Pagination -->
+        <div class="swiper-pagination detail2-pagination flex justify-center !bottom-0 !mt-2"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================= CTA ======================= -->
+<section class="py-16 lg:py-24 bg-primary text-white">
+  <div class="w-[85%] max-w-[1000px] mx-auto text-center">
+    <h2 class="text-[30px] lg:text-[40px] font-arima font-medium mb-10 lg:mb-16" data-aos="fade-up">
+      Bạn có dự án tương tự?
+    </h2>
+    <p class="text-[15px] opacity-90 mb-10 lg:mb-16 max-w-2xl mx-auto font-light leading-relaxed" data-aos="fade-up"
+      data-aos-delay="100">
+      Hãy liên hệ với chúng tôi để tư vấn về các giải pháp gốm sứ cao cấp
+      cho công trình của bạn.
+    </p>
+    <div class="flex flex-col md:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="200">
+      <a href="{{ route('client.contact') }}"
+        class="px-10 py-4 bg-white text-primary font-bold rounded-lg hover:bg-neutral-1 transition-all">
+        Liên Hệ Tư Vấn
+      </a>
+      <a href="{{ route('client.customer-service.show', 'quy-trinh-dat-hang') }}"
+        class="px-10 py-4 border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-primary transition-all">
+        Xem Quy Trình
+      </a>
+    </div>
+  </div>
+</section>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  // GLightbox — sync href from rendered img src (Vite asset hashing)
+  if (typeof GLightbox !== "undefined") {
+    document.querySelectorAll(".glightbox").forEach((anchor) => {
+      const image = anchor.querySelector("img");
+      if (image) {
+        anchor.setAttribute("href", image.currentSrc || image.src);
+      }
+    });
+    GLightbox({
+      touchNavigation: true,
+      loop: true,
+      autoplayVideos: true,
+    });
+  }
+
+  // Mobile Swiper
+  if (typeof Swiper !== "undefined") {
+    new Swiper(".detail2-gallery-swiper", {
+      slidesPerView: 1.15,
+      spaceBetween: 12,
+      pagination: {
+        el: ".detail2-pagination",
+        clickable: true,
+      },
+      breakpoints: {
+        480: {
+          slidesPerView: 1.6,
+          spaceBetween: 16,
+        },
+      },
+    });
+  }
+</script>
+@endpush
+
+</x-layouts.client>

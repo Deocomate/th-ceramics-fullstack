@@ -1,0 +1,72 @@
+<!-- Related Articles & Recently Viewed Products -->
+<section class="pb-16 md:pb-32">
+  <div class="w-[85%] max-w-[1320px] mx-auto">
+    <!-- BÀI VIẾT ĐÃ XEM LIÊN QUAN -->
+    <div class="pb-12 md:pb-24 border-b md:border-b-0 border-gray-200">
+      <h2
+        class="text-sm md:text-base font-archivo font-bold text-secondary uppercase mb-6 tracking-wide"
+        data-aos="fade-right"
+      >
+        Bài viết đã xem liên quan
+      </h2>
+
+      @include('clients.news.partials.related-articles-grid')
+      @include('clients.news.partials.related-articles-pagination')
+    </div>
+
+    <!-- ĐÃ XEM GẦN ĐÂY -->
+    <div class="history-products-section pt-8 md:pt-0">
+      <h2
+        class="text-sm md:text-base font-archivo font-bold text-secondary uppercase mb-6 tracking-wide"
+        data-aos="fade-right"
+      >
+        Đã xem gần đây
+      </h2>
+
+      <div
+        class="grid grid-cols-2 md:grid-cols-4 gap-6"
+        data-aos="fade-up"
+      >
+        <!-- Product 1 -->
+        <a
+          href="#"
+          class="flex flex-col group"
+        >
+          <div
+            class="aspect-square shadow-lg flex items-center justify-center mb-4 transition-transform group-hover:-translate-y-1 duration-300"
+          >
+            <img
+              src="{{ asset('assets/images/lan-can-related.jpg') }}"
+              alt="Product"
+              class="max-w-full max-h-full object-contain"
+            />
+          </div>
+          <h3 class="text-xs font-bold text-primary/90 uppercase mb-1 truncate group-hover:text-secondary transition-colors">
+            Ngói âm dương nâu đen 27cm
+          </h3>
+          <p class="text-xs font-bold text-primary/60">862.000 VNĐ</p>
+        </a>
+
+        <!-- Product 2 -->
+        <a
+          href="#"
+          class="flex flex-col group"
+        >
+          <div
+            class="aspect-square shadow-lg flex items-center justify-center mb-4 transition-transform group-hover:-translate-y-1 duration-300"
+          >
+            <img
+              src="{{ asset('assets/images/ngoi-hai-detail.png') }}"
+              alt="Product"
+              class="max-w-full max-h-full object-contain"
+            />
+          </div>
+          <h3 class="text-xs font-bold text-primary/90 uppercase mb-1 truncate group-hover:text-secondary transition-colors">
+            Ngói âm dương nâu đen 27cm
+          </h3>
+          <p class="text-xs font-bold text-primary/60">862.000 VNĐ</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

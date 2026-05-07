@@ -10,7 +10,7 @@
       @endphp
       <a href="{{ route('client.products.linh-vat-phong-thuy.detail', $product->linh_vat_phong_thuy_ct_id) }}" class="flex flex-col group cursor-pointer">
         <div class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square transition-all duration-300 group-hover:-translate-y-1">
-          <img src="{{ $productImage ? Storage::url($productImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover mix-blend-multiply" />
+          <img src="{{ $productImage ? asset('storage/' . $productImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover mix-blend-multiply" />
           <div class="product-overlay">
             <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
             <span>Xem chi tiết</span>

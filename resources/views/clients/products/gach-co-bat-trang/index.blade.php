@@ -15,7 +15,7 @@
 <!-- Banner Section -->
 <section class="relative w-full h-[530px] md:h-[720px] lg:h-[840px] overflow-hidden flex items-start">
   <div class="absolute inset-0 z-0">
-    <img src="{{ !empty($config->thumbnail_main) ? Storage::url($config->thumbnail_main) : asset('assets/images/gach-co-banner.png') }}" alt="Gạch Cổ Bát Tràng Banner" class="w-full h-full object-cover" />
+    <img src="{{ !empty($config->thumbnail_main) ? asset('storage/' .$config->thumbnail_main) : asset('assets/images/gach-co-banner.png') }}" alt="Gạch Cổ Bát Tràng Banner" class="w-full h-full object-cover" />
     <div class="absolute inset-0 bg-black/40"></div>
   </div>
 
@@ -79,7 +79,7 @@
       <!-- Left: Image Gallery -->
       <div class="relative">
         <div class="relative mb-[10px] md:mb-6">
-          <img src="{{ !empty($batProducts) && !empty($batProducts[0]->images) && is_array($batProducts[0]->images) ? Storage::url($batProducts[0]->images[0]) : asset('assets/images/gach-bat-01.jpg') }}" alt="Gạch bát công trình"
+          <img src="{{ !empty($batProducts) && !empty($batProducts[0]->images) && is_array($batProducts[0]->images) && isset($batProducts[0]->images[0]) ? asset('storage/' .$batProducts[0]->images[0]) : asset('assets/images/gach-bat-01.jpg') }}" alt="Gạch bát công trình"
             class="w-full aspect-[1.1/1] h-auto object-cover rounded-sm shadow-md"
             onerror="this.src = 'https://placehold.co/800x800/8c5a3c/fff?text=Gach+Bat+01'" />
           <img src="{{ asset('assets/images/gach-bat-elip.svg') }}" alt=""
@@ -90,7 +90,7 @@
           @foreach($batProducts->take(3) as $batProduct)
           <div
             class="aspect-square bg-white shadow-sm border border-black/5 flex items-center justify-center rounded-sm overflow-hidden p-2 md:p-0">
-            <img src="{{ !empty($batProduct->images) && is_array($batProduct->images) ? Storage::url($batProduct->images[0]) : asset('assets/images/gach-bat-02.jpg') }}" alt="{{ $batProduct->name }}" class="w-full h-full object-contain" />
+            <img src="{{ !empty($batProduct->images) && is_array($batProduct->images) && isset($batProduct->images[0]) ? asset('storage/' .$batProduct->images[0]) : asset('assets/images/gach-bat-02.jpg') }}" alt="{{ $batProduct->name }}" class="w-full h-full object-contain" />
           </div>
           @endforeach
         </div>
@@ -125,7 +125,7 @@
             @foreach($batProducts as $batProduct)
             <div class="swiper-slide !h-auto">
               <x-products.product-card href="{{ route('client.products.gach-co-bat-trang.detail', $batProduct->gach_co_bat_trang_ct_id) }}"
-              image="{{ !empty($batProduct->images) && is_array($batProduct->images) ? Storage::url($batProduct->images[0]) : asset('assets/images/gach-bat-01.jpg') }}" title="{{ $batProduct->name }}" alt="{{ $batProduct->name }}" code="MSP: {{ $batProduct->code }}"
+              image="{{ !empty($batProduct->images) && is_array($batProduct->images) && isset($batProduct->images[0]) ? asset('storage/' .$batProduct->images[0]) : asset('assets/images/gach-bat-01.jpg') }}" title="{{ $batProduct->name }}" alt="{{ $batProduct->name }}" code="MSP: {{ $batProduct->code }}"
               price="{{ $batProduct->price > 0 ? number_format($batProduct->price) . ' đ/viên' : 'Liên hệ' }}" price-prefix="Giá" :show-overlay="true" image-class="w-full h-full object-cover mix-blend-multiply" />
             </div>
             @endforeach
@@ -152,7 +152,7 @@
       <!-- Right: Image Gallery -->
       <div class="relative order-1 lg:order-2">
         <div class="relative mb-[10px] md:mb-6">
-          <img src="{{ !empty($thatXayProducts) && !empty($thatXayProducts[0]->images) && is_array($thatXayProducts[0]->images) ? Storage::url($thatXayProducts[0]->images[0]) : asset('assets/images/gach-that-01.jpg') }}" alt="Gạch thất công trình"
+          <img src="{{ !empty($thatXayProducts) && !empty($thatXayProducts[0]->images) && is_array($thatXayProducts[0]->images) && isset($thatXayProducts[0]->images[0]) ? asset('storage/' .$thatXayProducts[0]->images[0]) : asset('assets/images/gach-that-01.jpg') }}" alt="Gạch thất công trình"
             class="w-full aspect-[1.1/1] h-auto object-cover rounded-sm shadow-md"
             onerror="this.src = 'https://placehold.co/800x800/8c5a3c/fff?text=Gach+That+01'" />
           <img src="{{ asset('assets/images/gach-that-elip.svg') }}" alt=""
@@ -163,7 +163,7 @@
           @foreach($thatXayProducts->take(3) as $thatProduct)
           <div
             class="aspect-square bg-white shadow-sm border border-black/5 flex items-center justify-center rounded-sm overflow-hidden p-2 md:p-0">
-            <img src="{{ !empty($thatProduct->images) && is_array($thatProduct->images) ? Storage::url($thatProduct->images[0]) : asset('assets/images/gach-that-01.jpg') }}" alt="{{ $thatProduct->name }}" class="w-full h-full object-cover" />
+            <img src="{{ !empty($thatProduct->images) && is_array($thatProduct->images) && isset($thatProduct->images[0]) ? asset('storage/' .$thatProduct->images[0]) : asset('assets/images/gach-that-01.jpg') }}" alt="{{ $thatProduct->name }}" class="w-full h-full object-cover" />
           </div>
           @endforeach
         </div>
@@ -192,7 +192,7 @@
             @foreach($thatXayProducts as $thatProduct)
             <div class="swiper-slide !h-auto">
               <x-products.product-card href="{{ route('client.products.gach-co-bat-trang.detail', $thatProduct->gach_co_bat_trang_ct_id) }}"
-              image="{{ !empty($thatProduct->images) && is_array($thatProduct->images) ? Storage::url($thatProduct->images[0]) : asset('assets/images/gach-that-01.jpg') }}" title="{{ $thatProduct->name }}" alt="{{ $thatProduct->name }}" code="MSP: {{ $thatProduct->code }}"
+              image="{{ !empty($thatProduct->images) && is_array($thatProduct->images) && isset($thatProduct->images[0]) ? asset('storage/' .$thatProduct->images[0]) : asset('assets/images/gach-that-01.jpg') }}" title="{{ $thatProduct->name }}" alt="{{ $thatProduct->name }}" code="MSP: {{ $thatProduct->code }}"
               price="{{ $thatProduct->price > 0 ? number_format($thatProduct->price) . ' đ/viên' : 'Liên hệ' }}" price-prefix="Giá" :show-overlay="true" image-class="w-full h-full object-cover mix-blend-multiply" />
             </div>
             @endforeach
@@ -209,7 +209,7 @@
       <!-- Left: Image Gallery -->
       <div class="relative">
         <div class="relative mb-[10px] md:mb-6">
-          <img src="{{ !empty($theProducts) && !empty($theProducts[0]->images) && is_array($theProducts[0]->images) ? Storage::url($theProducts[0]->images[0]) : asset('assets/images/gach-the-01.jpg') }}" alt="Gạch thẻ công trình"
+          <img src="{{ !empty($theProducts) && !empty($theProducts[0]->images) && is_array($theProducts[0]->images) && isset($theProducts[0]->images[0]) ? asset('storage/' .$theProducts[0]->images[0]) : asset('assets/images/gach-the-01.jpg') }}" alt="Gạch thẻ công trình"
             class="w-full aspect-[1.1/1] h-auto object-cover rounded-sm shadow-md"
             onerror="this.src = 'https://placehold.co/800x800/8c5a3c/fff?text=Gach+The+01'" />
           <img src="{{ asset('assets/images/gach-the-elip.svg') }}" alt=""
@@ -220,7 +220,7 @@
           @foreach($theProducts->take(3) as $theProduct)
           <div
             class="aspect-square bg-white shadow-sm border border-black/5 flex items-center justify-center rounded-sm overflow-hidden p-2 md:p-0">
-            <img src="{{ !empty($theProduct->images) && is_array($theProduct->images) ? Storage::url($theProduct->images[0]) : asset('assets/images/gach-the-01.jpg') }}" alt="{{ $theProduct->name }}" class="w-full h-full object-cover" />
+            <img src="{{ !empty($theProduct->images) && is_array($theProduct->images) && isset($theProduct->images[0]) ? asset('storage/' .$theProduct->images[0]) : asset('assets/images/gach-the-01.jpg') }}" alt="{{ $theProduct->name }}" class="w-full h-full object-cover" />
           </div>
           @endforeach
         </div>
@@ -255,7 +255,7 @@
             @foreach($theProducts as $theProduct)
             <div class="swiper-slide !h-auto">
               <x-products.product-card href="{{ route('client.products.gach-co-bat-trang.detail', $theProduct->gach_co_bat_trang_ct_id) }}"
-              image="{{ !empty($theProduct->images) && is_array($theProduct->images) ? Storage::url($theProduct->images[0]) : asset('assets/images/gach-the-01.jpg') }}" title="{{ $theProduct->name }}" alt="{{ $theProduct->name }}" code="MSP: {{ $theProduct->code }}"
+              image="{{ !empty($theProduct->images) && is_array($theProduct->images) && isset($theProduct->images[0]) ? asset('storage/' .$theProduct->images[0]) : asset('assets/images/gach-the-01.jpg') }}" title="{{ $theProduct->name }}" alt="{{ $theProduct->name }}" code="MSP: {{ $theProduct->code }}"
               price="{{ $theProduct->price > 0 ? number_format($theProduct->price) . ' đ/viên' : 'Liên hệ' }}" price-prefix="Giá" :show-overlay="true" image-class="w-full h-full object-cover mix-blend-multiply" />
             </div>
             @endforeach
@@ -271,6 +271,7 @@
 
 <!-- CÔNG ĐOẠN CHẾ TÁC SECTION -->
 <x-products.fabrication-process />
+<x-products.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" />
 <x-products.journey-video :hide-title="true" />
 
 <!-- DẤU ẤN TRÊN NHỮNG CÔNG TRÌNH SECTION -->

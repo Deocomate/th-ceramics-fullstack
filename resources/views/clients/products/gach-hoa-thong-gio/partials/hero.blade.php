@@ -5,7 +5,7 @@
 >
   @if(!empty($config->image))
   <div class="absolute inset-0 z-0">
-    <img src="{{ Storage::url($config->image) }}" alt="" class="w-full h-full object-cover opacity-40" />
+    <img src="{{ $config->image ? asset('storage/' . $config->image) : '' }}" alt="" class="w-full h-full object-cover opacity-40" onerror="this.style.display='none'" />
   </div>
   @endif
   <div
@@ -26,7 +26,7 @@
       <p
         class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-charm text-2xl md:text-[32px] lg:text-[48px] text-gray-800 pointer-events-auto z-10 whitespace-nowrap gach-hoa-hero-brand"
       >
-        Gốm sứ Thanh Hải
+        {{ $config->title1 ?? 'Gốm sứ Thanh Hải' }}
       </p>
     </div>
   </div>
@@ -63,17 +63,14 @@
       class="font-archivo text-[3rem] md:text-[5rem] lg:text-[8rem] xl:text-[11rem] font-bold text-secondary tracking-normal leading-tight uppercase drop-shadow-sm mb-[250px] md:mb-60 lg:mb-[450px] gach-hoa-hero-title"
       style="text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5)"
     >
-      Gạch Hoa<br />Thông Gió
+      {!! $config->title2 ?? 'Gạch Hoa<br />Thông Gió' !!}
     </h1>
 
     <p
       class="font-italianno text-[29px] md:text-5xl text-primary leading-relaxed max-w-6xl mx-auto tracking-wide md:mt-24 lg:mt-0 gach-hoa-hero-copy -translate-y-[95px] md:translate-y-0"
       style="text-shadow: 0px 1px 0px #fff"
     >
-      Kết tinh từ cốt gốm đanh thép, tôi luyện giữa lò nung nghìn độ, Thanh Hải
-      phục dựng tinh hoa gạch thông gió cổ qua những nét chạm thủ công và sắc
-      men độc bản, mở ra không gian tràn đầy sinh khí và dấu ấn nghệ thuật
-      trường tồn.
+      {{ $config->title3 ?? 'Kết tinh từ cốt gốm đanh thép, tôi luyện giữa lò nung nghìn độ, Thanh Hải phục dựng tinh hoa gạch thông gió cổ qua những nét chạm thủ công và sắc men độc bản, mở ra không gian tràn đầy sinh khí và dấu ấn nghệ thuật trường tồn.' }}
     </p>
   </div>
 </section>

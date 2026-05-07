@@ -12,13 +12,13 @@
   </div>
   <div class="flex">
     <a
-      href="{{ !empty($config->images) && is_array($config->images) && isset($config->images[0]) ? Storage::url($config->images[0]) : asset('assets/images/gach-hoa-value.png') }}"
+      href="{{ !empty($config->images) && is_array($config->images) && isset($config->images[0]) ? asset('storage/' . $config->images[0]) : asset('assets/images/gach-hoa-value.png') }}"
       class="glightbox w-1/2 pl-[5%] py-[5%] pr-[5%] lg:pr-[5%]"
       data-aos="fade-right"
       data-gallery="hanh-trinh"
     >
       <img
-        src="{{ !empty($config->images) && is_array($config->images) && isset($config->images[0]) ? Storage::url($config->images[0]) : asset('assets/images/gach-hoa-value.png') }}"
+        src="{{ !empty($config->images) && is_array($config->images) && isset($config->images[0]) ? asset('storage/' . $config->images[0]) : asset('assets/images/gach-hoa-value.png') }}"
         alt="Hành trình chế tác 1"
         class="w-full h-full object-cover brightness-80 hover:brightness-100 transition-all duration-300"
       />

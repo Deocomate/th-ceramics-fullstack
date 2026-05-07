@@ -137,7 +137,7 @@
   class="relative w-full min-h-[322px] md:min-h-[500px] lg:min-h-[600px] flex items-center md:pb-8 overflow-hidden">
   <!-- Background Image with Dark Overlay -->
   <div class="absolute inset-0 z-0">
-    <img src="{{ $config && $config->thumbnail_main ? Storage::url($config->thumbnail_main) : asset('assets/images/gach-trang-tri-banner.png') }}" alt="Gạch Trang Trí Banner"
+    <img src="{{ $config && $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/gach-trang-tri-banner.png') }}" alt="Gạch Trang Trí Banner"
       class="w-full h-full object-cover object-center" />
     <!-- Slight dark overlay to make text readable -->
     <div class="absolute inset-0 bg-black/30"></div>
@@ -314,7 +314,7 @@
       @if($config && $config->dauAn && $config->dauAn->count() > 0)
         @foreach($config->dauAn as $dauAn)
         <div class="swiper-slide project-item group relative cursor-pointer">
-          <img src="{{ $dauAn->background ? Storage::url($dauAn->background) : asset('assets/images/trang-tri-slide-01.jpg') }}" alt="{{ $dauAn->title ?? 'Công trình' }}"
+          <img src="{{ $dauAn->background ? asset('storage/' . $dauAn->background) : asset('assets/images/trang-tri-slide-01.jpg') }}" alt="{{ $dauAn->title ?? 'Công trình' }}"
             class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
           <div class="project-overlay absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent"></div>
           <div class="project-content absolute bottom-[65px] left-[80px] text-white z-10 min-w-[130px] md:min-w-[400px]">

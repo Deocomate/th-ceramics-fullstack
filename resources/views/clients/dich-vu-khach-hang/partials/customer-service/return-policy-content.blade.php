@@ -1,0 +1,31 @@
+<div class="flex-1 lg:pl-12">
+  <h1 class="text-[30px] lg:text-[36px] font-arima font-medium text-primary mb-8 lg:mb-10 lg:mt-[-6px] leading-[36px]">
+    Chính sách đổi trả
+  </h1>
+
+  <div class="text-primary space-y-6 lg:space-y-4 text-base lg:text-base leading-[28px] lg:leading-relaxed font-archivo">
+    <p>
+      Vì đặc thù gốm thủ công được sản xuất theo lô (mỗi lô có thể lệch màu nhẹ), chúng tôi không khuyến khích trả lại hàng dư.
+      Bạn nên giữ lại một ít để dự phòng cho việc sửa chữa sau này nếu cần.
+    </p>
+    <p>
+      Tuy nhiên, nếu số lượng hàng dư nhiều, chúng tôi có chính sách đổi trả với điều kiện hàng hóa còn nguyên thùng, cụ thể như
+      sau:
+    </p>
+    <p>Hàng hóa có thể được đổi hoặc trả trong vòng 10 ngày kể từ ngày mua hàng</p>
+    <ul class="list-none pl-0 lg:list-disc lg:pl-7 space-y-6 lg:space-y-2">
+      <li>Sau 10 ngày, hàng trả lại sẽ bị trừ 10% giá trị đơn hàng</li>
+      <li>Từ 30 ngày trở lên, mức khấu trừ tăng lên 20% giá trị đơn hàng</li>
+      <li>Quá 40 ngày, công ty không chấp nhận bất kỳ yêu cầu đổi trả nào</li>
+    </ul>
+    <p>
+      Quý khách vui lòng kiểm tra hàng ngay khi nhận. Nếu phát hiện nứt vỡ do vận chuyển, hãy chụp ảnh, quay video cụ thể số lượng
+      hàng bị vỡ. Sau đó, liên hệ ngay với chúng tôi trong vòng 24h để được hỗ trợ gửi bù sản phẩm mới kịp thời cho công trình.
+    </p>
+  </div>
+  <img
+    src="{{ asset('assets/images/return-policy.jpg') }}"
+    alt="Chính sách đổi trả"
+    class="w-full h-auto rounded-sm mt-10 lg:mt-8"
+  />
+</div>

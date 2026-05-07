@@ -1,0 +1,162 @@
+<section class="bg-primary pt-[20px] lg:pt-20">
+  <div class="w-[85%] max-w-[1320px] mx-auto mb-[20px] md:mb-12">
+    <div class="flex items-center" data-aos="fade-up">
+      <h2 class="text-secondary text-2xl lg:text-4xl font-bold uppercase">
+        Công trình ấn tượng
+      </h2>
+    </div>
+  </div>
+
+  <!-- Works Carousel Container: Full width to allow bleed-out -->
+  <div class="works-carousel-container relative" data-aos="fade-up" data-aos-delay="200">
+    <div class="works-carousel overflow-x-auto scrollbar-hide">
+      <!-- padding-left calculated to match the 1320px container's left edge -->
+      <div class="flex" style="padding-left: max(7.5%, calc((100% - 1320px) / 2))">
+        <div class="works-track flex gap-[10px] lg:gap-6 pr-12">
+          @for ($i = 0; $i < 10; $i++)
+          <div
+            class="works-item flex-shrink-0 w-[151px] lg:w-96 h-[125px] lg:h-80 rounded-sm overflow-hidden group cursor-pointer relative">
+            <img src="{{ asset('assets/images/work-01.jpg') }}" alt="Chùa Bái Đính, Ninh Bình" class="w-full h-full object-cover" />
+            <div
+              class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 md:p-4 pt-12">
+              <p class="works-item-title text-white">
+                Chùa Bái Đính, Ninh Bình
+              </p>
+            </div>
+          </div>
+          @endfor
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Container: Gói gọn trong 1320px -->
+  <div
+    class="w-[85%] max-w-[1320px] mx-auto mt-[11px] md:mt-12 flex flex-col items-center lg:items-end justify-between gap-8 lg:gap-12">
+    <!-- Custom scrollbar -->
+    <div class="flex-grow w-full">
+      <div class="works-scrollbar-track">
+        <div class="works-scrollbar-thumb"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@push('styles')
+<style>
+  .works-carousel {
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .works-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .works-scrollbar-track {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .works-scrollbar-thumb {
+    height: 100%;
+    background: #c76e00;
+    border-radius: 2px;
+    min-width: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: width 0.1s ease;
+    cursor: pointer;
+  }
+
+  .works-item-title {
+    text-align: center;
+    font-family: Archivo, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  @media (min-width: 1024px) {
+    .works-item-title {
+      font-size: 18px;
+    }
+  }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const worksSection = document
+      .querySelector(".works-carousel-container")
+      ?.closest("section");
+    if (!worksSection) return;
+
+    const worksCarousel = worksSection.querySelector(".works-carousel");
+    const worksTrack = worksSection.querySelector(".works-track");
+    const worksPrev = worksSection.querySelector(".works-prev");
+    const worksNext = worksSection.querySelector(".works-next");
+    const scrollbarThumb = worksSection.querySelector(".works-scrollbar-thumb");
+    const scrollbarTrack = worksSection.querySelector(".works-scrollbar-track");
+
+    if (!worksCarousel || !worksTrack) return;
+
+    const getScrollStep = () => {
+      const firstItem = worksTrack.querySelector(".works-item");
+      if (!firstItem) return 0;
+
+      const itemWidth = firstItem.getBoundingClientRect().width;
+      const trackStyles = window.getComputedStyle(worksTrack);
+      const gap = parseFloat(trackStyles.columnGap || trackStyles.gap || "0") || 0;
+      return itemWidth + gap;
+    };
+
+    worksPrev?.addEventListener("click", () => {
+      const scrollStep = getScrollStep();
+      worksCarousel.scrollBy({
+        left: -scrollStep,
+        behavior: "smooth",
+      });
+    });
+
+    worksNext?.addEventListener("click", () => {
+      const scrollStep = getScrollStep();
+      worksCarousel.scrollBy({
+        left: scrollStep,
+        behavior: "smooth",
+      });
+    });
+
+    const updateScrollbar = () => {
+      if (!scrollbarThumb || !scrollbarTrack) return;
+
+      const scrollWidth = worksCarousel.scrollWidth;
+      const clientWidth = worksCarousel.clientWidth;
+      const scrollLeft = worksCarousel.scrollLeft;
+      const trackWidth = scrollbarTrack.clientWidth;
+
+      if (scrollWidth <= clientWidth || trackWidth <= 0) {
+        scrollbarThumb.style.width = "100%";
+        scrollbarThumb.style.left = "0";
+        return;
+      }
+
+      const thumbWidth = Math.max((clientWidth / scrollWidth) * trackWidth, 40);
+      const thumbLeft =
+        (scrollLeft / (scrollWidth - clientWidth)) * (trackWidth - thumbWidth);
+
+      scrollbarThumb.style.width = `${thumbWidth}px`;
+      scrollbarThumb.style.left = `${thumbLeft}px`;
+    };
+
+    worksCarousel.addEventListener("scroll", updateScrollbar);
+    window.addEventListener("resize", updateScrollbar);
+    updateScrollbar();
+  });
+</script>
+@endpush

@@ -3,7 +3,7 @@
   class="relative h-[320px] md:h-[70vh] md:min-h-[500px] md:max-h-[740px] lg:h-[663px] flex items-center justify-center text-neutral-1 overflow-hidden">
   <!-- Background Image -->
   <div class="absolute inset-0 z-0">
-    <img src="{{ $config->thumbnail_main ? Storage::url($config->thumbnail_main) : asset('assets/images/about-banner.jpg') }}" alt="About Banner" class="w-full h-full object-cover" />
+    <img src="{{ $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/about-banner.jpg') }}" alt="About Banner" class="w-full h-full object-cover" />
     <div class="absolute inset-0"
       style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 16.89%, rgba(21, 21, 21, 0.5) 75.07%, rgba(0, 0, 0, 0.5) 99.72%), linear-gradient(0deg, rgba(46, 47, 42, 0.59) 0%, rgba(46, 47, 42, 0.59) 100%);">
     </div>

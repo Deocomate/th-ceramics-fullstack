@@ -5,7 +5,7 @@
   <!-- Background Image -->
   <div class="absolute inset-0 z-0">
     <img
-      src="{{ $config->thumbnail_main ? Storage::url($config->thumbnail_main) : asset('assets/images/linh-vat-banner.png') }}"
+      src="{{ $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/linh-vat-banner.png') }}"
       alt="Linh Vật Phong Thủy Banner"
       class="w-full h-full object-cover"
     />

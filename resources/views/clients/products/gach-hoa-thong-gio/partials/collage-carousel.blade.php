@@ -43,7 +43,7 @@
     -->
     <div aria-hidden="true" class="hidden">
       @foreach($allGalleryPaths as $imgPath)
-      <img src="{{ Storage::url($imgPath) }}" alt="" />
+      <img src="{{ asset('storage/' . $imgPath) }}" alt="" />
       @endforeach
     </div>
 
@@ -129,7 +129,7 @@
       foreach ($imageChunks as $chunkIdx => $chunk) {
         $slideImages = [];
         foreach ($chunk as $imgIdx => $imgPath) {
-          $imgUrl = Storage::url($imgPath);
+          $imgUrl = asset('storage/' . $imgPath);
           $slideImages[] = [
             "href" => $imgUrl,
             "src" => $imgUrl,

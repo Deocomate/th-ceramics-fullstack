@@ -55,7 +55,38 @@
             </div>
         </div>
 
-        <!-- 2. CẤU HÌNH TRANG SẢN PHẨM -->
+        <!-- 2. CẤU HÌNH TRANG ĐƠN -->
+        @php $isPageConfig = request()->routeIs(['admin.pages.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('submenu-page-config', this)">
+                <div class="flex items-center gap-3">
+                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Cấu hình trang đơn
+                </div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isPageConfig ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            <div id="submenu-page-config" class="grid transition-all duration-300 ease-in-out {{ $isPageConfig ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden">
+                    <div class="pl-9 pr-3 space-y-1 pb-1">
+                        <a href="{{ route('admin.pages.factory.edit') }}" class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.factory.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Trang Xưởng Sản Xuất
+                        </a>
+                        <a href="{{ route('admin.pages.contact.edit') }}" class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.contact.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Trang Liên Hệ
+                        </a>
+                        <a href="{{ route('admin.pages.faq.edit') }}" class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.faq.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Trang FAQ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. CẤU HÌNH TRANG SẢN PHẨM -->
         @php
             $isProductConfig = request()->routeIs([
                 'admin.ngoi-am-duong.*', 'admin.ngoi-hai-van-mieu.*', 'admin.gach-hoa-thong-gio.*',
@@ -90,7 +121,7 @@
             </div>
         </div>
 
-        <!-- 3. DANH SÁCH SẢN PHẨM CHI TIẾT (Dropdown cấp 1 + cấp 2) -->
+        <!-- 4. DANH SÁCH SẢN PHẨM CHI TIẾT (Dropdown cấp 1 + cấp 2) -->
         @php
             // Nhóm biến trạng thái cấp 2
             $isNAD = request()->routeIs(['admin.ngoi-am-duong-ct.*', 'admin.mau-sac-ngoi-am-duong-ct.*', 'admin.dinh-muc-ngoi-am-duong.*']);

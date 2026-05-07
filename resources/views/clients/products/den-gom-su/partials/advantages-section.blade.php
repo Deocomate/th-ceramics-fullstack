@@ -8,22 +8,20 @@
       Ưu điểm vượt trội
     </h2>
 
+    @php
+      $galleryImages = $config->anh->pluck('image')->toArray();
+      $cardImages = array_pad(array_slice($galleryImages, 0, 4), 4, null);
+    @endphp
+
     <!-- Mobile Swiper (Chỉ hiển thị trên mobile) -->
     <div class="md:hidden">
       <div class="swiper advantage-swiper">
         <div class="swiper-wrapper">
+          @foreach($cardImages as $galleryImage)
           <div class="swiper-slide h-auto">
-            @include('clients.products.den-gom-su.partials.advantage-card')
+            @include('clients.products.den-gom-su.partials.advantage-card', ['bgImage' => $galleryImage])
           </div>
-          <div class="swiper-slide h-auto">
-            @include('clients.products.den-gom-su.partials.advantage-card')
-          </div>
-          <div class="swiper-slide h-auto">
-            @include('clients.products.den-gom-su.partials.advantage-card')
-          </div>
-          <div class="swiper-slide h-auto">
-            @include('clients.products.den-gom-su.partials.advantage-card')
-          </div>
+          @endforeach
         </div>
       </div>
       <!-- Dots -->
@@ -36,17 +34,9 @@
     <div
       class="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 items-start"
     >
-      <!-- Card 1 -->
-      @include('clients.products.den-gom-su.partials.advantage-card')
-
-      <!-- Card 2 -->
-      @include('clients.products.den-gom-su.partials.advantage-card')
-
-      <!-- Card 3 -->
-      @include('clients.products.den-gom-su.partials.advantage-card')
-
-      <!-- Card 4 -->
-      @include('clients.products.den-gom-su.partials.advantage-card')
+      @foreach($cardImages as $galleryImage)
+      @include('clients.products.den-gom-su.partials.advantage-card', ['bgImage' => $galleryImage])
+      @endforeach
     </div>
   </div>
 </section>

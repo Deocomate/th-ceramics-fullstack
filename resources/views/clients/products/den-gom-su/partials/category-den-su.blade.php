@@ -7,7 +7,7 @@
     <div class="w-full md:w-[70%] lg:w-[68%] relative group" data-aos="fade-up">
       <div class="relative overflow-hidden rounded-2xl shadow-xl">
         <img
-          src="{{ $config->image3 ? Storage::url($config->image3) : asset('assets/images/den-gom-02.png') }}"
+          src="{{ $config->image3 ? asset('storage/' . $config->image3) : asset('assets/images/den-gom-02.png') }}"
           alt="ĐÈN SỨ"
           class="w-full h-auto aspect-[6/5] object-cover"
           onerror="this.src = '{{ asset('assets/images/about-01.png') }}'"
@@ -45,7 +45,7 @@
     >
       <div class="aspect-[4/6] overflow-hidden rounded-2xl shadow-xl">
         <img
-          src="{{ $config->image4 ? Storage::url($config->image4) : asset('assets/images/den-gom-01.png') }}"
+          src="{{ $config->image4 ? asset('storage/' . $config->image4) : asset('assets/images/den-gom-01.png') }}"
           alt="ĐÈN SỨ"
           class="w-full h-full object-cover"
           onerror="this.src = '{{ asset('assets/images/ngoi-01.jpg') }}'"

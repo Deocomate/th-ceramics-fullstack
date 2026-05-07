@@ -1,0 +1,133 @@
+<div class="flex-1 lg:pl-12">
+  <h1 class="text-[30px] lg:text-[36px] font-arima font-medium text-primary mb-5 lg:mt-[-6px] lg:mb-10">Hướng dẫn thi công</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-y-0">
+    <!-- Row 1: Ngói âm dương (Left Aligned) -->
+    <div class="bg-[#D9D9D9] w-full aspect-[3/2] lg:aspect-[9/6] order-1 md:order-2"></div>
+    <div class="flex flex-col justify-center items-start px-0 lg:ml-8 lg:p-8 bg-transparent order-2 md:order-1 mt-5 lg:mt-0 mb-12 lg:mb-0">
+      <h3 class="text-2xl lg:text-[32px] font-semibold text-primary mb-4 font-archivo leading-[32px]">Ngói âm dương</h3>
+      <button
+        class="flex items-center justify-center lg:justify-between gap-2 px-2 py-1.5 border border-primary text-primary text-[12px] lg:text-[14px] font-extralight hover:bg-primary hover:text-white transition-all font-archivo w-[111px] h-[32px] lg:w-fit lg:h-auto lg:min-w-[140px]"
+      >
+        Xem hướng dẫn
+        <img
+          src="{{ asset('assets/images/triangle.svg') }}"
+          alt=""
+          class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1] ml-4"
+        />
+      </button>
+    </div>
+
+    <!-- Row 2: Ngói hài văn miếu (Right Aligned) -->
+    <div class="bg-[#D9D9D9] w-full aspect-[3/2] lg:aspect-[9/6] order-3"></div>
+    <div class="flex flex-col justify-center items-end lg:mr-8 lg:p-8 bg-transparent text-right order-4 mt-5 lg:mt-0 mb-12 lg:mb-0">
+      <h3 class="text-2xl lg:text-[32px] font-semibold text-primary mb-4 font-archivo leading-[32px]">Ngói hài văn miếu</h3>
+      <button
+        class="flex items-center justify-center lg:justify-between gap-2 px-2 py-1.5 border border-primary text-primary text-[12px] lg:text-[14px] font-extralight hover:bg-primary hover:text-white transition-all font-archivo w-[111px] h-[32px] lg:w-fit lg:h-auto lg:min-w-[140px]"
+      >
+        Xem hướng dẫn
+        <img
+          src="{{ asset('assets/images/triangle.svg') }}"
+          alt=""
+          class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1] ml-4"
+        />
+      </button>
+    </div>
+
+    <!-- Row 3: Gạch hoa thông gió (Left Aligned) -->
+    <div class="bg-[#D9D9D9] w-full aspect-[3/2] lg:aspect-[9/6] order-5 md:order-6"></div>
+    <div class="flex flex-col justify-center items-start lg:ml-8 lg:p-8 bg-transparent order-6 md:order-5 mt-5 lg:mt-0 mb-12 lg:mb-0">
+      <h3 class="text-2xl lg:text-[32px] font-semibold text-primary mb-4 font-archivo leading-[32px]">Ngói âm dương</h3>
+      <button
+        class="flex items-center justify-center lg:justify-between gap-2 px-2 py-1.5 border border-primary text-primary text-[12px] lg:text-[14px] font-extralight hover:bg-primary hover:text-white transition-all font-archivo w-[111px] h-[32px] lg:w-fit lg:h-auto lg:min-w-[140px]"
+      >
+        Xem hướng dẫn
+        <img
+          src="{{ asset('assets/images/triangle.svg') }}"
+          alt=""
+          class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1] ml-4"
+        />
+      </button>
+    </div>
+
+    <!-- Row 4: Gạch trang trí (Right Aligned) -->
+    <div class="bg-[#D9D9D9] w-full aspect-[3/2] lg:aspect-[9/6] order-7"></div>
+    <div class="flex flex-col justify-center items-end lg:mr-8 lg:p-8 bg-transparent text-right order-8 mt-5 lg:mt-0 mb-12 lg:mb-0">
+      <h3 class="text-2xl lg:text-[32px] font-semibold text-primary mb-4 font-archivo leading-[32px]">Ngói hài văn miếu</h3>
+      <button
+        class="flex items-center justify-center lg:justify-between gap-2 px-2 py-1.5 border border-primary text-primary text-[12px] lg:text-[14px] font-extralight hover:bg-primary hover:text-white transition-all font-archivo w-[111px] h-[32px] lg:w-fit lg:h-auto lg:min-w-[140px]"
+      >
+        Xem hướng dẫn
+        <img
+          src="{{ asset('assets/images/triangle.svg') }}"
+          alt=""
+          class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1] ml-4"
+        />
+      </button>
+    </div>
+
+    <!-- Row 5: Ngói lợp cao cấp (Left Aligned) -->
+    <div class="bg-[#D9D9D9] w-full aspect-[3/2] lg:aspect-[9/6] order-9 md:order-10"></div>
+    <div class="flex flex-col justify-center items-start lg:ml-8 lg:p-8 bg-transparent order-10 md:order-9 mt-5 lg:mt-0 mb-12 lg:mb-0">
+      <h3 class="text-2xl lg:text-[32px] font-semibold text-primary mb-4 font-archivo leading-[32px]">Ngói âm dương</h3>
+      <button
+        class="flex items-center justify-center lg:justify-between gap-2 px-2 py-1.5 border border-primary text-primary text-[12px] lg:text-[14px] font-extralight hover:bg-primary hover:text-white transition-all font-archivo w-[111px] h-[32px] lg:w-fit lg:h-auto lg:min-w-[140px]"
+      >
+        Xem hướng dẫn
+        <img
+          src="{{ asset('assets/images/triangle.svg') }}"
+          alt=""
+          class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1] ml-4"
+        />
+      </button>
+    </div>
+
+    <!-- Row 6: Linh vật gốm sứ (Right Aligned) -->
+    <div class="bg-[#D9D9D9] w-full aspect-[3/2] lg:aspect-[9/6] order-11"></div>
+    <div class="flex flex-col justify-center items-end lg:mr-8 lg:p-8 bg-transparent text-right order-12 mt-5 lg:mt-0 mb-12 lg:mb-0">
+      <h3 class="text-2xl lg:text-[32px] font-semibold text-primary mb-4 font-archivo leading-[32px]">Ngói hài văn miếu</h3>
+      <button
+        class="flex items-center justify-center lg:justify-between gap-2 px-2 py-1.5 border border-primary text-primary text-[12px] lg:text-[14px] font-extralight hover:bg-primary hover:text-white transition-all font-archivo w-[111px] h-[32px] lg:w-fit lg:h-auto lg:min-w-[140px]"
+      >
+        Xem hướng dẫn
+        <img
+          src="{{ asset('assets/images/triangle.svg') }}"
+          alt=""
+          class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1] ml-4"
+        />
+      </button>
+    </div>
+
+    <!-- Row 7: Gốm phong thủy (Left Aligned) -->
+    <div class="bg-[#D9D9D9] w-full aspect-[3/2] lg:aspect-[9/6] order-13 md:order-14"></div>
+    <div class="flex flex-col justify-center items-start lg:ml-8 lg:p-8 bg-transparent order-14 md:order-13 mt-5 lg:mt-0 mb-12 lg:mb-0">
+      <h3 class="text-2xl lg:text-[32px] font-semibold text-primary mb-4 font-archivo leading-[32px]">Ngói âm dương</h3>
+      <button
+        class="flex items-center justify-center lg:justify-between gap-2 px-2 py-1.5 border border-primary text-primary text-[12px] lg:text-[14px] font-extralight hover:bg-primary hover:text-white transition-all font-archivo w-[111px] h-[32px] lg:w-fit lg:h-auto lg:min-w-[140px]"
+      >
+        Xem hướng dẫn
+        <img
+          src="{{ asset('assets/images/triangle.svg') }}"
+          alt=""
+          class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1] ml-4"
+        />
+      </button>
+    </div>
+
+    <!-- Row 8: Gốm tâm linh (Right Aligned) -->
+    <div class="bg-[#D9D9D9] w-full aspect-[3/2] lg:aspect-[9/6] order-15"></div>
+    <div class="flex flex-col justify-center items-end lg:mr-8 lg:p-8 bg-transparent text-right order-16 mt-5 lg:mt-0 mb-12 lg:mb-0">
+      <h3 class="text-2xl lg:text-[32px] font-semibold text-primary mb-4 font-archivo leading-[32px]">Ngói hài văn miếu</h3>
+      <button
+        class="flex items-center justify-center lg:justify-between gap-2 px-2 py-1.5 border border-primary text-primary text-[12px] lg:text-[14px] font-extralight hover:bg-primary hover:text-white transition-all font-archivo w-[111px] h-[32px] lg:w-fit lg:h-auto lg:min-w-[140px]"
+      >
+        Xem hướng dẫn
+        <img
+          src="{{ asset('assets/images/triangle.svg') }}"
+          alt=""
+          class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1] ml-4"
+        />
+      </button>
+    </div>
+  </div>
+</div>

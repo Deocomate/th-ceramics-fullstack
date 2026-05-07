@@ -10,7 +10,7 @@
 <!-- Top Banner for Detail -->
 <section class="hidden md:flex relative w-full h-[180px] md:h-[210px] items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <img src="{{ !empty($product->images) && is_array($product->images) ? Storage::url($product->images[0]) : asset('assets/images/detail-banner.png') }}" alt="Gạch Cổ Bát Tràng Banner" class="w-full h-full object-cover" />
+        <img src="{{ !empty($product->images) && is_array($product->images) && isset($product->images[0]) ? asset('storage/' . $product->images[0]) : asset('assets/images/detail-banner.png') }}" alt="Gạch Cổ Bát Tràng Banner" class="w-full h-full object-cover" />
     </div>
     <div class="relative z-10 text-center text-white px-4 pt-4">
         <h1 class="text-2xl md:text-3xl font-bold mb-2.5 uppercase">
@@ -47,7 +47,7 @@ sku="{{ $product->code }}"
 
 <div class="flex flex-col md:block">
     <div class="order-2 md:order-none">
-        <x-products.quantity-calculator image="{{ !empty($product->size_image) ? Storage::url($product->size_image) : asset('assets/images/gtt-size.png') }}" />
+        <x-products.quantity-calculator image="{{ !empty($product->size_image) ? asset('storage/' . $product->size_image) : asset('assets/images/gtt-size.png') }}" />
     </div>
     <div class="order-3 md:order-none">
         <x-products.fabrication-process />

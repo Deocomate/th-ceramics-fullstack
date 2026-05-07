@@ -52,7 +52,7 @@
         <!-- Image Container -->
         <div class="w-full h-full max-h-[438px] md:max-h-full md:w-[68%] z-0">
           <div class="h-full md:aspect-auto overflow-hidden rounded-sm shadow-xl">
-            <img src="{{ $nghe->image ? Storage::url($nghe->image) : asset('assets/images/nghe.png') }}" alt="Linh vật Nghê" class="w-full h-full object-cover"
+            <img src="{{ $nghe->image ? asset('storage/' . $nghe->image) : asset('assets/images/nghe.png') }}" alt="Linh vật Nghê" class="w-full h-full object-cover"
               onerror="this.src = '{{ asset('assets/images/ngoi-01.jpg') }}'" />
           </div>
         </div>
@@ -77,7 +77,7 @@
         <!-- Image Container -->
         <div class="w-full md:w-[68%] z-0">
           <div class="aspect-[6/5] md:aspect-auto overflow-hidden rounded-sm shadow-xl">
-            <img src="{{ $phuong->image ? Storage::url($phuong->image) : asset('assets/images/phuong.png') }}" alt="Linh vật Phượng" class="w-full h-full object-cover"
+            <img src="{{ $phuong->image ? asset('storage/' . $phuong->image) : asset('assets/images/phuong.png') }}" alt="Linh vật Phượng" class="w-full h-full object-cover"
               onerror="this.src = '{{ asset('assets/images/ngoi-05.jpg') }}'" />
           </div>
         </div>
@@ -102,7 +102,7 @@
         <!-- Image Container -->
         <div class="w-full md:w-[68%] z-0">
           <div class="aspect-[5/6] md:aspect-auto overflow-hidden rounded-sm shadow-xl">
-            <img src="{{ $dauRong->image ? Storage::url($dauRong->image) : asset('assets/images/dau-rong.png') }}" alt="Linh vật Đầu Rồng" class="w-full h-full object-cover"
+            <img src="{{ $dauRong->image ? asset('storage/' . $dauRong->image) : asset('assets/images/dau-rong.png') }}" alt="Linh vật Đầu Rồng" class="w-full h-full object-cover"
               onerror="this.src = '{{ asset('assets/images/ngoi-07.jpg') }}'" />
           </div>
         </div>
@@ -138,7 +138,7 @@
           onclick="window.location.href = '{{ route('client.products.linh-vat-phong-thuy.detail', $product->linh_vat_phong_thuy_ct_id) }}'">
           <div
             class="product-card relative w-full {{ $isFirst ? 'aspect-[2/1] md:aspect-[18.8/10]' : 'aspect-[1.1/1] md:aspect-[9/10]' }} shadow mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1">
-            <img src="{{ $productImage ? Storage::url($productImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
+            <img src="{{ $productImage ? asset('storage/' . $productImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
             <div class="product-overlay">
               <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
               <span>Xem chi tiết</span>

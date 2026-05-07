@@ -39,12 +39,12 @@
             class="absolute top-[20%] left-[18%] right-[18%] bottom-[-15%] shadow-lg bg-black/5 overflow-hidden"
           >
             <a
-              href="{{ !empty($item->image) ? Storage::url($item->image) : asset('assets/images/gach-hoa-value.png') }}"
+              href="{{ !empty($item->image) ? asset('storage/' . $item->image) : asset('assets/images/gach-hoa-value.png') }}"
               class="glightbox group block w-full h-full cursor-zoom-in"
               data-gallery="gia-tri-vuot-troi"
             >
               <img
-                src="{{ !empty($item->image) ? Storage::url($item->image) : asset('assets/images/gach-hoa-value.png') }}"
+                src="{{ !empty($item->image) ? asset('storage/' . $item->image) : asset('assets/images/gach-hoa-value.png') }}"
                 alt="{{ $item->title ?? '' }}"
                 class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.2]"
               />
@@ -86,12 +86,12 @@
             class="absolute bottom-[20%] left-[18%] right-[18%] top-[-15%] shadow-lg bg-black/5 overflow-hidden"
           >
             <a
-              href="{{ !empty($item->image) ? Storage::url($item->image) : asset('assets/images/work-03.jpg') }}"
+              href="{{ !empty($item->image) ? asset('storage/' . $item->image) : asset('assets/images/work-03.jpg') }}"
               class="glightbox group block w-full h-full cursor-zoom-in"
               data-gallery="gia-tri-vuot-troi"
             >
               <img
-                src="{{ !empty($item->image) ? Storage::url($item->image) : asset('assets/images/work-03.jpg') }}"
+                src="{{ !empty($item->image) ? asset('storage/' . $item->image) : asset('assets/images/work-03.jpg') }}"
                 alt="{{ $item->title ?? '' }}"
                 class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.2]"
               />
