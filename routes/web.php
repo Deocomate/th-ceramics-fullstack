@@ -316,6 +316,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}/restore', [\App\Http\Controllers\Admin\PhanLoaiBoNocChuVanCtController::class, 'restore'])->name('restore');
         });
 
+        Route::get('trang-chu', [\App\Http\Controllers\Admin\TrangChuController::class, 'edit'])->name('trang_chu.edit');
+        Route::put('trang-chu', [\App\Http\Controllers\Admin\TrangChuController::class, 'update'])->name('trang_chu.update');
+
         // ── Page Configuration: single-page config panels ──────────────────────
         Route::prefix('pages')->name('pages.')->group(function () {
             Route::get('factory', [\App\Http\Controllers\Admin\FactoryPageController::class, 'edit'])->name('factory.edit');
