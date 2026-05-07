@@ -23,69 +23,83 @@
                 </div>
             @endif
 
-            {{-- Ảnh bản đồ --}}
-            <div class="bg-gray-50 rounded-xl border border-gray-200 p-5">
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh bản đồ</label>
-                <div class="aspect-video w-full max-w-2xl rounded-xl border-2 border-dashed border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-gray-50 transition-colors">
-                    <img id="preview-map_image" src="{{ $contactPage->map_image ? asset('storage/' . $contactPage->map_image) : 'https://placehold.co/800x450?text=Chua+co+anh+ban+do' }}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                {{-- Left Column: Text & Contact Info --}}
+                <div class="lg:col-span-3 space-y-6">
+                    <div>
+                        <label for="hotline" class="block text-sm font-semibold text-gray-700 mb-2">Hotline</label>
+                        <input type="text" id="hotline" name="hotline" value="{{ old('hotline', $contactPage->hotline) }}"
+                            placeholder="0966 55 8808"
+                            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg
+                                   focus:border-brand-red focus:ring-1 focus:ring-brand-red outline-none transition-all">
+                        @error('hotline') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
-                    <input type="file" name="map_image" accept="image/*" onchange="previewImage(event, 'preview-map_image')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                </div>
-                @error('map_image') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
-            </div>
 
-            <hr class="border-gray-100">
-
-            {{-- Hotline + Zalo link --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="hotline" class="block text-sm font-semibold text-gray-700 mb-2">Hotline</label>
-                    <input type="text" id="hotline" name="hotline" value="{{ old('hotline', $contactPage->hotline) }}"
-                        placeholder="0966 55 8808"
-                        class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
-                    @error('hotline') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
-                </div>
-
-                <div>
-                    <label for="zalo_link" class="block text-sm font-semibold text-gray-700 mb-2">Link Zalo (URL)</label>
-                    <input type="url" id="zalo_link" name="zalo_link" value="{{ old('zalo_link', $contactPage->zalo_link) }}"
-                        placeholder="https://zalo.me/..."
-                        class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
-                    @error('zalo_link') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
-                </div>
-            </div>
-
-            {{-- Ảnh Zalo --}}
-            <div class="bg-gray-50 rounded-xl border border-gray-200 p-5">
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh Zalo</label>
-                <div class="w-48 h-48 rounded-xl border-2 border-dashed border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-gray-50 transition-colors">
-                    <img id="preview-zalo_image" src="{{ $contactPage->zalo_image ? asset('storage/' . $contactPage->zalo_image) : 'https://placehold.co/200x200?text=Zalo' }}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
+                    <div>
+                        <label for="zalo_link" class="block text-sm font-semibold text-gray-700 mb-2">Link Zalo (URL)</label>
+                        <input type="url" id="zalo_link" name="zalo_link" value="{{ old('zalo_link', $contactPage->zalo_link) }}"
+                            placeholder="https://zalo.me/..."
+                            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg
+                                   focus:border-brand-red focus:ring-1 focus:ring-brand-red outline-none transition-all">
+                        @error('zalo_link') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
-                    <input type="file" name="zalo_image" accept="image/*" onchange="previewImage(event, 'preview-zalo_image')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+
+                    <div>
+                        <label for="form_title" class="block text-sm font-semibold text-gray-700 mb-2">Tiêu đề form liên hệ</label>
+                        <input type="text" id="form_title" name="form_title" value="{{ old('form_title', $contactPage->form_title) }}"
+                            placeholder="Hãy nói với chúng tôi những mong muốn của bạn"
+                            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg
+                                   focus:border-brand-red focus:ring-1 focus:ring-brand-red outline-none transition-all">
+                        @error('form_title') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
+                    </div>
                 </div>
-                @error('zalo_image') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
-            </div>
 
-            <hr class="border-gray-100">
+                {{-- Right Column: Media --}}
+                <div class="lg:col-span-2 space-y-6">
+                    {{-- Map Image --}}
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh bản đồ</label>
+                        <div class="aspect-video w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50
+                                    flex items-center justify-center overflow-hidden relative group
+                                    hover:bg-gray-100 transition-colors">
+                            <img id="preview-map_image"
+                                src="{{ $contactPage->map_image ? asset('storage/' . $contactPage->map_image) : 'https://placehold.co/800x450?text=Chua+co+anh+ban+do' }}"
+                                class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity
+                                        flex items-center justify-center">
+                                <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
+                            </div>
+                            <input type="file" name="map_image" accept="image/*" onchange="previewImage(event, 'preview-map_image')"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        </div>
+                        @error('map_image') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
+                    </div>
 
-            {{-- Tiêu đề form --}}
-            <div>
-                <label for="form_title" class="block text-sm font-semibold text-gray-700 mb-2">Tiêu đề form liên hệ</label>
-                <input type="text" id="form_title" name="form_title" value="{{ old('form_title', $contactPage->form_title) }}"
-                    placeholder="Hãy nói với chúng tôi những mong muốn của bạn"
-                    class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
-                @error('form_title') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
+                    {{-- Zalo Image --}}
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh Zalo</label>
+                        <div class="w-40 h-40 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50
+                                    flex items-center justify-center overflow-hidden relative group
+                                    hover:bg-gray-100 transition-colors">
+                            <img id="preview-zalo_image"
+                                src="{{ $contactPage->zalo_image ? asset('storage/' . $contactPage->zalo_image) : 'https://placehold.co/200x200?text=Zalo' }}"
+                                class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity
+                                        flex items-center justify-center">
+                                <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
+                            </div>
+                            <input type="file" name="zalo_image" accept="image/*" onchange="previewImage(event, 'preview-zalo_image')"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        </div>
+                        @error('zalo_image') <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p> @enderror
+                    </div>
+                </div>
             </div>
 
             <div class="pt-4 flex justify-end border-t border-gray-100">
                 <button type="submit"
-                    class="px-8 py-2.5 text-sm font-bold text-white rounded-lg shadow-sm transition-colors"
-                    style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'"
-                    onmouseout="this.style.background='#A31D1D'">
+                    class="px-6 py-2.5 text-sm font-bold text-white bg-brand-red hover:bg-brand-red-dark
+                           rounded-lg shadow-sm transition-all active:scale-95">
                     Lưu thay đổi
                 </button>
             </div>

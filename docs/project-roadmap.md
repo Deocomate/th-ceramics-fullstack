@@ -46,7 +46,7 @@
 | 100% | Product listing pages | 9 category index views |
 | 100% | Product detail pages | 9 category detail views with images, specs, pricing |
 | ~80% | Data binding | Client controllers wired to services; some views pending |
-| 100% | Page config admin panels | Factory (5-tab Alpine.js + TinyMCE), Contact (form), FAQ (banner + FAQ items CRUD with modal) |
+| 100% | Page config admin panels | Factory (5-tab Alpine.js, auto-resize textareas), Contact (form), FAQ (banner + FAQ items CRUD with modal) |
 | 0% | SEO meta tags | Per-page title/description via `@props` |
 | 0% | News pages | Controller + routes exist, views need implementation |
 | 0% | Projects pages | Controller + routes exist, views need implementation |

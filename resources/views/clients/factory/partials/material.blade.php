@@ -1,3 +1,10 @@
+@php
+    $materialSlider = is_string($factory->material_slider) ? json_decode($factory->material_slider, true) : $factory->material_slider;
+    $materialSlider = is_array($materialSlider) ? $materialSlider : [];
+
+    $materialSteps = is_string($factory->material_steps) ? json_decode($factory->material_steps, true) : $factory->material_steps;
+    $materialSteps = is_array($materialSteps) ? $materialSteps : [];
+@endphp
 <section class="bg-background-secondary relative overflow-hidden text-primary">
   <!-- 1. Slider Segment -->
   <div class="relative z-10 pt-16 md:pt-24 lg:pt-32">
@@ -7,8 +14,8 @@
     >
       <div class="swiper section4-swiper overflow-visible">
         <div class="swiper-wrapper">
-          @if(!empty($factory->material_slider))
-            @foreach($factory->material_slider as $image)
+          @if(!empty($materialSlider))
+            @foreach($materialSlider as $image)
               <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
                 <div class="aspect-[12/5] overflow-hidden shadow-lg bg-neutral-1">
                   <img
@@ -60,7 +67,7 @@
         <span
           id="section4-step-number"
           class="text-[48px] md:text-[80px] lg:text-[96px] leading-none text-[#909090] font-arbutus select-none"
-          >{{ !empty($factory->material_steps) ? ($factory->material_steps[0]['number'] ?? '1') : '1' }}</span
+          >{{ !empty($materialSteps) ? ($materialSteps[0]['number'] ?? '1') : '1' }}</span
         >
       </div>
 
@@ -75,7 +82,7 @@
             id="section4-step-title"
             class="text-[15px] md:text-[16px] font-bold uppercase leading-[24px]"
           >
-            {{ !empty($factory->material_steps) ? ($factory->material_steps[0]['title'] ?? 'LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)') : 'LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)' }}
+            {{ !empty($materialSteps) ? ($materialSteps[0]['title'] ?? 'LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)') : 'LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)' }}
           </h3>
 
           <div class="hidden md:flex gap-4 shrink-0">
@@ -118,16 +125,16 @@
           class="text-[15px]/[24px] md:text-base/9 text-black/75 space-y-4 text-left max-w-xl font-extralight pt-10 md:pt-0"
         >
           <p id="section4-step-description">
-            {{ !empty($factory->material_steps) ? ($factory->material_steps[0]['description'] ?? '') : '' }}
+            {{ !empty($materialSteps) ? ($materialSteps[0]['description'] ?? '') : '' }}
           </p>
         </div>
       </div>
     </div>
 
     <!-- Dots Pagination - Mobile Only -->
-    @if(!empty($factory->material_steps) && count($factory->material_steps) > 1)
+    @if(!empty($materialSteps) && count($materialSteps) > 1)
       <div class="flex justify-center gap-2 mt-2 md:mt-12 md:hidden">
-        @foreach($factory->material_steps as $index => $step)
+        @foreach($materialSteps as $index => $step)
           <button
             class="material-dot w-2 h-2 rounded-full transition-all duration-300 cursor-pointer {{ $index === 0 ? 'active' : '' }}"
             data-index="{{ $index }}"
@@ -150,7 +157,7 @@
         "section4-step-description",
       );
 
-      const section4Steps = {{ Js::from($factory->material_steps ?? []) }};
+      const section4Steps = {{ Js::from($materialSteps) }};
 
       const updateSection4Text = (index) => {
         if (

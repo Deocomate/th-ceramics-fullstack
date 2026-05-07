@@ -218,7 +218,7 @@
   }
 }
 
-/* Rich Text Content — ensures TinyMCE output renders with consistent typography */
+/* Rich Text Content — ensures consistent typography for admin-editable HTML content */
 .rich-text-content p {
   font-size: 15px;
   line-height: 1.6;

@@ -1,3 +1,7 @@
+@php
+    $processSlider = is_string($factory->process_slider) ? json_decode($factory->process_slider, true) : $factory->process_slider;
+    $processSlider = is_array($processSlider) ? $processSlider : [];
+@endphp
 <section class="bg-background-secondary relative overflow-hidden text-primary">
   <!-- Grid Overlay Blueprint Lines -->
   <div class="grid-overlay absolute inset-0 z-0 pointer-events-none">
@@ -90,8 +94,8 @@
         <!-- Swiper -->
         <div class="swiper section3-swiper overflow-hidden shadow-lg">
           <div class="swiper-wrapper">
-            @if(!empty($factory->process_slider))
-              @foreach($factory->process_slider as $image)
+            @if(!empty($processSlider))
+              @foreach($processSlider as $image)
                 <div class="swiper-slide w-full">
                   <div
                     class="aspect-[3/4] md:aspect-[4/5] object-cover bg-neutral-1"

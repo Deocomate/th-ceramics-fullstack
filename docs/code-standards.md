@@ -286,10 +286,24 @@ Unauthorized access returns 403 with Vietnamese message.
 
 ### 7.2 JavaScript
 
-- Vanilla JS only (no framework)
-- Swiper.js for image carousels
-- AOS for scroll animations
+- **Alpine.js** (CDN) for admin interactive UI: tab navigation, auto-resize textareas, dynamic image galleries, repeater fields
+- **Swiper.js** for client image carousels
+- **AOS** for client scroll animations
 - Module script loaded from `public/assets/js/app.js`
+
+#### 7.2.1 Alpine.js Auto-Resize Textarea Pattern
+
+All admin HTML-capable textareas use Alpine.js for automatic height adjustment. This replaces the former TinyMCE rich-text editor with a lightweight, native approach.
+
+```html
+<textarea name="description"
+    x-data
+    x-init="$el.style.height = $el.scrollHeight + 'px'"
+    @input="$el.style.height = 'auto'; $el.style.height = $el.scrollHeight + 'px'"
+    class="... resize-none overflow-hidden min-h-[120px] leading-relaxed">{{ old('description', $model->description) }}</textarea>
+```
+
+Key classes: `resize-none overflow-hidden min-h-[120px]` — prevents manual resize handles, hides scrollbar overflow, and sets a minimum height so the field never collapses below a usable size.
 
 ### 7.3 CSS
 

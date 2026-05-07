@@ -103,7 +103,7 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 | Database schema | Complete (42 tables, 9 migrations) |
 | Admin CRUD | Complete (all 9 categories + 3 page config panels) |
 | Product seeding | Complete (4 seeders: User, ProductType, ProductDetail) |
-| Page configuration | Complete (Factory, Contact, FAQ admin panels with Alpine.js + TinyMCE) |
+| Page configuration | Complete (Factory, Contact, FAQ admin panels with Alpine.js auto-resize textareas) |
 | Client product pages | In progress (9 categories) |
 | Cart/Checkout | UI stubs only, backend pending |
 | News/Projects | Controller structure done, views pending |
@@ -117,4 +117,4 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 | 0.1.0 | 2026-04-26 | Initial migration setup (product type tables) |
 | 0.2.0 | 2026-05-01 | Product detail migrations, model/service creation |
 | 0.3.0 | 2026-05-06 | Admin CRUD complete, client product data binding |
-| 0.3.1 | 2026-05-07 | Page configuration admin panels (Factory/Contact/FAQ), dynamic client pages, 12 new Pest tests |
+| 0.3.1 | 2026-05-07 | Page configuration admin panels (Factory/Contact/FAQ), TinyMCE replaced with auto-resize textareas, dynamic client pages, 12 new Pest tests, admin UI/UX Pro Max refactor |

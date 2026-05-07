@@ -2,7 +2,7 @@
 
 ## Overview
 
-Laravel 12 monolith with Blade frontend. 42 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js + TinyMCE.
+Laravel 12 monolith with Blade frontend. 42 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js (auto-resize textareas, tab navigation, image management).
 
 ## Directory Tree
 

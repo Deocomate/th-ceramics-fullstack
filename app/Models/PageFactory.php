@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class PageFactory extends Model
@@ -27,13 +28,53 @@ class PageFactory extends Model
         'material_steps',
     ];
 
-    protected function casts(): array
+    private function decodeJsonSafe($value): array
     {
-        return [
-            'gallery_1' => 'array',
-            'process_slider' => 'array',
-            'material_slider' => 'array',
-            'material_steps' => 'array',
-        ];
+        if (empty($value)) {
+            return [];
+        }
+        if (is_array($value)) {
+            return $value;
+        }
+
+        $decoded = json_decode((string) $value, true);
+
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+        }
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    protected function gallery1(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->decodeJsonSafe($value),
+            set: fn ($value) => is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
+        );
+    }
+
+    protected function processSlider(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->decodeJsonSafe($value),
+            set: fn ($value) => is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
+        );
+    }
+
+    protected function materialSlider(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->decodeJsonSafe($value),
+            set: fn ($value) => is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
+        );
+    }
+
+    protected function materialSteps(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->decodeJsonSafe($value),
+            set: fn ($value) => is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
+        );
     }
 }

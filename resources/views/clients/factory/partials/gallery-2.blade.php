@@ -1,3 +1,7 @@
+@php
+    $gallery1 = is_string($factory->gallery_1) ? json_decode($factory->gallery_1, true) : $factory->gallery_1;
+    $gallery1 = is_array($gallery1) ? $gallery1 : [];
+@endphp
 <section class="bg-background-secondary pb-8 md:pb-24 lg:pb-36 overflow-hidden">
   <!-- Header row -->
   <div class="w-[85%] max-w-[1320px] mx-auto mb-8 md:flex justify-end hidden">
@@ -44,8 +48,8 @@
   >
     <div class="swiper slider-final-swiper overflow-visible">
       <div class="swiper-wrapper">
-        @if(!empty($factory->gallery_1))
-          @foreach($factory->gallery_1 as $image)
+        @if(!empty($gallery1))
+          @foreach($gallery1 as $image)
             <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
               <div class="aspect-[2/1] overflow-hidden shadow-lg bg-neutral-1">
                 <img
