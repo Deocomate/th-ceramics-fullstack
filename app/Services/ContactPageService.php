@@ -19,7 +19,7 @@ class ContactPageService
         $model = $this->getFirstRecord();
 
         return DB::transaction(function () use ($model, $data) {
-            $imageFields = ['map_image', 'zalo_image'];
+            $imageFields = ['map_image'];
 
             foreach ($imageFields as $field) {
                 if (isset($data[$field]) && $data[$field] instanceof UploadedFile) {

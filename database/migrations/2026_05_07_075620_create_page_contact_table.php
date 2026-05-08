@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('map_image', 500)->nullable();
             $table->string('hotline', 50)->nullable();
             $table->string('zalo_link', 500)->nullable();
-            $table->string('zalo_image', 500)->nullable();
             $table->string('form_title', 500)->nullable();
             $table->boolean('is_delete')->default(0);
             $table->timestamps();

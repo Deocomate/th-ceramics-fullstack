@@ -66,7 +66,6 @@ class PageConfigSeeder extends Seeder
             'map_image' => 'assets/images/contact-map.png',
             'hotline' => '0966 55 8808',
             'zalo_link' => null,
-            'zalo_image' => 'assets/images/zalo2.png',
             'form_title' => 'Hãy nói với chúng tôi những mong muốn của bạn',
         ]);
 

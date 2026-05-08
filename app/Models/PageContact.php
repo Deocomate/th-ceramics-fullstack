@@ -14,7 +14,6 @@ class PageContact extends Model
         'map_image',
         'hotline',
         'zalo_link',
-        'zalo_image',
         'form_title',
     ];
 }
