@@ -39,6 +39,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [\App\Http\Controllers\Admin\GiaTriVuotTroiController::class, 'destroy'])->name('destroy');
         });
 
+        Route::prefix('giai-thuong-thanh-tuu')->name('giai-thuong-thanh-tuu.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\GiaiThuongThanhTuuController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\GiaiThuongThanhTuuController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\GiaiThuongThanhTuuController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\GiaiThuongThanhTuuController::class, 'destroy'])->name('destroy');
+        });
+
         // ── Product Types Routes ────────────────────────────────────────────────
         // 1. Ngói Âm Dương
         Route::prefix('ngoi-am-duong')->name('ngoi-am-duong.')->group(function () {
@@ -321,6 +328,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // ── Page Configuration: single-page config panels ──────────────────────
         Route::prefix('pages')->name('pages.')->group(function () {
+            Route::get('ve-chung-toi',[\App\Http\Controllers\Admin\VeChungToiController::class, 'edit'])->name('ve_chung_toi.edit');
+            Route::put('ve-chung-toi',[\App\Http\Controllers\Admin\VeChungToiController::class, 'update'])->name('ve_chung_toi.update');
+
             Route::get('factory', [\App\Http\Controllers\Admin\FactoryPageController::class, 'edit'])->name('factory.edit');
             Route::put('factory', [\App\Http\Controllers\Admin\FactoryPageController::class, 'update'])->name('factory.update');
 

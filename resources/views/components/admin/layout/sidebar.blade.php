@@ -36,7 +36,7 @@
         </div>
 
         <!-- 1. CẤU HÌNH SECTION CHUNG -->
-        @php $isSectionChung = request()->routeIs('admin.gia-tri-vuot-troi.*'); @endphp
+        @php $isSectionChung = request()->routeIs(['admin.gia-tri-vuot-troi.*', 'admin.giai-thuong-thanh-tuu.*']); @endphp
         <div>
             <button type="button"
                 class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
@@ -60,6 +60,10 @@
                         <a href="{{ route('admin.gia-tri-vuot-troi.index') }}"
                             class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.gia-tri-vuot-troi.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
                             Giá trị vượt trội
+                        </a>
+                        <a href="{{ route('admin.giai-thuong-thanh-tuu.index') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.giai-thuong-thanh-tuu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Giải thưởng & Thành tựu
                         </a>
                     </div>
                 </div>
@@ -91,6 +95,10 @@
                         <a href="{{ route('admin.trang_chu.edit') }}"
                             class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.trang_chu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
                             Trang chủ
+                        </a>
+                        <a href="{{ route('admin.pages.ve_chung_toi.edit') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.ve_chung_toi.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Trang Về Chúng Tôi
                         </a>
                         <a href="{{ route('admin.pages.factory.edit') }}"
                             class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.factory.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">

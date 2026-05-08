@@ -64,6 +64,15 @@ return new class extends Migration
             
             $table->timestamps();
         });
+
+        Schema::create('giai_thuong_thanh_tuu', function (Blueprint $table) {
+            $table->id('giai_thuong_thanh_tuu_id');
+
+            $table->string('image'); 
+            $table->longText('des');
+            
+            $table->timestamps();
+        });
     }
 
     /**
