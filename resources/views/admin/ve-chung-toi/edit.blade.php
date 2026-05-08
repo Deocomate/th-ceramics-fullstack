@@ -1,12 +1,16 @@
 <x-admin.layout.app title="Về Chúng Tôi" breadcrumb="Admin › Cấu hình trang đơn › Về Chúng Tôi">
-    <form method="POST" action="{{ route('admin.pages.ve_chung_toi.update') }}" enctype="multipart/form-data" class="space-y-8 pb-10">
-        @csrf @method('PUT')
+    
+    <div class="space-y-8 pb-10">
 
-        <!-- SECTION 1: BANNER -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+        <!-- ==================== SECTION 1: BANNER ==================== -->
+        <form method="POST" action="{{ route('admin.pages.ve_chung_toi.update',['section' => 'banner']) }}" enctype="multipart/form-data" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            @csrf @method('PUT')
+            
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
                 <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">1. Khu Vực Banner Đầu Trang</h2>
+                <button type="submit" class="px-6 py-2 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'" onmouseout="this.style.background='#A31D1D'">Lưu Banner</button>
             </div>
+            
             <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Cột Ảnh -->
                 <div class="lg:col-span-1">
@@ -31,46 +35,58 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
 
-        <!-- SECTION 2: GỐM SỨ & LỊCH SỬ -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
-                <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">2. Về Thương Hiệu Gốm Sứ</h2>
+        <!-- ==================== SECTION 2.1: ĐIỂM NHẤN & GIÁ TRỊ ==================== -->
+        <form method="POST" action="{{ route('admin.pages.ve_chung_toi.update',['section' => 'gom_su_1']) }}" enctype="multipart/form-data" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            @csrf @method('PUT')
+            
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+                <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">2.1. Điểm Nhấn & Giá Trị Cốt Lõi</h2>
+                <button type="submit" class="px-6 py-2 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'" onmouseout="this.style.background='#A31D1D'">Lưu Phần 2.1</button>
             </div>
             
             <div class="p-6 space-y-10">
-                <!-- GS Head (Ưu tiên 2) -->
+                <!-- GS Head -->
                 <div>
                     <div class="flex justify-between items-center mb-4 border-b pb-2">
-                        <h3 class="text-sm font-bold text-gray-700">Điểm Nhấn (Gs Head)</h3>
+                        <h3 class="text-sm font-bold text-gray-700">Điểm Nhấn </h3>
                         <button type="button" onclick="addJsonBlock('gs_head', 'gs-head-container')" class="text-xs text-blue-600 font-bold hover:underline">+ Thêm item</button>
                     </div>
-                    <!-- Lưới 2 cột -->
                     <div id="gs-head-container" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- GS Giá Trị (Ưu tiên 3) -->
+                <!-- GS Giá Trị -->
                 <div>
                     <div class="flex justify-between items-center mb-4 border-b pb-2">
-                        <h3 class="text-sm font-bold text-gray-700">Giá Trị Cốt Lõi (Gs Giá trị)</h3>
+                        <h3 class="text-sm font-bold text-gray-700">Giá Trị Cốt Lõi </h3>
                         <button type="button" onclick="addJsonBlock('gs_gia_tri', 'gs-gia-tri-container')" class="text-xs text-blue-600 font-bold hover:underline">+ Thêm item</button>
                     </div>
-                    <!-- Lưới 3 cột -->
                     <div id="gs-gia-tri-container" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
                 </div>
+            </div>
+        </form>
 
-                <!-- GS Hành Trình (Ưu tiên 5) -->
+        <!-- ==================== SECTION 2.2: LỊCH SỬ & GIẢI THƯỞNG ==================== -->
+        <form method="POST" action="{{ route('admin.pages.ve_chung_toi.update', ['section' => 'gom_su_2']) }}" enctype="multipart/form-data" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            @csrf @method('PUT')
+            
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+                <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">2.2. Lịch Sử & Giải Thưởng</h2>
+                <button type="submit" class="px-6 py-2 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'" onmouseout="this.style.background='#A31D1D'">Lưu Phần 2.2</button>
+            </div>
+            
+            <div class="p-6 space-y-10">
+                <!-- GS Hành Trình -->
                 <div>
                     <div class="flex justify-between items-center mb-4 border-b pb-2">
-                        <h3 class="text-sm font-bold text-gray-700">Hành Trình Lịch Sử (Gs Hành trình)</h3>
+                        <h3 class="text-sm font-bold text-gray-700">Hành Trình Lịch Sử </h3>
                         <button type="button" onclick="addJsonBlock('gs_hanh_trinh', 'gs-hanh-trinh-container', 'Năm (VD: 2000)')" class="text-xs text-blue-600 font-bold hover:underline">+ Thêm item</button>
                     </div>
-                    <!-- Lưới 5 cột -->
                     <div id="gs-hanh-trinh-container" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
                 </div>
 
-                <!-- GS Giải Thưởng (Ưu tiên 3, chỉ có năm và ảnh) -->
+                <!-- GS Giải Thưởng -->
                 <div>
                     <div class="flex justify-between items-center mb-4 border-b pb-2">
                         <h3 class="text-sm font-bold text-gray-700">Giải Thưởng</h3>
@@ -78,34 +94,49 @@
                     </div>
                     <div id="gs-giai-thuong-container" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
                 </div>
+            </div>
+        </form>
 
+        <!-- ==================== SECTION 2.3: NGƯỜI SÁNG LẬP ==================== -->
+        <form method="POST" action="{{ route('admin.pages.ve_chung_toi.update',['section' => 'gom_su_3']) }}" enctype="multipart/form-data" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            @csrf @method('PUT')
+            
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+                <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">2.3. Người Sáng Lập</h2>
+                <button type="submit" class="px-6 py-2 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'" onmouseout="this.style.background='#A31D1D'">Lưu Phần 2.3</button>
+            </div>
+            
+            <div class="p-6">
                 <!-- GS Người Sáng Lập -->
-                <div class="bg-gray-50 rounded-xl p-5 border border-gray-200">
-                    <h3 class="text-sm font-bold text-gray-700 mb-4 border-b pb-2">Người Sáng Lập</h3>
-                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                        <div class="lg:col-span-1">
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Ảnh Người Sáng Lập</label>
-                            <div class="aspect-square w-full rounded-xl border border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group">
-                                <img id="preview-nsl" src="{{ $veChungToi->gs_nguoi_sang_lap_anh ? asset('storage/' . $veChungToi->gs_nguoi_sang_lap_anh) : 'https://placehold.co/400x400' }}" class="w-full h-full object-cover">
-                                <input type="file" name="gs_nguoi_sang_lap_anh" accept="image/*" onchange="previewImage(event, 'preview-nsl')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div class="lg:col-span-1">
+                        <label class="block text-xs font-semibold text-gray-600 mb-2">Ảnh Người Sáng Lập</label>
+                        <div class="aspect-square w-full rounded-xl border border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group hover:opacity-90">
+                            <img id="preview-nsl" src="{{ $veChungToi->gs_nguoi_sang_lap_anh ? asset('storage/' . $veChungToi->gs_nguoi_sang_lap_anh) : 'https://placehold.co/400x400' }}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                             </div>
+                            <input type="file" name="gs_nguoi_sang_lap_anh" accept="image/*" onchange="previewImage(event, 'preview-nsl')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                         </div>
-                        <div class="lg:col-span-3">
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Nội dung câu chuyện</label>
-                            <textarea name="gs_nguoi_sang_lap_noi_dung" rows="8" class="w-full px-3 py-2 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] outline-none">{{ old('gs_nguoi_sang_lap_noi_dung', $veChungToi->gs_nguoi_sang_lap_noi_dung) }}</textarea>
-                        </div>
+                    </div>
+                    <div class="lg:col-span-3">
+                        <label class="block text-xs font-semibold text-gray-600 mb-2">Nội dung câu chuyện</label>
+                        <textarea name="gs_nguoi_sang_lap_noi_dung" rows="8" class="w-full px-3 py-2 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] outline-none">{{ old('gs_nguoi_sang_lap_noi_dung', $veChungToi->gs_nguoi_sang_lap_noi_dung) }}</textarea>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
 
-        <!-- SECTION 3: NGHỆ THUẬT CHẾ TÁC -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+        <!-- ==================== SECTION 3: CHẾ TÁC ==================== -->
+        <form method="POST" action="{{ route('admin.pages.ve_chung_toi.update',['section' => 'che_tac']) }}" enctype="multipart/form-data" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            @csrf @method('PUT')
+            
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
                 <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">3. Nghệ Thuật Chế Tác</h2>
+                <button type="submit" class="px-6 py-2 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'" onmouseout="this.style.background='#A31D1D'">Lưu Phần Chế Tác</button>
             </div>
+            
             <div class="p-6 space-y-10">
-                
                 <!-- Chung -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
@@ -118,13 +149,12 @@
                     </div>
                 </div>
 
-                <!-- NT Ngôn ngữ (Ưu tiên 1) -->
+                <!-- NT Ngôn ngữ -->
                 <div>
                     <div class="flex justify-between items-center mb-4 border-b pb-2">
-                        <h3 class="text-sm font-bold text-gray-700">Ngôn Ngữ Chế Tác (Nt Ngôn ngữ)</h3>
+                        <h3 class="text-sm font-bold text-gray-700">Ngôn Ngữ Chế Tác</h3>
                         <button type="button" onclick="addJsonBlock('nt_ngon_ngu', 'nt-ngon-ngu-container')" class="text-xs text-blue-600 font-bold hover:underline">+ Thêm item</button>
                     </div>
-                    <!-- 1 cột to -->
                     <div id="nt-ngon-ngu-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
@@ -158,7 +188,7 @@
                     </div>
                 </div>
 
-                <!-- NT Luyện Đất (Ưu tiên 3) -->
+                <!-- NT Luyện Đất -->
                 <div>
                     <div class="flex justify-between items-center mb-4 border-b pb-2">
                         <h3 class="text-sm font-bold text-gray-700">Luyện Đất</h3>
@@ -168,10 +198,10 @@
                         <input type="text" name="nt_luyen_dat_body" value="{{ old('nt_luyen_dat_body', $veChungToi->nt_luyen_dat_body) }}" placeholder="Mô tả..." class="w-full px-3 py-2 text-sm border rounded-lg outline-none">
                     </div>
                     <div class="flex justify-between items-center mt-6 mb-2">
-                        <span class="text-xs font-bold text-gray-600">Các bước luyện đất (Nt Luyện đất item)</span>
+                        <span class="text-xs font-bold text-gray-600">Các bước luyện đất</span>
                         <button type="button" onclick="addJsonBlock('nt_luyen_dat_item', 'nt-luyen-dat-container')" class="text-xs text-blue-600 font-bold hover:underline">+ Thêm item</button>
                     </div>
-                    <div id="nt-luyen-dat-container" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                    <div id="nt-luyen-dat-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
                 <!-- NT Đun Lò -->
@@ -205,19 +235,12 @@
                 </div>
 
             </div>
-        </div>
+        </form>
 
-        <!-- Submit -->
-        <div class="flex justify-end gap-3 sticky bottom-0 bg-white p-4 border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] -mx-6 -mb-6 z-50">
-            <button type="submit" class="px-8 py-2.5 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'" onmouseout="this.style.background='#A31D1D'">
-                Lưu Thay Đổi Trang
-            </button>
-        </div>
-    </form>
+    </div>
 
     @push('scripts')
     <script>
-        // Cấu hình dữ liệu hiện tại từ Laravel sang JS
         const existingData = {
             gs_head: @json($veChungToi->gs_head ??[]),
             gs_gia_tri: @json($veChungToi->gs_gia_tri ??[]),
@@ -231,7 +254,6 @@
             gs_head: 0, gs_gia_tri: 0, gs_hanh_trinh: 0, gs_giai_thuong: 0, nt_ngon_ngu: 0, nt_luyen_dat_item: 0
         };
 
-        // Hàm preview ảnh đơn giản
         function previewImage(event, targetId) {
             const file = event.target.files[0];
             if (file) {
@@ -241,7 +263,6 @@
             }
         }
 
-        // --- BỘ QUẢN LÝ ẢNH PREVIEW MULTIPLE ---
         function previewMultipleImages(event, containerId, objectFit = 'cover') {
             const input = event.target;
             const container = document.getElementById(containerId);
@@ -286,8 +307,7 @@
             renderPreviews(input, container, objectFit);
         }
 
-        // --- BỘ QUẢN LÝ DYNAMIC JSON BLOCK (Đầy đủ: Ảnh, Head, Body) ---
-        function addJsonBlock(fieldName, containerId, headLabel = 'Tiêu đề (Head)', bodyLabel = 'Mô tả (Body)') {
+        function addJsonBlock(fieldName, containerId, headLabel = 'Tiêu đề ', bodyLabel = 'Mô tả ') {
             const container = document.getElementById(containerId);
             const idx = blockIndexes[fieldName]++;
             const uniqueId = fieldName + '_' + idx;
@@ -315,8 +335,7 @@
             return div;
         }
 
-        // --- BỘ QUẢN LÝ DYNAMIC JSON BLOCK (Chỉ có Ảnh, Head) dùng cho Giải thưởng ---
-        function addJsonBlockImageOnly(fieldName, containerId, headLabel = 'Tiêu đề (Head)') {
+        function addJsonBlockImageOnly(fieldName, containerId, headLabel = 'Tiêu đề ') {
             const container = document.getElementById(containerId);
             const idx = blockIndexes[fieldName]++;
             const uniqueId = fieldName + '_' + idx;
@@ -340,19 +359,16 @@
             return div;
         }
 
-        // Hàm populate dữ liệu có sẵn từ CSDL
-        function populateJsonBlocks(fieldName, containerId, defaultCount, isImageOnly = false, headLabel = 'Tiêu đề (Head)', bodyLabel = 'Mô tả (Body)') {
+        function populateJsonBlocks(fieldName, containerId, defaultCount, isImageOnly = false, headLabel = 'Tiêu đề ', bodyLabel = 'Mô tả ') {
             const data = existingData[fieldName];
             if (data && data.length > 0) {
                 data.forEach(item => {
                     const block = isImageOnly ? addJsonBlockImageOnly(fieldName, containerId, headLabel) : addJsonBlock(fieldName, containerId, headLabel, bodyLabel);
-                    const idx = blockIndexes[fieldName] - 1; // Vì hàm add đã tăng idx
+                    const idx = blockIndexes[fieldName] - 1;
                     
-                    // Điền dữ liệu
                     const imgEl = block.querySelector('img');
                     if (item.image) {
                         imgEl.src = '/storage/' + item.image;
-                        // Thêm input hidden chứa path cũ
                         const hiddenInput = document.createElement('input');
                         hiddenInput.type = 'hidden';
                         hiddenInput.name = `${fieldName}[${idx}][old_image]`;
@@ -364,7 +380,6 @@
                     if(!isImageOnly && item.body) block.querySelector(`textarea[name="${fieldName}[${idx}][body]"]`).value = item.body;
                 });
             } else {
-                // Nếu chưa có, tạo mặc định dựa trên yêu cầu ưu tiên
                 for (let i = 0; i < defaultCount; i++) {
                     isImageOnly ? addJsonBlockImageOnly(fieldName, containerId, headLabel) : addJsonBlock(fieldName, containerId, headLabel, bodyLabel);
                 }
@@ -378,7 +393,6 @@
         populateJsonBlocks('gs_giai_thuong', 'gs-giai-thuong-container', 3, true, 'Năm (VD: 2024)');
         populateJsonBlocks('nt_ngon_ngu', 'nt-ngon-ngu-container', 1);
         populateJsonBlocks('nt_luyen_dat_item', 'nt-luyen-dat-container', 3);
-
     </script>
     @endpush
 </x-admin.layout.app>

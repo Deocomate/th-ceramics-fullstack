@@ -31,7 +31,8 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div class="lg:col-span-1">
                             <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh<span class="text-red-500">*</span></label>
-                            <div class="w-full aspect-[4/3] mx-auto rounded-xl border-2 border-dashed border-blue-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-blue-50/50 transition-colors">
+                            {{-- Đã sửa: Dùng chiều cao cố định h-[240px] cho khung upload --}}
+                            <div class="w-full h-[240px] mx-auto rounded-xl border-2 border-dashed border-blue-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-blue-50/50 transition-colors">
                                 <img id="preview-new-giaithuong" src="https://placehold.co/400x300?text=Chon+Anh" class="w-full h-full object-cover" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Chọn ảnh tải lên</span>
@@ -55,10 +56,12 @@
             </div>
 
             {{-- DANH SÁCH HIỂN THỊ --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
                 @forelse($giaiThuong as $item)
-                    <div class="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col group relative">
-                        <div class="w-full aspect-[4/3] relative bg-gray-100 flex-shrink-0 border-b border-gray-100">
+                    {{-- Đã sửa: Thêm h-full vào thẻ cha để các card cao bằng nhau --}}
+                    <div class="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col h-full group relative">
+                        {{-- Đã sửa: Đặt chiều cao cố định cho phần chứa ảnh --}}
+                        <div class="w-full h-[220px] relative bg-gray-100 flex-shrink-0 border-b border-gray-100">
                             <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 backdrop-blur-[2px]">
                                 <button type="button" 
@@ -106,7 +109,8 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div class="lg:col-span-1">
                             <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh</label>
-                            <div class="w-full aspect-[4/3] mx-auto rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
+                            {{-- Đã sửa: Dùng chiều cao cố định cho khung preview trong modal sửa --}}
+                            <div class="w-full h-[240px] mx-auto rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
                                 <img id="preview-edit-img" src="" class="w-full h-full object-cover" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Đổi ảnh</span>
@@ -153,7 +157,11 @@
         function previewImage(event, targetId) {
             const file = event.target.files[0];
             if (file) {
-                document.getElementById(targetId).src = URL.createObjectURL(file);
+                const objectUrl = URL.createObjectURL(file);
+                document.getElementById(targetId).src = objectUrl;
+                document.getElementById(targetId).onload = function() {
+                    URL.revokeObjectURL(objectUrl);
+                }
             }
         }
 

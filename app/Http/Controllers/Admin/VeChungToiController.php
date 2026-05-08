@@ -20,10 +20,25 @@ class VeChungToiController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
-        // Validation được rút gọn vì Admin chủ yếu làm chuẩn, nhưng đảm bảo file là ảnh
-        $data = $request->all();
-        $this->service->update($data);
+        $section = $request->query('section');
+        
+        // Kiểm tra section
+        if (!$section || !in_array($section,['banner', 'gom_su_1', 'gom_su_2', 'gom_su_3', 'che_tac'])) {
+            return back()->with('error', 'Section lưu không hợp lệ.');
+        }
 
-        return back()->with('success', 'Cập nhật Trang Về Chúng Tôi thành công.');
+        // Thực hiện update
+        $this->service->updateSection($section, $request->all());
+
+        // Custom Message theo Section
+        $messages =[
+            'banner'   => 'Cập nhật Banner thành công.',
+            'gom_su_1' => 'Cập nhật Điểm Nhấn & Giá Trị Cốt Lõi thành công.',
+            'gom_su_2' => 'Cập nhật Lịch Sử & Giải Thưởng thành công.',
+            'gom_su_3' => 'Cập nhật Thông tin Người Sáng Lập thành công.',
+            'che_tac'  => 'Cập nhật Nghệ Thuật Chế Tác thành công.',
+        ];
+
+        return back()->with('success', $messages[$section]);
     }
 }
