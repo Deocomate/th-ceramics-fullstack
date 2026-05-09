@@ -39,6 +39,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [\App\Http\Controllers\Admin\GiaTriVuotTroiController::class, 'destroy'])->name('destroy');
         });
 
+        Route::prefix('giai-thuong-thanh-tuu')->name('giai-thuong-thanh-tuu.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\GiaiThuongThanhTuuController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\GiaiThuongThanhTuuController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\GiaiThuongThanhTuuController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\GiaiThuongThanhTuuController::class, 'destroy'])->name('destroy');
+        });
+
         // ── Product Types Routes ────────────────────────────────────────────────
         // 1. Ngói Âm Dương
         Route::prefix('ngoi-am-duong')->name('ngoi-am-duong.')->group(function () {
@@ -316,8 +323,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}/restore', [\App\Http\Controllers\Admin\PhanLoaiBoNocChuVanCtController::class, 'restore'])->name('restore');
         });
 
+        Route::get('trang-chu', [\App\Http\Controllers\Admin\TrangChuController::class, 'edit'])->name('trang_chu.edit');
+        Route::put('trang-chu', [\App\Http\Controllers\Admin\TrangChuController::class, 'update'])->name('trang_chu.update');
+
         // ── Page Configuration: single-page config panels ──────────────────────
         Route::prefix('pages')->name('pages.')->group(function () {
+            Route::get('ve-chung-toi',[\App\Http\Controllers\Admin\VeChungToiController::class, 'edit'])->name('ve_chung_toi.edit');
+            Route::put('ve-chung-toi',[\App\Http\Controllers\Admin\VeChungToiController::class, 'update'])->name('ve_chung_toi.update');
+
             Route::get('factory', [\App\Http\Controllers\Admin\FactoryPageController::class, 'edit'])->name('factory.edit');
             Route::put('factory', [\App\Http\Controllers\Admin\FactoryPageController::class, 'update'])->name('factory.update');
 
@@ -327,6 +340,53 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('faq', [\App\Http\Controllers\Admin\FaqPageController::class, 'edit'])->name('faq.edit');
             Route::put('faq', [\App\Http\Controllers\Admin\FaqPageController::class, 'update'])->name('faq.update');
             Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class)->except(['show']);
+        });
+
+
+            // ── Danh Mục Dự Án ──────────────────────────────────────────────
+        Route::prefix('danh-muc-du-an')->name('danh-muc-du-an.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'store'])->name('store');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'restore'])->name('restore');
+        });
+
+        // ── Dự Án ────────────────────────────────────────────────────────
+        Route::prefix('du-an')->name('du-an.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DuAnController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\DuAnController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\DuAnController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\DuAnController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\DuAnController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DuAnController::class, 'destroy'])->name('destroy');
+            Route::delete('/{id}/image',[\App\Http\Controllers\Admin\DuAnController::class, 'destroyImage'])->name('image.destroy');
+        });
+
+        // ── Danh Mục Tin Tức ────────────────────────────────────────────
+        Route::prefix('danh-muc-tin-tuc')->name('danh-muc-tin-tuc.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'restore'])->name('restore');
+        });
+
+        // ── Tin Tức ──────────────────────────────────────────────────────
+        Route::prefix('tin-tuc')->name('tin-tuc.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\TinTucController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\TinTucController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\TinTucController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\TinTucController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\TinTucController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\TinTucController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('tac-gia')->name('tac-gia.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\TacGiaController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\TacGiaController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\TacGiaController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\TacGiaController::class, 'destroy'])->name('destroy');
         });
 
         // ── Superadmin-only: account management ──────────────────────────────
