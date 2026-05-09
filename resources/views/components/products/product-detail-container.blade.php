@@ -1,4 +1,4 @@
-@props(['title' => 'Chi tiết sản phẩm', 'price' => null, 'sku' => null, 'features' => null, 'colors' => null, 'variants' => null, 'images' => []])
+@props(['title' => 'Chi tiết sản phẩm', 'price' => null, 'rawPrice' => null, 'sku' => null, 'features' => null, 'colors' => null, 'variants' => null, 'images' => [], 'productType' => null, 'productId' => null])
 
 <section class="w-full md:w-[85%] max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-5 md:gap-4 lg:gap-6 xl:gap-8 pb-8 md:pb-10 lg:pb-24 pt-0 md:pt-4">
   <x-products.product-image-swiper :images="$images" />
@@ -35,7 +35,11 @@
     @isset($colors)
     <div class="grid grid-cols-4 md:flex md:flex-wrap items-start md:items-center gap-6 md:gap-8 mb-[15px] md:mb-8 order-[6] md:order-[none] w-full">
       @foreach ($colors as $color)
-      <div class="flex flex-col items-center gap-[11px] md:gap-3 cursor-pointer group">
+      <div class="flex flex-col items-center gap-[11px] md:gap-3 cursor-pointer group variant-item"
+           data-name="{{ $color['name'] }}"
+           @isset($color['variantId']) data-variant-id="{{ $color['variantId'] }}" @endisset
+           @isset($color['sku']) data-sku="{{ $color['sku'] }}" @endisset
+           @isset($color['price']) data-price="{{ $color['price'] }}" @endisset>
         <div class="w-[70px] h-[35px] md:w-[90px] md:h-[45px] {{ isset($color['colorCode']) ? 'bg-[' . $color['colorCode'] . ']' : 'bg-[#D9D9D9]' }} shadow-[0px_1px_2px_rgba(0,0,0,0.05)] md:shadow-sm group-hover:opacity-80 transition-opacity">
           @isset($color['image'])
           <img src="{{ $color['image'] }}" alt="{{ $color['name'] }}" class="w-full h-full object-cover" />
@@ -52,7 +56,11 @@
     @isset($variants)
     <div class="flex flex-wrap gap-3.5 md:gap-4 mb-6 md:mb-16 w-full xl:w-[95%] order-[6] md:order-[none]">
       @foreach ($variants as $variant)
-      <button class="{{ isset($variant['class']) ? $variant['class'] : 'flex-1 md:w-auto md:min-w-[200px]' }} border border-black/20 text-primary uppercase text-[10px] md:text-[13px] font-medium md:py-3 py-2 px-1 text-center hover:border-black/50 hover:bg-black/5 transition-all outline-none flex items-center justify-center leading-tight">
+      <button class="variant-item {{ isset($variant['class']) ? $variant['class'] : 'flex-1 md:w-auto md:min-w-[200px]' }} border border-black/20 text-primary uppercase text-[10px] md:text-[13px] font-medium md:py-3 py-2 px-1 text-center hover:border-black/50 hover:bg-black/5 transition-all outline-none flex items-center justify-center leading-tight"
+              data-name="{{ $variant['name'] }}"
+              @isset($variant['variantId']) data-variant-id="{{ $variant['variantId'] }}" @endisset
+              @isset($variant['sku']) data-sku="{{ $variant['sku'] }}" @endisset
+              @isset($variant['price']) data-price="{{ $variant['price'] }}" @endisset>
         {{ $variant['name'] }}
       </button>
       @endforeach
@@ -61,19 +69,47 @@
 
     <div class="flex flex-col md:flex-row items-start md:items-center gap-6 mb-[15px] md:mb-16 order-[7] md:order-[none] w-full">
       <div class="flex items-center gap-[16px] md:gap-4 text-[#2E2F2A] md:text-primary pl-0.5 md:pl-0">
-        <button class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors">
+        <button type="button" class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors qty-decrease-detail">
           -
         </button>
-        <div class="w-12 h-12 flex items-center justify-center rounded-full text-[16px] md:text-base font-normal shadow-[0px_1px_2px_rgba(0,0,0,0.05)] md:shadow-sm outline outline-1 outline-black/40 outline-offset-[-1px] md:outline-none md:border md:border-black/40 bg-transparent">
+        <div class="w-12 h-12 flex items-center justify-center rounded-full text-[16px] md:text-base font-normal shadow-[0px_1px_2px_rgba(0,0,0,0.05)] md:shadow-sm outline outline-1 outline-black/40 outline-offset-[-1px] md:outline-none md:border md:border-black/40 bg-transparent" id="detail-quantity-display">
           1
         </div>
-        <button class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors">
+        <button type="button" class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors qty-increase-detail">
           +
         </button>
       </div>
 
-      <button class="w-full md:w-auto bg-[#C16A00] hover:bg-secondary text-[#EFE4DE] px-8 py-4 font-semibold md:transition-colors md:shadow-md rounded-[2px] flex items-center justify-center text-[14px] md:text-sm tracking-[0.28px] md:tracking-normal md:ml-4">
-        THÊM VÀO GIỎ HÀNG
+      @php
+        $canAdd = isset($rawPrice) && $rawPrice > 0;
+        // For products with variants, we check if there are colors with price data
+        $hasVariantPricing = false;
+        if (isset($colors)) {
+            foreach ($colors as $c) {
+                if (isset($c['variantId']) || isset($c['price'])) {
+                    $hasVariantPricing = true;
+                    break;
+                }
+            }
+        }
+        if (isset($variants)) {
+            foreach ($variants as $v) {
+                if (isset($v['variantId']) || isset($v['price'])) {
+                    $hasVariantPricing = true;
+                    break;
+                }
+            }
+        }
+        $showBtn = $canAdd || $hasVariantPricing;
+      @endphp
+
+      <button id="btn-add-to-cart" type="button"
+          class="w-full md:w-auto {{ $showBtn ? 'bg-[#C16A00] hover:bg-secondary cursor-pointer' : 'bg-gray-400 cursor-not-allowed' }} text-[#EFE4DE] px-8 py-4 font-semibold md:transition-colors md:shadow-md rounded-[2px] flex items-center justify-center text-[14px] md:text-sm tracking-[0.28px] md:tracking-normal md:ml-4">
+          @if($showBtn)
+              THÊM VÀO GIỎ HÀNG
+          @else
+              LIÊN HỆ ĐẶT HÀNG
+          @endif
       </button>
     </div>
 
@@ -98,3 +134,88 @@
     </div>
   </div>
 </section>
+
+<input type="hidden" id="product_type" value="{{ $productType ?? '' }}">
+<input type="hidden" id="product_id" value="{{ $productId ?? '' }}">
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Variant/Color selection
+    document.querySelectorAll('.variant-item').forEach(el => {
+        el.addEventListener('click', function() {
+            const parent = this.parentElement;
+            parent.querySelectorAll('.variant-item').forEach(e => e.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    const btnAdd = document.getElementById('btn-add-to-cart');
+    if (!btnAdd || btnAdd.classList.contains('cursor-not-allowed')) return;
+
+    // Quantity controls
+    const qtyDisplay = document.getElementById('detail-quantity-display');
+    let currentQty = 1;
+
+    document.querySelector('.qty-decrease-detail')?.addEventListener('click', function() {
+        if (currentQty > 1) {
+            currentQty--;
+            qtyDisplay.textContent = currentQty;
+        }
+    });
+
+    document.querySelector('.qty-increase-detail')?.addEventListener('click', function() {
+        currentQty++;
+        qtyDisplay.textContent = currentQty;
+    });
+
+    btnAdd.addEventListener('click', function() {
+        const type = document.getElementById('product_type').value;
+        const id = document.getElementById('product_id').value;
+        const qty = currentQty;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+        if (!type || !id) {
+            alert('Thông tin sản phẩm không đầy đủ.');
+            return;
+        }
+
+        // Check if variants exist on page but none selected
+        const variantElements = document.querySelectorAll('.variant-item');
+        const selectedVariant = document.querySelector('.variant-item.selected');
+        let variantId = null;
+
+        if (variantElements.length > 0) {
+            if (!selectedVariant) {
+                alert('Vui lòng chọn màu sắc/phân loại trước khi thêm vào giỏ hàng!');
+                return;
+            }
+            variantId = selectedVariant.dataset.variantId || null;
+        }
+
+        fetch('{{ route("client.cart.add") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+                product_type: type,
+                product_id: parseInt(id),
+                variant_id: variantId ? parseInt(variantId) : null,
+                qty: qty
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Đã thêm vào giỏ hàng!');
+            } else {
+                alert(data.message || 'Có lỗi xảy ra.');
+            }
+        })
+        .catch(() => alert('Lỗi kết nối. Vui lòng thử lại.'));
+    });
+});
+</script>
+@endpush

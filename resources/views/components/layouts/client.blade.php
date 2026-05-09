@@ -13,6 +13,7 @@
     @endif
 
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/logo.png') }}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -65,6 +66,12 @@
 <body class="min-h-screen flex flex-col font-archivo text-primary">
 
     <x-header />
+
+    @if(session('success'))
+    <div class="bg-green-50 border-b border-green-200 text-green-800 px-4 py-3 text-center text-sm font-archivo">
+        {{ session('success') }}
+    </div>
+    @endif
 
     <main @if($dataPage) data-page="{{ $dataPage }}" @endif
           class="flex-grow {{ $mainClass ?? 'bg-white' }}">

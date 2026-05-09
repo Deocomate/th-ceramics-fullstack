@@ -46,6 +46,8 @@
     price="Liên hệ"
     sku="{{ $type === 'bo_noc' ? 'BN-' . $productId : 'CV-' . $productId }}"
     :features="$product->des && is_array($product->des) ? $product->des : null"
+    productType="phu_kien_ngoi"
+    productId="{{ $productId }}"
 />
 
 <!-- Phan Loai Classifications Table -->

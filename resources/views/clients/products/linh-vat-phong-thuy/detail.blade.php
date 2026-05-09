@@ -40,8 +40,11 @@
 <x-products.product-detail-container
     title="{!! $product->name !!}"
     price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
+    rawPrice="{{ $product->price }}"
     sku="{{ $product->code }}"
     :features="$product->des && is_array($product->des) ? $product->des : null"
+    productType="linh_vat_phong_thuy_ct"
+    productId="{{ $product->linh_vat_phong_thuy_ct_id }}"
 />
 
 <!-- Product Images Section -->

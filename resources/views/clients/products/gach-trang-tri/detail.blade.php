@@ -41,7 +41,10 @@
 <x-products.product-detail-container
 title="{{ $product->name ?? 'GẠCH TRANG TRÍ' }}"
 price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
+rawPrice="{{ $product->price }}"
 sku="{{ $product->code ?? '' }}"
+productType="gach_trang_tri_ct"
+productId="{{ $product->gach_trang_tri_ct_id }}"
 />
 
 <div class="flex flex-col md:block">

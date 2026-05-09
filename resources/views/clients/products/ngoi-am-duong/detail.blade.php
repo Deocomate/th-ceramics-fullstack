@@ -43,9 +43,12 @@
 <x-products.product-detail-container
     title="{{ $product->name }}"
     price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
+    rawPrice="{{ $product->price }}"
     sku="{{ $product->code ?? '' }}"
     :features="$product->des ?? null"
     :images="$product->images ?? []"
+    productType="ngoi_am_duong_ct"
+    productId="{{ $product->ngoi_am_duong_ct_id }}"
 />
 
 <x-products.journey-video :hide-title="true" />

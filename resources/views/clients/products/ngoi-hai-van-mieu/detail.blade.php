@@ -37,7 +37,10 @@
 <x-products.product-detail-container
     title="{{ $product->name ?? 'Ngói Hài Văn Miếu' }}"
     price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
-    :colors="$colors->map(fn($c) => ['name' => $c->name, 'colorCode' => '#D9D9D9', 'image' => $c->image ? asset('storage/' . $c->image) : null])->toArray()"
+    rawPrice="{{ $product->price }}"
+    :colors="$colors->map(fn($c) => ['name' => $c->name, 'colorCode' => '#D9D9D9', 'image' => $c->image ? asset('storage/' . $c->image) : null, 'variantId' => $c->mau_sac_ngoi_hai_van_mieu_ct_id, 'sku' => $c->code, 'price' => $c->price])->toArray()"
+    productType="ngoi_hai_van_mieu_ct"
+    productId="{{ $product->ngoi_hai_van_mieu_ct_id }}"
 />
 
 <x-products.hai-vm-calculator

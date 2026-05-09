@@ -47,7 +47,7 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 - **FR15**: Customer service pages (policies, guides)
 - **FR16**: FAQ page (dynamic: banner config + FAQ items CRUD via admin panel)
 - **FR17**: Showroom page
-- **FR18**: Cart and checkout pages (UI exists, backend pending)
+- **FR18**: Cart and checkout (session-based cart, AJAX add/update/remove, checkout flow with order creation, supports 9 product types with COD/banking payment)
 
 ### SEO & URL Strategy
 - **FR19**: Vietnamese-language SEO URLs (`/san-pham/ngoi-am-duong/{id}`)
@@ -105,7 +105,7 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 | Product seeding | Complete (4 seeders: User, ProductType, ProductDetail) |
 | Page configuration | Complete (Factory, Contact, FAQ admin panels with Alpine.js auto-resize textareas) |
 | Client product pages | In progress (9 categories) |
-| Cart/Checkout | UI stubs only, backend pending |
+| Cart/Checkout | Session-based cart with AJAX controls, checkout flow with Orders/OrderItems persistence, COD + banking payment |
 | News/Projects | Controller structure done, views pending |
 | Customer Service | Controller + views exist |
 | Tests | 7 Pest files (14 tests, 31 assertions, all passing) |

@@ -41,8 +41,11 @@
 <x-products.product-detail-container
 title="{{ $product->name ?? 'Gạch Hoa Thông Gió' }}"
 price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
+rawPrice="{{ $product->price }}"
 sku="{{ $product->code ?? '' }}"
 :images="$product->images ?? []"
+productType="gach_hoa_thong_gio_ct"
+productId="{{ $product->gach_hoa_thong_gio_ct_id }}"
 />
 
 <div class="flex flex-col md:block">

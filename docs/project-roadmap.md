@@ -56,14 +56,14 @@
 
 ---
 
-## Phase 4: Cart & Checkout (PLANNED)
+## Phase 4: Cart & Checkout (IN PROGRESS)
 
 | Status | Task | Details |
 |--------|------|---------|
-| 0% | Cart functionality | Add/remove items, quantity management, session-based cart |
-| 0% | Checkout flow | Address form, order summary, order placement |
+| 100% | Cart functionality | Add/remove items, quantity management, session-based cart via CartService (supports 9 product types) |
+| 100% | Checkout flow | Address form, order summary, order placement via Orders/OrderItems with COD + banking payment |
 | 0% | Order management | Admin order list, status updates |
-| 0% | Cart/checkout views | UI exists as stubs, backend integration needed |
+| 100% | Cart/checkout views | UI with AJAX controls (add/update/remove), cart page, checkout page |
 
 **Deliverables**: E-commerce functionality allowing customers to place orders online.
 
@@ -93,10 +93,10 @@
 Phase 1: Core Setup & Admin CRUD     ████████████████████ 100%
 Phase 2: Product Seeding              ████████████████████ 100%
 Phase 3: Client Product Pages         ██████████░░░░░░░░░░  50%
-Phase 4: Cart & Checkout              ░░░░░░░░░░░░░░░░░░░░   0%
+Phase 4: Cart & Checkout              ███████████████░░░░░  75%
 Phase 5: Advanced Features            ░░░░░░░░░░░░░░░░░░░░   0%
                                     ─────────────────────
-Total:                                █████░░░░░░░░░░░░░░░  33%
+Total:                                ████████░░░░░░░░░░░░  42%
 ```
 
 ## Key Milestones
@@ -108,7 +108,7 @@ Total:                                █████░░░░░░░░░
 | 2026-05-06 | Admin CRUD complete, client data binding started |
 | 2026-05-07 | Page configuration admin panels complete; Factory/Contact/FAQ pages dynamic |
 | TBD | Client product pages complete |
-| TBD | Cart/checkout MVP |
+| 2026-05-09 | Cart/checkout MVP (session cart, AJAX controls, order processing) |
 | TBD | Public launch |
 
 ## Dependencies

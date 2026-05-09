@@ -19,6 +19,14 @@ use App\Http\Controllers\Client\ProductPages\NgoiAmDuongController;
 use App\Http\Controllers\Client\ProductPages\NgoiHaiVanMieuController;
 use App\Http\Controllers\Client\ProductPages\PhuKienNgoiController;
 use App\Http\Controllers\Client\ProjectController;
+use App\Http\Controllers\Client\DichVuKhachHang\TaiKhoanCuaToiController;
+use App\Http\Controllers\Client\DichVuKhachHang\TrangThaiDonHangController;
+use App\Http\Controllers\Client\DichVuKhachHang\CatalogController;
+use App\Http\Controllers\Client\DichVuKhachHang\QuyTrinhDatHangController;
+use App\Http\Controllers\Client\DichVuKhachHang\HuongDanThiCongController;
+use App\Http\Controllers\Client\DichVuKhachHang\ChinhSachVanChuyenController;
+use App\Http\Controllers\Client\DichVuKhachHang\ChinhSachDoiTraController;
+use App\Http\Controllers\Client\DichVuKhachHang\BaoMatThongTinController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,6 +61,10 @@ Route::name('client.')->group(function () {
     // Giỏ hàng / Thanh toán
     Route::get('/gio-hang', [CartController::class, 'cart'])->name('cart.index');
     Route::get('/thanh-toan', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/gio-hang/them', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/gio-hang/xoa', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/thanh-toan/xu-ly', [CartController::class, 'processCheckout'])->name('cart.checkout.process');
 
     // Chính sách & Dịch vụ khách hàng
     Route::prefix('dich-vu')->name('customer-service.')->group(function () {
@@ -130,6 +142,18 @@ Route::name('client.')->group(function () {
         // Only for authenticated users
         Route::middleware('auth')->group(function () {
             Route::post('/dang-xuat', [AuthController::class, 'logout'])->name('logout');
+
+            // --- THÊM MỚI ROUTE CHO TRANG TÀI KHOẢN CỦA TÔI ---
+            Route::get('/cua-toi', [TaiKhoanCuaToiController::class, 'index'])->name('profile');
+            Route::post('/cua-toi/cap-nhat-thong-tin', [TaiKhoanCuaToiController::class, 'updateProfile'])->name('profile.update');
+            Route::post('/cua-toi/doi-mat-khau', [TaiKhoanCuaToiController::class, 'updatePassword'])->name('password.update');
+            Route::post('/cua-toi/cap-nhat-anh', [TaiKhoanCuaToiController::class, 'updateAvatar'])->name('profile.update-avatar');
+            Route::post('/cua-toi/doi-mat-khau', [TaiKhoanCuaToiController::class, 'updatePassword'])->name('password.update');
+        });
+
+        // Only for authenticated users
+        Route::middleware('auth')->group(function () {
+            Route::post('/dang-xuat', [AuthController::class, 'logout'])->name('logout');
         });
     });
 });
@@ -157,14 +181,17 @@ Route::redirect('/news', '/tin-tuc', 301);
 Route::redirect('/projects', '/du-an', 301);
 
 // Customer service .html URLs → clean Vietnamese URLs
-Route::redirect('/dich-vu-khach-hang/trang-thai-don-hang.html', '/dich-vu/trang-thai-don-hang', 301);
-Route::redirect('/dich-vu-khach-hang/tai-khoan-cua-toi.html', '/dich-vu/tai-khoan-cua-toi', 301);
-Route::redirect('/dich-vu-khach-hang/tai-catalog.html', '/dich-vu/tai-catalog', 301);
-Route::redirect('/dich-vu-khach-hang/quy-trinh-dat-hang.html', '/dich-vu/quy-trinh-dat-hang', 301);
-Route::redirect('/dich-vu-khach-hang/huong-dan-thi-cong.html', '/dich-vu/huong-dan-thi-cong', 301);
-Route::redirect('/dich-vu-khach-hang/chinh-sach-van-chuyen.html', '/dich-vu/chinh-sach-van-chuyen', 301);
-Route::redirect('/dich-vu-khach-hang/chinh-sach-doi-tra.html', '/dich-vu/chinh-sach-doi-tra', 301);
-Route::redirect('/dich-vu-khach-hang/bao-mat-thong-tin.html', '/dich-vu/bao-mat-thong-tin', 301);
+Route::prefix('dich-vu')->name('client.dich-vu.')->group(function () {
+    Route::get('/trang-thai-don-hang', [TrangThaiDonHangController::class, 'index'])->name('trang-thai-don-hang');
+    Route::get('/tai-catalog', [CatalogController::class, 'index'])->name('tai-catalog');
+    Route::get('/quy-trinh-dat-hang', [QuyTrinhDatHangController::class, 'index'])->name('quy-trinh-dat-hang');
+    Route::get('/huong-dan-thi-cong', [HuongDanThiCongController::class, 'index'])->name('huong-dan-thi-cong');
+    Route::get('/chinh-sach-van-chuyen', [ChinhSachVanChuyenController::class, 'index'])->name('chinh-sach-van-chuyen');
+    Route::get('/chinh-sach-doi-tra', [ChinhSachDoiTraController::class, 'index'])->name('chinh-sach-doi-tra');
+    Route::get('/bao-mat-thong-tin', [BaoMatThongTinController::class, 'index'])->name('bao-mat-thong-tin');
+});
+
 Route::redirect('/faq/index.html', '/cau-hoi-thuong-gap', 301);
+
 Route::redirect('/cart/gio-hang', '/gio-hang', 301);
 Route::redirect('/cart/thanh-toan.html', '/thanh-toan', 301);

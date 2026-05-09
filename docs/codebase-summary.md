@@ -2,7 +2,7 @@
 
 ## Overview
 
-Laravel 12 monolith with Blade frontend. 42 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js (auto-resize textareas, tab navigation, image management).
+Laravel 12 monolith with Blade frontend. 44 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Session-based cart with AJAX controls, checkout flow with Orders/OrderItems persistence. Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js (auto-resize textareas, tab navigation, image management).
 
 ## Directory Tree
 
@@ -19,18 +19,18 @@ th-ceramics-fullstack/
 │   │   │       └── FactoryController, ContactController, FaqController  # 3 dynamic page controllers
 │   │   ├── Middleware/
 │   │   │   └── RoleMiddleware.php        # RBAC: superadmin, admin
-│   │   └── Requests/                     # 13 form validation classes
-│   ├── Models/                           # 42 Eloquent models
+│   │   └── Requests/                     # 21 form validation classes
+│   ├── Models/                           # 52 Eloquent models
 │   ├── Providers/
 │   │   └── AppServiceProvider.php        # Empty registration
-│   └── Services/                         # 36 service classes (business logic)
+│   └── Services/                         # 46 service classes (business logic)
 ├── bootstrap/
 │   ├── app.php                           # Middleware, routing, exception config
 │   └── providers.php                     # Service provider registration
 ├── config/                               # 10 Laravel config files
 ├── database/
 │   ├── factories/
-│   ├── migrations/                       # 9 files → 42 tables
+│   ├── migrations/                       # 15 files → 44 tables
 │   └── seeders/                          # 4 files (User, ProductType, ProductDetail)
 ├── public/
 │   └── assets/
@@ -61,16 +61,16 @@ th-ceramics-fullstack/
 
 | Directory | Count | Description |
 |-----------|-------|-------------|
-| `app/Models/` | 42 | Eloquent models mapping to DB tables |
-| `app/Services/` | 36 | Business logic layer |
+| `app/Models/` | 52 | Eloquent models mapping to DB tables |
+| `app/Services/` | 46 | Business logic layer |
 | `app/Http/Controllers/Admin/` | 36 | Admin CRUD controllers |
-| `app/Http/Controllers/Client/` | 13 | Public page controllers |
+| `app/Http/Controllers/Client/` | 10 | Public page controllers (auth, cart, pages) |
 | `app/Http/Controllers/Client/ProductPages/` | 9 | Product page controllers |
-| `app/Http/Requests/` | 13 | Form request validators |
+| `app/Http/Requests/` | 21 | Form request validators |
 | `app/Helpers/` | 1 | FileUploadHelper |
 | `app/Http/Middleware/` | 1 | RoleMiddleware |
 | `routes/` | 3 | web.php (/admin + /admin/pages/*), client.php, console.php |
-| `database/migrations/` | 9 | 9 migration files = 42 tables |
+| `database/migrations/` | 15 | 15 migration files = 44 tables |
 | `database/seeders/` | 4 | User, ProductType, ProductDetail seeders |
 | `resources/views/admin/` | 61 | Admin Blade templates |
 | `resources/views/clients/` | 134 | Client Blade templates |
@@ -97,6 +97,10 @@ Single-row config for static pages: `PageFactory` (14+ fields for factory tour p
 
 ### System Models (1)
 `User` — authentication with role-based access
+
+### Commerce Models (2)
+`Order` — orders with status tracking (pending_payment, processing, shipping, completed, canceled, returned), payment method (COD/banking), generated order codes
+`OrderItem` — polymorphic line items (product_type, product_id, variant_id) with price and quantity tracking
 
 ## Key Architectural Decisions
 
