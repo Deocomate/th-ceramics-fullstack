@@ -102,10 +102,17 @@
                     aria-label="Cart">
                     <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-5 h-5" />
                 </a>
-                <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
-                    class="hover:text-secondary transition-colors" aria-label="User">
-                    <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-5 h-5" />
-                </a>
+                @auth
+                    <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
+                        class="hover:text-secondary transition-colors" aria-label="User">
+                        <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-5 h-5" />
+                    </a>
+                @else
+                    <a href="{{ route('client.auth.login') }}"
+                        class="hover:text-secondary transition-colors" aria-label="User">
+                        <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-5 h-5" />
+                    </a>
+                @endauth
             </div>
         </nav>
     </div>
@@ -130,10 +137,17 @@
                     aria-label="Cart">
                     <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-[18px] h-[18px]" />
                 </a>
-                <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
-                    class="hover:text-secondary transition-colors" aria-label="User">
-                    <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-[18px] h-[18px]" />
-                </a>
+                @auth
+                    <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
+                        class="hover:text-secondary transition-colors" aria-label="User">
+                        <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-[18px] h-[18px]" />
+                    </a>
+                @else
+                    <a href="{{ route('client.auth.login') }}"
+                        class="hover:text-secondary transition-colors" aria-label="User">
+                        <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-[18px] h-[18px]" />
+                    </a>
+                @endauth
             </div>
         </nav>
     </div>
@@ -153,10 +167,17 @@
                         aria-label="Cart">
                         <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-5 h-5" />
                     </a>
-                    <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
-                        class="hover:text-secondary transition-colors" aria-label="User">
-                        <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-5 h-5" />
-                    </a>
+                    @auth
+                        <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
+                            class="hover:text-secondary transition-colors" aria-label="User">
+                            <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-5 h-5" />
+                        </a>
+                    @else
+                        <a href="{{ route('client.auth.login') }}"
+                            class="hover:text-secondary transition-colors" aria-label="User">
+                            <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-5 h-5" />
+                        </a>
+                    @endauth
                     <button id="close-menu-button" class="text-white hover:text-secondary transition-colors">
                         <img src="{{ asset('assets/images/icon-close.svg') }}" alt="close" class="w-8 h-8" />
                     </button>
