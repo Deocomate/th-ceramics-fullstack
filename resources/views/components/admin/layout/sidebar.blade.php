@@ -36,7 +36,7 @@
         </div>
 
         <!-- 1. CẤU HÌNH SECTION CHUNG -->
-        @php $isSectionChung = request()->routeIs(['admin.gia-tri-vuot-troi.*', 'admin.giai-thuong-thanh-tuu.*']); @endphp
+        @php $isSectionChung = request()->routeIs(['admin.gia-tri-vuot-troi.*', 'admin.giai-thuong-thanh-tuu.*', 'admin.tac-gia.*']); @endphp
         <div>
             <button type="button"
                 class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
@@ -64,6 +64,11 @@
                         <a href="{{ route('admin.giai-thuong-thanh-tuu.index') }}"
                             class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.giai-thuong-thanh-tuu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
                             Giải thưởng & Thành tựu
+                        </a>
+                        <!-- THÊM TÁC GIẢ VÀO ĐÂY -->
+                        <a href="{{ route('admin.tac-gia.index') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.tac-gia.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Tác giả
                         </a>
                     </div>
                 </div>

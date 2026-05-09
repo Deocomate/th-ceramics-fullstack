@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-5">
         <div>
             <h2 class="text-sm font-semibold text-gray-700">Danh sách Dự Án</h2>
-            <p class="text-xs text-gray-400 mt-0.5">Tổng cộng {{ count($duAns) }} dự án</p>
+            <p class="text-xs text-gray-400 mt-0.5">Tổng cộng {{ $duAns->total() }} dự án</p>
         </div>
         
         <div class="flex items-center gap-3">
@@ -84,5 +84,12 @@
                 </tbody>
             </table>
         </div>
+        
+        {{-- PHÂN TRANG --}}
+        @if($duAns->hasPages())
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+                {{ $duAns->withQueryString()->links() }}
+            </div>
+        @endif
     </div>
 </x-admin.layout.app>

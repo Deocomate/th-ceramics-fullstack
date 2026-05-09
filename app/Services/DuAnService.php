@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class DuAnService
 {
-    public function getAll(?int $danhMucId = null)
+    public function getAll(?int $danhMucId = null, int $perPage = 10)
     {
         $query = DuAn::query()->with('danhMuc')->latest();
 
@@ -18,7 +18,7 @@ class DuAnService
             $query->where('danh_muc_du_an_id', $danhMucId);
         }
 
-        return $query->get();
+        return $query->paginate($perPage); // Đổi ->get() thành ->paginate()
     }
 
     public function findById(int $id): DuAn

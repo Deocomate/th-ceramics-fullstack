@@ -382,6 +382,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}',[\App\Http\Controllers\Admin\TinTucController::class, 'destroy'])->name('destroy');
         });
 
+        Route::prefix('tac-gia')->name('tac-gia.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\TacGiaController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\TacGiaController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\TacGiaController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\TacGiaController::class, 'destroy'])->name('destroy');
+        });
+
         // ── Superadmin-only: account management ──────────────────────────────
         Route::middleware('role:superadmin')->group(function () {
             Route::get('users', [UserController::class, 'index'])->name('users.index');

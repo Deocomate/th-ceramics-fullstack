@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class TinTucService
 {
-    public function getAll(?int $danhMucId = null)
+    public function getAll(?int $danhMucId = null, int $perPage = 10) // Thêm tham số $perPage
     {
         $query = TinTuc::query()->with('danhMuc')->latest();
 
@@ -18,7 +18,7 @@ class TinTucService
             $query->where('danh_muc_tin_tuc_id', $danhMucId);
         }
 
-        return $query->get();
+        return $query->paginate($perPage); // Đổi ->get() thành ->paginate()
     }
 
     public function findById(int $id): TinTuc
