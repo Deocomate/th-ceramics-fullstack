@@ -71,7 +71,7 @@
         </div>
 
         <!-- 2. CẤU HÌNH TRANG ĐƠN -->
-        @php $isPageConfig = request()->routeIs(['admin.pages.*', 'admin.danh-muc-du-an.*', 'admin.du-an.*']); @endphp
+        @php $isPageConfig = request()->routeIs(['admin.pages.*', 'admin.danh-muc-du-an.*', 'admin.du-an.*', 'admin.danh-muc-tin-tuc.*', 'admin.tin-tuc.*']); @endphp
         <div>
             <button type="button"
                 class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
@@ -124,6 +124,15 @@
                         <a href="{{ route('admin.du-an.index') }}"
                             class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
                             Danh Sách Dự Án
+                        </a>
+                        <div class="my-2 border-t border-white/10 mx-3"></div>
+                        <a href="{{ route('admin.danh-muc-tin-tuc.index') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.danh-muc-tin-tuc.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Danh Mục Tin Tức
+                        </a>
+                        <a href="{{ route('admin.tin-tuc.index') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.tin-tuc.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Danh Sách Tin Tức
                         </a>
                     </div>
                 </div>

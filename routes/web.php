@@ -363,6 +363,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}/image',[\App\Http\Controllers\Admin\DuAnController::class, 'destroyImage'])->name('image.destroy');
         });
 
+        // ── Danh Mục Tin Tức ────────────────────────────────────────────
+        Route::prefix('danh-muc-tin-tuc')->name('danh-muc-tin-tuc.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\DanhMucTinTucController::class, 'restore'])->name('restore');
+        });
+
+        // ── Tin Tức ──────────────────────────────────────────────────────
+        Route::prefix('tin-tuc')->name('tin-tuc.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\TinTucController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\TinTucController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\TinTucController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\TinTucController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\TinTucController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\TinTucController::class, 'destroy'])->name('destroy');
+        });
+
         // ── Superadmin-only: account management ──────────────────────────────
         Route::middleware('role:superadmin')->group(function () {
             Route::get('users', [UserController::class, 'index'])->name('users.index');
