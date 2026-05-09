@@ -46,6 +46,19 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    public static function statusLabel(string $status): string
+    {
+        return match ($status) {
+            'pending_payment' => 'Chờ thanh toán',
+            'processing' => 'Đang xử lý',
+            'shipping' => 'Đang giao hàng',
+            'completed' => 'Hoàn tất',
+            'canceled' => 'Đã hủy',
+            'returned' => 'Đổi trả',
+            default => $status,
+        };
+    }
+
     public static function generateOrderCode(): string
     {
         do {

@@ -57,12 +57,12 @@
                 <section class="space-y-4">
                     <h2 class="text-base font-bold text-primary uppercase tracking-[0.8px] font-archivo">Phương thức thanh toán</h2>
                     <div class="bg-white border border-gray-200 rounded-md overflow-hidden">
-                        <label class="flex items-center gap-4 px-6 h-[61px] cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0 group @if(old('payment_method', 'cod') === 'banking') bg-gray-50/30 @endif">
-                            <input type="radio" name="payment_method" value="banking" class="w-5 h-5 accent-secondary" @if(old('payment_method') === 'banking') checked @endif>
-                            <span class="text-sm font-medium text-primary font-archivo">Chuyển khoản ngân hàng</span>
+                        <label class="flex items-center gap-4 px-6 h-[61px] opacity-50 cursor-not-allowed border-b border-gray-100 last:border-0">
+                            <input type="radio" name="payment_method" value="banking" class="w-5 h-5 accent-secondary" disabled>
+                            <span class="text-sm font-medium text-primary font-archivo">Chuyển khoản ngân hàng (Tạm thời bảo trì)</span>
                         </label>
-                        <label class="flex items-center gap-4 px-6 h-[61px] cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0 group @if(old('payment_method', 'cod') === 'cod') bg-gray-50/30 @endif">
-                            <input type="radio" name="payment_method" value="cod" class="w-5 h-5 accent-secondary" @if(old('payment_method', 'cod') === 'cod') checked @endif>
+                        <label class="flex items-center gap-4 px-6 h-[61px] cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0 bg-gray-50/30">
+                            <input type="radio" name="payment_method" value="cod" class="w-5 h-5 accent-secondary" checked>
                             <span class="text-sm font-medium text-primary font-archivo">Thanh toán khi nhận hàng (COD)</span>
                         </label>
                     </div>
@@ -102,31 +102,32 @@
                         @endforeach
                     </div>
 
-                    <!-- Coupon -->
-                    <div class="mt-4 p-4 bg-gray-50 rounded-lg">
-                        <div class="flex items-center gap-2" id="coupon-input-area">
-                            <input type="text" id="coupon-code"
-                                   placeholder="Nhập mã giảm giá"
+                    <!-- Coupon Design -->
+                    <div class="space-y-2 pt-8">
+                        <p class="text-[12px] text-primary/40 font-archivo">Nhập mã tại đây</p>
+                        <div class="flex" id="coupon-input-area">
+                            <input type="text" id="coupon-code" 
+                                   placeholder="Mã ưu đãi" 
                                    value="{{ $couponCode ?? '' }}"
-                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase
-                                          focus:ring-red-500 focus:border-red-500 font-archivo">
-                            <button id="apply-coupon-btn" type="button"
-                                    class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg
-                                           hover:bg-red-700 transition-colors whitespace-nowrap font-archivo">
+                                   class="flex-1 bg-[#FEF9F5] border border-secondary border-r-0 px-4 py-3 text-sm focus:outline-none uppercase font-archivo">
+                            <button type="button" id="apply-coupon-btn" 
+                                    class="bg-secondary text-white px-6 py-3 text-xs font-bold uppercase hover:bg-opacity-90 transition-all font-archivo whitespace-nowrap">
                                 Áp dụng
                             </button>
                         </div>
-                        <p id="coupon-message" class="mt-2 text-sm hidden font-archivo"></p>
+                        
+                        <p id="coupon-message" class="text-sm hidden font-archivo pt-1"></p>
 
-                        <div id="coupon-discount-row" class="mt-3 {{ ($couponCode ?? false) ? '' : 'hidden' }}">
-                            <div class="flex justify-between items-center text-sm font-archivo">
-                                <span class="text-green-600 font-medium">Giảm giá:</span>
-                                <div class="flex items-center gap-3">
-                                    <span id="discount-amount" class="text-green-600 font-medium">
+                        <!-- Discount row display -->
+                        <div id="coupon-discount-row" class="pt-2 {{ ($couponCode ?? false) ? '' : 'hidden' }}">
+                            <div class="flex justify-between items-center text-sm font-archivo bg-secondary/5 border border-secondary/20 p-3">
+                                <span class="text-[#C76E00] font-bold uppercase tracking-[0.5px] text-xs">Ưu đãi giảm giá:</span>
+                                <div class="flex items-center gap-4">
+                                    <span id="discount-amount" class="text-[#C76E00] font-bold">
                                         -{{ number_format($discountAmount ?? 0, 0, ',', '.') }}đ
                                     </span>
                                     <button id="remove-coupon-btn" type="button"
-                                            class="text-red-500 hover:text-red-700 text-xs underline font-archivo">
+                                            class="text-gray-400 hover:text-red-500 text-[11px] underline font-archivo uppercase">
                                         Xóa mã
                                     </button>
                                 </div>
@@ -135,7 +136,7 @@
                     </div>
 
                     <!-- Totals -->
-                    <div class="mt-8 pt-8 border-t border-gray-300 space-y-2 md:space-y-2">
+                    <div class="mt-6 pt-6 border-t border-gray-300 space-y-2 md:space-y-2">
                         <div class="flex justify-between text-xs lg:text-sm font-archivo">
                             <span class="text-primary">Tạm tính</span>
                             <span id="subtotal-amount" class="text-primary font-medium">{{ number_format($total) }} đ</span>
@@ -166,16 +167,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const discountRow = document.getElementById('coupon-discount-row');
     const discountAmount = document.getElementById('discount-amount');
     const totalAmount = document.getElementById('total-amount');
-    const subtotalAmount = document.getElementById('subtotal-amount');
 
     function formatVND(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
+        return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
     }
 
     function showMessage(msg, type) {
         couponMessage.textContent = msg;
-        couponMessage.className = 'mt-2 text-sm font-archivo ' +
-            (type === 'error' ? 'text-red-600' : 'text-green-600');
+        // Đổi màu text thành màu đỏ khi lỗi và màu cam secondary khi thành công để hợp tone thiết kế
+        couponMessage.className = 'text-sm font-archivo pt-1 ' +
+            (type === 'error' ? 'text-red-600' : 'text-[#C76E00]');
         couponMessage.classList.remove('hidden');
     }
 
@@ -187,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         applyBtn.disabled = true;
-        applyBtn.textContent = 'Đang xử lý...';
+        applyBtn.textContent = 'ĐANG XỬ LÝ...';
 
         try {
             const res = await fetch('{{ route("client.cart.coupon.apply") }}', {
@@ -209,14 +210,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     totalAmount.textContent = formatVND(data.new_total);
                 }
                 showMessage(data.message, 'success');
-                applyBtn.textContent = 'Đã áp dụng';
+                applyBtn.textContent = 'ĐÃ ÁP DỤNG';
             } else {
                 showMessage(data.message, 'error');
-                applyBtn.textContent = 'Áp dụng';
+                applyBtn.textContent = 'ÁP DỤNG';
             }
         } catch (err) {
             showMessage('Có lỗi xảy ra, vui lòng thử lại.', 'error');
-            applyBtn.textContent = 'Áp dụng';
+            applyBtn.textContent = 'ÁP DỤNG';
         } finally {
             applyBtn.disabled = false;
         }
@@ -242,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     totalAmount.textContent = formatVND(data.new_total);
                 }
                 showMessage(data.message, 'success');
-                applyBtn.textContent = 'Áp dụng';
+                applyBtn.textContent = 'ÁP DỤNG';
             }
         } catch (err) {
             showMessage('Có lỗi xảy ra, vui lòng thử lại.', 'error');

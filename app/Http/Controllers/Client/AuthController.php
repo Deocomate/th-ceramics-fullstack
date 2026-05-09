@@ -34,7 +34,7 @@ class AuthController extends Controller
             return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
         }
 
-        return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác.'])->withInput();
+        return back()->withErrors(['error' => 'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.'])->withInput();
     }
 
     /**

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Laravel 12 monolith with Blade frontend. 44 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Session-based cart with AJAX controls, checkout flow with Orders/OrderItems persistence. Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js (auto-resize textareas, tab navigation, image management).
+Laravel 12 monolith with Blade frontend. 45 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Session-based cart with AJAX controls, checkout flow with Orders/OrderItems persistence (COD-only payment), email notification system (order confirmation + status updates via database queue), coupon/discount code system with percent and fixed discount types. Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js (auto-resize textareas, tab navigation, image management), order management (list, detail, status update with email notification), and coupon management (full CRUD with restore). Client-side dynamic order status tracking page with tab filtering. Dynamic customer service pages: installation guide (ThiCong model), catalog list with PDF flipbook reader (Catalog model, PDF.js + StPageFlip).
 
 ## Directory Tree
 
@@ -13,17 +13,20 @@ th-ceramics-fullstack/
 │   │   └── FileUploadHelper.php          # Image upload/replace/delete
 │   ├── Http/
 │   │   ├── Controllers/
-│   │   │   ├── Admin/                    # 36 files: CRUD per product category + page config panels
+│   │   │   ├── Admin/                    # 48 files: CRUD per product category + page config + order management
 │   │   │   └── Client/
 │   │   │       ├── ProductPages/         # 9 product page controllers
-│   │   │       └── FactoryController, ContactController, FaqController  # 3 dynamic page controllers
+│   │   │       └── FactoryController, ContactController, FaqController, CartController  # page + cart controllers
 │   │   ├── Middleware/
 │   │   │   └── RoleMiddleware.php        # RBAC: superadmin, admin
-│   │   └── Requests/                     # 21 form validation classes
-│   ├── Models/                           # 52 Eloquent models
+│   │   └── Requests/                     # 15 form validation classes
+│   ├── Mail/                             # 2 Mailable classes (ShouldQueue)
+│   │   ├── OrderCreatedMail.php          # Order confirmation email
+│   │   └── OrderStatusUpdatedMail.php    # Status change notification
+│   ├── Models/                           # 55 Eloquent models
 │   ├── Providers/
 │   │   └── AppServiceProvider.php        # Empty registration
-│   └── Services/                         # 46 service classes (business logic)
+│   └── Services/                         # 49 service classes (business logic)
 ├── bootstrap/
 │   ├── app.php                           # Middleware, routing, exception config
 │   └── providers.php                     # Service provider registration
@@ -40,8 +43,10 @@ th-ceramics-fullstack/
 ├── resources/
 │   └── views/
 │       ├── admin/                        # 58 files (32 sub-directories)
-│       ├── clients/                      # 134 files (36 sub-directories)
-│       └── components/                   # 28 shared Blade components
+│       ├── clients/                      # 136 files (36 sub-directories)
+│       ├── emails/                       # 2 files: order confirmation + status update templates
+│       │   └── orders/
+│       └── components/                   # 29 shared Blade components
 ├── routes/
 │   ├── web.php                           # Admin routes (/admin/*)
 │   ├── client.php                        # Public routes (Vietnamese URLs)
@@ -61,20 +66,23 @@ th-ceramics-fullstack/
 
 | Directory | Count | Description |
 |-----------|-------|-------------|
-| `app/Models/` | 52 | Eloquent models mapping to DB tables |
-| `app/Services/` | 46 | Business logic layer |
-| `app/Http/Controllers/Admin/` | 36 | Admin CRUD controllers |
+| `app/Models/` | 55 | Eloquent models mapping to DB tables |
+| `app/Services/` | 49 | Business logic layer |
+| `app/Http/Controllers/Admin/` | 48 | Admin CRUD controllers (incl. OrderController) |
 | `app/Http/Controllers/Client/` | 10 | Public page controllers (auth, cart, pages) |
+| `app/Http/Controllers/Client/DichVuKhachHang/` | 8 | Customer service controllers (catalog, installation guide, policies) |
 | `app/Http/Controllers/Client/ProductPages/` | 9 | Product page controllers |
-| `app/Http/Requests/` | 21 | Form request validators |
+| `app/Http/Requests/` | 15 | Form request validators |
+| `app/Mail/` | 2 | Mailable classes (ShouldQueue: order created, status updated) |
 | `app/Helpers/` | 1 | FileUploadHelper |
 | `app/Http/Middleware/` | 1 | RoleMiddleware |
 | `routes/` | 3 | web.php (/admin + /admin/pages/*), client.php, console.php |
-| `database/migrations/` | 15 | 15 migration files = 44 tables |
+| `database/migrations/` | 7 | Migration files |
 | `database/seeders/` | 4 | User, ProductType, ProductDetail seeders |
-| `resources/views/admin/` | 61 | Admin Blade templates |
-| `resources/views/clients/` | 134 | Client Blade templates |
-| `resources/views/components/` | 28 | Shared Blade components |
+| `resources/views/admin/` | 77 | Admin Blade templates (incl. orders/index, orders/show) |
+| `resources/views/clients/` | 136 | Client Blade templates (incl. order status page) |
+| `resources/views/emails/` | 2 | Email templates (order created, status updated) |
+| `resources/views/components/` | 29 | Shared Blade components |
 | `config/` | 10 | App, database, cache, session, etc. |
 | `tests/` | 7 | Pest test files (14 tests, 31 assertions, all passing) |
 
@@ -98,9 +106,14 @@ Single-row config for static pages: `PageFactory` (14+ fields for factory tour p
 ### System Models (1)
 `User` — authentication with role-based access
 
-### Commerce Models (2)
-`Order` — orders with status tracking (pending_payment, processing, shipping, completed, canceled, returned), payment method (COD/banking), generated order codes
+### Commerce Models (3)
+`Order` — orders with status tracking (pending_payment, processing, shipping, completed, canceled, returned), payment method (COD only since banking disabled), auto-generated order codes (`THC-YYYYMMDD-XXXX`), optional coupon_code, `statusLabel()` static helper for Vietnamese labels, `generateOrderCode()` with uniqueness check
 `OrderItem` — polymorphic line items (product_type, product_id, variant_id) with price and quantity tracking
+`Coupon` — discount codes with percent/fixed types, max discount cap, min order value, product-type filtering, usage limits, validity dates, banner support
+
+### Customer Service Models (2)
+`ThiCong` — installation guide records (table `thi_cong`, PK `thi_cong`), fields: tieu_de, anh (image), link_youtube, used in dynamic installation guide page
+`Catalog` — product catalog PDFs (table `catalog`, PK `catalog_id`), fields: tieu_de, anh_dai_dien (thumbnail), file (PDF path), used in catalog list + PDF flipbook reader
 
 ## Key Architectural Decisions
 

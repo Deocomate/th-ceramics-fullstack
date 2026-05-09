@@ -1,463 +1,593 @@
-<section
-  class="w-full pb-12 pt-8 lg:pt-16 lg:pb-16 bg-background-secondary"
-  data-aos="fade-up"
-  data-weight-calculator
->
-  <div class="w-[85%] max-w-[1320px] mx-auto">
-    <h2 class="text-[20px] font-semibold text-center text-secondary mb-8 uppercase block lg:hidden">
-      CÁCH TÍNH KHỐI LƯỢNG
-    </h2>
-
-    <div class="flex flex-col-reverse lg:grid lg:grid-cols-5 gap-8 lg:gap-24 items-start">
-      <div class="w-full space-y-4 col-span-1 lg:col-span-3">
-        <h2
-          class="text-[20px] md:text-3xl font-semibold text-center text-secondary mb-5 uppercase hidden lg:block"
-        >
-          CÁCH TÍNH KHỐI LƯỢNG
+<section class="w-full pb-12 pt-8 lg:pt-16 lg:pb-16 bg-background-secondary" data-aos="fade-up" data-weight-calculator>
+    <div class="w-[85%] max-w-[1320px] mx-auto">
+        <h2 class="text-[20px] font-semibold text-center text-secondary mb-8 uppercase block lg:hidden">
+            CÁCH TÍNH KHỐI LƯỢNG
         </h2>
-        <hr class="border-t border-black/10 w-full mb-6 lg:mb-0 block lg:hidden" />
-        <hr class="border-t border-black/10 mt-4 w-full hidden lg:block" />
-        <div class="grid grid-cols-2 gap-5 lg:gap-6">
-          <div class="relative">
-            <select
-              id="roof-style"
-              class="w-full h-[26px] lg:h-[44px] px-2 lg:px-4 pr-6 lg:pr-10 border border-black/10 rounded-sm bg-transparent text-[10px] lg:text-[13px] uppercase appearance-none outline-none focus:border-secondary transition-colors"
-            >
-              <option value="" disabled selected>KIỂU MÁI</option>
-              <option value="2-slope" data-factor="1.0">Mái dốc 2 mặt (Mái chữ A)</option>
-              <option value="4-slope" data-factor="1.0">Mái dốc 4 mặt (Mái bánh ít)</option>
-              <option value="chong-diem" data-factor="1.0">Mái chồng diêm</option>
-              <option value="dao" data-factor="1.1">Mái đao</option>
-            </select>
-            <div class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-              <svg class="w-3 h-3 lg:w-4 lg:h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="relative">
-            <select
-              id="tile-type"
-              class="w-full h-[26px] lg:h-[44px] px-2 lg:px-4 pr-6 lg:pr-10 border border-black/10 rounded-sm bg-transparent text-[10px] lg:text-[13px] uppercase appearance-none outline-none focus:border-secondary transition-colors"
-            >
-              <option value="" disabled selected>LOẠI NGÓI</option>
-              <option value="dai" data-am="27" data-duong="27" data-diem="5">Ngói Âm Dương cỡ Đại</option>
-              <option value="trung" data-am="40" data-duong="27" data-diem="5">Ngói Âm Dương cỡ Trung</option>
-              <option value="tieu" data-am="60" data-duong="60" data-diem="5">Ngói Âm Dương cỡ Tiểu</option>
-            </select>
-            <div class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-              <svg class="w-3 h-3 lg:w-4 lg:h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
 
-        <div class="flex flex-col lg:flex-row gap-2 lg:gap-4 items-start lg:items-end mb-6 lg:mb-0">
-          <div class="hidden lg:flex w-full lg:w-[150px] shrink-0 pb-1 flex-col">
-            <span class="font-semibold text-primary uppercase text-base">DIỆN TÍCH 1</span>
-          </div>
-          <div class="flex-1 w-full flex flex-row lg:grid lg:grid-cols-12 gap-2 lg:gap-7 items-end">
-            <div class="w-[111px] md:w-[111px] lg:w-auto shrink-0 col-span-12 lg:col-span-3 flex flex-col justify-end">
-              <span class="font-semibold text-primary uppercase text-[11px] lg:hidden mb-2 pl-2">DIỆN TÍCH 1</span>
-              <div class="relative">
-                <select class="w-full h-[30px] lg:h-[45px] px-2 lg:px-3 pr-5 lg:pr-6 border border-black/10 rounded-sm bg-transparent text-[9px] lg:text-[11px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
-                  <option selected>HÌNH CHỮ NHẬT</option>
-                  <option>HÌNH THANG</option>
-                </select>
-                <div class="absolute right-1 lg:right-3 top-1/2 -translate-y-1/2 pointer-events-none text-secondary">
-                  <svg class="w-2.5 h-2.5 lg:w-3 lg:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
+        <div class="flex flex-col-reverse lg:grid lg:grid-cols-5 gap-8 lg:gap-24 items-start">
+            <div class="w-full space-y-4 col-span-1 lg:col-span-3">
+                <h2
+                    class="text-[20px] md:text-3xl font-semibold text-center text-secondary mb-5 uppercase hidden lg:block">
+                    CÁCH TÍNH KHỐI LƯỢNG
+                </h2>
+                <hr class="border-t border-black/10 w-full mb-6 lg:mb-0 block lg:hidden" />
+                <hr class="border-t border-black/10 mt-4 w-full hidden lg:block" />
+                <div class="grid grid-cols-2 gap-5 lg:gap-6">
+                    <div class="relative">
+                        <select id="roof-style"
+                            class="w-full h-[26px] lg:h-[44px] px-2 lg:px-4 pr-6 lg:pr-10 border border-black/10 rounded-sm bg-transparent text-[10px] lg:text-[13px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
+                            <option value="" disabled selected>KIỂU MÁI</option>
+                            <option value="2-slope" data-factor="1.0">Mái dốc 2 mặt (Mái chữ A)</option>
+                            <option value="4-slope" data-factor="1.0">Mái dốc 4 mặt (Mái bánh ít)</option>
+                            <option value="chong-diem" data-factor="1.0">Mái chồng diêm</option>
+                            <option value="dao" data-factor="1.1">Mái đao</option>
+                        </select>
+                        <div class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg class="w-3 h-3 lg:w-4 lg:h-4 text-secondary" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <select id="tile-type"
+                            class="w-full h-[26px] lg:h-[44px] px-2 lg:px-4 pr-6 lg:pr-10 border border-black/10 rounded-sm bg-transparent text-[10px] lg:text-[13px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
+                            <option value="" disabled selected>LOẠI NGÓI</option>
+                            <option value="dai" data-am="27" data-duong="27" data-diem="5">Ngói Âm Dương cỡ Đại
+                            </option>
+                            <option value="trung" data-am="40" data-duong="27" data-diem="5">Ngói Âm Dương cỡ Trung
+                            </option>
+                            <option value="tieu" data-am="60" data-duong="60" data-diem="5">Ngói Âm Dương cỡ Tiểu
+                            </option>
+                        </select>
+                        <div class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg class="w-3 h-3 lg:w-4 lg:h-4 text-secondary" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
-              <label class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
-                CHIỀU DÀI
-                <span class="block text-[7px] lg:text-[12px] font-normal italic normal-case text-secondary/70 mt-[2px] lg:mt-1 tracking-normal">Chiều tính diềm mái</span>
-              </label>
-              <div class="relative">
-                <input type="text" placeholder="00" class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
-              </div>
-            </div>
+                <div class="flex flex-col lg:flex-row gap-2 lg:gap-4 items-start lg:items-end mb-6 lg:mb-0">
+                    <div class="hidden lg:flex w-full lg:w-[150px] shrink-0 pb-1 flex-col">
+                        <span class="font-semibold text-primary uppercase text-base">DIỆN TÍCH 1</span>
+                    </div>
+                    <div class="flex-1 w-full flex flex-row lg:grid lg:grid-cols-12 gap-2 lg:gap-7 items-end">
+                        <div
+                            class="w-[111px] md:w-[111px] lg:w-auto shrink-0 col-span-12 lg:col-span-3 flex flex-col justify-end">
+                            <span class="font-semibold text-primary uppercase text-[11px] lg:hidden mb-2 pl-2">DIỆN TÍCH
+                                1</span>
+                            <div class="relative">
+                                <select
+                                    class="w-full h-[30px] lg:h-[45px] px-2 lg:px-3 pr-5 lg:pr-6 border border-black/10 rounded-sm bg-transparent text-[9px] lg:text-[11px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
+                                    <option selected>HÌNH CHỮ NHẬT</option>
+                                    <option>HÌNH THANG</option>
+                                </select>
+                                <div
+                                    class="absolute right-1 lg:right-3 top-1/2 -translate-y-1/2 pointer-events-none text-secondary">
+                                    <svg class="w-2.5 h-2.5 lg:w-3 lg:h-3" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
 
-            <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
-              <label class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
-                CHIỀU RỘNG
-                <span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
-              </label>
-              <div class="relative">
-                <input type="text" placeholder="00" class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
-              </div>
-            </div>
+                        <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
+                            <label
+                                class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
+                                CHIỀU DÀI
+                                <span
+                                    class="block text-[7px] lg:text-[12px] font-normal italic normal-case text-secondary/70 mt-[2px] lg:mt-1 tracking-normal">Chiều
+                                    tính diềm mái</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" placeholder="00"
+                                    class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
+                                <span
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
+                            </div>
+                        </div>
 
-            <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2" style="display: none">
-              <label class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
-                CHIỀU CAO
-                <span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
-              </label>
-              <div class="relative">
-                <input type="text" placeholder="00" class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
-              </div>
-            </div>
-          </div>
-        </div>
+                        <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
+                            <label
+                                class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
+                                CHIỀU RỘNG
+                                <span
+                                    class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" placeholder="00"
+                                    class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
+                                <span
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
+                            </div>
+                        </div>
 
-        <div class="flex flex-col lg:flex-row gap-2 lg:gap-4 items-start lg:items-end mb-6 lg:mb-0">
-          <div class="hidden lg:flex w-full lg:w-[150px] shrink-0 pb-1 flex-col">
-            <span class="font-semibold text-primary uppercase text-base">DIỆN TÍCH 2</span>
-            <button class="text-[14px] text-secondary underline text-left font-bold w-fit ml-4 mt-1">Loại bỏ</button>
-          </div>
-          <div class="flex-1 w-full flex flex-row lg:grid lg:grid-cols-12 gap-2 lg:gap-7 items-end">
-            <div class="w-[111px] md:w-[111px] lg:w-auto shrink-0 col-span-12 lg:col-span-3 flex flex-col justify-end">
-              <div class="flex items-center gap-2 lg:hidden mb-2 pl-2">
-                <span class="font-semibold text-primary uppercase text-[11px] leading-tight">DIỆN TÍCH 2</span>
-                <button class="text-[8px] text-secondary/70 underline italic font-bold">Loại bỏ</button>
-              </div>
-              <div class="relative">
-                <select class="w-full h-[30px] lg:h-[45px] px-2 lg:px-3 pr-5 lg:pr-6 border border-black/10 rounded-sm bg-transparent text-[9px] lg:text-[11px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
-                  <option>HÌNH CHỮ NHẬT</option>
-                  <option selected>HÌNH THANG</option>
-                </select>
-                <div class="absolute right-1 lg:right-3 top-1/2 -translate-y-1/2 pointer-events-none text-secondary">
-                  <svg class="w-2.5 h-2.5 lg:w-3 lg:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
+                        <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2" style="display: none">
+                            <label
+                                class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
+                                CHIỀU CAO
+                                <span
+                                    class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" placeholder="00"
+                                    class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
+                                <span
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+
+                <div class="flex flex-col lg:flex-row gap-2 lg:gap-4 items-start lg:items-end mb-6 lg:mb-0">
+                    <div class="hidden lg:flex w-full lg:w-[150px] shrink-0 pb-1 flex-col">
+                        <span class="font-semibold text-primary uppercase text-base">DIỆN TÍCH 2</span>
+                        <button class="text-[14px] text-secondary underline text-left font-bold w-fit ml-4 mt-1">Loại
+                            bỏ</button>
+                    </div>
+                    <div class="flex-1 w-full flex flex-row lg:grid lg:grid-cols-12 gap-2 lg:gap-7 items-end">
+                        <div
+                            class="w-[111px] md:w-[111px] lg:w-auto shrink-0 col-span-12 lg:col-span-3 flex flex-col justify-end">
+                            <div class="flex items-center gap-2 lg:hidden mb-2 pl-2">
+                                <span class="font-semibold text-primary uppercase text-[11px] leading-tight">DIỆN TÍCH
+                                    2</span>
+                                <button class="text-[8px] text-secondary/70 underline italic font-bold">Loại
+                                    bỏ</button>
+                            </div>
+                            <div class="relative">
+                                <select
+                                    class="w-full h-[30px] lg:h-[45px] px-2 lg:px-3 pr-5 lg:pr-6 border border-black/10 rounded-sm bg-transparent text-[9px] lg:text-[11px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
+                                    <option>HÌNH CHỮ NHẬT</option>
+                                    <option selected>HÌNH THANG</option>
+                                </select>
+                                <div
+                                    class="absolute right-1 lg:right-3 top-1/2 -translate-y-1/2 pointer-events-none text-secondary">
+                                    <svg class="w-2.5 h-2.5 lg:w-3 lg:h-3" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
+                            <label
+                                class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
+                                ĐÁY LỚN
+                                <span
+                                    class="block text-[7px] lg:text-[12px] font-normal italic normal-case text-secondary/70 mt-[2px] lg:mt-1 tracking-normal">Chiều
+                                    tính diềm mái</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" placeholder="00"
+                                    class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
+                                <span
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
+                            <label
+                                class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
+                                ĐÁY BÉ
+                                <span
+                                    class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" placeholder="00"
+                                    class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
+                                <span
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
+                            <label
+                                class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
+                                CHIỀU CAO
+                                <span
+                                    class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" placeholder="00"
+                                    class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
+                                <span
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button class="text-secondary font-semibold text-sm underline">+ Thêm diện tích</button>
+                </div>
+
+                <button
+                    class="w-full py-4 bg-secondary text-white text-sm uppercase tracking-widest rounded-sm shadow-md hover:bg-secondary/90 hover:scale-[1.01] transition-all duration-300">TÍNH
+                    TOÁN KHỐI LƯỢNG</button>
+
+                <div class="pt-8">
+                    <div class="grid grid-cols-12 gap-4 pb-4 items-center">
+                        <div class="col-span-6 md:col-span-5">
+                            <h4 class="font-semibold text-primary uppercase text-base tracking-wider">KẾT QUẢ</h4>
+                        </div>
+                        <div class="col-span-3 md:col-span-4 text-center">
+                            <span class="text-base font-semibold text-primary">Định mức</span>
+                        </div>
+                        <div class="col-span-3 md:col-span-3 text-right">
+                            <span class="text-base font-semibold text-primary">Số lượng</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-12 gap-4 items-center">
+                            <div class="col-span-3 md:col-span-3"><span
+                                    class="text-primary/80 font-medium text-base">Ngói âm</span></div>
+                            <div class="col-span-3 md:col-span-2 text-right"><span
+                                    class="text-primary/80 font-medium text-base">00 m²</span></div>
+                            <div class="col-span-3 md:col-span-4 text-center"><span
+                                    class="text-primary/80 font-medium text-base">40 viên/m²</span></div>
+                            <div class="col-span-3 md:col-span-3 text-right"><span
+                                    class="text-primary font-extrabold text-[16px]">00 viên</span></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-4 items-center">
+                            <div class="col-span-3 md:col-span-3"><span
+                                    class="text-primary/80 font-medium text-base">Ngói dương</span></div>
+                            <div class="col-span-3 md:col-span-2 text-right"><span
+                                    class="text-primary/80 font-medium text-base">00 m²</span></div>
+                            <div class="col-span-3 md:col-span-4 text-center"><span
+                                    class="text-primary/80 font-medium text-base">27 viên/m²</span></div>
+                            <div class="col-span-3 md:col-span-3 text-right"><span
+                                    class="text-primary font-extrabold text-[16px]">00 viên</span></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-4 items-center">
+                            <div class="col-span-3 md:col-span-3"><span
+                                    class="text-primary/80 font-medium text-base">Diềm</span></div>
+                            <div class="col-span-3 md:col-span-2 text-right"><span
+                                    class="text-primary/80 font-medium text-base">00 md</span></div>
+                            <div class="col-span-3 md:col-span-4 text-center"><span
+                                    class="text-primary/80 font-medium text-base">5 cặp/md</span></div>
+                            <div class="col-span-3 md:col-span-3 text-right"><span
+                                    class="text-primary font-extrabold text-[16px]">00 cặp</span></div>
+                        </div>
+                    </div>
+                    <hr class="border-black/10 mt-8 mb-8" />
+                </div>
+
+                <div class="space-y-6">
+                    <input type="checkbox" id="extra-loss" class="peer sr-only" />
+                    <label for="extra-loss"
+                        class="w-fit flex items-center gap-2 cursor-pointer select-none peer-checked:[&_.loss-checkbox-box]:border-secondary peer-checked:[&_.loss-checkbox-box]:bg-secondary peer-checked:[&_.loss-checkbox-icon]:opacity-100 peer-focus-visible:[&_.loss-checkbox-box]:ring-2 peer-focus-visible:[&_.loss-checkbox-box]:ring-secondary/40 peer-focus-visible:[&_.loss-checkbox-box]:ring-offset-1">
+                        <span
+                            class="loss-checkbox-box relative flex h-5 w-5 items-center justify-center border border-black/20 rounded-none bg-transparent transition-all">
+                            <svg class="loss-checkbox-icon h-3 w-3 text-white opacity-0 transition-opacity"
+                                viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M4 10.5L8 14.5L16 6.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </span>
+                        <span class="text-[15px] font-medium text-primary/80">Cộng thêm hao hụt</span>
+                        <span class="group relative inline-block ml-1">
+                            <span
+                                class="w-5 h-5 rounded-full text-primary border-primary border flex items-center justify-center text-[12px] font-bold">?</span>
+                            <span
+                                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-primary text-white text-[12px] rounded-sm opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity shadow-lg z-10 leading-relaxed">
+                                Tính toán dựa trên độ dốc mái thực tế và hao hụt vận chuyển/thi công.
+                            </span>
+                        </span>
+                    </label>
+
+                    <div class="pl-7 space-y-4 hidden peer-checked:block">
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <div class="relative flex items-center justify-center">
+                                <input type="radio" name="loss-rate"
+                                    class="peer appearance-none w-5 h-5 border border-black/30 rounded-full checked:border-primary transition-all cursor-pointer"
+                                    checked />
+                                <div
+                                    class="absolute w-2.5 h-2.5 rounded-full bg-primary scale-0 peer-checked:scale-100 transition-transform">
+                                </div>
+                            </div>
+                            <span class="text-[14px] text-primary/70 font-medium">Thêm 15% (Độ dốc mái)</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <div class="relative flex items-center justify-center">
+                                <input type="radio" name="loss-rate"
+                                    class="peer appearance-none w-5 h-5 border border-black/30 rounded-full checked:border-primary transition-all cursor-pointer" />
+                                <div
+                                    class="absolute w-2.5 h-2.5 rounded-full bg-primary scale-0 peer-checked:scale-100 transition-transform">
+                                </div>
+                            </div>
+                            <span class="text-[14px] text-primary/70 font-medium">Thêm 20% (Độ dốc mái + hao vỡ)</span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
-            <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
-              <label class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
-                ĐÁY LỚN
-                <span class="block text-[7px] lg:text-[12px] font-normal italic normal-case text-secondary/70 mt-[2px] lg:mt-1 tracking-normal">Chiều tính diềm mái</span>
-              </label>
-              <div class="relative">
-                <input type="text" placeholder="00" class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
-              </div>
+            <div class="flex flex-col gap-12 lg:gap-20 col-span-1 lg:col-span-2">
+                <img src="{{ asset('assets/images/weight-01.svg') }}" alt="Cách đo mái chữ nhật"
+                    class="w-full h-auto object-contain" />
+                <img src="{{ asset('assets/images/weight-02.svg') }}" alt="Cách đo mái hình thang"
+                    class="w-full h-auto object-contain" />
+                <img src="{{ asset('assets/images/weight-03.svg') }}" alt="Cách đo diện tích mái"
+                    class="w-full h-auto object-contain" />
             </div>
-
-            <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
-              <label class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
-                ĐÁY BÉ
-                <span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
-              </label>
-              <div class="relative">
-                <input type="text" placeholder="00" class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
-              </div>
-            </div>
-
-            <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
-              <label class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
-                CHIỀU CAO
-                <span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
-              </label>
-              <div class="relative">
-                <input type="text" placeholder="00" class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
-                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <div class="text-center">
-          <button class="text-secondary font-semibold text-sm underline">+ Thêm diện tích</button>
-        </div>
-
-        <button class="w-full py-4 bg-secondary text-white text-sm uppercase tracking-widest rounded-sm shadow-md hover:bg-secondary/90 hover:scale-[1.01] transition-all duration-300">TÍNH TOÁN KHỐI LƯỢNG</button>
-
-        <div class="pt-8">
-          <div class="grid grid-cols-12 gap-4 pb-4 items-center">
-            <div class="col-span-6 md:col-span-5">
-              <h4 class="font-semibold text-primary uppercase text-base tracking-wider">KẾT QUẢ</h4>
-            </div>
-            <div class="col-span-3 md:col-span-4 text-center">
-              <span class="text-base font-semibold text-primary">Định mức</span>
-            </div>
-            <div class="col-span-3 md:col-span-3 text-right">
-              <span class="text-base font-semibold text-primary">Số lượng</span>
-            </div>
-          </div>
-
-          <div class="space-y-4">
-            <div class="grid grid-cols-12 gap-4 items-center">
-              <div class="col-span-3 md:col-span-3"><span class="text-primary/80 font-medium text-base">Ngói âm</span></div>
-              <div class="col-span-3 md:col-span-2 text-right"><span class="text-primary/80 font-medium text-base">00 m²</span></div>
-              <div class="col-span-3 md:col-span-4 text-center"><span class="text-primary/80 font-medium text-base">40 viên/m²</span></div>
-              <div class="col-span-3 md:col-span-3 text-right"><span class="text-primary font-extrabold text-[16px]">00 viên</span></div>
-            </div>
-
-            <div class="grid grid-cols-12 gap-4 items-center">
-              <div class="col-span-3 md:col-span-3"><span class="text-primary/80 font-medium text-base">Ngói dương</span></div>
-              <div class="col-span-3 md:col-span-2 text-right"><span class="text-primary/80 font-medium text-base">00 m²</span></div>
-              <div class="col-span-3 md:col-span-4 text-center"><span class="text-primary/80 font-medium text-base">27 viên/m²</span></div>
-              <div class="col-span-3 md:col-span-3 text-right"><span class="text-primary font-extrabold text-[16px]">00 viên</span></div>
-            </div>
-
-            <div class="grid grid-cols-12 gap-4 items-center">
-              <div class="col-span-3 md:col-span-3"><span class="text-primary/80 font-medium text-base">Diềm</span></div>
-              <div class="col-span-3 md:col-span-2 text-right"><span class="text-primary/80 font-medium text-base">00 md</span></div>
-              <div class="col-span-3 md:col-span-4 text-center"><span class="text-primary/80 font-medium text-base">5 cặp/md</span></div>
-              <div class="col-span-3 md:col-span-3 text-right"><span class="text-primary font-extrabold text-[16px]">00 cặp</span></div>
-            </div>
-          </div>
-          <hr class="border-black/10 mt-8 mb-8" />
-        </div>
-
-        <div class="space-y-6">
-          <input type="checkbox" id="extra-loss" class="peer sr-only" />
-          <label
-            for="extra-loss"
-            class="w-fit flex items-center gap-2 cursor-pointer select-none peer-checked:[&_.loss-checkbox-box]:border-secondary peer-checked:[&_.loss-checkbox-box]:bg-secondary peer-checked:[&_.loss-checkbox-icon]:opacity-100 peer-focus-visible:[&_.loss-checkbox-box]:ring-2 peer-focus-visible:[&_.loss-checkbox-box]:ring-secondary/40 peer-focus-visible:[&_.loss-checkbox-box]:ring-offset-1"
-          >
-            <span class="loss-checkbox-box relative flex h-5 w-5 items-center justify-center border border-black/20 rounded-none bg-transparent transition-all">
-              <svg class="loss-checkbox-icon h-3 w-3 text-white opacity-0 transition-opacity" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M4 10.5L8 14.5L16 6.5" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </span>
-            <span class="text-[15px] font-medium text-primary/80">Cộng thêm hao hụt</span>
-            <span class="group relative inline-block ml-1">
-              <span class="w-5 h-5 rounded-full text-primary border-primary border flex items-center justify-center text-[12px] font-bold">?</span>
-              <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-primary text-white text-[12px] rounded-sm opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity shadow-lg z-10 leading-relaxed">
-                Tính toán dựa trên độ dốc mái thực tế và hao hụt vận chuyển/thi công.
-              </span>
-            </span>
-          </label>
-
-          <div class="pl-7 space-y-4 hidden peer-checked:block">
-            <label class="flex items-center gap-3 cursor-pointer group">
-              <div class="relative flex items-center justify-center">
-                <input type="radio" name="loss-rate" class="peer appearance-none w-5 h-5 border border-black/30 rounded-full checked:border-primary transition-all cursor-pointer" checked />
-                <div class="absolute w-2.5 h-2.5 rounded-full bg-primary scale-0 peer-checked:scale-100 transition-transform"></div>
-              </div>
-              <span class="text-[14px] text-primary/70 font-medium">Thêm 15% (Độ dốc mái)</span>
-            </label>
-            <label class="flex items-center gap-3 cursor-pointer group">
-              <div class="relative flex items-center justify-center">
-                <input type="radio" name="loss-rate" class="peer appearance-none w-5 h-5 border border-black/30 rounded-full checked:border-primary transition-all cursor-pointer" />
-                <div class="absolute w-2.5 h-2.5 rounded-full bg-primary scale-0 peer-checked:scale-100 transition-transform"></div>
-              </div>
-              <span class="text-[14px] text-primary/70 font-medium">Thêm 20% (Độ dốc mái + hao vỡ)</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col gap-12 lg:gap-20 col-span-1 lg:col-span-2">
-        <img src="{{ asset('assets/images/weight-01.svg') }}" alt="Cách đo mái chữ nhật" class="w-full h-auto object-contain" />
-        <img src="{{ asset('assets/images/weight-02.svg') }}" alt="Cách đo mái hình thang" class="w-full h-auto object-contain" />
-        <img src="{{ asset('assets/images/weight-03.svg') }}" alt="Cách đo diện tích mái" class="w-full h-auto object-contain" />
-      </div>
     </div>
-  </div>
 </section>
 
 @push('scripts')
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const calculatorSection = document.querySelector("[data-weight-calculator]");
-    if (!calculatorSection) return;
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const calculatorSection = document.querySelector("[data-weight-calculator]");
+            if (!calculatorSection) return;
 
-    const roofStyleSelect = calculatorSection.querySelector("#roof-style");
-    const tileTypeSelect = calculatorSection.querySelector("#tile-type");
-    const areasContainer = calculatorSection.querySelector(".space-y-4.col-span-1.lg\\:col-span-3");
+            const roofStyleSelect = calculatorSection.querySelector("#roof-style");
+            const tileTypeSelect = calculatorSection.querySelector("#tile-type");
+            const areasContainer = calculatorSection.querySelector(".space-y-4.col-span-1.lg\\:col-span-3");
 
-    if (!areasContainer || !roofStyleSelect || !tileTypeSelect) return;
+            if (!areasContainer || !roofStyleSelect || !tileTypeSelect) return;
 
-    const allInitialBlocks = Array.from(areasContainer.children).filter(
-      (el) => el.classList.contains("flex") && el.querySelector("span")?.textContent.includes("DIỆN TÍCH"),
-    );
+            const allInitialBlocks = Array.from(areasContainer.children).filter(
+                (el) => el.classList.contains("flex") && el.querySelector("span")?.textContent.includes(
+                    "DIỆN TÍCH"),
+            );
 
-    const masterTemplate = (
-      allInitialBlocks.find((block) => {
-        const removeBtn = block.querySelector("button.underline");
-        return removeBtn && removeBtn.textContent.includes("Loại bỏ");
-      }) || allInitialBlocks[allInitialBlocks.length - 1]
-    )?.cloneNode(true);
+            const masterTemplate = (
+                allInitialBlocks.find((block) => {
+                    const removeBtn = block.querySelector("button.underline");
+                    return removeBtn && removeBtn.textContent.includes("Loại bỏ");
+                }) || allInitialBlocks[allInitialBlocks.length - 1]
+            )?.cloneNode(true);
 
-    const buttons = areasContainer.querySelectorAll("button");
-    const addAreaBtn = Array.from(buttons).find((btn) => btn.textContent.includes("+ Thêm diện tích"));
-    const calculateBtn = Array.from(buttons).find((btn) => btn.textContent.includes("TÍNH TOÁN KHỐI LƯỢNG"));
+            const buttons = areasContainer.querySelectorAll("button");
+            const addAreaBtn = Array.from(buttons).find((btn) => btn.textContent.includes("+ Thêm diện tích"));
+            const calculateBtn = Array.from(buttons).find((btn) => btn.textContent.includes(
+                "TÍNH TOÁN KHỐI LƯỢNG"));
 
-    const resultRows = calculatorSection.querySelectorAll(".pt-8 .space-y-4 > .grid.grid-cols-12");
-    const resultTilesAm = resultRows[0];
-    const resultTilesDuong = resultRows[1];
-    const resultDiem = resultRows[2];
+            const resultRows = calculatorSection.querySelectorAll(".pt-8 .space-y-4 > .grid.grid-cols-12");
+            const resultTilesAm = resultRows[0];
+            const resultTilesDuong = resultRows[1];
+            const resultDiem = resultRows[2];
 
-    const extraLossCheckbox = calculatorSection.querySelector("#extra-loss");
-    const lossRadios = Array.from(calculatorSection.querySelectorAll('input[name="loss-rate"]'));
+            const extraLossCheckbox = calculatorSection.querySelector("#extra-loss");
+            const lossRadios = Array.from(calculatorSection.querySelectorAll('input[name="loss-rate"]'));
 
-    const vnFormatter = new Intl.NumberFormat("vi-VN");
-    const format = (num) => vnFormatter.format(num);
+            const vnFormatter = new Intl.NumberFormat("vi-VN");
+            const format = (num) => vnFormatter.format(num);
 
-    const getAreaBlocks = () =>
-      Array.from(areasContainer.children).filter(
-        (el) => el.classList.contains("flex") && Array.from(el.querySelectorAll("span")).some((span) => /DIỆN\s*TÍCH/i.test(span.textContent || ""))
-      );
+            const getAreaBlocks = () =>
+                Array.from(areasContainer.children).filter(
+                    (el) => el.classList.contains("flex") && Array.from(el.querySelectorAll("span")).some((span) =>
+                        /DIỆN\s*TÍCH/i.test(span.textContent || ""))
+                );
 
-    const getAreaTitles = (block) =>
-      Array.from(block.querySelectorAll("span")).filter((span) => /DIỆN\s*TÍCH/i.test(span.textContent || ""));
+            const getAreaTitles = (block) =>
+                Array.from(block.querySelectorAll("span")).filter((span) => /DIỆN\s*TÍCH/i.test(span.textContent ||
+                    ""));
 
-    const updateCoeffLabels = () => {
-      const selectedTile = tileTypeSelect.options[tileTypeSelect.selectedIndex];
-      if (!selectedTile || selectedTile.value === "") {
-        if (resultTilesAm) resultTilesAm.querySelectorAll("span")[2].textContent = "-- viên/m²";
-        if (resultTilesDuong) resultTilesDuong.querySelectorAll("span")[2].textContent = "-- viên/m²";
-        if (resultDiem) resultDiem.querySelectorAll("span")[2].textContent = "-- cặp/md";
-        return;
-      }
-      const amCoeff = Number.parseFloat(selectedTile.dataset.am || "0") || 40;
-      const duongCoeff = Number.parseFloat(selectedTile.dataset.duong || "0") || 27;
-      const diemCoeff = Number.parseFloat(selectedTile.dataset.diem || "0") || 5;
-      if (resultTilesAm) { const coeffSpan = resultTilesAm.querySelectorAll("span")[2]; if (coeffSpan) coeffSpan.textContent = `${amCoeff} viên/m²`; }
-      if (resultTilesDuong) { const coeffSpan = resultTilesDuong.querySelectorAll("span")[2]; if (coeffSpan) coeffSpan.textContent = `${duongCoeff} viên/m²`; }
-      if (resultDiem) { const coeffSpan = resultDiem.querySelectorAll("span")[2]; if (coeffSpan) coeffSpan.textContent = `${diemCoeff} cặp/md`; }
-    };
+            const updateCoeffLabels = () => {
+                const selectedTile = tileTypeSelect.options[tileTypeSelect.selectedIndex];
+                if (!selectedTile || selectedTile.value === "") {
+                    if (resultTilesAm) resultTilesAm.querySelectorAll("span")[2].textContent = "-- viên/m²";
+                    if (resultTilesDuong) resultTilesDuong.querySelectorAll("span")[2].textContent =
+                        "-- viên/m²";
+                    if (resultDiem) resultDiem.querySelectorAll("span")[2].textContent = "-- cặp/md";
+                    return;
+                }
+                const amCoeff = Number.parseFloat(selectedTile.dataset.am || "0") || 40;
+                const duongCoeff = Number.parseFloat(selectedTile.dataset.duong || "0") || 27;
+                const diemCoeff = Number.parseFloat(selectedTile.dataset.diem || "0") || 5;
+                if (resultTilesAm) {
+                    const coeffSpan = resultTilesAm.querySelectorAll("span")[2];
+                    if (coeffSpan) coeffSpan.textContent = `${amCoeff} viên/m²`;
+                }
+                if (resultTilesDuong) {
+                    const coeffSpan = resultTilesDuong.querySelectorAll("span")[2];
+                    if (coeffSpan) coeffSpan.textContent = `${duongCoeff} viên/m²`;
+                }
+                if (resultDiem) {
+                    const coeffSpan = resultDiem.querySelectorAll("span")[2];
+                    if (coeffSpan) coeffSpan.textContent = `${diemCoeff} cặp/md`;
+                }
+            };
 
-    const updateResults = () => {
-      let totalS = 0;
-      let totalL = 0;
-      getAreaBlocks().forEach((block) => {
-        const select = block.querySelector("select");
-        if (!select) return;
-        const inputs = Array.from(block.querySelectorAll("input")).filter(
-          (input) => input.closest(".relative")?.parentElement.style.display !== "none",
-        );
-        const type = select.value || select.options[select.selectedIndex].text;
-        let area = 0;
-        let length = 0;
-        if (type.includes("CHỮ NHẬT")) {
-          const dai = Number.parseFloat(inputs[0]?.value || "0") || 0;
-          const rong = Number.parseFloat(inputs[1]?.value || "0") || 0;
-          area = dai * rong;
-          length = dai;
-        } else if (type.includes("THANG")) {
-          const dayLon = Number.parseFloat(inputs[0]?.value || "0") || 0;
-          const dayBe = Number.parseFloat(inputs[1]?.value || "0") || 0;
-          const cao = Number.parseFloat(inputs[2]?.value || "0") || 0;
-          area = ((dayLon + dayBe) * cao) / 2;
-          length = dayLon;
-        }
-        totalS += area;
-        totalL += length;
-      });
+            const updateResults = () => {
+                let totalS = 0;
+                let totalL = 0;
+                getAreaBlocks().forEach((block) => {
+                    const select = block.querySelector("select");
+                    if (!select) return;
+                    const inputs = Array.from(block.querySelectorAll("input")).filter(
+                        (input) => input.closest(".relative")?.parentElement.style.display !==
+                        "none",
+                    );
+                    const type = select.value || select.options[select.selectedIndex].text;
+                    let area = 0;
+                    let length = 0;
+                    if (type.includes("CHỮ NHẬT")) {
+                        const dai = Number.parseFloat(inputs[0]?.value || "0") || 0;
+                        const rong = Number.parseFloat(inputs[1]?.value || "0") || 0;
+                        area = dai * rong;
+                        length = dai;
+                    } else if (type.includes("THANG")) {
+                        const dayLon = Number.parseFloat(inputs[0]?.value || "0") || 0;
+                        const dayBe = Number.parseFloat(inputs[1]?.value || "0") || 0;
+                        const cao = Number.parseFloat(inputs[2]?.value || "0") || 0;
+                        area = ((dayLon + dayBe) * cao) / 2;
+                        length = dayLon;
+                    }
+                    totalS += area;
+                    totalL += length;
+                });
 
-      let factor = 1;
-      if (extraLossCheckbox?.checked) {
-        const checkedRadio = lossRadios.find((radio) => radio.checked);
-        const label = checkedRadio?.closest("label")?.textContent || "";
-        if (label.includes("15%")) factor = 1.15;
-        if (label.includes("20%")) factor = 1.2;
-      }
-      const styleFactor = roofStyleSelect.value !== ""
-        ? Number.parseFloat(roofStyleSelect.options[roofStyleSelect.selectedIndex].dataset.factor || "1") || 1
-        : 0;
-      factor *= styleFactor;
-      updateCoeffLabels();
+                let factor = 1;
+                if (extraLossCheckbox?.checked) {
+                    const checkedRadio = lossRadios.find((radio) => radio.checked);
+                    const label = checkedRadio?.closest("label")?.textContent || "";
+                    if (label.includes("15%")) factor = 1.15;
+                    if (label.includes("20%")) factor = 1.2;
+                }
+                const styleFactor = roofStyleSelect.value !== "" ?
+                    Number.parseFloat(roofStyleSelect.options[roofStyleSelect.selectedIndex].dataset.factor ||
+                        "1") || 1 :
+                    0;
+                factor *= styleFactor;
+                updateCoeffLabels();
 
-      const selectedTile = tileTypeSelect.options[tileTypeSelect.selectedIndex];
-      const amCoeff = selectedTile?.value ? Number.parseFloat(selectedTile.dataset.am || "0") || 0 : 0;
-      const duongCoeff = selectedTile?.value ? Number.parseFloat(selectedTile.dataset.duong || "0") || 0 : 0;
-      const diemCoeff = selectedTile?.value ? Number.parseFloat(selectedTile.dataset.diem || "0") || 0 : 0;
-      const ngoiAm = Math.ceil(totalS * amCoeff * factor);
-      const ngoiDuong = Math.ceil(totalS * duongCoeff * factor);
-      const diem = Math.ceil(totalL * diemCoeff * factor);
+                const selectedTile = tileTypeSelect.options[tileTypeSelect.selectedIndex];
+                const amCoeff = selectedTile?.value ? Number.parseFloat(selectedTile.dataset.am || "0") || 0 :
+                    0;
+                const duongCoeff = selectedTile?.value ? Number.parseFloat(selectedTile.dataset.duong || "0") ||
+                    0 : 0;
+                const diemCoeff = selectedTile?.value ? Number.parseFloat(selectedTile.dataset.diem || "0") ||
+                    0 : 0;
+                const ngoiAm = Math.ceil(totalS * amCoeff * factor);
+                const ngoiDuong = Math.ceil(totalS * duongCoeff * factor);
+                const diem = Math.ceil(totalL * diemCoeff * factor);
 
-      if (resultTilesAm) { resultTilesAm.querySelectorAll("span")[1].textContent = `${format(totalS)} m²`; resultTilesAm.querySelectorAll("span")[3].textContent = `${format(ngoiAm)} viên`; }
-      if (resultTilesDuong) { resultTilesDuong.querySelectorAll("span")[1].textContent = `${format(totalS)} m²`; resultTilesDuong.querySelectorAll("span")[3].textContent = `${format(ngoiDuong)} viên`; }
-      if (resultDiem) { resultDiem.querySelectorAll("span")[1].textContent = `${format(totalL)} md`; resultDiem.querySelectorAll("span")[3].textContent = `${format(diem)} cặp`; }
-    };
+                if (resultTilesAm) {
+                    resultTilesAm.querySelectorAll("span")[1].textContent = `${format(totalS)} m²`;
+                    resultTilesAm.querySelectorAll("span")[3].textContent = `${format(ngoiAm)} viên`;
+                }
+                if (resultTilesDuong) {
+                    resultTilesDuong.querySelectorAll("span")[1].textContent = `${format(totalS)} m²`;
+                    resultTilesDuong.querySelectorAll("span")[3].textContent = `${format(ngoiDuong)} viên`;
+                }
+                if (resultDiem) {
+                    resultDiem.querySelectorAll("span")[1].textContent = `${format(totalL)} md`;
+                    resultDiem.querySelectorAll("span")[3].textContent = `${format(diem)} cặp`;
+                }
+            };
 
-    const handleTypeChange = (block) => {
-      const select = block.querySelector("select");
-      const inputGrid = block.querySelector(".lg\\:grid-cols-12") || block.querySelector(".flex-1.w-full");
-      if (!select || !inputGrid) return;
-      const type = select.value || select.options[select.selectedIndex].text;
-      const inputWrappers = Array.from(inputGrid.children);
-      if (type.includes("CHỮ NHẬT")) {
-        const label1 = inputWrappers[1]?.querySelector("label");
-        if (label1) { label1.innerHTML = 'CHIỀU DÀI\n<span class="block text-[7px] lg:text-[12px] font-normal italic normal-case text-secondary/70 mt-[2px] lg:mt-1 tracking-normal">Chiều tính diềm mái</span>'; }
-        inputWrappers[1]?.classList.replace("col-span-4", "col-span-6");
-        const label2 = inputWrappers[2]?.querySelector("label");
-        if (label2) { label2.innerHTML = 'CHIỀU RỘNG\n<span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>'; }
-        inputWrappers[2]?.classList.replace("col-span-4", "col-span-6");
-        if (inputWrappers[3]) inputWrappers[3].style.display = "none";
-      } else if (type.includes("THANG")) {
-        const label1 = inputWrappers[1]?.querySelector("label");
-        if (label1) { label1.innerHTML = 'ĐÁY LỚN\n<span class="block text-[7px] lg:text-[12px] font-normal italic normal-case text-secondary/70 mt-[2px] lg:mt-1 tracking-normal">Chiều tính diềm mái</span>'; }
-        inputWrappers[1]?.classList.replace("col-span-6", "col-span-4");
-        const label2 = inputWrappers[2]?.querySelector("label");
-        if (label2) { label2.innerHTML = 'ĐÁY BÉ\n<span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>'; }
-        inputWrappers[2]?.classList.replace("col-span-6", "col-span-4");
-        if (inputWrappers[3]) {
-          inputWrappers[3].style.removeProperty("display");
-          inputWrappers[3]?.classList.replace("col-span-6", "col-span-4");
-          const label3 = inputWrappers[3].querySelector("label");
-          if (label3) { label3.innerHTML = 'CHIỀU CAO\n<span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>'; }
-        }
-      }
-      [inputWrappers[1], inputWrappers[2], inputWrappers[3]].forEach((wrapper) => {
-        const label = wrapper?.querySelector("label");
-        if (!label) return;
-        label.classList.add("flex", "flex-col", "items-center", "justify-end", "lg:h-[44px]");
-      });
-    };
+            const handleTypeChange = (block) => {
+                const select = block.querySelector("select");
+                const inputGrid = block.querySelector(".lg\\:grid-cols-12") || block.querySelector(
+                    ".flex-1.w-full");
+                if (!select || !inputGrid) return;
+                const type = select.value || select.options[select.selectedIndex].text;
+                const inputWrappers = Array.from(inputGrid.children);
+                if (type.includes("CHỮ NHẬT")) {
+                    const label1 = inputWrappers[1]?.querySelector("label");
+                    if (label1) {
+                        label1.innerHTML =
+                            'CHIỀU DÀI\n<span class="block text-[7px] lg:text-[12px] font-normal italic normal-case text-secondary/70 mt-[2px] lg:mt-1 tracking-normal">Chiều tính diềm mái</span>';
+                    }
+                    inputWrappers[1]?.classList.replace("col-span-4", "col-span-6");
+                    const label2 = inputWrappers[2]?.querySelector("label");
+                    if (label2) {
+                        label2.innerHTML =
+                            'CHIỀU RỘNG\n<span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>';
+                    }
+                    inputWrappers[2]?.classList.replace("col-span-4", "col-span-6");
+                    if (inputWrappers[3]) inputWrappers[3].style.display = "none";
+                } else if (type.includes("THANG")) {
+                    const label1 = inputWrappers[1]?.querySelector("label");
+                    if (label1) {
+                        label1.innerHTML =
+                            'ĐÁY LỚN\n<span class="block text-[7px] lg:text-[12px] font-normal italic normal-case text-secondary/70 mt-[2px] lg:mt-1 tracking-normal">Chiều tính diềm mái</span>';
+                    }
+                    inputWrappers[1]?.classList.replace("col-span-6", "col-span-4");
+                    const label2 = inputWrappers[2]?.querySelector("label");
+                    if (label2) {
+                        label2.innerHTML =
+                            'ĐÁY BÉ\n<span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>';
+                    }
+                    inputWrappers[2]?.classList.replace("col-span-6", "col-span-4");
+                    if (inputWrappers[3]) {
+                        inputWrappers[3].style.removeProperty("display");
+                        inputWrappers[3]?.classList.replace("col-span-6", "col-span-4");
+                        const label3 = inputWrappers[3].querySelector("label");
+                        if (label3) {
+                            label3.innerHTML =
+                                'CHIỀU CAO\n<span class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>';
+                        }
+                    }
+                }
+                [inputWrappers[1], inputWrappers[2], inputWrappers[3]].forEach((wrapper) => {
+                    const label = wrapper?.querySelector("label");
+                    if (!label) return;
+                    label.classList.add("flex", "flex-col", "items-center", "justify-end",
+                        "lg:h-[44px]");
+                });
+            };
 
-    const renumberAreas = () => {
-      getAreaBlocks().forEach((block, index) => {
-        const titleSpans = getAreaTitles(block);
-        titleSpans.forEach((span) => { span.textContent = `DIỆN TÍCH ${index + 1}`; });
-      });
-    };
+            const renumberAreas = () => {
+                getAreaBlocks().forEach((block, index) => {
+                    const titleSpans = getAreaTitles(block);
+                    titleSpans.forEach((span) => {
+                        span.textContent = `DIỆN TÍCH ${index + 1}`;
+                    });
+                });
+            };
 
-    const setupListeners = (block) => {
-      const select = block.querySelector("select");
-      if (select) { select.addEventListener("change", () => handleTypeChange(block)); handleTypeChange(block); }
-      const removeBtns = block.querySelectorAll("button.underline");
-      removeBtns.forEach((removeBtn) => {
-        if (removeBtn && removeBtn.textContent.includes("Loại bỏ")) {
-          removeBtn.addEventListener("click", (event) => { event.preventDefault(); block.remove(); renumberAreas(); updateResults(); });
-        }
-      });
-    };
+            const setupListeners = (block) => {
+                const select = block.querySelector("select");
+                if (select) {
+                    select.addEventListener("change", () => handleTypeChange(block));
+                    handleTypeChange(block);
+                }
+                const removeBtns = block.querySelectorAll("button.underline");
+                removeBtns.forEach((removeBtn) => {
+                    if (removeBtn && removeBtn.textContent.includes("Loại bỏ")) {
+                        removeBtn.addEventListener("click", (event) => {
+                            event.preventDefault();
+                            block.remove();
+                            renumberAreas();
+                            updateResults();
+                        });
+                    }
+                });
+            };
 
-    const addArea = () => {
-      if (!masterTemplate) return;
-      const newBlock = masterTemplate.cloneNode(true);
-      newBlock.querySelectorAll("input").forEach((input) => { input.value = ""; });
-      const triggerDiv = addAreaBtn?.parentElement;
-      if (!triggerDiv) return;
-      triggerDiv.before(newBlock);
-      renumberAreas();
-      setupListeners(newBlock);
-    };
+            const addArea = () => {
+                if (!masterTemplate) return;
+                const newBlock = masterTemplate.cloneNode(true);
+                newBlock.querySelectorAll("input").forEach((input) => {
+                    input.value = "";
+                });
+                const triggerDiv = addAreaBtn?.parentElement;
+                if (!triggerDiv) return;
+                triggerDiv.before(newBlock);
+                renumberAreas();
+                setupListeners(newBlock);
+            };
 
-    getAreaBlocks().forEach(setupListeners);
-    addAreaBtn?.addEventListener("click", (event) => { event.preventDefault(); addArea(); });
-    calculateBtn?.addEventListener("click", (event) => { event.preventDefault(); updateResults(); });
-    extraLossCheckbox?.addEventListener("change", updateResults);
-    lossRadios.forEach((radio) => radio.addEventListener("change", updateResults));
+            getAreaBlocks().forEach(setupListeners);
+            addAreaBtn?.addEventListener("click", (event) => {
+                event.preventDefault();
+                addArea();
+            });
+            calculateBtn?.addEventListener("click", (event) => {
+                event.preventDefault();
+                updateResults();
+            });
+            extraLossCheckbox?.addEventListener("change", updateResults);
+            lossRadios.forEach((radio) => radio.addEventListener("change", updateResults));
 
-    const checkButtonState = () => {
-      if (!calculateBtn) return;
-      const isStyleSelected = roofStyleSelect.value !== "";
-      const isTileSelected = tileTypeSelect.value !== "";
-      calculateBtn.disabled = !(isStyleSelected && isTileSelected);
-      calculateBtn.classList.toggle("opacity-50", calculateBtn.disabled);
-      calculateBtn.classList.toggle("cursor-not-allowed", calculateBtn.disabled);
-    };
+            const checkButtonState = () => {
+                if (!calculateBtn) return;
+                const isStyleSelected = roofStyleSelect.value !== "";
+                const isTileSelected = tileTypeSelect.value !== "";
+                calculateBtn.disabled = !(isStyleSelected && isTileSelected);
+                calculateBtn.classList.toggle("opacity-50", calculateBtn.disabled);
+                calculateBtn.classList.toggle("cursor-not-allowed", calculateBtn.disabled);
+            };
 
-    roofStyleSelect.addEventListener("change", checkButtonState);
-    tileTypeSelect.addEventListener("change", () => { updateCoeffLabels(); checkButtonState(); });
-    checkButtonState();
-    updateResults();
-  });
-</script>
+            roofStyleSelect.addEventListener("change", checkButtonState);
+            tileTypeSelect.addEventListener("change", () => {
+                updateCoeffLabels();
+                checkButtonState();
+            });
+            checkButtonState();
+            updateResults();
+        });
+    </script>
 @endpush

@@ -75,8 +75,8 @@ Two route files loaded under a single `web` middleware group in `bootstrap/app.p
 - Guest/Auth redirects configured in `bootstrap/app.php`
 
 ### 3. Controller Layer
-- **Admin controllers** (36 files): Thin controllers that validate requests, delegate to services, and return redirect responses with flash messages
-- **Client controllers** (13 + 9 product pages): Query services, return view responses with data
+- **Admin controllers** (48 files): Thin controllers that validate requests, delegate to services, and return redirect responses with flash messages. OrderController handles list/detail/status-update with email notification.
+- **Client controllers** (27 total): 10 page controllers + 8 DichVuKhachHang controllers + 9 product page controllers. Query services, return view responses with data. HuongDanThiCongController and CatalogController provide dynamic customer service pages. TrangThaiDonHangController provides dynamic order status tracking with tab filtering.
 - All use constructor DI with `private readonly` service properties
 
 ### 4. Service Layer
@@ -86,14 +86,16 @@ Two route files loaded under a single `web` middleware group in `bootstrap/app.p
 - `GlobalProductCodeService`: Cross-table uniqueness validation for product codes
 
 ### 5. Model Layer
-- **42 Eloquent models**: Map to database tables with custom primary keys
+- **55 Eloquent models**: Map to database tables with custom primary keys
 - Define relationships, query scopes, attribute casting, and fillable/hidden attributes
 - Single-record pattern for product section models (no create/delete)
+- Order model includes `statusLabel()` static helper and `generateOrderCode()` method
+- ThiCong and Catalog models serve dynamic customer service content (installation guides, catalog PDFs)
 
 ### 6. Database Layer
 - **MariaDB** via `DB_CONNECTION=mariadb` in `.env`
-- **38 tables** from 5 migration files
-- All session/cache/queue storage uses `database` driver
+- **44 tables** from 7 migration files
+- All session/cache/queue storage uses `database` driver (queue actively used for email dispatch)
 - Soft delete via boolean `is_delete` column
 
 ## Request Flow Example (Admin Update)
@@ -187,6 +189,22 @@ Page Configuration Tables (static pages, single-record sections)
 
 Users table (separate, for admin auth)
 
+Customer Service Tables
+│
+├── ThiCong (installation guide: tieu_de, anh, link_youtube)
+└── Catalog (product catalogs: tieu_de, anh_dai_dien, file PDF)
+
+Commerce Tables
+│
+├── Orders (order_code THLC-YYYYMMDD-XXXX, status, payment_method: cod)
+├── OrderItems (polymorphic: product_type, product_id, variant_id)
+└── Coupons (discount codes with percent/fixed types)
+
+Mail & Queue
+│
+├── jobs (database queue driver, processes ShouldQueue mailables)
+└── failed_jobs (failed queue job tracking)
+
 ## Routing Strategy
 
 ```
@@ -212,6 +230,68 @@ Users table (separate, for admin auth)
 /du-an                     → Projects listing
 /gio-hang                  → Cart
 /thanh-toan                → Checkout
+/thanh-toan/ap-dung-ma     → Apply coupon (AJAX POST)
+/thanh-toan/go-ma          → Remove coupon (AJAX POST)
+/admin/orders              → Order list (paginated, latest first)
+/admin/orders/{order}      → Order detail with items + status update form
+/admin/coupons             → Coupon management (CRUD + restore)
+
+/dich-vu/huong-dan-thi-cong   → Installation guide (dynamic from ThiCong model)
+/dich-vu/tai-catalog          → Catalog list (dynamic from Catalog model, featured + grid)
+/dich-vu/tai-catalog/doc/{id} → PDF flipbook reader (standalone, PDF.js + StPageFlip)
+/trang-thai-don-hang       → Client order status tracking (auth required, tab filters)
+```
+
+## Email Notification Flow
+
+```
+1. Order placed → CartController::processCheckout():
+   - DB::transaction() creates Order + OrderItems
+   - Mail::to($order->email)->send(new OrderCreatedMail($order))
+   - OrderCreatedMail implements ShouldQueue → queued to jobs table
+
+2. Admin updates status → OrderController::update():
+   - Validates new status from [pending_payment, processing, shipping, completed, canceled, returned]
+   - Updates order status
+   - If status changed AND order has email:
+     Mail::to($order->email)->send(new OrderStatusUpdatedMail($order))
+   - OrderStatusUpdatedMail implements ShouldQueue → queued to jobs table
+
+3. Queue processing:
+   - php artisan queue:work processes jobs from database queue
+   - Both mailables use markdown templates in resources/views/emails/orders/
+   - Status updated email shows Vietnamese label via Order::statusLabel()
+```
+
+## Coupon/Discount Flow
+
+```
+1. Admin creates coupon in /admin/coupons:
+   - Sets title, code (unique), discount_type (percent/fixed), discount_value
+   - Optional: max_discount_amount, min_order_value, applicable_product_types (JSON array)
+   - Optional: usage_limit, start_date, end_date, banner_image, show_banner
+
+2. Customer applies coupon on checkout page /thanh-toan:
+   - JS fetch() POST to /thanh-toan/ap-dung-ma with code
+   - CartController::applyCoupon():
+     a. CouponService::validateAndCalculate(code, cart items)
+        - Check coupon exists, is_valid() (active, not deleted, within date range, not exceeded usage)
+        - Check min_order_value against CartService::getSubtotal()
+        - If applicable_product_types set: filter cart, skip non-matching items
+        - Calculate: percent = subtotal * discount_value / 100, capped at max_discount_amount
+                   OR fixed = min(discount_value, subtotal)
+     b. CartService::setCoupon(code) → stored in session th_cart_coupon
+     c. Return JSON { success, discount_amount, new_total, message }
+
+3. During checkout processCheckout():
+   - CartService::getTotal() calls getSubtotal() - getDiscountAmount()
+   - Coupon re-validated server-side before order creation
+   - DB::transaction(): save discount + coupon_code to Order, increment coupon used_count
+
+4. Customer removes coupon:
+   - JS fetch() POST to /thanh-toan/go-ma
+   - CartService::removeCoupon() → clears session
+   - Return JSON { success, subtotal, total }
 ```
 
 ## Authentication Flow
@@ -240,6 +320,6 @@ Role check on superadmin routes:
 All three use the `database` driver:
 - **Session**: Stored in `sessions` table (120-minute lifetime)
 - **Cache**: Stored in `cache` table
-- **Queue**: Stored in `jobs` table, processed via `php artisan queue:listen`
+- **Queue**: Stored in `jobs` table, processed via `php artisan queue:work`. Used for email dispatch (OrderCreatedMail and OrderStatusUpdatedMail implement `ShouldQueue`), ensuring non-blocking checkout and status update operations.
 
 This means no Redis or Memcached dependency, but performance may be limited under high load.

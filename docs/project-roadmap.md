@@ -50,22 +50,25 @@
 | 0% | SEO meta tags | Per-page title/description via `@props` |
 | 0% | News pages | Controller + routes exist, views need implementation |
 | 0% | Projects pages | Controller + routes exist, views need implementation |
-| 0% | Customer service pages | Controller + views exist, content may need refinement |
+| 100% | Customer service pages | Dynamic installation guide (ThiCong model), catalog list + PDF flipbook reader (Catalog model) |
 
 **Deliverables**: Fully functional public website displaying product data from the database.
 
 ---
 
-## Phase 4: Cart & Checkout (IN PROGRESS)
+## Phase 4: Cart & Checkout (COMPLETE)
 
 | Status | Task | Details |
 |--------|------|---------|
 | 100% | Cart functionality | Add/remove items, quantity management, session-based cart via CartService (supports 9 product types) |
-| 100% | Checkout flow | Address form, order summary, order placement via Orders/OrderItems with COD + banking payment |
-| 0% | Order management | Admin order list, status updates |
-| 100% | Cart/checkout views | UI with AJAX controls (add/update/remove), cart page, checkout page |
+| 100% | Checkout flow | Address form, order summary, order placement via Orders/OrderItems with COD-only payment |
+| 100% | Coupon/discount system | Admin CRUD (CouponController + CouponService), client AJAX coupon application/removal, percent/fixed discount with max cap, min order value, product-type filtering, usage limits, coupon banner component |
+| 100% | Order management | Admin order list (paginated, latest first), order detail view, status update with email notification (OrderStatusUpdatedMail via database queue) |
+| 100% | Client order tracking | Dynamic order status page (/trang-thai-don-hang) with tab filters (all, pending_payment, processing, shipping, completed, canceled, returned), status counts, inline badge coloring |
+| 100% | Email notification | OrderCreatedMail + OrderStatusUpdatedMail (both ShouldQueue, markdown templates), dispatched on checkout and admin status updates |
+| 100% | Cart/checkout views | UI with AJAX controls (add/update/remove), cart page, checkout page with coupon input |
 
-**Deliverables**: E-commerce functionality allowing customers to place orders online.
+**Deliverables**: Full e-commerce flow from cart to checkout to order tracking with admin management and email notifications.
 
 ---
 
@@ -92,11 +95,11 @@
 ```
 Phase 1: Core Setup & Admin CRUD     ████████████████████ 100%
 Phase 2: Product Seeding              ████████████████████ 100%
-Phase 3: Client Product Pages         ██████████░░░░░░░░░░  50%
-Phase 4: Cart & Checkout              ███████████████░░░░░  75%
+Phase 3: Client Product Pages         ███████████░░░░░░░░░  55%
+Phase 4: Cart & Checkout              ████████████████████ 100%
 Phase 5: Advanced Features            ░░░░░░░░░░░░░░░░░░░░   0%
                                     ─────────────────────
-Total:                                ████████░░░░░░░░░░░░  42%
+Total:                                ███████████░░░░░░░░░  58%
 ```
 
 ## Key Milestones
@@ -109,6 +112,7 @@ Total:                                ████████░░░░░░
 | 2026-05-07 | Page configuration admin panels complete; Factory/Contact/FAQ pages dynamic |
 | TBD | Client product pages complete |
 | 2026-05-09 | Cart/checkout MVP (session cart, AJAX controls, order processing) |
+| 2026-05-09 | Customer service pages: dynamic installation guide, catalog list + PDF flipbook reader |
 | TBD | Public launch |
 
 ## Dependencies

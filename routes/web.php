@@ -418,5 +418,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->except(['show']);
         Route::post('/coupons/{coupon}/restore', [\App\Http\Controllers\Admin\CouponController::class, 'restore'])
             ->name('coupons.restore');
+
+        // ── Quản lý đơn hàng ──────────────────────────────────────────
+        Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)
+            ->only(['index', 'show', 'update']);
     });
 });

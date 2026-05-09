@@ -8,121 +8,72 @@
   </p>
 
   <div class="space-y-10 lg:space-y-12">
-    <!-- Featured Catalog -->
+    @if($featuredCatalog)
     <div class="flex flex-col lg:flex-row gap-6 lg:gap-24 bg-transparent mb-16 lg:mb-12">
-      <div class="w-full lg:w-[480px] aspect-[1/1.1] bg-[#D9D9D9] rounded-sm flex-shrink-0"></div>
+      <div class="w-full lg:w-[480px] aspect-[1/1.1] bg-[#D9D9D9] rounded-sm flex-shrink-0">
+        @if($featuredCatalog->anh_dai_dien)
+        <img src="{{ asset('storage/' . $featuredCatalog->anh_dai_dien) }}" alt="{{ $featuredCatalog->tieu_de ?? 'Catalog' }}" class="w-full h-full object-cover rounded-sm" />
+        @endif
+      </div>
       <div class="flex flex-col justify-end">
         <div class="flex items-center gap-3 mt-3 lg:mt-0 mb-2.5">
-          <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">Catalog Dự án</h3>
+          <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">{{ $featuredCatalog->tieu_de }}</h3>
         </div>
         <div>
-          <button
-            class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
-          >
-            <span class="font-archivo">Xem chi tiết</span>
-            <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
-          </button>
+          @if($featuredCatalog->file)
+            <a href="{{ route('client.dich-vu.tai-catalog.read', $featuredCatalog->catalog_id) }}"
+              class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
+            >
+              <span class="font-archivo">Xem chi tiết</span>
+              <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
+            </a>
+          @else
+            <span
+              class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary/30 text-primary/30 text-xs lg:text-sm cursor-not-allowed w-fit min-w-[97px] lg:min-w-[110px]"
+            >
+              <span class="font-archivo">Xem chi tiết</span>
+              <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
+            </span>
+          @endif
         </div>
       </div>
     </div>
+    @endif
 
-    <!-- Catalog Grid -->
     <div class="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-16 lg:gap-12">
-      <!-- Item 1 -->
+      @forelse($catalogs as $item)
       <div class="flex flex-col">
-        <div class="aspect-[1/1.1] bg-[#D9D9D9] rounded-sm mb-4 lg:mb-6"></div>
+        <div class="aspect-[1/1.1] bg-[#D9D9D9] rounded-sm mb-4 lg:mb-6">
+          @if($item->anh_dai_dien)
+          <img src="{{ asset('storage/' . $item->anh_dai_dien) }}" alt="{{ $item->tieu_de ?? 'Catalog' }}" class="w-full h-full object-cover rounded-sm" />
+          @endif
+        </div>
         <div class="flex items-center gap-3 mb-2.5">
-          <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">Catalog Dự án</h3>
+          <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">{{ $item->tieu_de }}</h3>
         </div>
         <div>
-          <button
-            class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
-          >
-            <span class="font-archivo">Xem chi tiết</span>
-            <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
-          </button>
+          @if($item->file)
+            <a href="{{ route('client.dich-vu.tai-catalog.read', $item->catalog_id) }}"
+              class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
+            >
+              <span class="font-archivo">Xem chi tiết</span>
+              <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
+            </a>
+          @else
+            <span
+              class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary/30 text-primary/30 text-xs lg:text-sm cursor-not-allowed w-fit min-w-[97px] lg:min-w-[110px]"
+            >
+              <span class="font-archivo">Xem chi tiết</span>
+              <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
+            </span>
+          @endif
         </div>
       </div>
-
-      <!-- Item 2 -->
-      <div class="flex flex-col">
-        <div class="aspect-[1/1.1] bg-[#D9D9D9] rounded-sm mb-4 lg:mb-6"></div>
-        <div class="flex items-center gap-3 mb-2.5">
-          <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">Catalog Dự án</h3>
-        </div>
-        <div>
-          <button
-            class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
-          >
-            <span class="font-archivo">Xem chi tiết</span>
-            <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
-          </button>
-        </div>
+      @empty
+      <div class="col-span-full text-center py-16">
+        <p class="text-primary/60 text-lg font-archivo">Đang cập nhật catalog...</p>
       </div>
-
-      <!-- Item 3 -->
-      <div class="flex flex-col">
-        <div class="aspect-[1/1.1] bg-[#D9D9D9] rounded-sm mb-4 lg:mb-6"></div>
-        <div class="flex items-center gap-3 mb-2.5">
-          <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">Catalog Dự án</h3>
-        </div>
-        <div>
-          <button
-            class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
-          >
-            <span class="font-archivo">Xem chi tiết</span>
-            <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
-          </button>
-        </div>
-      </div>
-
-      <!-- Item 4 -->
-      <div class="flex flex-col">
-        <div class="aspect-[1/1.1] bg-[#D9D9D9] rounded-sm mb-4 lg:mb-6"></div>
-        <div class="flex items-center gap-3 mb-2.5">
-          <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">Catalog Dự án</h3>
-        </div>
-        <div>
-          <button
-            class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
-          >
-            <span class="font-archivo">Xem chi tiết</span>
-            <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
-          </button>
-        </div>
-      </div>
-
-      <!-- Item 5 -->
-      <div class="flex flex-col">
-        <div class="aspect-[1/1.1] bg-[#D9D9D9] rounded-sm mb-4 lg:mb-6"></div>
-        <div class="flex items-center gap-3 mb-2.5">
-          <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">Catalog Dự án</h3>
-        </div>
-        <div>
-          <button
-            class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
-          >
-            <span class="font-archivo">Xem chi tiết</span>
-            <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
-          </button>
-        </div>
-      </div>
-
-      <!-- Item 6 -->
-      <div class="flex flex-col">
-        <div class="aspect-[1/1.1] bg-[#D9D9D9] rounded-sm mb-4 lg:mb-6"></div>
-        <div class="flex items-center gap-3 mb-2.5">
-          <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">Catalog Dự án</h3>
-        </div>
-        <div>
-          <button
-            class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
-          >
-            <span class="font-archivo">Xem chi tiết</span>
-            <img src="{{ asset('assets/images/triangle.svg') }}" alt="" class="hidden lg:block w-[6px] h-[10px] rotate-180 scale-x-[-1]" />
-          </button>
-        </div>
-      </div>
+      @endforelse
     </div>
   </div>
 </div>

@@ -1,11 +1,10 @@
+{{-- resources/views/components/admin/layout/sidebar.blade.php --}}
 <aside class="fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-[#0f0f13]">
     {{-- Brand --}}
     <div class="flex items-center gap-3 px-5 py-5 border-b border-white/[0.06]">
-        <div
-            class="w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#A31D1D] to-[#d94444] shadow-lg shadow-red-900/30">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#A31D1D] to-[#d94444] shadow-lg shadow-red-900/30">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
             </svg>
         </div>
         <div class="min-w-0">
@@ -15,499 +14,290 @@
     </div>
 
     {{-- Navigation --}}
-    <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5 custom-scrollbar">
+    <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1 custom-scrollbar">
         {{-- Dashboard --}}
         @php $isDashboard = request()->routeIs('admin.dashboard'); @endphp
-        <a href="{{ route('admin.dashboard') }}"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isDashboard ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
-            <svg class="w-[18px] h-[18px] flex-shrink-0 {{ $isDashboard ? 'text-[#A31D1D]' : '' }}" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10-2a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z" />
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isDashboard ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <svg class="w-[18px] h-[18px] flex-shrink-0 {{ $isDashboard ? 'text-[#A31D1D]' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10-2a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z" />
             </svg>
             Tổng quan
         </a>
 
-        <!-- HỆ THỐNG CẤU HÌNH -->
+        <!-- ================= BÁN HÀNG ================= -->
         <div class="pt-4 pb-1">
-            <p class="px-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-600">
-                Hệ thống cấu hình
-            </p>
+            <p class="px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500">Quản lý bán hàng</p>
         </div>
 
-        <!-- 1. CẤU HÌNH SECTION CHUNG -->
-        @php $isSectionChung = request()->routeIs(['admin.gia-tri-vuot-troi.*', 'admin.giai-thuong-thanh-tuu.*', 'admin.tac-gia.*', 'admin.thi-cong.*', 'admin.catalog.*']); @endphp
-        <div>
-            <button type="button"
-                class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
-                onclick="toggleSubmenu('submenu-section-chung', this)">
-                <div class="flex items-center gap-3">
-                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    Cấu hình section chung
-                </div>
-                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isSectionChung ? 'rotate-180' : '' }}"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-            <div id="submenu-section-chung"
-                class="grid transition-all duration-300 ease-in-out {{ $isSectionChung ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                <div class="overflow-hidden">
-                    <div class="pl-9 pr-3 space-y-1 pb-1">
-                        <a href="{{ route('admin.gia-tri-vuot-troi.index') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.gia-tri-vuot-troi.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Giá trị vượt trội
-                        </a>
-                        <a href="{{ route('admin.giai-thuong-thanh-tuu.index') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.giai-thuong-thanh-tuu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Giải thưởng & Thành tựu
-                        </a>
-                        <!-- THÊM TÁC GIẢ VÀO ĐÂY -->
-                        <a href="{{ route('admin.tac-gia.index') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.tac-gia.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Tác giả
-                        </a>
-                        <a href="{{ route('admin.thi-cong.index') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.thi-cong.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Video Thi Công
-                        </a>
-                        <a href="{{ route('admin.catalog.index') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.catalog.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Catalog
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Quản lý mã giảm giá --}}
-        <a href="{{ route('admin.coupons.index') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.coupons.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
-            <svg class="w-[18px] h-[18px] flex-shrink-0 {{ request()->routeIs('admin.coupons.*') ? 'text-[#A31D1D]' : '' }}" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+        <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.orders.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <svg class="w-[18px] h-[18px] flex-shrink-0 {{ request()->routeIs('admin.orders.*') ? 'text-[#A31D1D]' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
             </svg>
-            Quản lý mã giảm giá
+            Đơn hàng
         </a>
 
-        <!-- 2. CẤU HÌNH TRANG ĐƠN -->
-        @php $isPageConfig = request()->routeIs(['admin.pages.*', 'admin.danh-muc-du-an.*', 'admin.du-an.*', 'admin.danh-muc-tin-tuc.*', 'admin.tin-tuc.*']); @endphp
+        <a href="{{ route('admin.coupons.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.coupons.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <svg class="w-[18px] h-[18px] flex-shrink-0 {{ request()->routeIs('admin.coupons.*') ? 'text-[#A31D1D]' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+            </svg>
+            Mã giảm giá
+        </a>
+
+
+        <!-- ================= SẢN PHẨM ================= -->
+        <div class="pt-4 pb-1">
+            <p class="px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500">Danh mục sản phẩm</p>
+        </div>
+
+        {{-- 1. Ngói Âm Dương --}}
+        @php $isNAD = request()->routeIs(['admin.ngoi-am-duong.*', 'admin.ngoi-am-duong-ct.*', 'admin.mau-sac-ngoi-am-duong-ct.*', 'admin.dinh-muc-ngoi-am-duong.*']); @endphp
         <div>
-            <button type="button"
-                class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
-                onclick="toggleSubmenu('submenu-page-config', this)">
-                <div class="flex items-center gap-3">
-                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    Cấu hình trang đơn
-                </div>
-                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isPageConfig ? 'rotate-180' : '' }}"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-nad', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-red-800"></span>Ngói Âm Dương</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isNAD ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </button>
-            <div id="submenu-page-config"
-                class="grid transition-all duration-300 ease-in-out {{ $isPageConfig ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                <div class="overflow-hidden">
-                    <div class="pl-9 pr-3 space-y-1 pb-1">
-                        <a href="{{ route('admin.trang_chu.edit') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.trang_chu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Trang chủ
-                        </a>
-                        <a href="{{ route('admin.pages.ve_chung_toi.edit') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.ve_chung_toi.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Trang Về Chúng Tôi
-                        </a>
-                        <a href="{{ route('admin.pages.factory.edit') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.factory.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Trang Xưởng Sản Xuất
-                        </a>
-                        <a href="{{ route('admin.pages.contact.edit') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.contact.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Trang Liên Hệ
-                        </a>
-                        <a href="{{ route('admin.pages.faq.edit') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.faq.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Trang FAQ
-                        </a>
-                        <a href="{{ route('admin.pages.faq.edit') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.faq.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Trang FAQ
-                        </a>
-                        <!-- THÊM 2 ĐƯỜNG DẪN MỚI -->
-                        <a href="{{ route('admin.danh-muc-du-an.index') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.danh-muc-du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Danh Mục Dự Án
-                        </a>
-                        <a href="{{ route('admin.du-an.index') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Danh Sách Dự Án
-                        </a>
-                        <div class="my-2 border-t border-white/10 mx-3"></div>
-                        <a href="{{ route('admin.danh-muc-tin-tuc.index') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.danh-muc-tin-tuc.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Danh Mục Tin Tức
-                        </a>
-                        <a href="{{ route('admin.tin-tuc.index') }}"
-                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.tin-tuc.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                            Danh Sách Tin Tức
-                        </a>
-                    </div>
+            <div id="menu-nad" class="grid transition-all duration-300 ease-in-out {{ $isNAD ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.ngoi-am-duong.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.ngoi-am-duong.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang</a>
+                    <a href="{{ route('admin.ngoi-am-duong-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.ngoi-am-duong-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Sản phẩm chi tiết</a>
+                    <a href="{{ route('admin.mau-sac-ngoi-am-duong-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.mau-sac-ngoi-am-duong-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Quản lý màu sắc</a>
+                    <a href="{{ route('admin.dinh-muc-ngoi-am-duong.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.dinh-muc-ngoi-am-duong.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Định mức thi công</a>
                 </div>
             </div>
         </div>
 
-        <!-- 3. CẤU HÌNH TRANG SẢN PHẨM -->
-        @php
-            $isProductConfig = request()->routeIs([
-                'admin.ngoi-am-duong.*',
-                'admin.ngoi-hai-van-mieu.*',
-                'admin.gach-hoa-thong-gio.*',
-                'admin.phu-kien-ngoi.*',
-                'admin.gach-trang-tri.*',
-                'admin.lan-can-gom-xu.*',
-                'admin.gach-co-bat-trang.*',
-                'admin.linh-vat-phong-thuy.*',
-                'admin.den-gom-su.*',
-            ]);
-            $products = [
-                [
-                    'route' => 'admin.ngoi-am-duong.index',
-                    'name' => 'Ngói Âm Dương',
-                    'active' => 'admin.ngoi-am-duong.*',
-                ],
-                [
-                    'route' => 'admin.ngoi-hai-van-mieu.index',
-                    'name' => 'Ngói Hài Văn Miếu',
-                    'active' => 'admin.ngoi-hai-van-mieu.*',
-                ],
-                [
-                    'route' => 'admin.gach-hoa-thong-gio.index',
-                    'name' => 'Gạch Hoa Thông Gió',
-                    'active' => 'admin.gach-hoa-thong-gio.*',
-                ],
-                [
-                    'route' => 'admin.phu-kien-ngoi.index',
-                    'name' => 'Phụ Kiện Ngói',
-                    'active' => 'admin.phu-kien-ngoi.*',
-                ],
-                [
-                    'route' => 'admin.gach-trang-tri.index',
-                    'name' => 'Gạch Trang Trí',
-                    'active' => 'admin.gach-trang-tri.*',
-                ],
-                [
-                    'route' => 'admin.lan-can-gom-xu.index',
-                    'name' => 'Lan Can Gốm Sứ',
-                    'active' => 'admin.lan-can-gom-xu.*',
-                ],
-                [
-                    'route' => 'admin.gach-co-bat-trang.index',
-                    'name' => 'Gạch Cổ Bát Tràng',
-                    'active' => 'admin.gach-co-bat-trang.*',
-                ],
-                [
-                    'route' => 'admin.linh-vat-phong-thuy.index',
-                    'name' => 'Linh Vật Phong Thủy',
-                    'active' => 'admin.linh-vat-phong-thuy.*',
-                ],
-                ['route' => 'admin.den-gom-su.index', 'name' => 'Đèn Gốm Sứ', 'active' => 'admin.den-gom-su.*'],
-            ];
-        @endphp
+        {{-- 2. Ngói Hài --}}
+        @php $isNgoiHai = request()->routeIs(['admin.ngoi-hai-van-mieu.*', 'admin.ngoi-hai-van-mieu-ct.*', 'admin.mau-sac-ngoi-hai-van-mieu-ct.*', 'admin.dinh-muc-ngoi-hai-van-mieu.*', 'admin.ngoi-hai-co-ct.*', 'admin.mau-sac-ngoi-hai-co-ct.*', 'admin.dinh-muc-ngoi-hai-co.*']); @endphp
         <div>
-            <button type="button"
-                class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
-                onclick="toggleSubmenu('submenu-product-config', this)">
-                <div class="flex items-center gap-3">
-                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                    Cấu hình trang sản phẩm
-                </div>
-                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isProductConfig ? 'rotate-180' : '' }}"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-ngoihai', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-red-700"></span>Ngói Hài</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isNgoiHai ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </button>
-            <div id="submenu-product-config"
-                class="grid transition-all duration-300 ease-in-out {{ $isProductConfig ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                <div class="overflow-hidden">
-                    <div class="pl-9 pr-3 space-y-1 pb-1">
-                        @foreach ($products as $prod)
-                            <a href="{{ route($prod['route']) }}"
-                                class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs($prod['active']) ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
-                                {{ $prod['name'] }}
-                            </a>
-                        @endforeach
-                    </div>
+            <div id="menu-ngoihai" class="grid transition-all duration-300 ease-in-out {{ $isNgoiHai ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.ngoi-hai-van-mieu.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.ngoi-hai-van-mieu.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang chính</a>
+                    <div class="px-3 py-1 mt-2 text-[10px] font-bold text-gray-600 uppercase">Ngói Hài Văn Miếu</div>
+                    <a href="{{ route('admin.ngoi-hai-van-mieu-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs(['admin.ngoi-hai-van-mieu-ct.*', 'admin.mau-sac-ngoi-hai-van-mieu-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh sách SP & Màu</a>
+                    <a href="{{ route('admin.dinh-muc-ngoi-hai-van-mieu.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.dinh-muc-ngoi-hai-van-mieu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Định mức thi công</a>
+                    <div class="px-3 py-1 mt-2 text-[10px] font-bold text-gray-600 uppercase">Ngói Hài Cổ</div>
+                    <a href="{{ route('admin.ngoi-hai-co-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs(['admin.ngoi-hai-co-ct.*', 'admin.mau-sac-ngoi-hai-co-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh sách SP & Màu</a>
+                    <a href="{{ route('admin.dinh-muc-ngoi-hai-co.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.dinh-muc-ngoi-hai-co.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Định mức thi công</a>
                 </div>
             </div>
         </div>
 
-        <!-- 4. DANH SÁCH SẢN PHẨM CHI TIẾT (Dropdown cấp 1 + cấp 2) -->
-        @php
-            // Nhóm biến trạng thái cấp 2
-            $isNAD = request()->routeIs([
-                'admin.ngoi-am-duong-ct.*',
-                'admin.mau-sac-ngoi-am-duong-ct.*',
-                'admin.dinh-muc-ngoi-am-duong.*',
-            ]);
-            $isNHC = request()->routeIs([
-                'admin.ngoi-hai-co-ct.*',
-                'admin.mau-sac-ngoi-hai-co-ct.*',
-                'admin.dinh-muc-ngoi-hai-co.*',
-            ]);
-            $isNHVM = request()->routeIs([
-                'admin.ngoi-hai-van-mieu-ct.*',
-                'admin.mau-sac-ngoi-hai-van-mieu-ct.*',
-                'admin.dinh-muc-ngoi-hai-van-mieu.*',
-            ]);
-            $isGHTG = request()->routeIs(['admin.gach-hoa-thong-gio-ct.*', 'admin.dinh-muc-gach-hoa-thong-gio.*']);
-            $isGTT = request()->routeIs(['admin.gach-trang-tri-ct.*', 'admin.dinh-muc-gach-trang-tri.*']);
-            $isGCBT = request()->routeIs(['admin.gach-co-bat-trang-ct.*', 'admin.dinh-muc-gach-co-bat-trang.*']);
-            $isLVPT = request()->routeIs(['admin.linh-vat-phong-thuy-ct.*']);
-            $isNBN = request()->routeIs(['admin.ngoi-bo-noc-ct.*', 'admin.phan-loai-ngoi-bo-noc-ct.*']);
-            $isBNCV = request()->routeIs(['admin.bo-noc-chu-van-ct.*', 'admin.phan-loai-bo-noc-chu-van-ct.*']);
-
-            // Biến trạng thái tổng (cấp 1)
-            $isProductDetail =
-                $isNAD || $isNHC || $isNHVM || $isGHTG || $isGTT || $isGCBT || $isLVPT || $isNBN || $isBNCV;
-        @endphp
+        {{-- 3. Gạch Hoa Thông Gió --}}
+        @php $isGHTG = request()->routeIs(['admin.gach-hoa-thong-gio.*', 'admin.gach-hoa-thong-gio-ct.*', 'admin.dinh-muc-gach-hoa-thong-gio.*']); @endphp
         <div>
-            <button type="button"
-                class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
-                onclick="toggleSubmenu('submenu-product-detail', this)">
-                <div class="flex items-center gap-3">
-                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                    </svg>
-                    DS Sản phẩm chi tiết
-                </div>
-                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isProductDetail ? 'rotate-180' : '' }}"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-ghtg', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-red-600"></span>Gạch Hoa Thông Gió</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isGHTG ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </button>
-            <div id="submenu-product-detail"
-                class="grid transition-all duration-300 ease-in-out {{ $isProductDetail ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                <div class="overflow-hidden">
-                    <div class="pl-7 pr-3 pb-2 pt-1">
-
-                        <!-- Ngói Âm Dương (Có menu con) -->
-                        <div class="mb-1">
-                            <button type="button"
-                                class="w-full flex items-center justify-between px-2 py-2 rounded-md text-[11px] font-bold {{ $isNAD ? 'text-gray-200' : 'text-gray-500' }} uppercase tracking-wider hover:text-gray-300 hover:bg-white/[0.04] transition-colors"
-                                onclick="toggleSubmenu('submenu-nad', this)">
-                                Ngói Âm Dương
-                                <svg class="chevron-icon w-3.5 h-3.5 transition-transform duration-300 {{ $isNAD ? 'rotate-180' : '' }}"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="submenu-nad"
-                                class="grid transition-all duration-300 ease-in-out {{ $isNAD ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                                <div class="overflow-hidden space-y-1 pl-2 border-l border-white/[0.05] ml-2">
-                                    <a href="{{ route('admin.ngoi-am-duong-ct.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.ngoi-am-duong-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">DS
-                                        sản phẩm</a>
-                                    <a href="{{ route('admin.mau-sac-ngoi-am-duong-ct.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.mau-sac-ngoi-am-duong-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">Quản
-                                        lý màu sắc</a>
-                                    <a href="{{ route('admin.dinh-muc-ngoi-am-duong.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-ngoi-am-duong.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">Quản
-                                        lý định mức</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Ngói Hài Cổ (Có menu con) -->
-                        <div class="mb-1">
-                            <button type="button"
-                                class="w-full flex items-center justify-between px-2 py-2 rounded-md text-[11px] font-bold {{ $isNHC ? 'text-gray-200' : 'text-gray-500' }} uppercase tracking-wider hover:text-gray-300 hover:bg-white/[0.04] transition-colors"
-                                onclick="toggleSubmenu('submenu-nhc', this)">
-                                Ngói Hài Cổ
-                                <svg class="chevron-icon w-3.5 h-3.5 transition-transform duration-300 {{ $isNHC ? 'rotate-180' : '' }}"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="submenu-nhc"
-                                class="grid transition-all duration-300 ease-in-out {{ $isNHC ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                                <div class="overflow-hidden space-y-1 pl-2 border-l border-white/[0.05] ml-2">
-                                    <a href="{{ route('admin.ngoi-hai-co-ct.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs(['admin.ngoi-hai-co-ct.*', 'admin.mau-sac-ngoi-hai-co-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">DS
-                                        sản phẩm</a>
-                                    <a href="{{ route('admin.dinh-muc-ngoi-hai-co.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-ngoi-hai-co.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">Quản
-                                        lý định mức</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Ngói Hài Văn Miếu (Có menu con) -->
-                        <div class="mb-1">
-                            <button type="button"
-                                class="w-full flex items-center justify-between px-2 py-2 rounded-md text-[11px] font-bold {{ $isNHVM ? 'text-gray-200' : 'text-gray-500' }} uppercase tracking-wider hover:text-gray-300 hover:bg-white/[0.04] transition-colors"
-                                onclick="toggleSubmenu('submenu-nhvm', this)">
-                                Ngói Hài Văn Miếu
-                                <svg class="chevron-icon w-3.5 h-3.5 transition-transform duration-300 {{ $isNHVM ? 'rotate-180' : '' }}"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="submenu-nhvm"
-                                class="grid transition-all duration-300 ease-in-out {{ $isNHVM ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                                <div class="overflow-hidden space-y-1 pl-2 border-l border-white/[0.05] ml-2">
-                                    <a href="{{ route('admin.ngoi-hai-van-mieu-ct.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs(['admin.ngoi-hai-van-mieu-ct.*', 'admin.mau-sac-ngoi-hai-van-mieu-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">DS
-                                        sản phẩm</a>
-                                    <a href="{{ route('admin.dinh-muc-ngoi-hai-van-mieu.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-ngoi-hai-van-mieu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">Quản
-                                        lý định mức</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Gạch Hoa Thông Gió (Có menu con) -->
-                        <div class="mb-1">
-                            <button type="button"
-                                class="w-full flex items-center justify-between px-2 py-2 rounded-md text-[11px] font-bold {{ $isGHTG ? 'text-gray-200' : 'text-gray-500' }} uppercase tracking-wider hover:text-gray-300 hover:bg-white/[0.04] transition-colors"
-                                onclick="toggleSubmenu('submenu-ghtg', this)">
-                                Gạch Hoa Thông Gió
-                                <svg class="chevron-icon w-3.5 h-3.5 transition-transform duration-300 {{ $isGHTG ? 'rotate-180' : '' }}"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="submenu-ghtg"
-                                class="grid transition-all duration-300 ease-in-out {{ $isGHTG ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                                <div class="overflow-hidden space-y-1 pl-2 border-l border-white/[0.05] ml-2">
-                                    <a href="{{ route('admin.gach-hoa-thong-gio-ct.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.gach-hoa-thong-gio-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">DS
-                                        sản phẩm</a>
-                                    <a href="{{ route('admin.dinh-muc-gach-hoa-thong-gio.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-gach-hoa-thong-gio.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">Quản
-                                        lý định mức</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Gạch Trang Trí (Có menu con) -->
-                        <div class="mb-1">
-                            <button type="button"
-                                class="w-full flex items-center justify-between px-2 py-2 rounded-md text-[11px] font-bold {{ $isGTT ? 'text-gray-200' : 'text-gray-500' }} uppercase tracking-wider hover:text-gray-300 hover:bg-white/[0.04] transition-colors"
-                                onclick="toggleSubmenu('submenu-gtt', this)">
-                                Gạch Trang Trí
-                                <svg class="chevron-icon w-3.5 h-3.5 transition-transform duration-300 {{ $isGTT ? 'rotate-180' : '' }}"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="submenu-gtt"
-                                class="grid transition-all duration-300 ease-in-out {{ $isGTT ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                                <div class="overflow-hidden space-y-1 pl-2 border-l border-white/[0.05] ml-2">
-                                    <a href="{{ route('admin.gach-trang-tri-ct.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.gach-trang-tri-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">DS
-                                        sản phẩm</a>
-                                    <a href="{{ route('admin.dinh-muc-gach-trang-tri.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-gach-trang-tri.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">Quản
-                                        lý định mức</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Gạch Cổ Bát Tràng (Có menu con) -->
-                        <div class="mb-1">
-                            <button type="button"
-                                class="w-full flex items-center justify-between px-2 py-2 rounded-md text-[11px] font-bold {{ $isGCBT ? 'text-gray-200' : 'text-gray-500' }} uppercase tracking-wider hover:text-gray-300 hover:bg-white/[0.04] transition-colors"
-                                onclick="toggleSubmenu('submenu-gcbt', this)">
-                                Gạch Cổ Bát Tràng
-                                <svg class="chevron-icon w-3.5 h-3.5 transition-transform duration-300 {{ $isGCBT ? 'rotate-180' : '' }}"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="submenu-gcbt"
-                                class="grid transition-all duration-300 ease-in-out {{ $isGCBT ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
-                                <div class="overflow-hidden space-y-1 pl-2 border-l border-white/[0.05] ml-2">
-                                    <a href="{{ route('admin.gach-co-bat-trang-ct.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.gach-co-bat-trang-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">DS
-                                        sản phẩm</a>
-                                    <a href="{{ route('admin.dinh-muc-gach-co-bat-trang.index') }}"
-                                        class="block px-3 py-1.5 rounded-md text-[12px] font-medium transition-all duration-200 {{ request()->routeIs('admin.dinh-muc-gach-co-bat-trang.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]' }}">Quản
-                                        lý định mức</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Linh Vật Phong Thủy (Chỉ có 1 con -> Chuyển thành link trực tiếp) -->
-                        <div class="mb-1">
-                            <a href="{{ route('admin.linh-vat-phong-thuy-ct.index') }}"
-                                class="block w-full px-2 py-2 rounded-md text-[11px] font-bold uppercase tracking-wider transition-colors {{ $isLVPT ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.04]' }}">
-                                Linh Vật Phong Thủy
-                            </a>
-                        </div>
-
-                        <!-- Ngói Bò Nóc (Chỉ có 1 con -> Chuyển thành link trực tiếp) -->
-                        <div class="mb-1">
-                            <a href="{{ route('admin.ngoi-bo-noc-ct.index') }}"
-                                class="block w-full px-2 py-2 rounded-md text-[11px] font-bold uppercase tracking-wider transition-colors {{ $isNBN ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.04]' }}">
-                                Ngói Bò Nóc
-                            </a>
-                        </div>
-
-                        <!-- Bò Nóc Chữ Vạn (Chỉ có 1 con -> Chuyển thành link trực tiếp) -->
-                        <div class="mb-1">
-                            <a href="{{ route('admin.bo-noc-chu-van-ct.index') }}"
-                                class="block w-full px-2 py-2 rounded-md text-[11px] font-bold uppercase tracking-wider transition-colors {{ $isBNCV ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.04]' }}">
-                                Bò Nóc Chữ Vạn
-                            </a>
-                        </div>
-
-                    </div>
+            <div id="menu-ghtg" class="grid transition-all duration-300 ease-in-out {{ $isGHTG ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.gach-hoa-thong-gio.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.gach-hoa-thong-gio.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang</a>
+                    <a href="{{ route('admin.gach-hoa-thong-gio-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.gach-hoa-thong-gio-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Sản phẩm chi tiết</a>
+                    <a href="{{ route('admin.dinh-muc-gach-hoa-thong-gio.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.dinh-muc-gach-hoa-thong-gio.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Định mức thi công</a>
                 </div>
             </div>
         </div>
 
-        {{-- Superadmin section --}}
+        {{-- 4. Gạch Trang Trí --}}
+        @php $isGTT = request()->routeIs(['admin.gach-trang-tri.*', 'admin.gach-trang-tri-ct.*', 'admin.dinh-muc-gach-trang-tri.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-gtt', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-red-500"></span>Gạch Trang Trí</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isGTT ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-gtt" class="grid transition-all duration-300 ease-in-out {{ $isGTT ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.gach-trang-tri.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.gach-trang-tri.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang</a>
+                    <a href="{{ route('admin.gach-trang-tri-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.gach-trang-tri-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Sản phẩm chi tiết</a>
+                    <a href="{{ route('admin.dinh-muc-gach-trang-tri.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.dinh-muc-gach-trang-tri.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Định mức thi công</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- 5. Gạch Cổ Bát Tràng --}}
+        @php $isGCBT = request()->routeIs(['admin.gach-co-bat-trang.*', 'admin.gach-co-bat-trang-ct.*', 'admin.dinh-muc-gach-co-bat-trang.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-gcbt', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-orange-700"></span>Gạch Cổ Bát Tràng</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isGCBT ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-gcbt" class="grid transition-all duration-300 ease-in-out {{ $isGCBT ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.gach-co-bat-trang.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.gach-co-bat-trang.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang</a>
+                    <a href="{{ route('admin.gach-co-bat-trang-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.gach-co-bat-trang-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Sản phẩm chi tiết</a>
+                    <a href="{{ route('admin.dinh-muc-gach-co-bat-trang.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.dinh-muc-gach-co-bat-trang.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Định mức thi công</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- 6. Phụ Kiện Ngói --}}
+        @php $isPKN = request()->routeIs(['admin.phu-kien-ngoi.*', 'admin.ngoi-bo-noc-ct.*', 'admin.phan-loai-ngoi-bo-noc-ct.*', 'admin.bo-noc-chu-van-ct.*', 'admin.phan-loai-bo-noc-chu-van-ct.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-pkn', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-orange-500"></span>Phụ Kiện Ngói</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isPKN ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-pkn" class="grid transition-all duration-300 ease-in-out {{ $isPKN ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.phu-kien-ngoi.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.phu-kien-ngoi.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang chính</a>
+                    <div class="px-3 py-1 mt-2 text-[10px] font-bold text-gray-600 uppercase">Ngói Bò Nóc</div>
+                    <a href="{{ route('admin.ngoi-bo-noc-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs(['admin.ngoi-bo-noc-ct.*', 'admin.phan-loai-ngoi-bo-noc-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh sách SP & Phân loại</a>
+                    <div class="px-3 py-1 mt-2 text-[10px] font-bold text-gray-600 uppercase">Bò Nóc Chữ Vạn</div>
+                    <a href="{{ route('admin.bo-noc-chu-van-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs(['admin.bo-noc-chu-van-ct.*', 'admin.phan-loai-bo-noc-chu-van-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh sách SP & Phân loại</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- 7. Sản phẩm khác (Gồm Lan Can, Linh Vật, Đèn Gốm) --}}
+        @php $isSPKhac = request()->routeIs(['admin.lan-can-gom-xu.*', 'admin.linh-vat-phong-thuy.*', 'admin.linh-vat-phong-thuy-ct.*', 'admin.den-gom-su.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-spkhac', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-yellow-600"></span>Sản Phẩm Khác</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isSPKhac ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-spkhac" class="grid transition-all duration-300 ease-in-out {{ $isSPKhac ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
+                    <div class="px-3 py-1 mt-1 text-[10px] font-bold text-gray-600 uppercase">Linh Vật Phong Thủy</div>
+                    <a href="{{ route('admin.linh-vat-phong-thuy.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.linh-vat-phong-thuy.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang</a>
+                    <a href="{{ route('admin.linh-vat-phong-thuy-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.linh-vat-phong-thuy-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Sản phẩm chi tiết</a>
+                    
+                    <div class="px-3 py-1 mt-2 text-[10px] font-bold text-gray-600 uppercase">Khác</div>
+                    <a href="{{ route('admin.lan-can-gom-xu.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.lan-can-gom-xu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Lan Can Gốm Sứ</a>
+                    <a href="{{ route('admin.den-gom-su.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.den-gom-su.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Đèn Gốm Sứ</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= NỘI DUNG (CMS) ================= -->
+        <div class="pt-4 pb-1">
+            <p class="px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500">Quản lý nội dung</p>
+        </div>
+
+        {{-- Tin Tức --}}
+        @php $isNews = request()->routeIs(['admin.danh-muc-tin-tuc.*', 'admin.tin-tuc.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-news', this)">
+                <div class="flex items-center gap-3">
+                    <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5L18.5 7H20" /></svg>
+                    Tin tức
+                </div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isNews ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-news" class="grid transition-all duration-300 ease-in-out {{ $isNews ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-9 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.danh-muc-tin-tuc.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.danh-muc-tin-tuc.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh mục</a>
+                    <a href="{{ route('admin.tin-tuc.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.tin-tuc.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Bài viết</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- Dự Án --}}
+        @php $isProject = request()->routeIs(['admin.danh-muc-du-an.*', 'admin.du-an.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-project', this)">
+                <div class="flex items-center gap-3">
+                    <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
+                    Dự án
+                </div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isProject ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-project" class="grid transition-all duration-300 ease-in-out {{ $isProject ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-9 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.danh-muc-du-an.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.danh-muc-du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh mục</a>
+                    <a href="{{ route('admin.du-an.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Dự án</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- Các Nội Dung Khác --}}
+        @php $isMiscContent = request()->routeIs(['admin.tac-gia.*', 'admin.thi-cong.*', 'admin.catalog.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-misc', this)">
+                <div class="flex items-center gap-3">
+                    <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    Nội dung bổ sung
+                </div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isMiscContent ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-misc" class="grid transition-all duration-300 ease-in-out {{ $isMiscContent ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-9 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.tac-gia.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.tac-gia.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Tác giả</a>
+                    <a href="{{ route('admin.thi-cong.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.thi-cong.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Video thi công</a>
+                    <a href="{{ route('admin.catalog.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.catalog.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Catalogs</a>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= GIAO DIỆN & CẤU HÌNH ================= -->
+        <div class="pt-4 pb-1">
+            <p class="px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500">Giao diện & Cấu hình</p>
+        </div>
+
+        {{-- Cấu Hình Trang Đơn --}}
+        @php $isPages = request()->routeIs(['admin.trang_chu.*', 'admin.pages.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-pages', this)">
+                <div class="flex items-center gap-3">
+                    <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    Cấu hình trang
+                </div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isPages ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-pages" class="grid transition-all duration-300 ease-in-out {{ $isPages ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-9 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.trang_chu.edit') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.trang_chu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Trang Chủ</a>
+                    <a href="{{ route('admin.pages.ve_chung_toi.edit') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.pages.ve_chung_toi.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Trang Về Chúng Tôi</a>
+                    <a href="{{ route('admin.pages.factory.edit') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.pages.factory.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Trang Xưởng Sản Xuất</a>
+                    <a href="{{ route('admin.pages.contact.edit') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.pages.contact.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Trang Liên Hệ</a>
+                    <a href="{{ route('admin.pages.faq.edit') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.pages.faq.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Trang FAQ</a>
+                    <a href="{{ route('admin.pages.faqs.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.pages.faqs.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh Sách FAQ</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- Thành phần chung (Dùng cho nhiều trang) --}}
+        @php $isShared = request()->routeIs(['admin.gia-tri-vuot-troi.*', 'admin.giai-thuong-thanh-tuu.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-shared', this)">
+                <div class="flex items-center gap-3">
+                    <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                    Khối thành phần chung
+                </div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isShared ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-shared" class="grid transition-all duration-300 ease-in-out {{ $isShared ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-9 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.gia-tri-vuot-troi.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.gia-tri-vuot-troi.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Giá trị vượt trội</a>
+                    <a href="{{ route('admin.giai-thuong-thanh-tuu.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.giai-thuong-thanh-tuu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Giải thưởng & Thành tựu</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= HỆ THỐNG ================= -->
         @if (auth()->user()?->isSuperAdmin())
             <div class="pt-4 pb-1">
-                <p class="px-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-600">
-                    Quản trị viên
-                </p>
+                <p class="px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500">Hệ thống</p>
             </div>
             @php $isUsers = request()->routeIs('admin.users.*'); @endphp
-            <a href="{{ route('admin.users.index') }}"
-                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isUsers ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
-                <svg class="w-[18px] h-[18px] flex-shrink-0 {{ $isUsers ? 'text-[#A31D1D]' : '' }}" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ $isUsers ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+                <svg class="w-[18px] h-[18px] flex-shrink-0 {{ $isUsers ? 'text-[#A31D1D]' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
-                Danh sách Admin
+                Danh sách Quản trị viên
             </a>
         @endif
+
     </nav>
 
     {{-- User info + Logout --}}
     <div class="px-3 py-4 border-t border-white/[0.06]">
         <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/[0.04] mb-2">
-            <div
-                class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0 bg-gradient-to-br from-[#A31D1D] to-[#d94444]">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0 bg-gradient-to-br from-[#A31D1D] to-[#d94444]">
                 {{ strtoupper(substr(auth()->user()?->name ?? 'A', 0, 1)) }}
             </div>
             <div class="min-w-0 flex-1">
@@ -517,12 +307,9 @@
         </div>
         <form method="POST" action="{{ route('admin.auth.logout') }}">
             @csrf
-            <button type="submit"
-                class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-gray-500 hover:text-gray-300 hover:bg-white/[0.04] transition-all duration-200">
-                <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-gray-500 hover:text-gray-300 hover:bg-white/[0.04] transition-all duration-200">
+                <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
                 Đăng xuất
             </button>
@@ -532,11 +319,10 @@
 
 @push('scripts')
     <script>
-        // Xử lý logic Animation mượt mà bằng CSS Grid transition cho dropdown (Dùng chung cho cả Cấp 1 & Cấp 2)
+        // Xử lý logic Animation mượt mà bằng CSS Grid transition cho dropdown
         function toggleSubmenu(id, btn) {
             const wrapper = document.getElementById(id);
             const icon = btn.querySelector('.chevron-icon');
-
             if (wrapper.classList.contains('grid-rows-[1fr]')) {
                 wrapper.classList.remove('grid-rows-[1fr]', 'opacity-100', 'mt-1');
                 wrapper.classList.add('grid-rows-[0fr]', 'opacity-0', 'mt-0');

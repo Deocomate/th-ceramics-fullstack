@@ -19,7 +19,7 @@ class CheckoutRequest extends FormRequest
             'email' => ['nullable', 'email'],
             'address' => ['required', 'string', 'max:500'],
             'note' => ['nullable', 'string', 'max:1000'],
-            'payment_method' => ['required', 'in:cod,banking'],
+            'payment_method' => ['required', 'in:cod'],
         ];
     }
 

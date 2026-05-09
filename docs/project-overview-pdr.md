@@ -47,7 +47,10 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 - **FR15**: Customer service pages (policies, guides)
 - **FR16**: FAQ page (dynamic: banner config + FAQ items CRUD via admin panel)
 - **FR17**: Showroom page
-- **FR18**: Cart and checkout (session-based cart, AJAX add/update/remove, checkout flow with order creation, supports 9 product types with COD/banking payment)
+- **FR18**: Cart and checkout (session-based cart, AJAX add/update/remove, checkout flow with order creation, supports 9 product types with COD-only payment, coupon/discount code system with percent/fixed discount types and product-type filtering)
+- **FR22**: Admin order management (paginated list, detail view with items + customer info, status update with email notification trigger)
+- **FR23**: Email notification system (order confirmation on checkout, status update notification on admin status change, both via database-queued ShouldQueue mailables, markdown email templates)
+- **FR24**: Client order status tracking (dynamic page /trang-thai-don-hang, tab filtering by status, status counts per tab, inline badge coloring, auth-gated)
 
 ### SEO & URL Strategy
 - **FR19**: Vietnamese-language SEO URLs (`/san-pham/ngoi-am-duong/{id}`)
@@ -100,14 +103,16 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 
 | Area | Status |
 |------|--------|
-| Database schema | Complete (42 tables, 9 migrations) |
-| Admin CRUD | Complete (all 9 categories + 3 page config panels) |
+| Database schema | Complete (44 tables, 7 migrations) |
+| Admin CRUD | Complete (all 9 categories + 3 page config panels + order management) |
 | Product seeding | Complete (4 seeders: User, ProductType, ProductDetail) |
 | Page configuration | Complete (Factory, Contact, FAQ admin panels with Alpine.js auto-resize textareas) |
 | Client product pages | In progress (9 categories) |
-| Cart/Checkout | Session-based cart with AJAX controls, checkout flow with Orders/OrderItems persistence, COD + banking payment |
+| Cart/Checkout | Complete: session-based cart, AJAX controls, COD-only checkout, coupon discount system |
+| Order management | Complete: admin list/detail/status-update, client order tracking with tab filters |
+| Email notification | Complete: order confirmation + status update emails via database queue (ShouldQueue) |
 | News/Projects | Controller structure done, views pending |
-| Customer Service | Controller + views exist |
+| Customer Service | Complete: dynamic installation guide (ThiCong), catalog list + PDF flipbook reader (Catalog) |
 | Tests | 7 Pest files (14 tests, 31 assertions, all passing) |
 
 ## Version History
@@ -118,3 +123,5 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 | 0.2.0 | 2026-05-01 | Product detail migrations, model/service creation |
 | 0.3.0 | 2026-05-06 | Admin CRUD complete, client product data binding |
 | 0.3.1 | 2026-05-07 | Page configuration admin panels (Factory/Contact/FAQ), TinyMCE replaced with auto-resize textareas, dynamic client pages, 12 new Pest tests, admin UI/UX Pro Max refactor |
+| 0.4.0 | 2026-05-09 | Coupon/discount module: coupons CRUD admin panel, client-side coupon application via AJAX on checkout page, percent/fixed discount calculation with max discount cap, min order value check, product-type filtering, usage limits, coupon banner component |
+| 0.5.0 | 2026-05-09 | Order management and email notification: admin order list/detail/status-update, client dynamic order status tracking page with tab filters, email notification system (order confirmation + status updates via database-queued ShouldQueue mailables), disabled bank transfer payment (COD only) |

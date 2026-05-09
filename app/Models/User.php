@@ -23,6 +23,9 @@ class User extends Authenticatable
         'name',
         'role',
         'email',
+        'phone',       // Thêm dòng này
+        'gender',      // Thêm dòng này
+        'birth_year',  // Thêm dòng này
         'password',
         'google_id',
         'avatar',

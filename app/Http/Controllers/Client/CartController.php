@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\AddToCartRequest;
 use App\Http\Requests\Cart\CheckoutRequest;
 use App\Http\Requests\Cart\UpdateCartRequest;
+use App\Mail\OrderCreatedMail;
 use App\Models\Order;
 use App\Services\CartService;
 use App\Services\CouponService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class CartController extends Controller
 {
@@ -175,7 +177,7 @@ class CartController extends Controller
                 'shipping_fee'   => $shippingFee,
                 'discount'       => $discount,
                 'total_amount'   => $totalAmount,
-                'status'         => $request->payment_method === 'banking' ? 'pending_payment' : 'processing',
+                'status'         => 'processing',
                 'payment_method' => $request->payment_method,
                 'coupon_code'    => $couponCode,
             ]);
@@ -198,6 +200,10 @@ class CartController extends Controller
                 $couponService->incrementUsage($couponCode);
             }
         });
+
+        if ($order->email) {
+            Mail::to($order->email)->send(new OrderCreatedMail($order->load('items')));
+        }
 
         $cartService->clear();
         $cartService->removeCoupon();
