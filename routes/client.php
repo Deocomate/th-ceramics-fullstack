@@ -5,6 +5,14 @@ use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\CustomerServiceController;
+use App\Http\Controllers\Client\DichVuKhachHang\BaoMatThongTinController;
+use App\Http\Controllers\Client\DichVuKhachHang\CatalogController;
+use App\Http\Controllers\Client\DichVuKhachHang\ChinhSachDoiTraController;
+use App\Http\Controllers\Client\DichVuKhachHang\ChinhSachVanChuyenController;
+use App\Http\Controllers\Client\DichVuKhachHang\HuongDanThiCongController;
+use App\Http\Controllers\Client\DichVuKhachHang\QuyTrinhDatHangController;
+use App\Http\Controllers\Client\DichVuKhachHang\TaiKhoanCuaToiController;
+use App\Http\Controllers\Client\DichVuKhachHang\TrangThaiDonHangController;
 use App\Http\Controllers\Client\FactoryController;
 use App\Http\Controllers\Client\FaqController;
 use App\Http\Controllers\Client\HomeController;
@@ -19,14 +27,6 @@ use App\Http\Controllers\Client\ProductPages\NgoiAmDuongController;
 use App\Http\Controllers\Client\ProductPages\NgoiHaiVanMieuController;
 use App\Http\Controllers\Client\ProductPages\PhuKienNgoiController;
 use App\Http\Controllers\Client\ProjectController;
-use App\Http\Controllers\Client\DichVuKhachHang\TaiKhoanCuaToiController;
-use App\Http\Controllers\Client\DichVuKhachHang\TrangThaiDonHangController;
-use App\Http\Controllers\Client\DichVuKhachHang\CatalogController;
-use App\Http\Controllers\Client\DichVuKhachHang\QuyTrinhDatHangController;
-use App\Http\Controllers\Client\DichVuKhachHang\HuongDanThiCongController;
-use App\Http\Controllers\Client\DichVuKhachHang\ChinhSachVanChuyenController;
-use App\Http\Controllers\Client\DichVuKhachHang\ChinhSachDoiTraController;
-use App\Http\Controllers\Client\DichVuKhachHang\BaoMatThongTinController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,6 +65,8 @@ Route::name('client.')->group(function () {
     Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('cart.update');
     Route::post('/gio-hang/xoa', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/thanh-toan/xu-ly', [CartController::class, 'processCheckout'])->name('cart.checkout.process');
+    Route::post('/thanh-toan/ap-dung-ma', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
+    Route::post('/thanh-toan/go-ma', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
 
     // Chính sách & Dịch vụ khách hàng
     Route::prefix('dich-vu')->name('customer-service.')->group(function () {

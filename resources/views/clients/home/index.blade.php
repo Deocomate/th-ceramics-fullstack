@@ -1,5 +1,6 @@
 <x-layouts.client title="Trang chủ" data-page="index" main-class="bg-white">
     @include('clients.home.partials.banner')
+    <x-coupon-banner />
     @include('clients.home.partials.works')
     @include('clients.home.partials.partners')
     @include('clients.home.partials.products-ngoi-am-duong')

@@ -412,5 +412,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
             Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
         });
+
+        // ── Quản lý mã giảm giá ──────────────────────────────────────────
+        Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class)
+            ->except(['show']);
+        Route::post('/coupons/{coupon}/restore', [\App\Http\Controllers\Admin\CouponController::class, 'restore'])
+            ->name('coupons.restore');
     });
 });

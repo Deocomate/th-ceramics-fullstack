@@ -25,6 +25,7 @@ class Order extends Model
         'total_amount',
         'payment_method',
         'status',
+        'coupon_code',
     ];
 
     protected function casts(): array
@@ -48,7 +49,7 @@ class Order extends Model
     public static function generateOrderCode(): string
     {
         do {
-            $code = 'THC-' . now()->format('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
+            $code = 'THC-'.now()->format('Ymd').'-'.strtoupper(substr(uniqid(), -4));
         } while (static::where('order_code', $code)->exists());
 
         return $code;

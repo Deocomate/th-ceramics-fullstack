@@ -83,6 +83,17 @@
             </div>
         </div>
 
+        {{-- Quản lý mã giảm giá --}}
+        <a href="{{ route('admin.coupons.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.coupons.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">
+            <svg class="w-[18px] h-[18px] flex-shrink-0 {{ request()->routeIs('admin.coupons.*') ? 'text-[#A31D1D]' : '' }}" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+            </svg>
+            Quản lý mã giảm giá
+        </a>
+
         <!-- 2. CẤU HÌNH TRANG ĐƠN -->
         @php $isPageConfig = request()->routeIs(['admin.pages.*', 'admin.danh-muc-du-an.*', 'admin.du-an.*', 'admin.danh-muc-tin-tuc.*', 'admin.tin-tuc.*']); @endphp
         <div>

@@ -19,6 +19,10 @@ class CartService
 {
     private string $sessionKey = 'th_cart';
 
+    public function __construct(
+        private readonly CouponService $couponService
+    ) {}
+
     /** @return array{name: string, variant_name: ?string, sku: ?string, price: int, image: ?string} */
     public function getProductDetails(string $productType, int $productId, ?int $variantId): array
     {
@@ -99,12 +103,10 @@ class CartService
 
     public function getTotal(): int
     {
-        $total = 0;
-        foreach ($this->getCart() as $item) {
-            $total += $item['price'] * $item['quantity'];
-        }
+        $subtotal = $this->getSubtotal();
+        $discount = $this->getDiscountAmount();
 
-        return $total;
+        return max(0, $subtotal - $discount);
     }
 
     public function getCount(): int
@@ -115,6 +117,43 @@ class CartService
         }
 
         return $count;
+    }
+
+    public function setCoupon(string $code): void
+    {
+        session(['th_cart_coupon' => $code]);
+    }
+
+    public function getCouponCode(): ?string
+    {
+        return session('th_cart_coupon');
+    }
+
+    public function removeCoupon(): void
+    {
+        session()->forget('th_cart_coupon');
+    }
+
+    public function getSubtotal(): int
+    {
+        return $this->couponService->getCartSubtotal($this->getCart());
+    }
+
+    public function getDiscountAmount(): int
+    {
+        $code = $this->getCouponCode();
+        if (! $code) {
+            return 0;
+        }
+
+        $result = $this->couponService->validateAndCalculate($code, $this->getCart());
+        if (! $result['valid']) {
+            $this->removeCoupon();
+
+            return 0;
+        }
+
+        return $result['discount'];
     }
 
     public function clear(): void

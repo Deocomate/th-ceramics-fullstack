@@ -103,13 +103,34 @@
                     </div>
 
                     <!-- Coupon -->
-                    <div class="space-y-2 pt-4">
-                        <p class="text-[12px] text-primary/40">Nhập mã tại đây</p>
-                        <div class="flex">
-                            <input type="text" placeholder="Mã ưu đãi"
-                                class="flex-1 bg-[#FEF9F5] border border-secondary border-r-0 px-4 py-3 text-sm focus:outline-none">
-                            <button type="button"
-                                class="bg-secondary text-white px-6 py-3 text-xs font-bold uppercase hover:bg-opacity-90 transition-all">Áp dụng</button>
+                    <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center gap-2" id="coupon-input-area">
+                            <input type="text" id="coupon-code"
+                                   placeholder="Nhập mã giảm giá"
+                                   value="{{ $couponCode ?? '' }}"
+                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase
+                                          focus:ring-red-500 focus:border-red-500 font-archivo">
+                            <button id="apply-coupon-btn" type="button"
+                                    class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg
+                                           hover:bg-red-700 transition-colors whitespace-nowrap font-archivo">
+                                Áp dụng
+                            </button>
+                        </div>
+                        <p id="coupon-message" class="mt-2 text-sm hidden font-archivo"></p>
+
+                        <div id="coupon-discount-row" class="mt-3 {{ ($couponCode ?? false) ? '' : 'hidden' }}">
+                            <div class="flex justify-between items-center text-sm font-archivo">
+                                <span class="text-green-600 font-medium">Giảm giá:</span>
+                                <div class="flex items-center gap-3">
+                                    <span id="discount-amount" class="text-green-600 font-medium">
+                                        -{{ number_format($discountAmount ?? 0, 0, ',', '.') }}đ
+                                    </span>
+                                    <button id="remove-coupon-btn" type="button"
+                                            class="text-red-500 hover:text-red-700 text-xs underline font-archivo">
+                                        Xóa mã
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -117,7 +138,7 @@
                     <div class="mt-8 pt-8 border-t border-gray-300 space-y-2 md:space-y-2">
                         <div class="flex justify-between text-xs lg:text-sm font-archivo">
                             <span class="text-primary">Tạm tính</span>
-                            <span class="text-primary font-medium">{{ number_format($total) }} đ</span>
+                            <span id="subtotal-amount" class="text-primary font-medium">{{ number_format($total) }} đ</span>
                         </div>
                         <div class="flex justify-between text-xs lg:text-sm font-archivo">
                             <span class="text-primary">Phí vận chuyển</span>
@@ -125,7 +146,7 @@
                         </div>
                         <div class="flex justify-between items-baseline pt-4 font-archivo">
                             <span class="text-sm lg:text-base font-bold text-primary">Tổng</span>
-                            <span class="text-sm lg:text-base font-bold text-primary tracking-tight">{{ number_format($total) }} đ</span>
+                            <span id="total-amount" class="text-sm lg:text-base font-bold text-primary tracking-tight">{{ number_format($total - ($discountAmount ?? 0)) }} đ</span>
                         </div>
                     </div>
                 </div>
@@ -135,5 +156,113 @@
 </div>
 
 <x-faq-faq-contact />
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const couponInput = document.getElementById('coupon-code');
+    const applyBtn = document.getElementById('apply-coupon-btn');
+    const removeBtn = document.getElementById('remove-coupon-btn');
+    const couponMessage = document.getElementById('coupon-message');
+    const discountRow = document.getElementById('coupon-discount-row');
+    const discountAmount = document.getElementById('discount-amount');
+    const totalAmount = document.getElementById('total-amount');
+    const subtotalAmount = document.getElementById('subtotal-amount');
+
+    function formatVND(amount) {
+        return new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
+    }
+
+    function showMessage(msg, type) {
+        couponMessage.textContent = msg;
+        couponMessage.className = 'mt-2 text-sm font-archivo ' +
+            (type === 'error' ? 'text-red-600' : 'text-green-600');
+        couponMessage.classList.remove('hidden');
+    }
+
+    async function handleApplyCoupon() {
+        const code = couponInput.value.trim();
+        if (!code) {
+            showMessage('Vui lòng nhập mã giảm giá.', 'error');
+            return;
+        }
+
+        applyBtn.disabled = true;
+        applyBtn.textContent = 'Đang xử lý...';
+
+        try {
+            const res = await fetch('{{ route("client.cart.coupon.apply") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ code }),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                discountRow.classList.remove('hidden');
+                discountAmount.textContent = '-' + formatVND(data.discount);
+                if (totalAmount) {
+                    totalAmount.textContent = formatVND(data.new_total);
+                }
+                showMessage(data.message, 'success');
+                applyBtn.textContent = 'Đã áp dụng';
+            } else {
+                showMessage(data.message, 'error');
+                applyBtn.textContent = 'Áp dụng';
+            }
+        } catch (err) {
+            showMessage('Có lỗi xảy ra, vui lòng thử lại.', 'error');
+            applyBtn.textContent = 'Áp dụng';
+        } finally {
+            applyBtn.disabled = false;
+        }
+    }
+
+    async function handleRemoveCoupon() {
+        try {
+            const res = await fetch('{{ route("client.cart.coupon.remove") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                discountRow.classList.add('hidden');
+                couponInput.value = '';
+                if (totalAmount) {
+                    totalAmount.textContent = formatVND(data.new_total);
+                }
+                showMessage(data.message, 'success');
+                applyBtn.textContent = 'Áp dụng';
+            }
+        } catch (err) {
+            showMessage('Có lỗi xảy ra, vui lòng thử lại.', 'error');
+        }
+    }
+
+    applyBtn.addEventListener('click', handleApplyCoupon);
+    couponInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleApplyCoupon();
+        }
+    });
+    if (removeBtn) {
+        removeBtn.addEventListener('click', handleRemoveCoupon);
+    }
+    couponInput.addEventListener('input', () => {
+        couponInput.value = couponInput.value.toUpperCase();
+    });
+});
+</script>
 
 </x-layouts.client>
