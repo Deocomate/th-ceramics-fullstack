@@ -19,14 +19,24 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
 
-        // Redirect unauthenticated users to the admin login page
+        // Redirect unauthenticated users based on route prefix
         $middleware->redirectGuestsTo(function (\Illuminate\Http\Request $request) {
-            return route('admin.auth.login');
+            // If accessing admin routes, redirect to admin login
+            if ($request->routeIs('admin.*') || $request->is('admin*')) {
+                return route('admin.auth.login');
+            }
+            // For client routes, redirect to client login
+            return route('client.auth.login');
         });
 
-        // Redirect authenticated users away from guest-only pages (e.g. login) to admin dashboard
+        // Redirect authenticated users away from guest-only pages
         $middleware->redirectUsersTo(function (\Illuminate\Http\Request $request) {
-            return route('admin.dashboard');
+            // If accessing admin pages, redirect to admin dashboard
+            if ($request->routeIs('admin.*') || $request->is('admin*')) {
+                return route('admin.dashboard');
+            }
+            // For client pages, redirect to client home
+            return route('client.home');
         });
     })
     ->withExceptions(function (Exceptions $exceptions): void {

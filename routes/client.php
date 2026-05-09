@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Client\AboutController;
+use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\CustomerServiceController;
@@ -95,6 +96,41 @@ Route::name('client.')->group(function () {
         // Phụ Kiện Ngói
         Route::get('/phu-kien-ngoi', [PhuKienNgoiController::class, 'index'])->name('phu-kien-ngoi.index');
         Route::get('/phu-kien-ngoi/{id}', [PhuKienNgoiController::class, 'detail'])->name('phu-kien-ngoi.detail');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | AUTHENTICATION ROUTES
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('tai-khoan')->name('auth.')->group(function () {
+        // Only for guests
+        Route::middleware('guest')->group(function () {
+            // Login
+            Route::get('/dang-nhap', [AuthController::class, 'showLogin'])->name('login');
+            Route::post('/dang-nhap', [AuthController::class, 'login'])->name('login.post');
+
+            // Register
+            Route::get('/dang-ky', [AuthController::class, 'showRegister'])->name('register');
+            Route::post('/dang-ky', [AuthController::class, 'register'])->name('register.post');
+
+            // Forgot Password
+            Route::get('/quen-mat-khau', [AuthController::class, 'showForgotPassword'])->name('forgot-password');
+            Route::post('/quen-mat-khau', [AuthController::class, 'sendResetLink'])->name('forgot-password.post');
+
+            // Reset Password
+            Route::get('/dat-lai-mat-khau/{token}', [AuthController::class, 'showResetPassword'])->name('reset-password');
+            Route::post('/dat-lai-mat-khau', [AuthController::class, 'resetPassword'])->name('reset-password.post');
+
+            // Google OAuth
+            Route::get('/google', [AuthController::class, 'redirectToGoogle'])->name('google');
+            Route::get('/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google.callback');
+        });
+
+        // Only for authenticated users
+        Route::middleware('auth')->group(function () {
+            Route::post('/dang-xuat', [AuthController::class, 'logout'])->name('logout');
+        });
     });
 });
 
