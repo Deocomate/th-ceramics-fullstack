@@ -36,7 +36,7 @@
         </div>
 
         <!-- 1. CẤU HÌNH SECTION CHUNG -->
-        @php $isSectionChung = request()->routeIs(['admin.gia-tri-vuot-troi.*', 'admin.giai-thuong-thanh-tuu.*', 'admin.tac-gia.*']); @endphp
+        @php $isSectionChung = request()->routeIs(['admin.gia-tri-vuot-troi.*', 'admin.giai-thuong-thanh-tuu.*', 'admin.tac-gia.*', 'admin.thi-cong.*', 'admin.catalog.*']); @endphp
         <div>
             <button type="button"
                 class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
@@ -69,6 +69,14 @@
                         <a href="{{ route('admin.tac-gia.index') }}"
                             class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.tac-gia.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
                             Tác giả
+                        </a>
+                        <a href="{{ route('admin.thi-cong.index') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.thi-cong.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Video Thi Công
+                        </a>
+                        <a href="{{ route('admin.catalog.index') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.catalog.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Catalog
                         </a>
                     </div>
                 </div>

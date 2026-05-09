@@ -389,6 +389,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [\App\Http\Controllers\Admin\TacGiaController::class, 'destroy'])->name('destroy');
         });
 
+         Route::prefix('thi-cong')->name('thi-cong.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\ThiCongController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\ThiCongController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\ThiCongController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\ThiCongController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('catalog')->name('catalog.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\CatalogController::class, 'index'])->name('index');
+            Route::post('/', [\App\Http\Controllers\Admin\CatalogController::class, 'store'])->name('store');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\CatalogController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\CatalogController::class, 'destroy'])->name('destroy');
+        });
+
         // ── Superadmin-only: account management ──────────────────────────────
         Route::middleware('role:superadmin')->group(function () {
             Route::get('users', [UserController::class, 'index'])->name('users.index');
