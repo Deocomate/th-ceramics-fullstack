@@ -342,6 +342,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class)->except(['show']);
         });
 
+
+            // ── Danh Mục Dự Án ──────────────────────────────────────────────
+        Route::prefix('danh-muc-du-an')->name('danh-muc-du-an.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'index'])->name('index');
+            Route::post('/',[\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'store'])->name('store');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore',[\App\Http\Controllers\Admin\DanhMucDuAnController::class, 'restore'])->name('restore');
+        });
+
+        // ── Dự Án ────────────────────────────────────────────────────────
+        Route::prefix('du-an')->name('du-an.')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\DuAnController::class, 'index'])->name('index');
+            Route::get('/create',[\App\Http\Controllers\Admin\DuAnController::class, 'create'])->name('create');
+            Route::post('/',[\App\Http\Controllers\Admin\DuAnController::class, 'store'])->name('store');
+            Route::get('/{id}/edit',[\App\Http\Controllers\Admin\DuAnController::class, 'edit'])->name('edit');
+            Route::put('/{id}',[\App\Http\Controllers\Admin\DuAnController::class, 'update'])->name('update');
+            Route::delete('/{id}',[\App\Http\Controllers\Admin\DuAnController::class, 'destroy'])->name('destroy');
+            Route::delete('/{id}/image',[\App\Http\Controllers\Admin\DuAnController::class, 'destroyImage'])->name('image.destroy');
+        });
+
         // ── Superadmin-only: account management ──────────────────────────────
         Route::middleware('role:superadmin')->group(function () {
             Route::get('users', [UserController::class, 'index'])->name('users.index');

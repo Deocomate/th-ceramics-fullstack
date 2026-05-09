@@ -71,7 +71,7 @@
         </div>
 
         <!-- 2. CẤU HÌNH TRANG ĐƠN -->
-        @php $isPageConfig = request()->routeIs(['admin.pages.*']); @endphp
+        @php $isPageConfig = request()->routeIs(['admin.pages.*', 'admin.danh-muc-du-an.*', 'admin.du-an.*']); @endphp
         <div>
             <button type="button"
                 class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
@@ -111,6 +111,19 @@
                         <a href="{{ route('admin.pages.faq.edit') }}"
                             class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.faq.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
                             Trang FAQ
+                        </a>
+                        <a href="{{ route('admin.pages.faq.edit') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.pages.faq.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Trang FAQ
+                        </a>
+                        <!-- THÊM 2 ĐƯỜNG DẪN MỚI -->
+                        <a href="{{ route('admin.danh-muc-du-an.index') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.danh-muc-du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Danh Mục Dự Án
+                        </a>
+                        <a href="{{ route('admin.du-an.index') }}"
+                            class="block px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 {{ request()->routeIs('admin.du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">
+                            Danh Sách Dự Án
                         </a>
                     </div>
                 </div>
