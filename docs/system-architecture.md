@@ -91,10 +91,11 @@ Two route files loaded under a single `web` middleware group in `bootstrap/app.p
 - Single-record pattern for product section models (no create/delete)
 - Order model includes `statusLabel()` static helper and `generateOrderCode()` method
 - ThiCong and Catalog models serve dynamic customer service content (installation guides, catalog PDFs)
+- DuAn and DanhMucDuAn models serve the dynamic project showcase (project listing with category filters, detail with gallery)
 
 ### 6. Database Layer
 - **MariaDB** via `DB_CONNECTION=mariadb` in `.env`
-- **44 tables** from 7 migration files
+- **44 tables** from 7 migration files + 8 seeders
 - All session/cache/queue storage uses `database` driver (queue actively used for email dispatch)
 - Soft delete via boolean `is_delete` column
 
@@ -189,6 +190,11 @@ Page Configuration Tables (static pages, single-record sections)
 
 Users table (separate, for admin auth)
 
+Project Module Tables
+│
+├── DanhMucDuAn (project categories: ten_danh_muc, is_delete)
+└── DuAn (projects: ten_du_an, dia_diem, san_pham, nam, images JSON, slug, FK danh_muc_du_an_id)
+
 Customer Service Tables
 │
 ├── ThiCong (installation guide: tieu_de, anh, link_youtube)
@@ -227,7 +233,8 @@ Mail & Queue
 /san-pham/{category}       → Product listing
 /san-pham/{category}/{id}  → Product detail
 /tin-tuc                   → News listing
-/du-an                     → Projects listing
+/du-an                     → Projects listing (dynamic: category filters + pagination, 8 per page)
+/du-an/{slug}              → Project detail (dynamic: hero, meta bar, GLightbox/Swiper gallery, related projects)
 /gio-hang                  → Cart
 /thanh-toan                → Checkout
 /thanh-toan/ap-dung-ma     → Apply coupon (AJAX POST)
@@ -235,6 +242,8 @@ Mail & Queue
 /admin/orders              → Order list (paginated, latest first)
 /admin/orders/{order}      → Order detail with items + status update form
 /admin/coupons             → Coupon management (CRUD + restore)
+/admin/danh-muc-du-an       → Project category management (CRUD + restore)
+/admin/du-an                 → Project item management (CRUD + image delete)
 
 /dich-vu/huong-dan-thi-cong   → Installation guide (dynamic from ThiCong model)
 /dich-vu/tai-catalog          → Catalog list (dynamic from Catalog model, featured + grid)

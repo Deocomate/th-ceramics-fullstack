@@ -1,5 +1,15 @@
 # Project Changelog
 
+## 0.5.4 (2026-05-10)
+
+### Added
+- **Project Module Client Dynamic**: Full dynamic project showcase system
+  - `DuAnSeeder` -- seeds 5 project categories (`DanhMucDuAn`: Ngoi Am Duong, Ngoi Hai - Van Mieu, Gach Thong Gio, Gach Trang Tri, San pham khac) + 20 real Vietnamese projects (Chua Bai Dinh, Thien Vien Truc Lam, etc.) with deterministically assigned image arrays and unique slugs
+  - `DatabaseSeeder` updated to include `DuAnSeeder::class` (7 seeder calls now)
+- **Dynamic Client Project Index** (`/du-an`): Category filters via mobile dropdown + desktop tabs, project grid with pagination (8 per page), empty state fallback, image thumbnails with hover zoom
+- **Dynamic Client Project Detail** (`/du-an/{slug}`): Hero banner with overlay, meta bar (dia_diem, nam, san_pham), 3-row staggered gallery grid (GLightbox on desktop), Swiper carousel (mobile), related projects from same category (limit 4), CTA section
+- `DanhMucDuAn` and `DuAn` Eloquent models documented (table `du_an`, PK `du_an_id`, `images` JSON cast, `danhMuc()` BelongsTo relationship)
+
 ## 0.5.3 (2026-05-10)
 
 ### Changed

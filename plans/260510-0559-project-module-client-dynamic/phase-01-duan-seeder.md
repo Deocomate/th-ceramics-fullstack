@@ -1,7 +1,7 @@
 ---
 phase: 1
 title: "DuAn Seeder"
-status: pending
+status: completed
 priority: P1
 effort: "1.5h"
 dependencies: []
@@ -72,12 +72,12 @@ DuAnSeeder
 
 ## Success Criteria
 
-- [ ] `php artisan db:seed --class=DuAnSeeder` chạy không lỗi
-- [ ] 5 danh mục được tạo trong bảng `danh_muc_du_an`
-- [ ] 20 dự án được tạo trong bảng `du_an`
-- [ ] Mỗi dự án có slug unique, `images` là JSON array 3-5 phần tử
-- [ ] DatabaseSeeder gọi được DuAnSeeder
-- [ ] Admin edit view hiển thị đúng ảnh từ mảng images
+- [x] `php artisan db:seed --class=DuAnSeeder` chạy không lỗi
+- [x] 5 danh mục được tạo trong bảng `danh_muc_du_an`
+- [x] 20 dự án được tạo trong bảng `du_an`
+- [x] Mỗi dự án có slug unique, `images` là JSON array 3-5 phần tử
+- [x] DatabaseSeeder gọi được DuAnSeeder
+- [x] Admin edit view hiển thị đúng ảnh từ mảng images
 
 ## Risk Assessment
 

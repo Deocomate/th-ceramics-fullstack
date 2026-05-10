@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Client Index Page"
-status: pending
+status: completed
 priority: P1
 effort: "2h"
 dependencies: []
@@ -180,14 +180,14 @@ Sử dụng `$projects->links()` với custom pagination view giữ nguyên HTML
 
 ## Success Criteria
 
-- [ ] `/du-an` render danh sách dynamic từ database
-- [ ] Mobile dropdown filter hoạt động, redirect đúng URL có `?category=`
-- [ ] Desktop tabs hiển thị active state (underline `#c76e00`) đúng với category hiện tại
-- [ ] Grid render đủ 8 project/page, link đúng `/du-an/{slug}`
-- [ ] Pagination hoạt động: prev/next, page numbers, active state
-- [ ] Filter + pagination kết hợp đúng (category filter được giữ khi chuyển trang)
-- [ ] 100% class Tailwind và AOS animation không đổi
-- [ ] Empty state hiển thị khi không có dự án
+- [x] `/du-an` render danh sách dynamic từ database
+- [x] Mobile dropdown filter hoạt động, redirect đúng URL có `?category=`
+- [x] Desktop tabs hiển thị active state (underline `#c76e00`) đúng với category hiện tại
+- [x] Grid render đủ 8 project/page, link đúng `/du-an/{slug}`
+- [x] Pagination hoạt động: prev/next, page numbers, active state
+- [x] Filter + pagination kết hợp đúng (category filter được giữ khi chuyển trang)
+- [x] 100% class Tailwind và AOS animation không đổi
+- [x] Empty state hiển thị khi không có dự án
 
 ## Risk Assessment
 

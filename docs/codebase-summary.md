@@ -36,7 +36,7 @@ th-ceramics-fullstack/
 ├── database/
 │   ├── factories/
 │   ├── migrations/                       # 15 files → 44 tables
-│   └── seeders/                          # 7 files (User, ProductType, ProductDetail, DinhMuc, HomeAndAboutUs, PageConfig, DatabaseSeeder)
+│   └── seeders/                          # 8 files (User, ProductType, ProductDetail, DinhMuc, HomeAndAboutUs, PageConfig, DuAn, DatabaseSeeder)
 ├── public/
 │   └── assets/
 │       ├── css/main.css
@@ -83,7 +83,7 @@ th-ceramics-fullstack/
 | `app/Http/Middleware/` | 1 | RoleMiddleware |
 | `routes/` | 3 | web.php (/admin + /admin/pages/*), client.php, console.php |
 | `database/migrations/` | 7 | Migration files |
-| `database/seeders/` | 7 | User, ProductType, ProductDetail, DinhMuc, HomeAndAboutUs, PageConfig, DatabaseSeeder |
+| `database/seeders/` | 8 | User, ProductType, ProductDetail, DinhMuc, HomeAndAboutUs, PageConfig, DuAn, DatabaseSeeder |
 | `resources/views/admin/` | 77 | Admin Blade templates (incl. orders/index, orders/show) |
 | `resources/views/clients/` | 136 | Client Blade templates (incl. order status page) |
 | `resources/views/emails/` | 3 | Email templates (order created, status updated, password reset) |
@@ -119,6 +119,10 @@ Single-row config for static pages: `PageFactory` (14+ fields for factory tour p
 ### Customer Service Models (2)
 `ThiCong` — installation guide records (table `thi_cong`, PK `thi_cong`), fields: tieu_de, anh (image), link_youtube, used in dynamic installation guide page
 `Catalog` — product catalog PDFs (table `catalog`, PK `catalog_id`), fields: tieu_de, anh_dai_dien (thumbnail), file (PDF path), used in catalog list + PDF flipbook reader
+
+### Project Module Models (2)
+`DanhMucDuAn` — project categories (table `danh_muc_du_an`, PK `danh_muc_du_an_id`), fields: ten_danh_muc, is_delete; hasMany DuAns
+`DuAn` — individual projects (table `du_an`, PK `du_an_id`), fields: ten_du_an, dia_diem, san_pham, nam, images (JSON array), slug, danh_muc_du_an_id; BelongsTo DanhMucDuAn
 
 ## Key Architectural Decisions
 

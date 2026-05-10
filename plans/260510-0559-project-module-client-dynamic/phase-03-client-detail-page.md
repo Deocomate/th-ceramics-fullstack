@@ -1,7 +1,7 @@
 ---
 phase: 3
 title: "Client Detail Page"
-status: pending
+status: completed
 priority: P1
 effort: "2h"
 dependencies: []
@@ -227,16 +227,16 @@ Nếu có `$relatedProjects`:
 
 ## Success Criteria
 
-- [ ] `/du-an/{slug}` hiển thị đúng dự án từ database
-- [ ] `/du-an/slug-khong-ton-tai` trả về 404
-- [ ] Hero banner có tiêu đề dynamic, background là ảnh đầu tiên của dự án
-- [ ] Breadcrumb hiển thị: Trang chủ > Dự án > {Tên dự án}
-- [ ] Meta bar hiển thị địa điểm, năm (nếu có), sản phẩm từ DB
-- [ ] Gallery desktop: grid layout giữ nguyên pattern (2+1, 4 equal, 1+2)
-- [ ] Gallery mobile: Swiper carousel với tất cả ảnh
-- [ ] GLightbox hoạt động trên tất cả ảnh (cả desktop và mobile)
-- [ ] Related projects hiển thị (nếu có dự án cùng danh mục)
-- [ ] 100% class Tailwind, AOS, JS không đổi
+- [x] `/du-an/{slug}` hiển thị đúng dự án từ database
+- [x] `/du-an/slug-khong-ton-tai` trả về 404
+- [x] Hero banner có tiêu đề dynamic, background là ảnh đầu tiên của dự án
+- [x] Breadcrumb hiển thị: Trang chủ > Dự án > {Tên dự án}
+- [x] Meta bar hiển thị địa điểm, năm (nếu có), sản phẩm từ DB
+- [x] Gallery desktop: grid layout giữ nguyên pattern (2+1, 4 equal, 1+2)
+- [x] Gallery mobile: Swiper carousel với tất cả ảnh
+- [x] GLightbox hoạt động trên tất cả ảnh (cả desktop và mobile)
+- [x] Related projects hiển thị (nếu có dự án cùng danh mục)
+- [x] 100% class Tailwind, AOS, JS không đổi
 
 ## Risk Assessment
 

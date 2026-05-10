@@ -1,7 +1,7 @@
 ---
 title: "Dynamic hóa Module Dự án (Projects) - Seeder, Client Index & Detail"
 description: "Seeder dữ liệu thực tế + Dynamic hóa trang Danh sách & Chi tiết Dự án cho client"
-status: pending
+status: completed
 priority: P1
 branch: "main"
 tags: [projects, client, seeder, gallery, filter, pagination]
@@ -37,9 +37,9 @@ source: skill
 
 | Phase | Name | Status | Priority | Effort |
 |-------|------|--------|----------|--------|
-| 1 | [DuAn Seeder](./phase-01-duan-seeder.md) | Pending | P1 | 1.5h |
-| 2 | [Client Index Page](./phase-02-client-index-page.md) | Pending | P1 | 2h |
-| 3 | [Client Detail Page](./phase-03-client-detail-page.md) | Pending | P1 | 2h |
+| 1 | [DuAn Seeder](./phase-01-duan-seeder.md) | Completed | P1 | 1.5h |
+| 2 | [Client Index Page](./phase-02-client-index-page.md) | Completed | P1 | 2h |
+| 3 | [Client Detail Page](./phase-03-client-detail-page.md) | Completed | P1 | 2h |
 
 ## Dependencies
 
