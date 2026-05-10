@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ProductTypeSeeder::class,
             ProductDetailSeeder::class,
             DuAnSeeder::class,
+            CatalogSeeder::class,
         ]);
     }
 }
