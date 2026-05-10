@@ -32,7 +32,7 @@
                         <div class="lg:col-span-1">
                             <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh đại diện video <span class="text-red-500">*</span></label>
                             <div class="w-full aspect-[4/3] mx-auto rounded-xl border-2 border-dashed border-blue-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-blue-50/50 transition-colors">
-                                <img id="preview-new-thicong" src="https://placehold.co/800x600?text=Chon+Anh" class="w-full h-full object-cover" alt="Preview">
+                                <img id="preview-new-thicong" src="https://placehold.co/800x600?text=Chon+Anh" class="w-full h-full object-contain" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Chọn ảnh</span>
                                 </div>
@@ -62,7 +62,7 @@
                 @forelse($thiCongs as $item)
                     <div class="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col group relative">
                         <div class="w-full aspect-[4/3] relative bg-gray-100 flex-shrink-0 overflow-hidden border-b border-gray-100">
-                            <img src="{{ asset('storage/' . $item->anh) }}" onerror="this.src='https://placehold.co/800x600?text=Loi+Anh'" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $item->anh) }}" onerror="this.src='https://placehold.co/800x600?text=Loi+Anh'" class="w-full h-full object-contain">
                             
                             <!-- Icon Video play giả lập -->
                             @if($item->link_youtube)
@@ -127,7 +127,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh đại diện</label>
                             <div class="w-full aspect-[4/3] max-w-[280px] mx-auto rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
-                                <img id="preview-edit-img" src="" class="w-full h-full object-cover" alt="Preview">
+                                <img id="preview-edit-img" src="" class="w-full h-full object-contain" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Đổi ảnh</span>
                                 </div>

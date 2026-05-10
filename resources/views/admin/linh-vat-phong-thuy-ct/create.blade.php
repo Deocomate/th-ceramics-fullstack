@@ -65,7 +65,7 @@
                 <div class="lg:col-span-1">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Ảnh bản vẽ / Kích thước</label>
                     <div class="aspect-square w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
-                        <img id="preview-size" src="https://placehold.co/400x400?text=Chon+Ban+Ve" class="w-full h-full object-cover">
+                        <img id="preview-size" src="https://placehold.co/400x400?text=Chon+Ban+Ve" class="w-full h-full object-contain">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Tải ảnh lên</span>
                         </div>
@@ -156,7 +156,7 @@
                         reader.onload = function(e) {
                             const div = document.createElement('div');
                             div.className = 'image-preview-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100';
-                            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">
+                            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain">
                                              <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center">
                                                 <button type="button" onclick="removeFile(${index})" class="text-white text-xl">×</button>
                                              </div>`;

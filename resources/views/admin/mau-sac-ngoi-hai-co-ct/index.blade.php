@@ -60,7 +60,7 @@
                 <div class="xl:col-span-1">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Ảnh màu sắc <span class="text-red-500">*</span></label>
                     <div class="aspect-square w-full max-w-[250px] mx-auto rounded-xl border-2 border-dashed border-blue-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-blue-50 transition-colors">
-                        <img id="preview-new" src="https://placehold.co/400x400?text=Chon+Anh" class="w-full h-full object-cover">
+                        <img id="preview-new" src="https://placehold.co/400x400?text=Chon+Anh" class="w-full h-full object-contain">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Chọn ảnh tải lên</span>
                         </div>
@@ -140,7 +140,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-12 h-12 rounded-lg border border-gray-200 shadow-sm overflow-hidden flex-shrink-0 {{ $item->is_delete ? 'opacity-50 grayscale' : '' }}">
-                                        <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-cover">
+                                        <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-contain">
                                     </div>
                                     <span class="font-bold text-gray-800 {{ $item->is_delete ? 'text-gray-400 line-through' : '' }}">{{ $item->name }}</span>
                                 </div>
@@ -227,7 +227,7 @@
                     <div class="md:col-span-1">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Ảnh</label>
                         <div class="aspect-square w-full rounded-xl border-2 border-dashed border-gray-300 relative group flex items-center justify-center bg-gray-50 overflow-hidden">
-                            <img id="preview-edit" src="" class="w-full h-full object-cover">
+                            <img id="preview-edit" src="" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Đổi ảnh</span>
                             </div>

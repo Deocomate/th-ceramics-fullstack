@@ -33,7 +33,7 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh<span class="text-red-500">*</span></label>
                             {{-- Đã sửa: Dùng chiều cao cố định h-[240px] cho khung upload --}}
                             <div class="w-full h-[240px] mx-auto rounded-xl border-2 border-dashed border-blue-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-blue-50/50 transition-colors">
-                                <img id="preview-new-giaithuong" src="https://placehold.co/400x300?text=Chon+Anh" class="w-full h-full object-cover" alt="Preview">
+                                <img id="preview-new-giaithuong" src="https://placehold.co/400x300?text=Chon+Anh" class="w-full h-full object-contain" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Chọn ảnh tải lên</span>
                                 </div>
@@ -62,7 +62,7 @@
                     <div class="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col h-full group relative">
                         {{-- Đã sửa: Đặt chiều cao cố định cho phần chứa ảnh --}}
                         <div class="w-full h-[220px] relative bg-gray-100 flex-shrink-0 border-b border-gray-100">
-                            <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 backdrop-blur-[2px]">
                                 <button type="button" 
                                     data-desc="{{ $item->des }}"
@@ -111,7 +111,7 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-3">Hình ảnh</label>
                             {{-- Đã sửa: Dùng chiều cao cố định cho khung preview trong modal sửa --}}
                             <div class="w-full h-[240px] mx-auto rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
-                                <img id="preview-edit-img" src="" class="w-full h-full object-cover" alt="Preview">
+                                <img id="preview-edit-img" src="" class="w-full h-full object-contain" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Đổi ảnh</span>
                                 </div>

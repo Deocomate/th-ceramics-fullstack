@@ -146,7 +146,7 @@
                             <div class="mb-3">
                                 <p class="text-xs text-gray-400 mb-1">Ảnh hiện tại:</p>
                                 <img src="{{ asset('storage/' . $coupon->banner_image) }}"
-                                     class="max-h-40 rounded-lg border border-gray-200 object-cover">
+                                     class="max-h-40 rounded-lg border border-gray-200 object-contain">
                             </div>
                         @endif
                         <input type="file" name="banner_image" accept="image/*"
@@ -154,7 +154,7 @@
                         <p class="mt-1 text-xs text-gray-400">Để trống nếu không muốn thay đổi ảnh.</p>
                         <div class="mt-3">
                             <img id="image-preview" src="#" alt="Xem trước ảnh mới"
-                                 class="hidden max-h-40 rounded-lg border border-gray-200 object-cover">
+                                 class="hidden max-h-40 rounded-lg border border-gray-200 object-contain">
                         </div>
                         @error('banner_image') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>

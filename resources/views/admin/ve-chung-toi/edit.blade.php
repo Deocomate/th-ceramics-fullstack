@@ -16,7 +16,7 @@
                 <div class="lg:col-span-1">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Hình ảnh Banner</label>
                     <div class="aspect-[16/9] w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
-                        <img id="preview-banner" src="{{ $veChungToi->banner ? asset('storage/' . $veChungToi->banner) : 'https://placehold.co/800x450?text=Chon+Anh' }}" class="w-full h-full object-cover">
+                        <img id="preview-banner" src="{{ $veChungToi->banner ? asset('storage/' . $veChungToi->banner) : 'https://placehold.co/800x450?text=Chon+Anh' }}" class="w-full h-full object-contain">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                         </div>
@@ -112,7 +112,7 @@
                     <div class="lg:col-span-1">
                         <label class="block text-xs font-semibold text-gray-600 mb-2">Ảnh Người Sáng Lập</label>
                         <div class="aspect-square w-full rounded-xl border border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group hover:opacity-90">
-                            <img id="preview-nsl" src="{{ $veChungToi->gs_nguoi_sang_lap_anh ? asset('storage/' . $veChungToi->gs_nguoi_sang_lap_anh) : 'https://placehold.co/400x400' }}" class="w-full h-full object-cover">
+                            <img id="preview-nsl" src="{{ $veChungToi->gs_nguoi_sang_lap_anh ? asset('storage/' . $veChungToi->gs_nguoi_sang_lap_anh) : 'https://placehold.co/400x400' }}" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                             </div>
@@ -172,7 +172,7 @@
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 @foreach($veChungToi->nt_che_tac_anh as $idx => $path)
                                     <div class="relative group aspect-square rounded-lg border overflow-hidden bg-white">
-                                        <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-cover">
+                                        <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-contain">
                                         <label class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer">
                                             <input type="checkbox" name="delete_nt_che_tac_anh[]" value="{{ $idx }}" class="w-5 h-5 text-red-600 rounded">
                                         </label>
@@ -218,7 +218,7 @@
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 @foreach($veChungToi->nt_dun_lo_anh as $idx => $path)
                                     <div class="relative group aspect-square rounded-lg border overflow-hidden bg-white">
-                                        <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-cover">
+                                        <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-contain">
                                         <label class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer">
                                             <input type="checkbox" name="delete_nt_dun_lo_anh[]" value="{{ $idx }}" class="w-5 h-5 text-red-600 rounded">
                                         </label>
@@ -319,7 +319,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 <div class="aspect-[4/3] w-full bg-gray-100 rounded-lg border border-dashed border-gray-300 relative overflow-hidden flex items-center justify-center">
-                    <img id="preview_${uniqueId}" src="https://placehold.co/400x300?text=Chon+Anh" class="w-full h-full object-cover">
+                    <img id="preview_${uniqueId}" src="https://placehold.co/400x300?text=Chon+Anh" class="w-full h-full object-contain">
                     <input type="file" name="${fieldName}[${idx}][new_image]" accept="image/*" onchange="previewImage(event, 'preview_${uniqueId}')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                 </div>
                 <div>
@@ -347,7 +347,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 <div class="aspect-[4/3] w-full bg-gray-100 rounded-lg border border-dashed border-gray-300 relative overflow-hidden flex items-center justify-center">
-                    <img id="preview_${uniqueId}" src="https://placehold.co/400x300?text=Chon+Anh" class="w-full h-full object-cover">
+                    <img id="preview_${uniqueId}" src="https://placehold.co/400x300?text=Chon+Anh" class="w-full h-full object-contain">
                     <input type="file" name="${fieldName}[${idx}][new_image]" accept="image/*" onchange="previewImage(event, 'preview_${uniqueId}')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                 </div>
                 <div>

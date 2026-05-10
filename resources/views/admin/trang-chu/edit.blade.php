@@ -14,7 +14,7 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         @foreach($trangChu->banner as $idx => $path)
                             <div class="relative group aspect-video rounded-lg border border-gray-200 overflow-hidden bg-gray-50">
-                                <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-cover">
+                                <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-contain">
                                 <label class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
                                     <input type="checkbox" name="delete_banner[]" value="{{ $idx }}" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500">
                                     <span class="text-white text-xs font-bold ml-2">Xóa ảnh này</span>
@@ -72,7 +72,7 @@
                 <div class="lg:col-span-1 flex flex-col items-center">
                     <label class="block text-sm font-semibold text-gray-700 mb-2 text-center w-full">Hình ảnh Lời Tri Ân</label>
                     <div class="aspect-[3/4] w-full max-w-[240px] mx-auto rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
-                        <img id="preview-loi-tri-an" src="{{ $trangChu->loi_tri_an_anh ? asset('storage/' . $trangChu->loi_tri_an_anh) : 'https://placehold.co/600x800?text=Chon+Anh' }}" class="w-full h-full object-cover">
+                        <img id="preview-loi-tri-an" src="{{ $trangChu->loi_tri_an_anh ? asset('storage/' . $trangChu->loi_tri_an_anh) : 'https://placehold.co/600x800?text=Chon+Anh' }}" class="w-full h-full object-contain">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi</span>
                         </div>
@@ -169,7 +169,7 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                             @foreach($trangChu->showroom_images as $idx => $path)
                                 <div class="relative group aspect-square rounded-lg border border-gray-200 overflow-hidden bg-gray-50">
-                                    <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-cover">
+                                    <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-contain">
                                     <label class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
                                         <input type="checkbox" name="delete_showroom_images[]" value="{{ $idx }}" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500">
                                         <span class="text-white text-xs font-bold ml-2">Xóa ảnh này</span>

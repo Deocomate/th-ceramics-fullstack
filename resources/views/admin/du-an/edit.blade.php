@@ -71,7 +71,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     @foreach($duAn->images as $path)
                         <div class="relative group aspect-square rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
-                            <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-contain">
                             @if($loop->first)
                                 <div class="absolute top-2 left-2 bg-[#A31D1D] text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">Ảnh bìa</div>
                             @endif
@@ -133,7 +133,7 @@
                     reader.onload = function(e) {
                         const div = document.createElement('div');
                         div.className = 'image-preview-item relative aspect-square rounded-lg overflow-hidden bg-gray-100 group shadow-sm border border-gray-200';
-                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">
+                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain">
                                          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity backdrop-blur-[2px]">
                                             <button type="button" onclick="removeFile(${index})" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors shadow-sm" title="Bỏ ảnh này">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
