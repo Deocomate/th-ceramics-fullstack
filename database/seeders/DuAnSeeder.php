@@ -12,7 +12,9 @@ class DuAnSeeder extends Seeder
 {
     public function run(): void
     {
-        File::copyDirectory(public_path('assets/images'), storage_path('app/public/assets/images'));
+        if (File::exists(public_path('assets/images'))) {
+            File::copyDirectory(public_path('assets/images'), storage_path('app/public/assets/images'));
+        }
 
         $categories = $this->seedCategories();
         $this->seedProjects($categories);

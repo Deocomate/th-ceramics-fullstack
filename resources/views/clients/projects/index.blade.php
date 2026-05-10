@@ -8,7 +8,7 @@
 @include('clients.projects.partials.catalog-section')
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
   if (typeof GLightbox !== "undefined") {
     // Use actual rendered img URLs so lightbox works with Vite asset hashing.

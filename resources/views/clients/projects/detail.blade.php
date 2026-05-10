@@ -84,25 +84,25 @@
       <a href="{{ asset('storage/' . $images[0]) }}" class="glightbox col-span-2 aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $images[0]) }}" alt="{{ $project->ten_du_an }} — ảnh 1"
-          onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
       <a href="{{ asset('storage/' . $images[1]) }}" class="glightbox aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $images[1]) }}" alt="{{ $project->ten_du_an }} — ảnh 2"
-          onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
     </div>
 
     @if($count >= 7)
-    <!-- Row 2: 4 equal cols -->
+    <!-- Row 2: 4 equal cols (images[2] through images[5]) -->
     <div class="hidden md:grid grid-cols-4 gap-3 mb-3" data-aos="fade-up" data-aos-delay="80">
-      @for($i = 2; $i < min($count, 6); $i++)
+      @for($i = 2; $i <= 5; $i++)
       <a href="{{ asset('storage/' . $images[$i]) }}" class="glightbox aspect-square overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $images[$i]) }}" alt="{{ $project->ten_du_an }} — ảnh {{ $i+1 }}"
-          onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
       @endfor
@@ -114,17 +114,29 @@
       <a href="{{ asset('storage/' . $images[6]) }}" class="glightbox aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $images[6]) }}" alt="{{ $project->ten_du_an }} — ảnh 7"
-          onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
       <a href="{{ asset('storage/' . ($images[7] ?? $images[0])) }}" class="glightbox col-span-2 aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . ($images[7] ?? $images[0])) }}" alt="{{ $project->ten_du_an }} — ảnh 8"
-          onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
     </div>
     @endif
+    @else
+    <!-- 3-6 images: show remaining in 3-col grid after Row 1 -->
+    <div class="hidden md:grid grid-cols-3 gap-3" data-aos="fade-up" data-aos-delay="80">
+      @for($i = 2; $i < $count; $i++)
+      <a href="{{ asset('storage/' . $images[$i]) }}" class="glightbox aspect-[16/9] overflow-hidden block group"
+        data-gallery="project-gallery">
+        <img src="{{ asset('storage/' . $images[$i]) }}" alt="{{ $project->ten_du_an }} — ảnh {{ $i+1 }}"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </a>
+      @endfor
+    </div>
     @endif
 
     @else
@@ -134,7 +146,7 @@
       <a href="{{ asset('storage/' . $img) }}" class="glightbox aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $img) }}" alt="{{ $project->ten_du_an }}"
-          onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
       @endforeach
@@ -150,7 +162,7 @@
             <a href="{{ asset('storage/' . $img) }}" class="glightbox h-full w-full block"
               data-gallery="project-gallery-mobile">
               <img src="{{ asset('storage/' . $img) }}" alt="{{ $project->ten_du_an }}"
-                onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+                onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
                 class="w-full h-full object-cover" />
             </a>
           </div>
@@ -215,7 +227,7 @@
 </section>
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
   if (typeof GLightbox !== "undefined") {
     document.querySelectorAll(".glightbox").forEach((anchor) => {
