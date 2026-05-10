@@ -91,10 +91,11 @@ Two route files loaded under a single `web` middleware group in `bootstrap/app.p
 - Single-record pattern for product section models (no create/delete)
 - Order model includes `statusLabel()` static helper and `generateOrderCode()` method
 - ThiCong and Catalog models serve dynamic customer service content (installation guides, catalog PDFs)
+- DuAn and DanhMucDuAn models serve the dynamic project showcase (project listing with category filters, detail with gallery)
 
 ### 6. Database Layer
 - **MariaDB** via `DB_CONNECTION=mariadb` in `.env`
-- **44 tables** from 7 migration files
+- **44 tables** from 7 migration files + 8 seeders
 - All session/cache/queue storage uses `database` driver (queue actively used for email dispatch)
 - Soft delete via boolean `is_delete` column
 
@@ -189,6 +190,11 @@ Page Configuration Tables (static pages, single-record sections)
 
 Users table (separate, for admin auth)
 
+Project Module Tables
+│
+├── DanhMucDuAn (project categories: ten_danh_muc, is_delete)
+└── DuAn (projects: ten_du_an, dia_diem, san_pham, nam, images JSON, slug, FK danh_muc_du_an_id)
+
 Customer Service Tables
 │
 ├── ThiCong (installation guide: tieu_de, anh, link_youtube)
@@ -227,7 +233,8 @@ Mail & Queue
 /san-pham/{category}       → Product listing
 /san-pham/{category}/{id}  → Product detail
 /tin-tuc                   → News listing
-/du-an                     → Projects listing
+/du-an                     → Projects listing (dynamic: category filters + pagination, 8 per page)
+/du-an/{slug}              → Project detail (dynamic: hero, meta bar, GLightbox/Swiper gallery, related projects)
 /gio-hang                  → Cart
 /thanh-toan                → Checkout
 /thanh-toan/ap-dung-ma     → Apply coupon (AJAX POST)
@@ -235,6 +242,8 @@ Mail & Queue
 /admin/orders              → Order list (paginated, latest first)
 /admin/orders/{order}      → Order detail with items + status update form
 /admin/coupons             → Coupon management (CRUD + restore)
+/admin/danh-muc-du-an       → Project category management (CRUD + restore)
+/admin/du-an                 → Project item management (CRUD + image delete)
 
 /dich-vu/huong-dan-thi-cong   → Installation guide (dynamic from ThiCong model)
 /dich-vu/tai-catalog          → Catalog list (dynamic from Catalog model, featured + grid)
@@ -243,6 +252,8 @@ Mail & Queue
 ```
 
 ## Email Notification Flow
+
+### Order Emails
 
 ```
 1. Order placed → CartController::processCheckout():
@@ -261,6 +272,27 @@ Mail & Queue
    - php artisan queue:work processes jobs from database queue
    - Both mailables use markdown templates in resources/views/emails/orders/
    - Status updated email shows Vietnamese label via Order::statusLabel()
+```
+
+### Password Reset Emails
+
+```
+1. User requests reset → AuthController::sendResetLink():
+   - Validates email via ForgotPasswordRequest
+   - Laravel Password facade dispatches reset token
+   - User::sendPasswordResetNotification() sends custom ResetPasswordNotification
+
+2. ResetPasswordNotification::toMail():
+   - Checks $notifiable->isAdmin() for role-based routing
+   - Admin users route to admin.auth.reset-password (/admin/reset-password/{token})
+   - Client users route to client.auth.reset-password (/tai-khoan/dat-lai-mat-khau/{token})
+   - Sends branded Vietnamese email via emails.auth.reset_password markdown template
+   - Implements ShouldQueue → queued to jobs table
+
+3. Queue processing:
+   - php artisan queue:work processes notification from database queue
+   - Uses markdown template in resources/views/emails/auth/reset_password.blade.php
+   - Email shows configurable expiration time from auth.passwords.users.expire
 ```
 
 ## Coupon/Discount Flow
@@ -320,6 +352,6 @@ Role check on superadmin routes:
 All three use the `database` driver:
 - **Session**: Stored in `sessions` table (120-minute lifetime)
 - **Cache**: Stored in `cache` table
-- **Queue**: Stored in `jobs` table, processed via `php artisan queue:work`. Used for email dispatch (OrderCreatedMail and OrderStatusUpdatedMail implement `ShouldQueue`), ensuring non-blocking checkout and status update operations.
+- **Queue**: Stored in `jobs` table, processed via `php artisan queue:work`. Used for email dispatch (OrderCreatedMail, OrderStatusUpdatedMail, and ResetPasswordNotification implement `ShouldQueue`), ensuring non-blocking checkout, status update, and password reset operations.
 
 This means no Redis or Memcached dependency, but performance may be limited under high load.

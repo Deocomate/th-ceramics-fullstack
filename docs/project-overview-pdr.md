@@ -43,7 +43,7 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 - **FR11**: Product category pages with listing and detail views (9 categories)
 - **FR12**: About us, factory tour, contact, FAQ pages (now dynamic from DB via page config admin panels)
 - **FR13**: News section with listing and detail
-- **FR14**: Projects section with listing and detail
+- **FR14**: Projects section with dynamic listing (category filters + pagination) and detail (hero banner, meta bar, GLightbox/Swiper gallery, related projects)
 - **FR15**: Customer service pages (policies, guides)
 - **FR16**: FAQ page (dynamic: banner config + FAQ items CRUD via admin panel)
 - **FR17**: Showroom page
@@ -105,15 +105,16 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 |------|--------|
 | Database schema | Complete (44 tables, 7 migrations) |
 | Admin CRUD | Complete (all 9 categories + 3 page config panels + order management) |
-| Product seeding | Complete (4 seeders: User, ProductType, ProductDetail) |
+| Product seeding | Complete (8 seeders: User, DinhMuc, PageConfig, HomeAndAboutUs, ProductType, ProductDetail, DuAn, DatabaseSeeder) |
 | Page configuration | Complete (Factory, Contact, FAQ admin panels with Alpine.js auto-resize textareas) |
 | Client product pages | In progress (9 categories) |
 | Cart/Checkout | Complete: session-based cart, AJAX controls, COD-only checkout, coupon discount system |
 | Order management | Complete: admin list/detail/status-update, client order tracking with tab filters |
 | Email notification | Complete: order confirmation + status update emails via database queue (ShouldQueue) |
-| News/Projects | Controller structure done, views pending |
+| Projects client pages | Complete: dynamic index with category filters + pagination, dynamic detail with GLightbox/Swiper gallery |
+| News | Views pending |
 | Customer Service | Complete: dynamic installation guide (ThiCong), catalog list + PDF flipbook reader (Catalog) |
-| Tests | 7 Pest files (14 tests, 31 assertions, all passing) |
+| Tests | 8 Pest files (29 tests, all passing) |
 
 ## Version History
 
@@ -125,3 +126,7 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 | 0.3.1 | 2026-05-07 | Page configuration admin panels (Factory/Contact/FAQ), TinyMCE replaced with auto-resize textareas, dynamic client pages, 12 new Pest tests, admin UI/UX Pro Max refactor |
 | 0.4.0 | 2026-05-09 | Coupon/discount module: coupons CRUD admin panel, client-side coupon application via AJAX on checkout page, percent/fixed discount calculation with max discount cap, min order value check, product-type filtering, usage limits, coupon banner component |
 | 0.5.0 | 2026-05-09 | Order management and email notification: admin order list/detail/status-update, client dynamic order status tracking page with tab filters, email notification system (order confirmation + status updates via database-queued ShouldQueue mailables), disabled bank transfer payment (COD only) |
+| 0.5.1 | 2026-05-09 | Dynamic customer service pages: installation guide (ThiCong model), catalog list + PDF flipbook reader (Catalog model, PDF.js + StPageFlip) |
+| 0.5.2 | 2026-05-10 | Custom password reset notification: branded Vietnamese email, role-based routing (admin vs client), ShouldQueue, 15 Pest tests |
+| 0.5.3 | 2026-05-10 | Seeder system rewrite: 6 seeders refactored with firstOrCreate idempotency, Eloquent instead of raw SQL/DB::table, real Vietnamese content, string-path images, GiaTriVuotTroi seeded, DatabaseSeeder reordered |
+| 0.5.4 | 2026-05-10 | Project module client dynamic: DuAnSeeder (5 categories + 20 real projects), dynamic project index with category filters + pagination, dynamic project detail with hero banner + GLightbox/Swiper gallery + related projects |

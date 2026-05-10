@@ -2,36 +2,224 @@
 
 namespace Database\Seeders;
 
+use App\Models\GiaiThuongThanhTuu;
+use App\Models\GiaTriVuotTroi;
+use App\Models\TrangChu;
+use App\Models\VeChungToi;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class HomeAndAboutUsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // 1. Xóa dữ liệu cũ (nếu có) để tránh lỗi Duplicate Entry khi chạy seeder nhiều lần
-        DB::table('trang_chu')->delete();
-        DB::table('ve_chung_toi')->delete();
-        DB::table('giai_thuong_thanh_tuu')->delete();
+        $this->seedTrangChu();
+        $this->seedVeChungToi();
+        $this->seedGiaiThuongThanhTuu();
+        $this->seedGiaTriVuotTroi();
+    }
 
-        // 2. Sử dụng Nowdoc (<<<'SQL') để PHP bỏ qua việc parse các ký tự escape (\", \u...),
-        // đảm bảo đẩy vào database y hệt từng ký tự từ câu lệnh SQL bạn cung cấp.
-        DB::unprepared(<<<'SQL'
-INSERT INTO `trang_chu` (`trang_chu_id`, `banner`, `khach_hang_doi_tac`, `loi_tri_an`, `loi_tri_an_anh`, `ve_chung_toi_logo`, `video`, `nhung_con_so`, `showroom_images`, `showroom_noidung`, `created_at`, `updated_at`) VALUES
-(1, '[\"trang_chu\\/banner\\/y1SsYpfPjqiY79C5_1778230846.png\"]', '[\"trang_chu\\/khach_hang_doi_tac\\/3gqxXpRW1u3SSvop_1778230846.png\",\"trang_chu\\/khach_hang_doi_tac\\/BM5mtTLAMbaOkiLa_1778230846.png\",\"trang_chu\\/khach_hang_doi_tac\\/F3nE59CpFL1w0GtC_1778230846.png\",\"trang_chu\\/khach_hang_doi_tac\\/Qx22aqoOIN1KyECh_1778230846.png\",\"trang_chu\\/khach_hang_doi_tac\\/dLY8bcv4K9bqblOJ_1778230846.png\"]', '[\"H\\u01a1n 40 n\\u0103m g\\u1eafn b\\u00f3 v\\u1edbi g\\u1ed1m s\\u1ee9 trang tr\\u00ed n\\u1ed9i - ngo\\u1ea1i th\\u1ea5t, ch\\u00fang t\\u00f4i tin r\\u1eb1ng m\\u1ed7i s\\u1ea3n ph\\u1ea9m kh\\u00f4ng ch\\u1ec9 l\\u00e0 v\\u1eadt li\\u1ec7u x\\u00e2y d\\u1ef1ng, m\\u00e0 l\\u00e0 k\\u1ebft tinh c\\u1ee7a \\u0111\\u1ea5t, l\\u1eeda v\\u00e0 t\\u1ea5m l\\u00f2ng ng\\u01b0\\u1eddi l\\u00e0m ngh\\u1ec1.\",\"Sinh ra v\\u00e0 l\\u1edbn l\\u00ean t\\u1ea1i l\\u00e0ng g\\u1ed1m B\\u00e1t Tr\\u00e0ng, n\\u01a1i l\\u01b0u gi\\u1eef di s\\u1ea3n ngh\\u1ec1 g\\u1ed1m \\u0111\\u01b0\\u1ee3c truy\\u1ec1n qua nhi\\u1ec1u th\\u1ebf h\\u1ec7, ch\\u00fang t\\u00f4i th\\u1eeba h\\u01b0\\u1edfng n\\u1ec1n t\\u1ea3ng th\\u1ee7 c\\u00f4ng truy\\u1ec1n th\\u1ed1ng c\\u00f9ng ngu\\u1ed3n nguy\\u00ean li\\u1ec7u qu\\u00fd gi\\u00e1 c\\u1ee7a qu\\u00ea h\\u01b0\\u01a1ng. L\\u00e0 ng\\u01b0\\u1eddi k\\u1ebf th\\u1eeba th\\u1ec3 h\\u1ec7 th\\u1ee9 ba c\\u1ee7a d\\u00f2ng h\\u1ecd V\\u0169 Gia, t\\u00f4i ti\\u1ebfp b\\u01b0\\u1edbc con \\u0111\\u01b0\\u1eddng cha \\u00f4ng \\u0111\\u00e3 g\\u00e2y d\\u1ef1ng, g\\u00ecn gi\\u1eef v\\u00e0 l\\u00e0m gi\\u00e0u th\\u00eam gi\\u00e1 tr\\u1ecb di s\\u1ea3n g\\u1ed1m Vi\\u1ec7t, \\u0111\\u1eb7c bi\\u1ec7t l\\u00e0 ng\\u00f3i \\u00e2m d\\u01b0\\u01a1ng lo\\u1ea1i ng\\u00f3i g\\u1eafn li\\u1ec1n v\\u1edbi ki\\u1ebfn tr\\u00fac cung \\u0111\\u00ecnh, \\u0111\\u1ec1n ch\\u00f9a t\\u1eeb th\\u1eddi L\\u00fd \\u2013 Tr\\u1ea7n \\u0111\\u1ebfn nay.\",\"T\\u1eeb ng\\u00f3i l\\u1ee3p g\\u1ed1m s\\u1ee9, g\\u1ea1ch hoa th\\u00f4ng gi\\u00f3 \\u0111\\u1ebfn c\\u00e1c ph\\u1ee5 ki\\u1ec7n trang tr\\u00ed, m\\u1ed7i s\\u1ea3n ph\\u1ea9m \\u0111\\u1ec1u l\\u00e0 s\\u1ef1 giao thoa gi\\u1eefa di s\\u1ea3n truy\\u1ec1n th\\u1ed1ng v\\u00e0 tinh th\\u1ea7n \\u0111\\u01b0\\u01a1ng \\u0111\\u1ea1i. H\\u00e0nh tr\\u00ecnh \\u1ea5y \\u0111\\u00e3 \\u0111\\u01b0a s\\u1ea3n ph\\u1ea9m c\\u1ee7a ch\\u00fang t\\u00f4i hi\\u1ec7n di\\u1ec7n tr\\u00ean kh\\u1eafp m\\u1ecdi mi\\u1ec1n \\u0111\\u1ea5t n\\u01b0\\u1edbc, tr\\u1edf th\\u00e0nh m\\u1ed9t ph\\u1ea7n trong nhi\\u1ec1u c\\u00f4ng tr\\u00ecnh mang \\u0111\\u1eadm b\\u1ea3n s\\u1eafc v\\u00e0 th\\u1ea9m m\\u1ef9 Vi\\u1ec7t.\"]', 'trang_chu/images/Z8qmBvXV5N6r2tVG_1778230846.jpg', '[\"trang_chu\\/ve_chung_toi_logo\\/X9rAaFEl7A9cfFNU_1778230846.png\",\"trang_chu\\/ve_chung_toi_logo\\/JIHBZLpjt9kW4Ry3_1778230846.png\",\"trang_chu\\/ve_chung_toi_logo\\/1dJpk996wOiaCZi9_1778230846.png\",\"trang_chu\\/ve_chung_toi_logo\\/JMmSqmF4EueXBigj_1778230846.png\",\"trang_chu\\/ve_chung_toi_logo\\/8TyEHh3SZVMqT25E_1778230846.png\"]', NULL, '[{\"head\":\"1000\",\"body\":\"C\\u00f4ng tr\\u00ecnh l\\u1edbn nh\\u1ecf\"},{\"head\":\"5000m2\",\"body\":\"Nh\\u00e0 x\\u01b0\\u1edfng\"},{\"head\":\"100%\",\"body\":\"S\\u1ea3n xu\\u1ea5t th\\u1ee7 c\\u00f4ng\"},{\"head\":\"50\",\"body\":\"D\\u00f2ng s\\u1ea3n ph\\u1ea9m\"},{\"head\":\"40\",\"body\":\"N\\u0103m kinh nghi\\u1ec7m\"}]', '[\"trang_chu\\/showroom_images\\/0AKC67iNJ8FPIbUH_1778230846.png\",\"trang_chu\\/showroom_images\\/wNEo4HM2J1tJsdDw_1778230846.png\",\"trang_chu\\/showroom_images\\/tcZZIibF8XRZ2JUx_1778230846.png\"]', 'Xưởng sản xuất và showroom Thanh Hải Ceramics là nơi quá khứ và hiện tại giao thoa. Từ ngọn lửa lò nung Bát Tràng, những viên ngói âm dương ra đời, mang theo tinh hoa làng nghề, dấu ấn kiến trúc Việt và câu chuyện di sản sống động. Trong từng lớp ngói xếp là ký ức của thời gian, được tiếp nối bằng bàn tay người thợ hôm nay để gìn giữ và lan tỏa giá trị truyền thống.', '2026-05-08 08:54:22', '2026-05-08 09:00:46');
-
-INSERT INTO `ve_chung_toi` (`ve_chung_toi_id`, `banner`, `header_banner`, `body_banner`, `gs_head`, `gs_gia_tri`, `gs_hanh_trinh`, `gs_nguoi_sang_lap_anh`, `gs_nguoi_sang_lap_noi_dung`, `gs_giai_thuong`, `nt_head`, `nt_body`, `nt_ngon_ngu`, `nt_che_tac_head`, `nt_che_tac_body`, `nt_che_tac_anh`, `nt_luyen_dat_head`, `nt_luyen_dat_body`, `nt_luyen_dat_item`, `nt_dun_lo_head`, `nt_dun_lo_body`, `nt_dun_lo_anh`, `created_at`, `updated_at`) VALUES
-(1, 've_chung_toi/banner/p2vnolmFDW8LX0Dn_1778233465.jpg', 'GỐM SỨ THANH HẢI', '40 NĂM - LỬA NGHỀ\r\nCHƯA BAO GIỜ TẮT', '[{\"image\":\"ve_chung_toi\\/gs_head\\/ompefihsITGxipUX_1778235112.png\",\"head\":\"Nh\\u1eefng c\\u00f4ng vi\\u1ec7c gi\\u1ea3n d\\u1ecb v\\u00e0 ng\\u1ecdn l\\u1eeda ngh\\u1ec1 lu\\u00f4n \\u1ea5m\",\"body\":\"T\\u1eeb nh\\u1eefng b\\u00e0n tay kh\\u00e9o l\\u00e9o c\\u1ee7a ng\\u01b0\\u1eddi th\\u1ee3 Vi\\u1ec7t t\\u1edbi ng\\u00f4i nh\\u00e0 c\\u1ee7a b\\u1ea1n. T\\u1eeb nh\\u1eefng ng\\u00e0y l\\u00e0m thu\\u00ea trong x\\u00ed nghi\\u1ec7p g\\u1ed1m, ngh\\u1ec7 nh\\u00e2n V\\u0169 M\\u1ea1nh H\\u1ea3i v\\u00e0 Nguy\\u1ec5n Th\\u1ecb Thanh \\u2013 hai ng\\u01b0\\u1eddi s\\u00e1ng l\\u1eadp \\u0111\\u1ea7y t\\u00e2m huy\\u1ebft \\u2013 \\u0111\\u00e3 s\\u1edbm nu\\u00f4i d\\u01b0\\u1ee1ng kh\\u00e1t khao t\\u1ea1o ra nh\\u1eefng s\\u1ea3n ph\\u1ea9m c\\u1ee7a ri\\u00eang m\\u00ecnh. Nh\\u1eefng m\\u1eabu lan can g\\u1ed1m s\\u1ee9 \\u0111\\u1ea7u ti\\u00ean, \\u0111\\u01b0\\u1ee3c t\\u1ef1 tay thi\\u1ebft k\\u1ebf, s\\u1ea3n xu\\u1ea5t v\\u00e0 mang \\u0111i ch\\u00e0o h\\u00e0ng tr\\u00ean ph\\u1ed1 C\\u00e1t Linh, \\u0111\\u00e3 \\u0111\\u1eb7t n\\u1ec1n m\\u00f3ng cho h\\u00e0nh tr\\u00ecnh theo ngh\\u1ec1 nhi\\u1ec1u th\\u1eed th\\u00e1ch nh\\u01b0ng b\\u1ec1n b\\u1ec9.\"},{\"image\":\"ve_chung_toi\\/gs_head\\/UQeVylr7Loa9q8Wi_1778235112.jpg\",\"head\":\"Ki\\u00ean \\u0111\\u1ecbnh m\\u1ed9t con \\u0111\\u01b0\\u1eddng, b\\u1ec1n v\\u1eefng qua th\\u1eddi gian\",\"body\":\"D\\u00f9 B\\u00e1t Tr\\u00e0ng \\u0111\\u00e3 tr\\u1ea3i qua nhi\\u1ec1u giai \\u0111o\\u1ea1n chuy\\u1ec3n \\u0111\\u1ed5i v\\u00e0 th\\u1eed nghi\\u1ec7m c\\u00e1c lo\\u1ea1i h\\u00e0nh g\\u1ed1m s\\u1ee9 kh\\u00e1c nhau, Thanh H\\u1ea3i v\\u1eabn ki\\u00ean \\u0111\\u1ecbnh v\\u1edbi l\\u1ef1a ch\\u1ecdn ban \\u0111\\u1ea7u: g\\u1ed1m s\\u1ee9 x\\u00e2y d\\u1ef1ng \\u2013 g\\u1ea1ch v\\u00e0 ng\\u00f3i \\u2013 l\\u00e0m n\\u1ec1n t\\u1ea3ng ph\\u00e1t tri\\u1ec3n l\\u00e2u d\\u00e0i.\\r\\nM\\u1ed7i s\\u1ea3n ph\\u1ea9m \\u0111\\u01b0\\u1ee3c nghi\\u00ean c\\u1ee9u k\\u1ef9 v\\u1ec1 ch\\u1ea5t li\\u1ec7u v\\u00e0 k\\u1ef9 thu\\u1eadt, \\u0111\\u1ed3ng th\\u1eddi \\u0111\\u01b0\\u1ee3c tinh ch\\u1ec9nh trong thi\\u1ebft k\\u1ebf \\u0111\\u1ec3 ph\\u00f9 h\\u1ee3p v\\u1edbi ki\\u1ebfn tr\\u00fac h\\u00f4m nay. Thanh H\\u1ea3i tin r\\u1eb1ng gi\\u00e1 tr\\u1ecb b\\u1ec1n v\\u1eefng nh\\u1ea5t n\\u1eb1m \\u1edf s\\u1ef1 k\\u1ebft h\\u1ee3p h\\u00e0i h\\u00f2a gi\\u1eefa di s\\u1ea3n ngh\\u1ec1 g\\u1ed1m v\\u00e0 h\\u01a1i th\\u1edf c\\u1ee7a th\\u1eddi \\u0111\\u1ea1i.\"}]', '[{\"image\":\"ve_chung_toi\\/gs_gia_tri\\/GHPvEr18Eo4Gtjrt_1778235112.jpg\",\"head\":\"T\\u00ednh k\\u1ebf th\\u1eeba\",\"body\":\"G\\u1ed1m s\\u1ee9 x\\u00e2y d\\u1ef1ng Thanh H\\u1ea3i l\\u00e0 c\\u00e2u chuy\\u1ec7n \\u0111\\u01b0\\u1ee3c ti\\u1ebfp n\\u1ed1i qua nhi\\u1ec1u th\\u1ebf h\\u1ec7. T\\u1eeb nh\\u1eefng ng\\u00e0y \\u0111\\u1ea7u cha \\u00f4ng nh\\u00f3m l\\u1eeda l\\u00f2 nung, qua n\\u0103m th\\u00e1ng th\\u1ebf h\\u1ec7 k\\u1ebf th\\u1eeba v\\u1eabn b\\u1ec1n b\\u1ec9 t\\u00edch l\\u0169y kinh nghi\\u1ec7m. M\\u1ed7i th\\u1ebf h\\u1ec7 sau kh\\u00f4ng ch\\u1ec9 h\\u1ecdc c\\u00e1ch l\\u00e0m g\\u1ed1m, m\\u00e0 c\\u00f2n h\\u1ecdc c\\u00e1ch t\\u00f4n tr\\u1ecdng ngh\\u1ec1, gi\\u1eef ch\\u1eef t\\u00edn v\\u00e0 l\\u00e0m ra nh\\u1eefng s\\u1ea3n ph\\u1ea9m \\u0111\\u1ee7 b\\u1ec1n \\u0111\\u1ec3 \\u0111i c\\u00f9ng th\\u1eddi gian. Ch\\u00ednh s\\u1ef1 k\\u1ebf th\\u1eeba l\\u1eb7ng l\\u1ebd nh\\u01b0ng b\\u1ec1n b\\u1ec9 \\u1ea5y \\u0111\\u00e3 t\\u1ea1o n\\u00ean Thanh H\\u1ea3i c\\u1ee7a h\\u00f4m nay.\"},{\"image\":\"ve_chung_toi\\/gs_gia_tri\\/BJIOgfwT8WClxlJQ_1778235112.jpg\",\"head\":\"Ngh\\u1ec7 thu\\u1eadt th\\u1ee7 c\\u00f4ng\",\"body\":\"\\\"Ngh\\u1ec7 thu\\u1eadt th\\u1ee7 c\\u00f4ng\\\" l\\u00e0 gi\\u00e1 tr\\u1ecb c\\u1ed1t l\\u00f5i khi\\u1ebfn s\\u1ea3n ph\\u1ea9m G\\u1ed1m s\\u1ee9 x\\u00e2y d\\u1ef1ng c\\u1ee7a Thanh H\\u1ea3i kh\\u00e1c bi\\u1ec7t v\\u1edbi c\\u00e1c v\\u1eadt li\\u1ec7u c\\u00f4ng nghi\\u1ec7p tr\\u00ean th\\u1ecb tr\\u01b0\\u1eddng. T\\u1eeb \\u0111\\u1ea5t th\\u00f4 qua b\\u00e0n tay ng\\u01b0\\u1eddi th\\u1ee3, m\\u1ed7i vi\\u00ean g\\u1ea1ch, vi\\u00ean ng\\u00f3i \\u0111\\u01b0\\u1ee3c ch\\u1ebf t\\u00e1c b\\u1eb1ng s\\u1ef1 am hi\\u1ec3u v\\u1eadt li\\u1ec7u, k\\u1ebft h\\u1ee3p k\\u1ef9 thu\\u1eadt nung truy\\u1ec1n th\\u1ed1ng v\\u00e0 s\\u1ef1 tuy\\u1ec3n ch\\u1ecdn nguy\\u00ean li\\u1ec7u h\\u00e0ng \\u0111\\u1ea7u nh\\u1eb1m \\u0111\\u1ea3m b\\u1ea3o \\u0111\\u1ed9 b\\u1ec1n, t\\u00ednh th\\u1ea9m m\\u1ef9 v\\u00e0 gi\\u00e1 tr\\u1ecb s\\u1eed d\\u1ee5ng l\\u00e2u d\\u00e0i cho t\\u1eebng c\\u00f4ng tr\\u00ecnh.\"},{\"image\":\"ve_chung_toi\\/gs_gia_tri\\/PH12cRKJ7vyXRmdp_1778235112.jpg\",\"head\":\"Gi\\u00e1 tr\\u1ecb v\\u01b0\\u1ee3t th\\u1eddi gian\",\"body\":\"V\\u1edbi Thanh H\\u1ea3i, m\\u1ed7i vi\\u00ean g\\u1ea1ch, vi\\u00ean ng\\u00f3i kh\\u00f4ng ch\\u1ec9 \\u0111\\u1ec3 d\\u1ef1ng nh\\u00e0, m\\u00e0 \\u0111\\u1ec3 g\\u00ecn gi\\u1eef m\\u1ed9t t\\u1ed5 \\u1ea5m. \\u0110\\u00f3 l\\u00e0 n\\u01a1i che m\\u01b0a n\\u1eafng, ch\\u1ee9ng ki\\u1ebfn nh\\u1eefng b\\u1eefa c\\u01a1m sum h\\u1ecdp v\\u00e0 nh\\u1eefng \\u0111\\u1ed5i thay c\\u1ee7a \\u0111\\u1eddi ng\\u01b0\\u1eddi theo n\\u0103m th\\u00e1ng. Ch\\u00ednh v\\u00ec v\\u1eady, t\\u1eebng s\\u1ea3n ph\\u1ea9m \\u0111\\u1ec1u \\u0111\\u01b0\\u1ee3c l\\u00e0m ra b\\u1eb1ng s\\u1ef1 n\\u00e2ng niu v\\u00e0 tr\\u00e1ch nhi\\u1ec7m, \\u0111\\u1ee7 b\\u1ec1n \\u0111\\u1ec3 \\u1edf l\\u1ea1i c\\u00f9ng gia \\u0111\\u00ecnh qua nhi\\u1ec1u th\\u1ebf h\\u1ec7. V\\u1edbi Thanh H\\u1ea3i, g\\u00f3p ph\\u1ea7n x\\u00e2y t\\u1ed5 \\u1ea5m cho ng\\u01b0\\u1eddi kh\\u00e1c lu\\u00f4n l\\u00e0 m\\u1ed9t s\\u1ee9 m\\u1ec7nh cao c\\u1ea3.\"}]', '[{\"image\":\"ve_chung_toi\\/gs_hanh_trinh\\/04RNDPlDI2Pdmouk_1778235214.jpg\",\"head\":\"1985\",\"body\":\"Hai ng\\u01b0\\u1eddi s\\u00e1ng l\\u1eadp l\\u00e0 \\u00f4ng V\\u0169 M\\u1ea1nh H\\u1ea3i v\\u00e0 b\\u00e0 Nguy\\u1ec5n Th\\u1ecb Thanh b\\u1eaft \\u0111\\u1ea7u \\u0111\\u01b0\\u1ee3c giao l\\u1ea1i to\\u00e0n b\\u1ed9 c\\u00f4ng vi\\u1ec7c s\\u1ea3n xu\\u1ea5t g\\u1ed1m s\\u1ee9 t\\u1eeb c\\u1ee5 V\\u0169 \\u0110\\u00ecnh S\\u01a1n. Nh\\u1eadn th\\u1ea5y th\\u1ecb tr\\u01b0\\u1eddng s\\u1ea3n xu\\u1ea5t b\\u00e1t \\u0111\\u0129a \\u0111ang d\\u1ea7n b\\u00e3o h\\u00f2a v\\u00e0 nhi\\u1ec1u c\\u1ea1nh tranh, \\u00f4ng b\\u00e0 b\\u1eaft \\u0111\\u1ea7u t\\u00ecm h\\u01b0\\u1edbng \\u0111i m\\u1edbi th\\u00f4ng qua vi\\u1ec7c t\\u1ef1 thi\\u1ebft k\\u1ebf m\\u1eabu m\\u00e3 m\\u1edbi cho d\\u00f2ng s\\u1ea3n ph\\u1ea9m g\\u1ed1m s\\u1ee9 x\\u00e2y d\\u1ef1ng, g\\u1ed1m s\\u1ee9 trang tr\\u00ed \\u2013 \\u0111\\u1eb7t nh\\u1eefng vi\\u00ean g\\u1ea1ch \\u0111\\u1ea7u ti\\u00ean cho con \\u0111\\u01b0\\u1eddng l\\u00e0m ngh\\u1ec1.\"},{\"image\":\"ve_chung_toi\\/gs_hanh_trinh\\/0VcyWIoymx9hdnEi_1778235214.jpg\",\"head\":\"1993\",\"body\":\"C\\u1eeda h\\u00e0ng b\\u00e1n l\\u1ebb \\u0111\\u1ea7u ti\\u00ean \\u0111\\u01b0\\u1ee3c m\\u1edf ra, \\u0111\\u00e1nh d\\u1ea5u b\\u01b0\\u1edbc ph\\u00e1t tri\\u1ec3n m\\u1edbi trong ho\\u1ea1t \\u0111\\u1ed9ng kinh doanh. T\\u1eeb \\u0111\\u00e2y, m\\u1eabu m\\u00e3 kh\\u00f4ng ng\\u1eebng \\u0111\\u01b0\\u1ee3c nghi\\u00ean c\\u1ee9u v\\u00e0 s\\u00e1ng t\\u1ea1o, ch\\u1ee7ng lo\\u1ea1i s\\u1ea3n ph\\u1ea9m ng\\u00e0y c\\u00e0ng \\u0111a d\\u1ea1ng nh\\u1eb1m \\u0111\\u00e1p \\u1ee9ng c\\u00e1c nhu c\\u1ea7u kh\\u00e1c nhau c\\u1ee7a kh\\u00e1ch h\\u00e0ng. \\u0110\\u1ed3ng th\\u1eddi, G\\u1ed1m S\\u1ee9 Thanh H\\u1ea3i d\\u1ea7n t\\u1ea1o \\u0111\\u01b0\\u1ee3c s\\u1ef1 t\\u00edn nhi\\u1ec7m t\\u1eeb c\\u00e1c doanh nghi\\u1ec7p l\\u1edbn v\\u00e0 \\u0111\\u01b0\\u1ee3c giao th\\u1ef1c hi\\u1ec7n nh\\u1eefng c\\u00f4ng tr\\u00ecnh quy m\\u00f4 \\u0111\\u1ea7u ti\\u00ean.\"},{\"image\":\"ve_chung_toi\\/gs_hanh_trinh\\/5syhZyGAQLfZQXw2_1778235214.jpg\",\"head\":\"2000\",\"body\":\"C\\u00f4ng ty TNHH S\\u1ea3n xu\\u1ea5t v\\u00e0 Th\\u01b0\\u01a1ng m\\u1ea1i Thanh H\\u1ea3i ch\\u00ednh th\\u1ee9c \\u0111\\u01b0\\u1ee3c th\\u00e0nh l\\u1eadp, \\u0111\\u00e1nh d\\u1ea5u b\\u01b0\\u1edbc chuy\\u1ec3n quan tr\\u1ecdng sang m\\u00f4 h\\u00ecnh ho\\u1ea1t \\u0111\\u1ed9ng chuy\\u00ean nghi\\u1ec7p. H\\u1ec7 th\\u1ed1ng x\\u01b0\\u1edfng s\\u1ea3n xu\\u1ea5t g\\u1ed1m s\\u1ee9 x\\u00e2y d\\u1ef1ng \\u0111\\u01b0\\u1ee3c \\u0111\\u1ea7u t\\u01b0 \\u0111\\u1ed3ng b\\u1ed9, t\\u1eebng b\\u01b0\\u1edbc \\u00e1p d\\u1ee5ng quy tr\\u00ecnh \\u0111\\u1ec3 n\\u00e2ng cao tay ngh\\u1ec1 th\\u1ee3 th\\u1ee7 c\\u00f4ng, m\\u1edf r\\u1ed9ng quy m\\u00f4 s\\u1ea3n xu\\u1ea5t.\"},{\"image\":\"ve_chung_toi\\/gs_hanh_trinh\\/1zzjDp0VpCDTuJWO_1778235214.jpg\",\"head\":\"2008\",\"body\":\"Showroom chuy\\u00ean nghi\\u1ec7p \\u0111\\u1ea7u ti\\u00ean \\u0111\\u01b0\\u1ee3c x\\u00e2y d\\u1ef1ng t\\u1ea1i s\\u1ed1 42 Ph\\u1ed1 G\\u1ed1m, \\u0111\\u00e1nh d\\u1ea5u b\\u01b0\\u1edbc ph\\u00e1t tri\\u1ec3n trong vi\\u1ec7c n\\u00e2ng cao tr\\u1ea3i nghi\\u1ec7m tham quan v\\u00e0 gi\\u1edbi thi\\u1ec7u s\\u1ea3n ph\\u1ea9m g\\u1ed1m s\\u1ee9 Thanh H\\u1ea3i. T\\u1eeb \\u0111\\u00e2y, kh\\u00f4ng gian tr\\u01b0ng b\\u00e0y \\u0111\\u01b0\\u1ee3c ch\\u00fa tr\\u1ecdng \\u0111\\u1ea7u t\\u01b0 b\\u00e0i b\\u1ea3n, s\\u1eafp \\u0111\\u1eb7t s\\u1ea3n ph\\u1ea9m theo t\\u1eebng nh\\u00f3m \\u1ee9ng d\\u1ee5ng v\\u00e0 gi\\u00e1 tr\\u1ecb th\\u1ea9m m\\u1ef9, g\\u00f3p ph\\u1ea7n th\\u1ec3 hi\\u1ec7n r\\u00f5 n\\u00e9t h\\u01a1n tinh th\\u1ea7n v\\u00e0 ch\\u1ea5t l\\u01b0\\u1ee3ng c\\u1ee7a th\\u01b0\\u01a1ng hi\\u1ec7u.\"},{\"image\":\"ve_chung_toi\\/gs_hanh_trinh\\/n9o3lxKl1ImG31Cj_1778235214.jpg\",\"head\":\"2024\",\"body\":\"Showroom th\\u1ee9 hai v\\u1edbi di\\u1ec7n t\\u00edch g\\u1ea7n 400m\\u00b2 t\\u1ea1i s\\u1ed1 18 Ph\\u1ed1 G\\u1ed1m \\u0111\\u01b0\\u1ee3c h\\u00ecnh th\\u00e0nh nh\\u01b0 m\\u1ed9t kh\\u00f4ng gian tr\\u01b0ng b\\u00e0y v\\u00e0 k\\u1ec3 chuy\\u1ec7n di s\\u1ea3n. T\\u1ea1i \\u0111\\u00e2y, ng\\u00f3i \\u00e2m d\\u01b0\\u01a1ng \\u0111\\u01b0\\u1ee3c t\\u00e1i hi\\u1ec7n th\\u00f4ng qua vi\\u1ec7c k\\u1ebft h\\u1ee3p ng\\u00f3i \\u00e2m v\\u00e0 g\\u1ea1ch x\\u00e2y c\\u0169, t\\u1ea1o n\\u00ean c\\u00e1c h\\u1ecda ti\\u1ebft m\\u00f4 ph\\u1ecfng ng\\u00f3i th\\u1eddi L\\u00fd \\u2013 Tr\\u1ea7n, d\\u1ea5u \\u1ea5n ti\\u00eau bi\\u1ec3u c\\u1ee7a ki\\u1ebfn tr\\u00fac c\\u1ed5 Vi\\u1ec7t Nam. Kh\\u00f4ng gian v\\u1eeba l\\u00e0 n\\u01a1i gi\\u1edbi thi\\u1ec7u s\\u1ea3n ph\\u1ea9m, v\\u1eeba l\\u00e0 \\u0111i\\u1ec3m k\\u1ebft n\\u1ed1i v\\u0103n h\\u00f3a, l\\u01b0u gi\\u1eef v\\u00e0 lan t\\u1ecfa gi\\u00e1 tr\\u1ecb ki\\u1ebfn tr\\u00fac truy\\u1ec1n th\\u1ed1ng.\"}]', 've_chung_toi/images/KPKSZzjfMXociVOS_1778235254.png', 'Trải qua nhiều thăng trầm của nghề, ông Vũ Mạnh Hải và bà Nguyễn Thị Thanh vẫn bền bỉ đồng hành, kiên định theo đuổi dòng sản phẩm gốm sứ xây dựng. Dù ngói thủ công không phải là sản phẩm phổ biến, Thanh Hải vẫn xây dựng được một cộng đồng khách hàng trung thành và tin cậy, thể hiện qua việc được lựa chọn cho nhiều công trình lớn nhỏ trên cả nước như Chùa Bái Đính, Bệnh viện Y học cổ truyền Quân đội, Viện 103, Vinpearl Land Nha Trang. Những dấu ấn ấy đã đưa hai nhà sáng lập đến niềm vinh dự khi lần lượt được UBND Thành phố Hà Nội trao tặng danh hiệu Nghệ nhân Hà Nội vào các năm 2023 và 2025.', '[{\"image\":\"ve_chung_toi\\/gs_giai_thuong\\/efVNNNwzLinmTVD7_1778235214.jpg\",\"head\":\"2016\"},{\"image\":\"ve_chung_toi\\/gs_giai_thuong\\/QyCRMys7CDsJbT5h_1778235214.jpg\",\"head\":\"2016\"},{\"image\":\"ve_chung_toi\\/gs_giai_thuong\\/o07CIv41jQ7rNy6R_1778235214.jpg\",\"head\":\"2016\"}]', 'Từ vật liệu xây dựng đến di sản kiến trúc', 'Chúng tôi dành nhiều năm nghiên cứu để phục chế mẫu ngói âm dương lấy cảm hứng từ ngói thời Lý – Trần, kết hợp đối chiếu tư liệu kiến trúc cổ và hệ mái Kinh thành Huế. Bắt đầu từ những bản vẽ và mẫu thử đầu tiên, từng viên ngói được chế tác thủ công, đo đạc tỷ lệ, kiểm tra độ thoát nước, độ bền và khả năng thích ứng với kiến trúc đương đại. Không chỉ tái hiện hình dáng cổ xưa, chúng tôi hướng tới việc giữ lại tinh thần của ngói âm dương truyền thống, đồng thời nâng cao chất lượng để mỗi mái ngói vừa mang giá trị di sản, vừa đáp ứng yêu cầu sử dụng lâu dài trong công trình hôm nay.', '[{\"image\":\"ve_chung_toi\\/nt_ngon_ngu\\/GMGiXtVPQRlNlLRK_1778233743.jpg\",\"head\":\"Ng\\u00f4n ng\\u1eef c\\u1ee7a v\\u1eadt li\\u1ec7u\",\"body\":\"Ch\\u00fang t\\u00f4i hi\\u1ec3u r\\u1eb1ng \\u0111\\u1ea5t ch\\u00ednh l\\u00e0 c\\u1ed1t l\\u00f5i l\\u00e0m n\\u00ean h\\u1ed3n c\\u1ee7a m\\u1ed7i s\\u1ea3n ph\\u1ea9m. D\\u00f9 kh\\u00f4ng d\\u1ec5 \\u0111\\u1ec3 thuy\\u1ebft ph\\u1ee5c kh\\u00e1ch h\\u00e0ng ngay t\\u1eeb c\\u00e1i nh\\u00ecn \\u0111\\u1ea7u ti\\u00ean r\\u1eb1ng gi\\u00e1 tr\\u1ecb c\\u1ee7a Thanh H\\u1ea3i n\\u1eb1m s\\u00e2u trong l\\u1edbp \\u0111\\u1ea5t \\u0111\\u01b0\\u1ee3c tuy\\u1ec3n ch\\u1ecdn k\\u1ef9 l\\u01b0\\u1ee1ng, ch\\u00fang t\\u00f4i ch\\u1ecdn \\u0111\\u1ec3 th\\u1eddi gian l\\u00ean ti\\u1ebfng. Gi\\u00e1 tr\\u1ecb \\u1ea5y \\u0111\\u01b0\\u1ee3c ch\\u1ee9ng minh b\\u1eb1ng \\u0111\\u1ed9 b\\u1ec1n qua n\\u0103m th\\u00e1ng v\\u00e0 b\\u1eb1ng c\\u00e1c ch\\u1ee9ng ch\\u1ec9 ki\\u1ec3m nghi\\u1ec7m \\u0111\\u1ed9c l\\u1eadp. N\\u1ebfu men l\\u00e0 v\\u1ebb \\u0111\\u1eb9p thu h\\u00fat \\u00e1nh nh\\u00ecn ban \\u0111\\u1ea7u, th\\u00ec \\u0111\\u1ea5t ch\\u00ednh l\\u00e0 chi\\u1ec1u s\\u00e2u l\\u1eb7ng l\\u1ebd \\u2013 \\u0111\\u1ee7 \\u0111\\u1ec3 gi\\u1eef kh\\u00e1ch h\\u00e0ng \\u1edf l\\u1ea1i l\\u00e2u d\\u00e0i c\\u00f9ng ch\\u00fang t\\u00f4i.\"}]', 'NGHỆ THUẬT CHẾ TÁC THỦ CÔNG ĐIÊU LUYỆN', 'Nghệ thuật chế tác của Thanh Hải bắt đầu từ những đôi tay thuần thục mỗi ngày. Dù thị trường ngày càng đòi hỏi tốc độ và sản lượng, chúng tôi vẫn giữ lại gần như trọn vẹn các công đoạn thủ công, vì đó là cách duy nhất để mỗi sản phẩm còn giữ được “chất” của nghề. Những đôi tay cạo hàng thuần thục, những đôi tay dội men uyển chuyển, hay đôi tay rắn rỏi đổ khuôn mỗi ngày - tất cả đều mang theo sự tập trung, kiên nhẫn và tình yêu nghề. Chúng tôi khác biệt ngay từ chất liệu ban đầu, và lựa chọn gìn giữ sự khác biệt ấy đến tận cùng. Men và lửa, qua những biến thiên tự nhiên, tạo nên sắc độ đậm nhạt không lặp lại - mộc mạc, thuần khiết như chính thiên nhiên ban tặng.', '[\"ve_chung_toi\\/nt_che_tac_anh\\/JDz4Fmxq6wJqOxrF_1778233743.png\",\"ve_chung_toi\\/nt_che_tac_anh\\/bx6BPbB0R3NmIaiW_1778233743.jpg\"]', 'Kỹ thuật luyện đất', 'Đất là gốc rễ, nền tảng của mọi sản phẩm gốm chất lượng. Chúng tôi tuyển chọn nguyên liệu đất sét tinh khiết, loại bỏ tạp chất để đảm bảo độ dẻo, độ bám và khả năng chịu nhiệt vượt trội. Đất sau khi được ngâm, lắng và luyện qua nhiều giai đoạn xử lý truyền thống sẽ cho ra hỗn hợp mịn, ổn định, sẵn sàng cho từng bước tạo hình, nung và hoàn thiện.', '[{\"image\":\"ve_chung_toi\\/nt_luyen_dat_item\\/g6xt6Qus9dnsud9O_1778233743.jpg\",\"head\":\"K\\u1ef9 thu\\u1eadt t\\u1ea1o h\\u00ecnh\",\"body\":\"T\\u1ea1o h\\u00ecnh b\\u1eaft \\u0111\\u1ea7u t\\u1eeb b\\u1ea3n v\\u1ebd, n\\u01a1i t\\u1ec9 l\\u1ec7 v\\u00e0 h\\u00ecnh d\\u00e1ng s\\u1ea3n ph\\u1ea9m \\u0111\\u01b0\\u1ee3c t\\u00ednh to\\u00e1n k\\u1ef9 l\\u01b0\\u1ee1ng. \\u0110\\u1ec3 t\\u1ea1o h\\u00ecnh h\\u00e0ng lo\\u1ea1t, ngh\\u1ec7 nh\\u00e2n s\\u1ebd b\\u1eaft \\u0111\\u1ea7u v\\u1edbi c\\u1ed1t s\\u1ea3n ph\\u1ea9m. Ph\\u1ea7n c\\u1ed1t n\\u00e0y s\\u1ebd \\u0111\\u01b0\\u1ee3c \\u0111i\\u00eau kh\\u1eafc ho\\u00e0n to\\u00e0n b\\u1eb1ng tay v\\u1edbi nguy\\u00ean li\\u1ec7u ch\\u00ednh l\\u00e0 th\\u1ea1ch cao. C\\u1ed1t c\\u00e0ng s\\u1eafc n\\u00e9t, khu\\u00f4n th\\u1ea1ch cao c\\u00e0ng chu\\u1ea9n, h\\u00e0ng c\\u00e0ng \\u0111\\u1eb9p. \\u0111\\u1ea5t sau luy\\u1ec7n \\u0111\\u01b0\\u1ee3c \\u0111\\u1ed5 r\\u00f3t v\\u00e0o khu\\u00f4n. C\\u00e1ch \\u0111\\u1ec3 ki\\u1ec3m so\\u00e1t \\u0111\\u1ed9 d\\u00e0y \\u0111\\u1ed3ng \\u0111\\u1ec1u gi\\u1eefa c\\u00e1c s\\u1ea3n ph\\u1ea9m ph\\u1ee5 thu\\u1ed9c nhi\\u1ec1u v\\u00e0o khu\\u00f4n v\\u00e0 tay ngh\\u1ec1 c\\u0169ng nh\\u01b0 s\\u1ee9c b\\u1ec1n c\\u1ee7a m\\u1ed7i ng\\u01b0\\u1eddi th\\u1ee3 \\u0111\\u1ed5 r\\u00f3t.\"},{\"image\":\"ve_chung_toi\\/nt_luyen_dat_item\\/00nVHQnbWabPA999_1778233743.jpg\",\"head\":\"K\\u1ef9 thu\\u1eadt tr\\u00e1ng men\",\"body\":\"M\\u1ed7i ngh\\u1ec7 nh\\u00e2n s\\u1ebd c\\u00f3 m\\u1ed9t b\\u00ed quy\\u1ebft pha men ri\\u00eang, k\\u1ebf th\\u1eeba t\\u1eeb cha \\u00f4ng v\\u00e0 ti\\u1ebfp t\\u1ee5c s\\u00e1ng t\\u1ea1o tr\\u00ean n\\u1ec1n t\\u1ea3ng \\u0111\\u00f3. Th\\u00f4ng th\\u01b0\\u1eddng, men s\\u1ebd \\u0111\\u01b0\\u1ee3c nghi\\u1ec1n m\\u1ed9t c\\u00e1ch c\\u1ea9n th\\u1eadn, sau \\u0111\\u00f3 tr\\u1ed9n, l\\u1ecdc k\\u1ef9 r\\u1ed3i m\\u1edbi pha theo t\\u1ef7 l\\u1ec7 \\u0111\\u1ec3 t\\u1ea1o n\\u00ean m\\u00e0u s\\u1eafc v\\u00e0 b\\u1ec1 m\\u1eb7t kh\\u00e1c nhau. V\\u1edbi ng\\u00f3i, ch\\u00fang t\\u00f4i ph\\u00e1t tri\\u1ec3n h\\u01a1n hai m\\u01b0\\u01a1i m\\u00e0u men, qu\\u00fd kh\\u00e1ch h\\u00e0ng ho\\u00e0n to\\u00e0n c\\u00f3 th\\u1ec3 l\\u1ef1a ch\\u1ecdn theo ng\\u0169 h\\u00e0nh, hay t\\u00ednh ch\\u1ea5t t\\u1eebng c\\u00f4ng tr\\u00ecnh nh\\u01b0: Ch\\u00f9a chi\\u1ec1n, T\\u1eeb \\u0111\\u01b0\\u1eddng hay Khu ngh\\u1ec9 d\\u01b0\\u1ee1ng.\"}]', 'Kỹ thuật đun lò', 'Công đoạn nung sản phẩm trong lò là bước quyết định chất lượng gốm của Thanh Hải. Lò được đun ở nhiệt độ cao, có thể lên tới 1.300°C, đòi hỏi đất và men đạt chuẩn để chịu nhiệt bền vững. Việc tăng – giữ – hạ nhiệt theo từng giai đoạn là bí quyết riêng của các nghệ nhân. Sau khi nung, sản phẩm được ủ chậm khoảng 12 giờ để nguội dần, giúp gốm đanh chắc, hạn chế nứt vỡ và bền bỉ theo thời gian.', '[\"ve_chung_toi\\/nt_dun_lo_anh\\/UcZQefP570l7C6u0_1778233743.png\",\"ve_chung_toi\\/nt_dun_lo_anh\\/SHbBceeQ3XmmF77W_1778233743.jpg\"]', '2026-05-08 09:00:51', '2026-05-08 10:16:24');
-
-INSERT INTO `giai_thuong_thanh_tuu` (`giai_thuong_thanh_tuu_id`, `image`, `des`, `created_at`, `updated_at`) VALUES
-(1, 'giai_thuong_thanh_tuu/images/VkXIhmQHkLWbnYQM_1778235476.jpg', 'Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội trao tặng', '2026-05-08 10:17:56', '2026-05-08 10:17:56'),
-(2, 'giai_thuong_thanh_tuu/images/OXcnL6iUcZ6PJi2T_1778235543.jpg', 'Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội trao tặng', '2026-05-08 10:19:03', '2026-05-08 10:19:03'),
-(3, 'giai_thuong_thanh_tuu/images/PKhs3Sn18Hgw5TE3_1778235612.jpg', 'Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà Nội trao tặng', '2026-05-08 10:20:12', '2026-05-08 10:20:12'),
-(4, 'giai_thuong_thanh_tuu/images/sMToqS1Y7TQ8kCw8_1778235898.jpg', 'Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà Nội trao tặng', '2026-05-08 10:24:58', '2026-05-08 10:24:58');
-SQL
+    private function seedTrangChu(): void
+    {
+        TrangChu::firstOrCreate(
+            ['trang_chu_id' => 1],
+            [
+                'banner' => [
+                    ['image' => 'assets/images/home-hero-01.png', 'alt' => 'TH Ceramics - Gốm Việt Trường Tồn'],
+                ],
+                'khach_hang_doi_tac' => [
+                    ['image' => 'assets/images/partner-01.png', 'alt' => 'Đối tác 1'],
+                    ['image' => 'assets/images/partner-02.png', 'alt' => 'Đối tác 2'],
+                    ['image' => 'assets/images/partner-03.png', 'alt' => 'Đối tác 3'],
+                    ['image' => 'assets/images/partner-04.png', 'alt' => 'Đối tác 4'],
+                    ['image' => 'assets/images/partner-05.png', 'alt' => 'Đối tác 5'],
+                ],
+                'loi_tri_an' => [
+                    'Hơn 40 năm gắn bó với gốm sứ trang trí nội - ngoại thất, chúng tôi tin rằng mỗi sản phẩm không chỉ là vật liệu xây dựng, mà là kết tinh của đất, lửa và tấm lòng người làm nghề.',
+                    'Sinh ra và lớn lên tại làng gốm Bát Tràng, nơi lưu giữ di sản nghề gốm được truyền qua nhiều thế hệ, chúng tôi thừa hưởng nền tảng thủ công truyền thống cùng nguồn nguyên liệu quý giá của quê hương. Là người kế thừa thế hệ thứ ba của dòng họ Vũ Gia, tôi tiếp bước con đường cha ông đã gây dựng, gìn giữ và làm giàu thêm giá trị di sản gốm Việt, đặc biệt là ngói âm dương - loại ngói gắn liền với kiến trúc cung đình, đền chùa từ thời Lý – Trần đến nay.',
+                    'Từ ngói lợp gốm sứ, gạch hoa thông gió đến các phụ kiện trang trí, mỗi sản phẩm đều là sự giao thoa giữa di sản truyền thống và tinh thần đương đại. Hành trình ấy đã đưa sản phẩm của chúng tôi hiện diện trên khắp mọi miền đất nước, trở thành một phần trong nhiều công trình mang đậm bản sắc và thẩm mỹ Việt.',
+                ],
+                'loi_tri_an_anh' => 'assets/images/ceo.jpg',
+                've_chung_toi_logo' => [
+                    ['image' => 'assets/images/logo.png', 'alt' => 'TH Ceramics Logo'],
+                ],
+                'video' => null,
+                'nhung_con_so' => [
+                    ['head' => '1000', 'body' => 'Công trình lớn nhỏ'],
+                    ['head' => '5000m²', 'body' => 'Nhà xưởng'],
+                    ['head' => '100%', 'body' => 'Sản xuất thủ công'],
+                    ['head' => '50', 'body' => 'Dòng sản phẩm'],
+                    ['head' => '40', 'body' => 'Năm kinh nghiệm'],
+                ],
+                'showroom_images' => [
+                    ['image' => 'assets/images/showroom-01.jpg', 'des' => 'Showroom Hà Nội - 286 Nguyễn Xiển'],
+                    ['image' => 'assets/images/showroom-02.jpg', 'des' => 'Không gian trưng bày sản phẩm ngói'],
+                    ['image' => 'assets/images/showroom-03.png', 'des' => 'Gạch trang trí cao cấp'],
+                ],
+                'showroom_noidung' => 'Xưởng sản xuất và showroom Thanh Hải Ceramics là nơi quá khứ và hiện tại giao thoa. Từ ngọn lửa lò nung Bát Tràng, những viên ngói âm dương ra đời, mang theo tinh hoa làng nghề, dấu ấn kiến trúc Việt và câu chuyện di sản sống động. Trong từng lớp ngói xếp là ký ức của thời gian, được tiếp nối bằng bàn tay người thợ hôm nay để gìn giữ và lan tỏa giá trị truyền thống.',
+            ]
         );
+    }
+
+    private function seedVeChungToi(): void
+    {
+        VeChungToi::firstOrCreate(
+            ['ve_chung_toi_id' => 1],
+            [
+                'banner' => 'assets/images/about-banner.jpg',
+                'header_banner' => 'GỐM SỨ THANH HẢI',
+                'body_banner' => "40 NĂM - LỬA NGHỀ\nCHƯA BAO GIỜ TẮT",
+                'gs_head' => [
+                    [
+                        'image' => 'assets/images/about-01.png',
+                        'head' => 'Những công việc giản dị và ngọn lửa nghề luôn ấm',
+                        'body' => 'Từ những bàn tay khéo léo của người thợ Việt tới ngôi nhà của bạn. Từ những ngày làm thuê trong xí nghiệp gốm, nghệ nhân Vũ Mạnh Hải và Nguyễn Thị Thanh – hai người sáng lập đầy tâm huyết – đã sớm nuôi dưỡng khát khao tạo ra những sản phẩm của riêng mình. Những mẫu lan can gốm sứ đầu tiên, được tự tay thiết kế, sản xuất và mang đi chào hàng trên phố Cát Linh, đã đặt nền móng cho hành trình theo nghề nhiều thử thách nhưng bền bỉ.',
+                    ],
+                    [
+                        'image' => 'assets/images/about-02.jpg',
+                        'head' => 'Kiên định một con đường, bền vững qua thời gian',
+                        'body' => "Dù Bát Tràng đã trải qua nhiều giai đoạn chuyển đổi và thử nghiệm các loại hành gốm sứ khác nhau, Thanh Hải vẫn kiên định với lựa chọn ban đầu: gốm sứ xây dựng – gạch và ngói – làm nền tảng phát triển lâu dài.\nMỗi sản phẩm được nghiên cứu kỹ về chất liệu và kỹ thuật, đồng thời được tinh chỉnh trong thiết kế để phù hợp với kiến trúc hôm nay. Thanh Hải tin rằng giá trị bền vững nhất nằm ở sự kết hợp hài hòa giữa di sản nghề gốm và hơi thở của thời đại.",
+                    ],
+                ],
+                'gs_gia_tri' => [
+                    [
+                        'image' => 'assets/images/gia-tri-vuot-troi-01.jpg',
+                        'head' => 'Tính kế thừa',
+                        'body' => 'Gốm sứ xây dựng Thanh Hải là câu chuyện được tiếp nối qua nhiều thế hệ. Từ những ngày đầu cha ông nhóm lửa lò nung, qua năm tháng thế hệ kế thừa vẫn bền bỉ tích lũy kinh nghiệm. Mỗi thế hệ sau không chỉ học cách làm gốm, mà còn học cách tôn trọng nghề, giữ chữ tín và làm ra những sản phẩm đủ bền để đi cùng thời gian. Chính sự kế thừa lặng lẽ nhưng bền bỉ ấy đã tạo nên Thanh Hải của hôm nay.',
+                    ],
+                    [
+                        'image' => 'assets/images/gia-tri-vuot-troi-02.jpg',
+                        'head' => 'Nghệ thuật thủ công',
+                        'body' => '"Nghệ thuật thủ công" là giá trị cốt lõi khiến sản phẩm Gốm sứ xây dựng của Thanh Hải khác biệt với các vật liệu công nghiệp trên thị trường. Từ đất thô qua bàn tay người thợ, mỗi viên gạch, viên ngói được chế tác bằng sự am hiểu vật liệu, kết hợp kỹ thuật nung truyền thống và sự tuyển chọn nguyên liệu hàng đầu nhằm đảm bảo độ bền, tính thẩm mỹ và giá trị sử dụng lâu dài cho từng công trình.',
+                    ],
+                    [
+                        'image' => 'assets/images/gia-tri-vuot-troi-03.jpg',
+                        'head' => 'Giá trị vượt thời gian',
+                        'body' => 'Với Thanh Hải, mỗi viên gạch, viên ngói không chỉ để dựng nhà, mà để gìn giữ một tổ ấm. Đó là nơi che mưa nắng, chứng kiến những bữa cơm sum họp và những đổi thay của đời người theo năm tháng. Chính vì vậy, từng sản phẩm đều được làm ra bằng sự nâng niu và trách nhiệm, đủ bền để ở lại cùng gia đình qua nhiều thế hệ. Với Thanh Hải, góp phần xây tổ ấm cho người khác luôn là một sứ mệnh cao cả.',
+                    ],
+                ],
+                'gs_hanh_trinh' => [
+                    [
+                        'image' => 'assets/images/hanh-trinh-01.jpg',
+                        'head' => '1985',
+                        'body' => 'Hai người sáng lập là ông Vũ Mạnh Hải và bà Nguyễn Thị Thanh bắt đầu được giao lại toàn bộ công việc sản xuất gốm sứ từ cụ Vũ Đình Sơn. Nhận thấy thị trường sản xuất bát đĩa đang dần bão hòa và nhiều cạnh tranh, ông bà bắt đầu tìm hướng đi mới thông qua việc tự thiết kế mẫu mã mới cho dòng sản phẩm gốm sứ xây dựng, gốm sứ trang trí – đặt những viên gạch đầu tiên cho con đường làm nghề.',
+                    ],
+                    [
+                        'image' => 'assets/images/hanh-trinh-02.jpg',
+                        'head' => '1993',
+                        'body' => 'Cửa hàng bán lẻ đầu tiên được mở ra, đánh dấu bước phát triển mới trong hoạt động kinh doanh. Từ đây, mẫu mã không ngừng được nghiên cứu và sáng tạo, chủng loại sản phẩm ngày càng đa dạng nhằm đáp ứng các nhu cầu khác nhau của khách hàng. Đồng thời, Gốm Sứ Thanh Hải dần tạo được sự tín nhiệm từ các doanh nghiệp lớn và được giao thực hiện những công trình quy mô đầu tiên.',
+                    ],
+                    [
+                        'image' => 'assets/images/hanh-trinh-03.jpg',
+                        'head' => '2000',
+                        'body' => 'Công ty TNHH Sản xuất và Thương mại Thanh Hải chính thức được thành lập, đánh dấu bước chuyển quan trọng sang mô hình hoạt động chuyên nghiệp. Hệ thống xưởng sản xuất gốm sứ xây dựng được đầu tư đồng bộ, từng bước áp dụng quy trình để nâng cao tay nghề thợ thủ công, mở rộng quy mô sản xuất.',
+                    ],
+                    [
+                        'image' => 'assets/images/hanh-trinh-04.jpg',
+                        'head' => '2008',
+                        'body' => 'Showroom chuyên nghiệp đầu tiên được xây dựng tại số 42 Phố Gốm, đánh dấu bước phát triển trong việc nâng cao trải nghiệm tham quan và giới thiệu sản phẩm gốm sứ Thanh Hải. Từ đây, không gian trưng bày được chú trọng đầu tư bài bản, sắp đặt sản phẩm theo từng nhóm ứng dụng và giá trị thẩm mỹ, góp phần thể hiện rõ nét hơn tinh thần và chất lượng của thương hiệu.',
+                    ],
+                    [
+                        'image' => 'assets/images/hanh-trinh-05.jpg',
+                        'head' => '2024',
+                        'body' => 'Showroom thứ hai với diện tích gần 400m² tại số 18 Phố Gốm được hình thành như một không gian trưng bày và kể chuyện di sản. Tại đây, ngói âm dương được tái hiện thông qua việc kết hợp ngói âm và gạch xây cũ, tạo nên các họa tiết mô phỏng ngói thời Lý – Trần, dấu ấn tiêu biểu của kiến trúc cổ Việt Nam. Không gian vừa là nơi giới thiệu sản phẩm, vừa là điểm kết nối văn hóa, lưu giữ và lan tỏa giá trị kiến trúc truyền thống.',
+                    ],
+                ],
+                'gs_nguoi_sang_lap_anh' => 'assets/images/ceo.jpg',
+                'gs_nguoi_sang_lap_noi_dung' => 'Trải qua nhiều thăng trầm của nghề, ông Vũ Mạnh Hải và bà Nguyễn Thị Thanh vẫn bền bỉ đồng hành, kiên định theo đuổi dòng sản phẩm gốm sứ xây dựng. Dù ngói thủ công không phải là sản phẩm phổ biến, Thanh Hải vẫn xây dựng được một cộng đồng khách hàng trung thành và tin cậy, thể hiện qua việc được lựa chọn cho nhiều công trình lớn nhỏ trên cả nước như Chùa Bái Đính, Bệnh viện Y học cổ truyền Quân đội, Viện 103, Vinpearl Land Nha Trang. Những dấu ấn ấy đã đưa hai nhà sáng lập đến niềm vinh dự khi lần lượt được UBND Thành phố Hà Nội trao tặng danh hiệu Nghệ nhân Hà Nội vào các năm 2023 và 2025.',
+                'gs_giai_thuong' => [
+                    ['image' => 'assets/images/award-01.jpg', 'head' => '2016'],
+                    ['image' => 'assets/images/award-02.jpg', 'head' => '2016'],
+                    ['image' => 'assets/images/award-03.jpg', 'head' => '2016'],
+                ],
+                'nt_head' => 'Từ vật liệu xây dựng đến di sản kiến trúc',
+                'nt_body' => 'Chúng tôi dành nhiều năm nghiên cứu để phục chế mẫu ngói âm dương lấy cảm hứng từ ngói thời Lý – Trần, kết hợp đối chiếu tư liệu kiến trúc cổ và hệ mái Kinh thành Huế. Bắt đầu từ những bản vẽ và mẫu thử đầu tiên, từng viên ngói được chế tác thủ công, đo đạc tỷ lệ, kiểm tra độ thoát nước, độ bền và khả năng thích ứng với kiến trúc đương đại. Không chỉ tái hiện hình dáng cổ xưa, chúng tôi hướng tới việc giữ lại tinh thần của ngói âm dương truyền thống, đồng thời nâng cao chất lượng để mỗi mái ngói vừa mang giá trị di sản, vừa đáp ứng yêu cầu sử dụng lâu dài trong công trình hôm nay.',
+                'nt_ngon_ngu' => [
+                    [
+                        'image' => 'assets/images/dat-set-bat-trang.jpg',
+                        'head' => 'Ngôn ngữ của vật liệu',
+                        'body' => 'Chúng tôi hiểu rằng đất chính là cốt lõi làm nên hồn của mỗi sản phẩm. Dù không dễ để thuyết phục khách hàng ngay từ cái nhìn đầu tiên rằng giá trị của Thanh Hải nằm sâu trong lớp đất được tuyển chọn kỹ lưỡng, chúng tôi chọn để thời gian lên tiếng. Giá trị ấy được chứng minh bằng độ bền qua năm tháng và bằng các chứng chỉ kiểm nghiệm độc lập. Nếu men là vẻ đẹp thu hút ánh nhìn ban đầu, thì đất chính là chiều sâu lặng lẽ – đủ để giữ khách hàng ở lại lâu dài cùng chúng tôi.',
+                    ],
+                ],
+                'nt_che_tac_head' => 'NGHỆ THUẬT CHẾ TÁC THỦ CÔNG ĐIÊU LUYỆN',
+                'nt_che_tac_body' => 'Nghệ thuật chế tác của Thanh Hải bắt đầu từ những đôi tay thuần thục mỗi ngày. Dù thị trường ngày càng đòi hỏi tốc độ và sản lượng, chúng tôi vẫn giữ lại gần như trọn vẹn các công đoạn thủ công, vì đó là cách duy nhất để mỗi sản phẩm còn giữ được "chất" của nghề. Những đôi tay cạo hàng thuần thục, những đôi tay dội men uyển chuyển, hay đôi tay rắn rỏi đổ khuôn mỗi ngày - tất cả đều mang theo sự tập trung, kiên nhẫn và tình yêu nghề. Chúng tôi khác biệt ngay từ chất liệu ban đầu, và lựa chọn gìn giữ sự khác biệt ấy đến tận cùng. Men và lửa, qua những biến thiên tự nhiên, tạo nên sắc độ đậm nhạt không lặp lại - mộc mạc, thuần khiết như chính thiên nhiên ban tặng.',
+                'nt_che_tac_anh' => [
+                    'assets/images/che-tac-01.png',
+                    'assets/images/che-tac-02.jpg',
+                ],
+                'nt_luyen_dat_head' => 'Kỹ thuật luyện đất',
+                'nt_luyen_dat_body' => 'Đất là gốc rễ, nền tảng của mọi sản phẩm gốm chất lượng. Chúng tôi tuyển chọn nguyên liệu đất sét tinh khiết, loại bỏ tạp chất để đảm bảo độ dẻo, độ bám và khả năng chịu nhiệt vượt trội. Đất sau khi được ngâm, lắng và luyện qua nhiều giai đoạn xử lý truyền thống sẽ cho ra hỗn hợp mịn, ổn định, sẵn sàng cho từng bước tạo hình, nung và hoàn thiện.',
+                'nt_luyen_dat_item' => [
+                    [
+                        'image' => 'assets/images/luyen-dat-01.jpg',
+                        'head' => 'Kỹ thuật tạo hình',
+                        'body' => 'Tạo hình bắt đầu từ bản vẽ, nơi tỉ lệ và hình dáng sản phẩm được tính toán kỹ lưỡng. Để tạo hình hàng loạt, nghệ nhân sẽ bắt đầu với cốt sản phẩm. Phần cốt này sẽ được điêu khắc hoàn toàn bằng tay với nguyên liệu chính là thạch cao. Cốt càng sắc nét, khuôn thạch cao càng chuẩn, hàng càng đẹp. Đất sau luyện được đổ rót vào khuôn. Cách để kiểm soát độ dày đồng đều giữa các sản phẩm phụ thuộc nhiều vào khuôn và tay nghề cũng như sức bền của mỗi người thợ đổ rót.',
+                    ],
+                    [
+                        'image' => 'assets/images/luyen-dat-02.jpg',
+                        'head' => 'Kỹ thuật tráng men',
+                        'body' => 'Mỗi nghệ nhân sẽ có một bí quyết pha men riêng, kế thừa từ cha ông và tiếp tục sáng tạo trên nền tảng đó. Thông thường, men sẽ được nghiền một cách cẩn thận, sau đó trộn, lọc kỹ rồi mới pha theo tỷ lệ để tạo nên màu sắc và bề mặt khác nhau. Với ngói, chúng tôi phát triển hơn hai mươi màu men, quý khách hàng hoàn toàn có thể lựa chọn theo ngũ hành, hay tính chất từng công trình như: Chùa chiền, Từ đường hay Khu nghỉ dưỡng.',
+                    ],
+                ],
+                'nt_dun_lo_head' => 'Kỹ thuật đun lò',
+                'nt_dun_lo_body' => 'Công đoạn nung sản phẩm trong lò là bước quyết định chất lượng gốm của Thanh Hải. Lò được đun ở nhiệt độ cao, có thể lên tới 1.300°C, đòi hỏi đất và men đạt chuẩn để chịu nhiệt bền vững. Việc tăng – giữ – hạ nhiệt theo từng giai đoạn là bí quyết riêng của các nghệ nhân. Sau khi nung, sản phẩm được ủ chậm khoảng 12 giờ để nguội dần, giúp gốm đanh chắc, hạn chế nứt vỡ và bền bỉ theo thời gian.',
+                'nt_dun_lo_anh' => [
+                    'assets/images/dun-lo-01.png',
+                    'assets/images/dun-lo-02.jpg',
+                ],
+            ]
+        );
+    }
+
+    private function seedGiaiThuongThanhTuu(): void
+    {
+        $awards = [
+            ['image' => 'assets/images/award-01.jpg', 'des' => 'Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội trao tặng'],
+            ['image' => 'assets/images/award-02.jpg', 'des' => 'Sản phẩm công nghiệp nông thôn tiêu biểu 2023'],
+            ['image' => 'assets/images/award-03.jpg', 'des' => 'Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà Nội trao tặng'],
+            ['image' => 'assets/images/award-05.jpg', 'des' => 'Top 10 thương hiệu gốm sứ uy tín 2024'],
+        ];
+
+        foreach ($awards as $award) {
+            GiaiThuongThanhTuu::firstOrCreate(
+                ['des' => $award['des']],
+                ['image' => $award['image']]
+            );
+        }
+    }
+
+    private function seedGiaTriVuotTroi(): void
+    {
+        $values = [
+            [
+                'title' => 'Đất sét Bát Tràng nguyên chất',
+                'desscription' => 'Sử dụng 100% đất sét trắng Bát Tràng, khai thác tại địa phương, đảm bảo độ dẻo và độ kết dính tự nhiên. Nguyên liệu được tuyển chọn kỹ lưỡng qua quy trình lắng lọc 3 giai đoạn.',
+                'image' => 'assets/images/gia-tri-vuot-troi-01.jpg',
+            ],
+            [
+                'title' => 'Nung ở 1200°C - Độ cứng vượt trội',
+                'desscription' => 'Công nghệ lò nung tuynel đạt 1200°C giúp sản phẩm đạt độ cứng tối ưu, chống thấm nước, chống rêu mốc vĩnh viễn. Quy trình nung kéo dài 72 giờ đảm bảo xương gốm đanh chắc từ trong ra ngoài.',
+                'image' => 'assets/images/gia-tri-vuot-troi-02.jpg',
+            ],
+            [
+                'title' => 'Men hỏa biến độc quyền',
+                'desscription' => 'Kỹ thuật tráng men thủ công kết hợp biến nhiệt tạo hiệu ứng hoả biến độc nhất. Mỗi viên ngói là một tác phẩm nghệ thuật không thể sao chép, với sắc độ và vân men riêng biệt.',
+                'image' => 'assets/images/gia-tri-vuot-troi-03.jpg',
+            ],
+            [
+                'title' => 'Bảo hành 20 năm - Trường tồn cùng thời gian',
+                'desscription' => 'Cam kết bảo hành chống phai màu, chống thấm nước 20 năm. Sản phẩm đã kiểm chứng qua hơn 500 công trình trên toàn quốc, từ đình chùa di tích đến biệt thự nghỉ dưỡng cao cấp.',
+                'image' => 'assets/images/gia-tri-vuot-troi-04.jpg',
+            ],
+        ];
+
+        foreach ($values as $v) {
+            GiaTriVuotTroi::firstOrCreate(
+                ['title' => $v['title']],
+                [
+                    'desscription' => $v['desscription'],
+                    'image' => $v['image'],
+                ]
+            );
+        }
     }
 }

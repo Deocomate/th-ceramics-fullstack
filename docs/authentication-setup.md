@@ -61,11 +61,19 @@ File này đã được cập nhật tự động với:
 ### Models
 - ✅ `app/Models/User.php`
   - Thêm `google_id`, `avatar` vào `$fillable`
+  - Override `sendPasswordResetNotification()` để gửi `ResetPasswordNotification` custom (role-based routing, ShouldQueue)
 
 ### Services
 - ✅ `app/Services/AuthService.php`
   - Thêm: `registerClient()` - Đăng ký khách hàng
   - Thêm: `handleGoogleUser()` - Xử lý Google OAuth
+
+### Notifications
+- ✅ `app/Notifications/ResetPasswordNotification.php`
+  - Extends `Illuminate\Auth\Notifications\ResetPassword`
+  - Implements `ShouldQueue` (database queue)
+  - Role-based routing: admin -> `/admin/reset-password/{token}`, client -> `/tai-khoan/dat-lai-mat-khau/{token}`
+  - Custom Vietnamese-branded email via `emails.auth.reset_password` markdown template
 
 ### Controllers
 - ✅ `app/Http/Controllers/Client/AuthController.php`
@@ -108,6 +116,7 @@ File này đã được cập nhật tự động với:
 - ✅ `resources/views/clients/auth/register.blade.php` - Form đăng ký
 - ✅ `resources/views/clients/auth/forget-password.blade.php` - Form quên mật khẩu
 - ✅ `resources/views/clients/auth/reset-password.blade.php` - Form reset mật khẩu
+- ✅ `resources/views/emails/auth/reset_password.blade.php` - Email template đặt lại mật khẩu (tiếng Việt, branded)
 
 ### Configuration
 - ✅ `config/services.php` - Cấu hình Google OAuth

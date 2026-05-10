@@ -1,229 +1,40 @@
 <!-- Projects Grid -->
+@if($projects->isEmpty())
+<div class="text-center py-16" data-aos="fade-up">
+  <p class="text-lg text-primary/60 font-archivo">Chưa có dự án nào trong danh mục này.</p>
+</div>
+@else
 <div
   class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 mb-8 md:mb-20 w-[85%] mx-auto"
   data-aos="fade-up"
 >
-  <!-- Project 1 -->
+  @foreach($projects as $project)
   <a
-    href="/projects/detail.html"
+    href="{{ route('client.projects.detail', $project->slug) }}"
     class="group block overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 bg-white"
   >
     <div class="aspect-[4/3] overflow-hidden">
       <img
-        src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}"
-        alt="Chùa Bái Đính"
+        src="{{ asset('storage/' . ($project->images[0] ?? 'assets/images/placeholder.jpg')) }}"
+        alt="{{ $project->ten_du_an }}"
         class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+        onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
       />
     </div>
     <div class="p-3 text-center bg-white">
       <h3
         class="text-lg md:text-xl font-archivo font-extrabold text-primary mb-2 group-hover:text-secondary transition-colors"
       >
-        CHÙA BÁI ĐÍNH
+        {{ \Illuminate\Support\Str::upper($project->ten_du_an) }}
       </h3>
       <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Địa điểm:</span> Ninh Bình
+        <span class="text-primary font-semibold">Địa điểm:</span> {{ $project->dia_diem }}
       </p>
       <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Sản phẩm:</span> Ngói âm dương
-        nâu đen
+        <span class="text-primary font-semibold">Sản phẩm:</span> {{ $project->san_pham }}
       </p>
     </div>
   </a>
-
-  <!-- Project 2 -->
-  <a
-    href="/projects/detail.html"
-    class="group block overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 bg-white"
-  >
-    <div class="aspect-[4/3] overflow-hidden">
-      <img
-        src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}"
-        alt="Chùa Bái Đính"
-        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-      />
-    </div>
-    <div class="p-3 text-center bg-white">
-      <h3
-        class="text-lg md:text-xl font-archivo font-extrabold text-primary mb-2 group-hover:text-secondary transition-colors"
-      >
-        CHÙA BÁI ĐÍNH
-      </h3>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Địa điểm:</span> Ninh Bình
-      </p>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Sản phẩm:</span> Ngói âm dương
-        nâu đen
-      </p>
-    </div>
-  </a>
-
-  <!-- Project 3 -->
-  <a
-    href="/projects/detail.html"
-    class="group block overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 bg-white"
-  >
-    <div class="aspect-[4/3] overflow-hidden">
-      <img
-        src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}"
-        alt="Chùa Bái Đính"
-        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-      />
-    </div>
-    <div class="p-3 text-center bg-white">
-      <h3
-        class="text-lg md:text-xl font-archivo font-extrabold text-primary mb-2 group-hover:text-secondary transition-colors"
-      >
-        CHÙA BÁI ĐÍNH
-      </h3>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Địa điểm:</span> Ninh Bình
-      </p>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Sản phẩm:</span> Ngói âm dương
-        nâu đen
-      </p>
-    </div>
-  </a>
-
-  <!-- Project 4 -->
-  <a
-    href="/projects/detail.html"
-    class="group block overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 bg-white"
-  >
-    <div class="aspect-[4/3] overflow-hidden">
-      <img
-        src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}"
-        alt="Chùa Bái Đính"
-        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-      />
-    </div>
-    <div class="p-3 text-center bg-white">
-      <h3
-        class="text-lg md:text-xl font-archivo font-extrabold text-primary mb-2 group-hover:text-secondary transition-colors"
-      >
-        CHÙA BÁI ĐÍNH
-      </h3>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Địa điểm:</span> Ninh Bình
-      </p>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Sản phẩm:</span> Ngói âm dương
-        nâu đen
-      </p>
-    </div>
-  </a>
-
-  <!-- Project 5 -->
-  <a
-    href="/projects/detail.html"
-    class="group block overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 bg-white"
-  >
-    <div class="aspect-[4/3] overflow-hidden">
-      <img
-        src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}"
-        alt="Chùa Bái Đính"
-        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-      />
-    </div>
-    <div class="p-3 text-center bg-white">
-      <h3
-        class="text-lg md:text-xl font-archivo font-extrabold text-primary mb-2 group-hover:text-secondary transition-colors"
-      >
-        CHÙA BÁI ĐÍNH
-      </h3>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Địa điểm:</span> Ninh Bình
-      </p>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Sản phẩm:</span> Ngói âm dương
-        nâu đen
-      </p>
-    </div>
-  </a>
-
-  <!-- Project 6 -->
-  <a
-    href="/projects/detail.html"
-    class="group block overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 bg-white"
-  >
-    <div class="aspect-[4/3] overflow-hidden">
-      <img
-        src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}"
-        alt="Chùa Bái Đính"
-        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-      />
-    </div>
-    <div class="p-3 text-center bg-white">
-      <h3
-        class="text-lg md:text-xl font-archivo font-extrabold text-primary mb-2 group-hover:text-secondary transition-colors"
-      >
-        CHÙA BÁI ĐÍNH
-      </h3>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Địa điểm:</span> Ninh Bình
-      </p>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Sản phẩm:</span> Ngói âm dương
-        nâu đen
-      </p>
-    </div>
-  </a>
-
-  <!-- Project 7 -->
-  <a
-    href="/projects/detail.html"
-    class="group block overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 bg-white"
-  >
-    <div class="aspect-[4/3] overflow-hidden">
-      <img
-        src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}"
-        alt="Chùa Bái Đính"
-        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-      />
-    </div>
-    <div class="p-3 text-center bg-white">
-      <h3
-        class="text-lg md:text-xl font-archivo font-extrabold text-primary mb-2 group-hover:text-secondary transition-colors"
-      >
-        CHÙA BÁI ĐÍNH
-      </h3>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Địa điểm:</span> Ninh Bình
-      </p>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Sản phẩm:</span> Ngói âm dương
-        nâu đen
-      </p>
-    </div>
-  </a>
-
-  <!-- Project 8 -->
-  <a
-    href="/projects/detail.html"
-    class="group block overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 bg-white"
-  >
-    <div class="aspect-[4/3] overflow-hidden">
-      <img
-        src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}"
-        alt="Chùa Bái Đính"
-        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-      />
-    </div>
-    <div class="p-3 text-center bg-white">
-      <h3
-        class="text-lg md:text-xl font-archivo font-extrabold text-primary mb-2 group-hover:text-secondary transition-colors"
-      >
-        CHÙA BÁI ĐÍNH
-      </h3>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Địa điểm:</span> Ninh Bình
-      </p>
-      <p class="text-[15px] text-primary font-archivo font-medium">
-        <span class="text-primary font-semibold">Sản phẩm:</span> Ngói âm dương
-        nâu đen
-      </p>
-    </div>
-  </a>
+  @endforeach
 </div>
+@endif

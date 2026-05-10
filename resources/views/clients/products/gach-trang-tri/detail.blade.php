@@ -49,7 +49,13 @@ productId="{{ $product->gach_trang_tri_ct_id }}"
 
 <div class="flex flex-col md:block">
     <div class="order-2 md:order-none">
-        <x-products.quantity-calculator image="{{ $product->size_image ? asset('storage/' . $product->size_image) : asset('assets/images/gtt-size.png') }}" />
+        <x-products.quantity-calculator
+            image="{{ $product->size_image ? asset('storage/' . $product->size_image) : asset('assets/images/gtt-size.png') }}"
+            :dinhMuc="$dinhMuc"
+            :showInfo="true"
+            label1="Gạch"
+            rate1="{{ $dinhMuc->first() ? $dinhMuc->first()->value . ' viên/m²' : '-- viên/m²' }}"
+            areaNote="Diện tích được làm tròn lên đến m² gần nhất." />
     </div>
     <div class="order-3 md:order-none">
         <x-products.fabrication-process />
