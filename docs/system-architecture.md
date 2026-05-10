@@ -244,6 +244,8 @@ Mail & Queue
 
 ## Email Notification Flow
 
+### Order Emails
+
 ```
 1. Order placed → CartController::processCheckout():
    - DB::transaction() creates Order + OrderItems
@@ -261,6 +263,27 @@ Mail & Queue
    - php artisan queue:work processes jobs from database queue
    - Both mailables use markdown templates in resources/views/emails/orders/
    - Status updated email shows Vietnamese label via Order::statusLabel()
+```
+
+### Password Reset Emails
+
+```
+1. User requests reset → AuthController::sendResetLink():
+   - Validates email via ForgotPasswordRequest
+   - Laravel Password facade dispatches reset token
+   - User::sendPasswordResetNotification() sends custom ResetPasswordNotification
+
+2. ResetPasswordNotification::toMail():
+   - Checks $notifiable->isAdmin() for role-based routing
+   - Admin users route to admin.auth.reset-password (/admin/reset-password/{token})
+   - Client users route to client.auth.reset-password (/tai-khoan/dat-lai-mat-khau/{token})
+   - Sends branded Vietnamese email via emails.auth.reset_password markdown template
+   - Implements ShouldQueue → queued to jobs table
+
+3. Queue processing:
+   - php artisan queue:work processes notification from database queue
+   - Uses markdown template in resources/views/emails/auth/reset_password.blade.php
+   - Email shows configurable expiration time from auth.passwords.users.expire
 ```
 
 ## Coupon/Discount Flow
@@ -320,6 +343,6 @@ Role check on superadmin routes:
 All three use the `database` driver:
 - **Session**: Stored in `sessions` table (120-minute lifetime)
 - **Cache**: Stored in `cache` table
-- **Queue**: Stored in `jobs` table, processed via `php artisan queue:work`. Used for email dispatch (OrderCreatedMail and OrderStatusUpdatedMail implement `ShouldQueue`), ensuring non-blocking checkout and status update operations.
+- **Queue**: Stored in `jobs` table, processed via `php artisan queue:work`. Used for email dispatch (OrderCreatedMail, OrderStatusUpdatedMail, and ResetPasswordNotification implement `ShouldQueue`), ensuring non-blocking checkout, status update, and password reset operations.
 
 This means no Redis or Memcached dependency, but performance may be limited under high load.

@@ -1,3 +1,6 @@
+@props(['image' => null, 'dinhMuc' => []])
+
+<!-- Gach va cac loai khac -->
 <section
   class="w-full pb-0 md:pb-16 lg:pb-20 bg-background-secondary"
   data-aos="fade-up"
@@ -25,14 +28,14 @@
               <div class="flex flex-col gap-1 md:gap-2 md:col-span-2">
                 <label class="text-[9px] md:text-[16px] uppercase font-semibold text-[#2E2F2A] md:text-primary text-center md:mb-2 leading-[24px] md:leading-normal">CHIỀU DÀI</label>
                 <div class="relative">
-                  <input type="text" placeholder="00" class="w-full h-[30px] md:h-[45px] p-2 md:p-3 text-[12px] md:text-base border border-[#DDD6D0] md:border-black/10 rounded-[1px] md:rounded-sm bg-transparent text-left pr-6 md:pr-8 focus:border-secondary outline-none transition-colors text-[#2E2F2A] md:text-primary placeholder:text-[#9CA3AF]" />
+                  <input type="number" step="0.01" min="0" placeholder="00" class="w-full h-[30px] md:h-[45px] p-2 md:p-3 text-[12px] md:text-base border border-[#DDD6D0] md:border-black/10 rounded-[1px] md:rounded-sm bg-transparent text-left pr-6 md:pr-8 focus:border-secondary outline-none transition-colors text-[#2E2F2A] md:text-primary placeholder:text-[#9CA3AF]" />
                   <span class="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 text-[10px] md:text-[12px] text-black/40 md:text-primary/40 leading-[15px]">m</span>
                 </div>
               </div>
               <div class="flex flex-col gap-1 md:gap-2 md:col-span-2">
                 <label class="text-[9px] md:text-[16px] uppercase font-semibold text-[#2E2F2A] md:text-primary text-center md:mb-2 leading-[24px] md:leading-normal">CHIỀU RỘNG</label>
                 <div class="relative">
-                  <input type="text" placeholder="00" class="w-full h-[30px] md:h-[45px] p-2 md:p-3 text-[12px] md:text-base border border-[#DDD6D0] md:border-black/10 rounded-[1px] md:rounded-sm bg-transparent text-left pr-6 md:pr-8 focus:border-secondary outline-none transition-colors text-[#2E2F2A] md:text-primary placeholder:text-[#9CA3AF]" />
+                  <input type="number" step="0.01" min="0" placeholder="00" class="w-full h-[30px] md:h-[45px] p-2 md:p-3 text-[12px] md:text-base border border-[#DDD6D0] md:border-black/10 rounded-[1px] md:rounded-sm bg-transparent text-left pr-6 md:pr-8 focus:border-secondary outline-none transition-colors text-[#2E2F2A] md:text-primary placeholder:text-[#9CA3AF]" />
                   <span class="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 text-[10px] md:text-[12px] text-black/40 md:text-primary/40 leading-[15px]">m</span>
                 </div>
               </div>
@@ -47,11 +50,11 @@
             <div class="flex-1 max-w-[250px] md:max-w-none w-full grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6 items-end">
               <hr class="hidden md:block md:col-span-1" />
               <div class="relative md:col-span-2 flex flex-col justify-end h-full">
-                <input type="text" placeholder="00" class="w-full h-[30px] md:h-[45px] p-2 md:p-3 text-[12px] md:text-base border border-[#DDD6D0] md:border-black/10 rounded-[1px] md:rounded-sm bg-transparent text-left pr-6 md:pr-8 focus:border-secondary outline-none transition-colors text-[#2E2F2A] md:text-primary placeholder:text-[#9CA3AF]" />
+                <input type="number" step="0.01" min="0" placeholder="00" class="w-full h-[30px] md:h-[45px] p-2 md:p-3 text-[12px] md:text-base border border-[#DDD6D0] md:border-black/10 rounded-[1px] md:rounded-sm bg-transparent text-left pr-6 md:pr-8 focus:border-secondary outline-none transition-colors text-[#2E2F2A] md:text-primary placeholder:text-[#9CA3AF]" />
                 <span class="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 text-[10px] md:text-[12px] text-black/40 md:text-primary/40 leading-[15px]">m</span>
               </div>
               <div class="relative md:col-span-2 flex flex-col justify-end h-full">
-                <input type="text" placeholder="00" class="w-full h-[30px] md:h-[45px] p-2 md:p-3 text-[12px] md:text-base border border-[#DDD6D0] md:border-black/10 rounded-[1px] md:rounded-sm bg-transparent text-left pr-6 md:pr-8 focus:border-secondary outline-none transition-colors text-[#2E2F2A] md:text-primary placeholder:text-[#9CA3AF]" />
+                <input type="number" step="0.01" min="0" placeholder="00" class="w-full h-[30px] md:h-[45px] p-2 md:p-3 text-[12px] md:text-base border border-[#DDD6D0] md:border-black/10 rounded-[1px] md:rounded-sm bg-transparent text-left pr-6 md:pr-8 focus:border-secondary outline-none transition-colors text-[#2E2F2A] md:text-primary placeholder:text-[#9CA3AF]" />
                 <span class="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 text-[10px] md:text-[12px] text-black/40 md:text-primary/40 leading-[15px]">m</span>
               </div>
             </div>
@@ -145,14 +148,14 @@
             <div class="pl-8 space-y-3 hidden peer-checked:block">
               <label class="flex items-center gap-3 cursor-pointer group">
                 <div class="relative flex items-center justify-center">
-                  <input type="radio" name="loss-rate" class="peer appearance-none w-[20px] h-[20px] border border-black/30 md:border-black/30 rounded-full checked:border-primary transition-all cursor-pointer" checked />
+                  <input type="radio" name="loss-rate" value="1.05" class="peer appearance-none w-[20px] h-[20px] border border-black/30 md:border-black/30 rounded-full checked:border-primary transition-all cursor-pointer" checked />
                   <div class="absolute w-2.5 h-2.5 rounded-full bg-[#C76E00] md:bg-primary scale-0 peer-checked:scale-100 transition-transform"></div>
                 </div>
                 <span class="text-[14px] text-[#2E2F2A] md:text-primary/70 font-medium md:font-medium tracking-tight">Thêm 5%</span>
               </label>
               <label class="flex items-center gap-3 cursor-pointer group">
                 <div class="relative flex items-center justify-center">
-                  <input type="radio" name="loss-rate" class="peer appearance-none w-[20px] h-[20px] border border-black/30 rounded-full checked:border-primary transition-all cursor-pointer" />
+                  <input type="radio" name="loss-rate" value="1.10" class="peer appearance-none w-[20px] h-[20px] border border-black/30 rounded-full checked:border-primary transition-all cursor-pointer" />
                   <div class="absolute w-2.5 h-2.5 rounded-full bg-[#C76E00] md:bg-primary scale-0 peer-checked:scale-100 transition-transform"></div>
                 </div>
                 <span class="text-[14px] text-[#2E2F2A] md:text-primary/70 font-medium tracking-tight">Thêm 10% (Đối với gạch dị hình)</span>
@@ -197,16 +200,12 @@
 
     const getLossFactor = () => {
       if (!extraLossCheckbox || !extraLossCheckbox.checked) return 1;
-      const selectedRadio = lossRadios.find((radio) => radio.checked);
-      if (!selectedRadio) return 1;
-      const labelText = selectedRadio.closest("label")?.textContent || "";
-      if (labelText.includes("10%")) return 1.1;
-      if (labelText.includes("5%")) return 1.05;
-      return 1;
+      const selected = lossRadios.find((r) => r.checked);
+      return Number.parseFloat(selected?.value) || 1;
     };
 
     const getBlockArea = (block) => {
-      const inputs = Array.from(block.querySelectorAll('input[type="text"]'));
+      const inputs = Array.from(block.querySelectorAll('input[type="number"]'));
       const length = parseNumericValue(inputs[0]?.value || "0");
       const width = parseNumericValue(inputs[1]?.value || "0");
       return length * width;
@@ -228,13 +227,24 @@
 
       if (totalAreaOutput) { totalAreaOutput.textContent = `${formatNumber(roundedArea)} m²`; }
 
+      let qtyToSync = 0;
       rateOutputs.forEach((rateEl, index) => {
         const rate = parseNumericValue(rateEl.textContent || "0");
         const quantity = Math.ceil(roundedArea * rate * lossFactor);
         if (!valueOutputs[index]) return;
         if (rate > 0) { valueOutputs[index].textContent = `${formatNumber(quantity)} viên`; }
         else { valueOutputs[index].textContent = "00 viên"; }
+        if (index === 0) qtyToSync = quantity;
       });
+
+      if (qtyToSync > 0) {
+        const qtyInput = document.querySelector('input[name="qty"]');
+        if (qtyInput) {
+          qtyInput.value = qtyToSync;
+          qtyInput.dispatchEvent(new Event('input', { bubbles: true }));
+          qtyInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
     };
 
     const attachRemoveAreaListener = (block) => {
@@ -246,7 +256,7 @@
     const addArea = () => {
       if (!masterTemplate) return;
       const newBlock = masterTemplate.cloneNode(true);
-      newBlock.querySelectorAll('input[type="text"]').forEach((input) => { input.value = ""; });
+      newBlock.querySelectorAll('input[type="number"]').forEach((input) => { input.value = ""; });
       const removeBtn = newBlock.querySelector("[data-remove-area]");
       if (!removeBtn) {
         const title = getAreaTitle(newBlock);
@@ -266,6 +276,7 @@
       addAreaRow.before(newBlock);
       attachRemoveAreaListener(newBlock);
       renumberAreas();
+      wireBlockInputs(newBlock);
     };
 
     areaBlocks().forEach(attachRemoveAreaListener);
@@ -273,6 +284,21 @@
     calculateBtn?.addEventListener("click", (event) => { event.preventDefault(); updateResults(); });
     extraLossCheckbox?.addEventListener("change", updateResults);
     lossRadios.forEach((radio) => radio.addEventListener("change", updateResults));
+
+    let calcTimeout;
+    const scheduleUpdate = () => {
+      clearTimeout(calcTimeout);
+      calcTimeout = setTimeout(updateResults, 300);
+    };
+
+    const wireBlockInputs = (block) => {
+      block.querySelectorAll('input[type="number"]').forEach((input) => {
+        input.addEventListener("input", scheduleUpdate);
+      });
+    };
+
+    areaBlocks().forEach(wireBlockInputs);
+
     renumberAreas();
   });
 </script>

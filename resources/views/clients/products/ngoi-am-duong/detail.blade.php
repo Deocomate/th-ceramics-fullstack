@@ -103,7 +103,7 @@
                 </div>
             </button>
             <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                <x-products.weight-calculator />
+                <x-products.weight-calculator :dinhMuc="$dinhMuc" />
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden" />

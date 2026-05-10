@@ -23,6 +23,8 @@ th-ceramics-fullstack/
 │   ├── Mail/                             # 2 Mailable classes (ShouldQueue)
 │   │   ├── OrderCreatedMail.php          # Order confirmation email
 │   │   └── OrderStatusUpdatedMail.php    # Status change notification
+│   ├── Notifications/
+│   │   └── ResetPasswordNotification.php # Custom password reset (ShouldQueue, role-based routing)
 │   ├── Models/                           # 55 Eloquent models
 │   ├── Providers/
 │   │   └── AppServiceProvider.php        # Empty registration
@@ -34,7 +36,7 @@ th-ceramics-fullstack/
 ├── database/
 │   ├── factories/
 │   ├── migrations/                       # 15 files → 44 tables
-│   └── seeders/                          # 4 files (User, ProductType, ProductDetail)
+│   └── seeders/                          # 7 files (User, ProductType, ProductDetail, DinhMuc, HomeAndAboutUs, PageConfig, DatabaseSeeder)
 ├── public/
 │   └── assets/
 │       ├── css/main.css
@@ -44,7 +46,9 @@ th-ceramics-fullstack/
 │   └── views/
 │       ├── admin/                        # 58 files (32 sub-directories)
 │       ├── clients/                      # 136 files (36 sub-directories)
-│       ├── emails/                       # 2 files: order confirmation + status update templates
+│       ├── emails/                       # 3 files: order confirmation, status update, password reset
+│       │   ├── auth/
+│       │   │   └── reset_password.blade.php  # Vietnamese branded password reset email
 │       │   └── orders/
 │       └── components/                   # 29 shared Blade components
 ├── routes/
@@ -74,17 +78,18 @@ th-ceramics-fullstack/
 | `app/Http/Controllers/Client/ProductPages/` | 9 | Product page controllers |
 | `app/Http/Requests/` | 15 | Form request validators |
 | `app/Mail/` | 2 | Mailable classes (ShouldQueue: order created, status updated) |
+| `app/Notifications/` | 1 | ResetPasswordNotification (ShouldQueue, role-based routing) |
 | `app/Helpers/` | 1 | FileUploadHelper |
 | `app/Http/Middleware/` | 1 | RoleMiddleware |
 | `routes/` | 3 | web.php (/admin + /admin/pages/*), client.php, console.php |
 | `database/migrations/` | 7 | Migration files |
-| `database/seeders/` | 4 | User, ProductType, ProductDetail seeders |
+| `database/seeders/` | 7 | User, ProductType, ProductDetail, DinhMuc, HomeAndAboutUs, PageConfig, DatabaseSeeder |
 | `resources/views/admin/` | 77 | Admin Blade templates (incl. orders/index, orders/show) |
 | `resources/views/clients/` | 136 | Client Blade templates (incl. order status page) |
-| `resources/views/emails/` | 2 | Email templates (order created, status updated) |
+| `resources/views/emails/` | 3 | Email templates (order created, status updated, password reset) |
 | `resources/views/components/` | 29 | Shared Blade components |
 | `config/` | 10 | App, database, cache, session, etc. |
-| `tests/` | 7 | Pest test files (14 tests, 31 assertions, all passing) |
+| `tests/` | 8 | Pest test files (29 tests, all passing) |
 
 ## Models Breakdown
 

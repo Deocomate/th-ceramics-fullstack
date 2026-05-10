@@ -105,7 +105,7 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 |------|--------|
 | Database schema | Complete (44 tables, 7 migrations) |
 | Admin CRUD | Complete (all 9 categories + 3 page config panels + order management) |
-| Product seeding | Complete (4 seeders: User, ProductType, ProductDetail) |
+| Product seeding | Complete (7 seeders: User, DinhMuc, PageConfig, HomeAndAboutUs, ProductType, ProductDetail, DatabaseSeeder) |
 | Page configuration | Complete (Factory, Contact, FAQ admin panels with Alpine.js auto-resize textareas) |
 | Client product pages | In progress (9 categories) |
 | Cart/Checkout | Complete: session-based cart, AJAX controls, COD-only checkout, coupon discount system |
@@ -113,7 +113,7 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 | Email notification | Complete: order confirmation + status update emails via database queue (ShouldQueue) |
 | News/Projects | Controller structure done, views pending |
 | Customer Service | Complete: dynamic installation guide (ThiCong), catalog list + PDF flipbook reader (Catalog) |
-| Tests | 7 Pest files (14 tests, 31 assertions, all passing) |
+| Tests | 8 Pest files (29 tests, all passing) |
 
 ## Version History
 
@@ -125,3 +125,6 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 | 0.3.1 | 2026-05-07 | Page configuration admin panels (Factory/Contact/FAQ), TinyMCE replaced with auto-resize textareas, dynamic client pages, 12 new Pest tests, admin UI/UX Pro Max refactor |
 | 0.4.0 | 2026-05-09 | Coupon/discount module: coupons CRUD admin panel, client-side coupon application via AJAX on checkout page, percent/fixed discount calculation with max discount cap, min order value check, product-type filtering, usage limits, coupon banner component |
 | 0.5.0 | 2026-05-09 | Order management and email notification: admin order list/detail/status-update, client dynamic order status tracking page with tab filters, email notification system (order confirmation + status updates via database-queued ShouldQueue mailables), disabled bank transfer payment (COD only) |
+| 0.5.1 | 2026-05-09 | Dynamic customer service pages: installation guide (ThiCong model), catalog list + PDF flipbook reader (Catalog model, PDF.js + StPageFlip) |
+| 0.5.2 | 2026-05-10 | Custom password reset notification: branded Vietnamese email, role-based routing (admin vs client), ShouldQueue, 15 Pest tests |
+| 0.5.3 | 2026-05-10 | Seeder system rewrite: 6 seeders refactored with firstOrCreate idempotency, Eloquent instead of raw SQL/DB::table, real Vietnamese content, string-path images, GiaTriVuotTroi seeded, DatabaseSeeder reordered |

@@ -1,5 +1,27 @@
 # Project Changelog
 
+## 0.5.3 (2026-05-10)
+
+### Changed
+- **Seeder System Rewrite**: All 6 seeders rewritten from raw SQL/lorem ipsum to 100% real data
+  - `UserSeeder`: Verified (no changes needed, already idempotent with firstOrCreate)
+  - `DinhMucSeeder`: Changed truncate to firstOrCreate, expanded sizes for gach_trang_tri (5 sizes), gach_hoa_thong_gio (4 sizes), gach_co_bat_trang (4 sizes)
+  - `PageConfigSeeder`: Changed create to firstOrCreate, replaced placeholder images with real images from assets/images/, added real factory/contact/FAQ content
+  - `HomeAndAboutUsSeeder`: Complete rewrite from DB::unprepared() raw SQL to Eloquent, added GiaTriVuotTroi seeding (4 values, previously unseeded)
+  - `ProductTypeSeeder`: Rewrite from DB::table()->insertOrIgnore() to Eloquent firstOrCreate, real product images replacing defaults/placeholder.png across all 9 parent categories
+  - `ProductDetailSeeder`: Rewrite with string paths instead of File::copy/Storage::put, real Vietnamese SEO content, proper SKUs (NAD-, GTG-, GTT-, GCB-, LVP-, NHC-, NBN-, BNC-), category-specific pricing (tiles: 15k-80k, linh vat/den: 500k-3.5M)
+  - `DatabaseSeeder.php`: Reordered seeder calls: User -> DinhMuc -> PageConfig -> HomeAndAboutUs -> ProductType -> ProductDetail
+
+## 0.5.2 (2026-05-10)
+
+### Added
+- **Custom Password Reset Notification**: Branded Vietnamese email with role-based routing and queue support
+  - `ResetPasswordNotification` extends Laravel's `ResetPassword`, implements `ShouldQueue`
+  - Role-based reset URL routing: `isAdmin()` check routes admin users to `/admin/reset-password/{token}` and client users to `/tai-khoan/dat-lai-mat-khau/{token}`
+  - `User::sendPasswordResetNotification()` override to dispatch custom notification
+  - `resources/views/emails/auth/reset_password.blade.php` -- Vietnamese branded email with configurable expiration time from `auth.passwords.users.expire`
+  - `tests/Feature/Auth/PasswordResetTest.php` -- 15 Pest tests covering both admin and client reset flows (all passing)
+
 ## 0.5.1 (2026-05-09)
 
 ### Added

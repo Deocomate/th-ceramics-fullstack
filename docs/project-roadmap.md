@@ -26,12 +26,15 @@
 
 | Status | Task | Details |
 |--------|------|---------|
-| 100% | User seeder | Default superadmin + admin accounts |
-| 100% | Product type seeder | Sample data for all 9 categories with images, descriptions, prices |
-| 100% | Product detail seeder | 105 records across 9 `_ct` tables + 4 child tables with file-copy image seeding |
-| 100% | DatabaseSeeder orchestration | Calls UserSeeder, ProductTypeSeeder, ProductDetailSeeder in order |
+| 100% | User seeder | Superadmin account (firstOrCreate, idempotent) |
+| 100% | DinhMuc seeder | 6 material consumption tables (firstOrCreate, expanded sizes per category) |
+| 100% | PageConfig seeder | Factory/Contact/FAQ page configs with real images (firstOrCreate, idempotent) |
+| 100% | Home & About Us seeder | Brand pages with real Vietnamese content, awards, GiaTriVuotTroi (Eloquent rewrite from raw SQL) |
+| 100% | Product type seeder | 9 parent categories with real product images (Eloquent firstOrCreate, replaces DB::table) |
+| 100% | Product detail seeder | ~60+ products with real Vietnamese SEO content, proper SKUs, string-path images (truncate + create for FK safety) |
+| 100% | DatabaseSeeder orchestration | Ordered: User -> DinhMuc -> PageConfig -> HomeAndAboutUs -> ProductType -> ProductDetail |
 
-**Deliverables**: Pre-populated database with sample products for development and testing.
+**Deliverables**: Pre-populated database with 100% real Vietnamese data, real product images, proper SKUs, idempotent seeding.
 
 ---
 

@@ -1,0 +1,23 @@
+,,,Hình chữ nhật,Hình thang,Hình tam giác,,,Định mức
+1,Ngói hài cổ,,"Không có hao hụt: Dài x rộng
+Thêm hao hụt: 
+5%: (Dài x rộng)*1,05
+10%: (Dài x rộng)*1,1","Không có hao hụt: ((Đáy lớn + Đáy bé)*Chiều cao)/2
+Thêm hao hụt: 
+5%: (((Đáy lớn + Đáy bé)*Chiều cao)/2))*1,05
+10%: (((Đáy lớn + Đáy bé)*Chiều cao)/2))*1,1","Không có hao hụt: (Chiều dài*Chiều cao)/2
+Thêm hao hụt: 
+5%: ((Chiều dài*Chiều cao)/2)*1,05
+10%: ((Chiều dài*Chiều cao)/2)*1,1",Mái gỗ,Tổng diện tích x,125
+,,,,,,Mái bê tông,Tổng diện tích x,75
+2,Ngói văn miếu,,"Không có hao hụt: Dài x rộng
+Thêm hao hụt: 
+5%: (Dài x rộng)*1,05
+10%: (Dài x rộng)*1,1","Không có hao hụt: ((Đáy lớn + Đáy bé)*Chiều cao)/2
+Thêm hao hụt: 
+5%: (((Đáy lớn + Đáy bé)*Chiều cao)/2))*1,05
+10%: (((Đáy lớn + Đáy bé)*Chiều cao)/2))*1,1","Không có hao hụt: (Chiều dài*Chiều cao)/2
+Thêm hao hụt: 
+5%: ((Chiều dài*Chiều cao)/2)*1,05
+10%: ((Chiều dài*Chiều cao)/2)*1,1",Mái gỗ,Tổng diện tích x,125
+,,,,,,Mái bê tông,Tổng diện tích x,88
