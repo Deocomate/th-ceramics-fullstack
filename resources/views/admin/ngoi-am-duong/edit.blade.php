@@ -10,7 +10,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh nền</label>
                     <div class="aspect-video w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
-                        <img id="preview-main" src="{{ asset('storage/' . $ngoiAmDuong->thumbnail_main) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover" alt="Ảnh chính">
+                        <img id="preview-main" src="{{ asset('storage/' . $ngoiAmDuong->thumbnail_main) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain" alt="Ảnh chính">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                         </div>
@@ -22,7 +22,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh phụ 1</label>
                     <div class="aspect-video w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
-                        <img id="preview-thumb1" src="{{ asset('storage/' . $ngoiAmDuong->thumbnail1) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover" alt="Ảnh phụ 1">
+                        <img id="preview-thumb1" src="{{ asset('storage/' . $ngoiAmDuong->thumbnail1) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain" alt="Ảnh phụ 1">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                         </div>
@@ -34,7 +34,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh phụ 2</label>
                     <div class="aspect-video w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
-                        <img id="preview-thumb2" src="{{ asset('storage/' . $ngoiAmDuong->thumbnail2) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover" alt="Ảnh phụ 2">
+                        <img id="preview-thumb2" src="{{ asset('storage/' . $ngoiAmDuong->thumbnail2) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain" alt="Ảnh phụ 2">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                         </div>

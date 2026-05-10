@@ -32,7 +32,7 @@
                         <div class="lg:col-span-1">
                             <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh đại diện<span class="text-red-500">*</span></label>
                             <div class="w-full aspect-square mx-auto rounded-full border-2 border-dashed border-blue-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-blue-50/50 transition-colors">
-                                <img id="preview-new-tacgia" src="https://placehold.co/400x400?text=Chon+Anh" class="w-full h-full object-cover" alt="Preview">
+                                <img id="preview-new-tacgia" src="https://placehold.co/400x400?text=Chon+Anh" class="w-full h-full object-contain" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Chọn ảnh tải lên</span>
                                 </div>
@@ -80,7 +80,7 @@
                 @forelse($tacGias as $item)
                     <div class="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col group relative">
                         <div class="w-[200px] h-[200px] mx-auto mt-6 relative bg-gray-100 flex-shrink-0 rounded-full overflow-hidden border border-gray-200 shadow-sm">
-                            <img src="{{ asset('storage/' . $item->anh_dai_dien) }}" onerror="this.src='https://placehold.co/400x400?text=Loi+Anh'" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $item->anh_dai_dien) }}" onerror="this.src='https://placehold.co/400x400?text=Loi+Anh'" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 backdrop-blur-[2px]">
                                 <button type="button" 
                                     data-id="{{ $item->tac_gia_id }}"
@@ -143,7 +143,7 @@
                         <div class="lg:col-span-1">
                             <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh đại diện</label>
                             <div class="w-full aspect-square mx-auto rounded-full border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
-                                <img id="preview-edit-img" src="" class="w-full h-full object-cover" alt="Preview">
+                                <img id="preview-edit-img" src="" class="w-full h-full object-contain" alt="Preview">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Đổi ảnh</span>
                                 </div>

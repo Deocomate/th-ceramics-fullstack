@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('thumbnail_main');
             $table->string('thumbnail1');
             $table->string('thumbnail2');
-            $table->string('video')->nullable();
+            $table->longText('video')->nullable();
             $table->timestamps();
         });
         Schema::create('ngoi_am_duong_ct', function (Blueprint $table) {
@@ -56,7 +56,7 @@ return new class extends Migration
             $table->string('thumbnail2');
             $table->string('title3', 50);
             $table->string('thumbnail3');
-            $table->string('video')->nullable();
+            $table->longText('video')->nullable();
             $table->json('images')->nullable();
             $table->timestamps();
         });
@@ -121,7 +121,7 @@ return new class extends Migration
         Schema::create('gach_hoa_thong_gio', function (Blueprint $table) {
             $table->id('gach_hoa_thong_gio_id');
             $table->string('image');
-            $table->string('video')->nullable();
+            $table->longText('video')->nullable();
             $table->json('images')->nullable();
             $table->timestamps();
         });
@@ -163,7 +163,7 @@ return new class extends Migration
         Schema::create('gach_trang_tri', function (Blueprint $table) {
             $table->id('gach_trang_tri_id');
             $table->string('thumbnail_main');
-            $table->string('video')->nullable();
+            $table->longText('video')->nullable();
             $table->json('images')->nullable();
             $table->timestamps();
         });
@@ -199,7 +199,7 @@ return new class extends Migration
         Schema::create('gach_co_bat_trang', function (Blueprint $table) {
             $table->id('gach_co_bat_trang_id');
             $table->string('thumbnail_main');
-            $table->string('video')->nullable();
+            $table->longText('video')->nullable();
             $table->json('images')->nullable();
             $table->timestamps();
         });
@@ -232,7 +232,7 @@ return new class extends Migration
         Schema::create('linh_vat_phong_thuy', function (Blueprint $table) {
             $table->id('linh_vat_phong_thuy_id');
             $table->string('thumbnail_main');
-            $table->string('video')->nullable();
+            $table->longText('video')->nullable();
             $table->timestamps();
         });
         Schema::create('linh_vat', function (Blueprint $table) {
@@ -315,13 +315,13 @@ return new class extends Migration
         Schema::create('lan_can_gom_xu', function (Blueprint $table) {
             $table->id('lan_can_gom_xu_id');
             $table->string('thumbnail_main');
-            $table->string('video')->nullable();
+            $table->longText('video')->nullable();
             $table->timestamps();
         });
         Schema::create('den_gom_su', function (Blueprint $table) {
             $table->id('den_gom_su_id');
             $table->string('thumbnail_main');
-            $table->string('video')->nullable();
+            $table->longText('video')->nullable();
             $table->string('image1');
             $table->string('image2');
             $table->string('title2', 30)->nullable();

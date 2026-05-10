@@ -43,7 +43,7 @@ class ProductTypeSeeder extends Seeder
                 'thumbnail_main' => 'assets/images/ngoi-am-duong-banner.jpg',
                 'thumbnail1' => 'assets/images/ngoi-am-duong-01.jpg',
                 'thumbnail2' => 'assets/images/ngoi-am-duong-02.png',
-                'video' => null,
+                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
             ]
         );
     }
@@ -60,7 +60,7 @@ class ProductTypeSeeder extends Seeder
                 'thumbnail2' => 'assets/images/ngoi-hai-02.png',
                 'title3' => 'Ngói Văn Miếu - Uy nghi cổ kính',
                 'thumbnail3' => 'assets/images/ngoi-hai-03.png',
-                'video' => null,
+                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
                 'images' => [
                     'assets/images/ngoi-hai-01.png',
                     'assets/images/ngoi-hai-02.png',
@@ -76,13 +76,13 @@ class ProductTypeSeeder extends Seeder
             ['gach_hoa_thong_gio_id' => 1],
             [
                 'image' => 'assets/images/gach-hoa-01.jpg',
-                'video' => null,
+                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
             ]
         );
 
         $anhs = [
-            ['image' => 'assets/images/gach-hoa-thong-gio-anh-01.jpg'],
-            ['image' => 'assets/images/gach-hoa-thong-gio-anh-02.jpg'],
+            ['image' => 'assets/images/gach-hoa-01.jpg'],
+            ['image' => 'assets/images/gach-hoa-02.jpg'],
         ];
         foreach ($anhs as $anh) {
             GachHoaThongGioAnh::firstOrCreate(
@@ -92,8 +92,8 @@ class ProductTypeSeeder extends Seeder
         }
 
         $giaTris = [
-            ['title' => 'Thông gió tự nhiên', 'image' => 'assets/images/gia-tri-01.png', 'background' => 'assets/images/gia-tri-bg-01.jpg', 'desscription' => 'Thiết kế gạch hoa rỗng giúp không khí lưu thông tự nhiên, giảm nhiệt độ công trình hiệu quả.'],
-            ['title' => 'Chống nóng hiệu quả', 'image' => 'assets/images/gia-tri-02.png', 'background' => 'assets/images/gia-tri-bg-02.jpg', 'desscription' => 'Đất sét nung 1200°C kết hợp cấu trúc rỗng giúp cách nhiệt vượt trội, tiết kiệm năng lượng làm mát.'],
+            ['title' => 'Thông gió tự nhiên', 'image' => 'assets/images/gia-tri-vuot-troi-01.jpg', 'background' => 'assets/images/gia-tri-vuot-troi-02.jpg', 'desscription' => 'Thiết kế gạch hoa rỗng giúp không khí lưu thông tự nhiên, giảm nhiệt độ công trình hiệu quả.'],
+            ['title' => 'Chống nóng hiệu quả', 'image' => 'assets/images/gia-tri-vuot-troi-03.jpg', 'background' => 'assets/images/gia-tri-vuot-troi-04.jpg', 'desscription' => 'Đất sét nung 1200°C kết hợp cấu trúc rỗng giúp cách nhiệt vượt trội, tiết kiệm năng lượng làm mát.'],
         ];
         foreach ($giaTris as $gt) {
             GiaTriGachHoaThongGio::firstOrCreate(
@@ -125,13 +125,13 @@ class ProductTypeSeeder extends Seeder
             ['gach_trang_tri_id' => 1],
             [
                 'thumbnail_main' => 'assets/images/gach-trang-tri-banner.png',
-                'video' => null,
+                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
             ]
         );
 
         $dauAns = [
-            ['title' => 'Đậm nét Á Đông', 'background' => 'assets/images/dau-an-01.png', 'location' => 'Mặt tiền', 'description' => 'Họa tiết gạch trang trí mang đậm dấu ấn văn hóa Á Đông, tái hiện tinh hoa kiến trúc cổ.'],
-            ['title' => 'Bền bỉ với thời gian', 'background' => 'assets/images/dau-an-02.png', 'location' => 'Tường rào', 'description' => 'Sản phẩm nung 1200°C từ đất sét Bát Tràng, đảm bảo độ bền vượt thời gian.'],
+            ['title' => 'Đậm nét Á Đông', 'background' => 'assets/images/trang-tri-01.png', 'location' => 'Mặt tiền', 'description' => 'Họa tiết gạch trang trí mang đậm dấu ấn văn hóa Á Đông, tái hiện tinh hoa kiến trúc cổ.'],
+            ['title' => 'Bền bỉ với thời gian', 'background' => 'assets/images/trang-tri-02.png', 'location' => 'Tường rào', 'description' => 'Sản phẩm nung 1200°C từ đất sét Bát Tràng, đảm bảo độ bền vượt thời gian.'],
         ];
         foreach ($dauAns as $da) {
             DauAnGachTrangTri::firstOrCreate(
@@ -152,7 +152,7 @@ class ProductTypeSeeder extends Seeder
             ['lan_can_gom_xu_id' => 1],
             [
                 'thumbnail_main' => 'assets/images/lan-can-01.jpg',
-                'video' => null,
+                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
             ]
         );
     }
@@ -163,13 +163,13 @@ class ProductTypeSeeder extends Seeder
             ['gach_co_bat_trang_id' => 1],
             [
                 'thumbnail_main' => 'assets/images/gach-co-banner.png',
-                'video' => null,
+                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
             ]
         );
 
         $anhs = [
-            ['image' => 'assets/images/gach-co-anh-01.jpg'],
-            ['image' => 'assets/images/gach-co-anh-02.jpg'],
+            ['image' => 'assets/images/gach-co-work-1.jpg'],
+            ['image' => 'assets/images/gach-co-work-2.jpg'],
         ];
         foreach ($anhs as $anh) {
             GachCoBatTrangAnh::firstOrCreate(
@@ -185,13 +185,13 @@ class ProductTypeSeeder extends Seeder
             ['linh_vat_phong_thuy_id' => 1],
             [
                 'thumbnail_main' => 'assets/images/linh-vat-banner.png',
-                'video' => null,
+                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
             ]
         );
 
         $linhVats = [
-            ['title' => 'Long', 'image' => 'assets/images/linh-vat-long.png', 'description' => 'Rồng (Long) — linh vật quyền lực nhất trong tứ linh, biểu tượng của sức mạnh và sự uy nghi.'],
-            ['title' => 'Lân', 'image' => 'assets/images/linh-vat-lan.png', 'description' => 'Lân — linh vật của sự may mắn, bình an, bảo vệ gia chủ khỏi tà khí.'],
+            ['title' => 'Long', 'image' => 'assets/images/dau-rong.png', 'description' => 'Rồng (Long) — linh vật quyền lực nhất trong tứ linh, biểu tượng của sức mạnh và sự uy nghi.'],
+            ['title' => 'Lân', 'image' => 'assets/images/lan-can-01.png', 'description' => 'Lân — linh vật của sự may mắn, bình an, bảo vệ gia chủ khỏi tà khí.'],
         ];
         foreach ($linhVats as $lv) {
             LinhVat::firstOrCreate(
@@ -205,8 +205,8 @@ class ProductTypeSeeder extends Seeder
         }
 
         $anhs = [
-            ['image' => 'assets/images/linh-vat-anh-01.jpg'],
-            ['image' => 'assets/images/linh-vat-anh-02.jpg'],
+            ['image' => 'assets/images/work-01.jpg'],
+            ['image' => 'assets/images/work-02.jpg'],
         ];
         foreach ($anhs as $anh) {
             LinhVatPhongThuyAnh::firstOrCreate(
@@ -222,7 +222,7 @@ class ProductTypeSeeder extends Seeder
             ['den_gom_su_id' => 1],
             [
                 'thumbnail_main' => 'assets/images/den-gom-banner.png',
-                'video' => null,
+                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
                 'title2' => 'Đèn gốm sứ cao cấp',
                 'title3' => 'Sản phẩm tiêu biểu',
                 'image1' => 'assets/images/den-gom-01.png',
@@ -233,8 +233,8 @@ class ProductTypeSeeder extends Seeder
         );
 
         $anhs = [
-            ['image' => 'assets/images/den-gom-anh-01.jpg'],
-            ['image' => 'assets/images/den-gom-anh-02.jpg'],
+            ['image' => 'assets/images/den-gom-01.png'],
+            ['image' => 'assets/images/den-gom-02.png'],
         ];
         foreach ($anhs as $anh) {
             DenGomSuAnh::firstOrCreate(

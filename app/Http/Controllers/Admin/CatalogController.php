@@ -23,7 +23,7 @@ class CatalogController extends Controller
         $data = $request->validate([
             'tieu_de'      => ['nullable', 'string', 'max:255'],
             'anh_dai_dien' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'file'         =>['nullable', 'file', 'mimes:pdf,doc,docx,zip,rar', 'max:20480'], // Max 20MB
+            'file'         =>['nullable', 'file', 'mimes:pdf,doc,docx,zip,rar', 'max:204800'], // Max 20MB
         ]);
 
         $this->service->store($data);
@@ -35,7 +35,7 @@ class CatalogController extends Controller
         $data = $request->validate([
             'tieu_de'      => ['nullable', 'string', 'max:255'],
             'anh_dai_dien' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'file'         =>['nullable', 'file', 'mimes:pdf,doc,docx,zip,rar', 'max:20480'],
+            'file'         =>['nullable', 'file', 'mimes:pdf,doc,docx,zip,rar', 'max:204800'],
         ]);
 
         $this->service->update($id, $data);

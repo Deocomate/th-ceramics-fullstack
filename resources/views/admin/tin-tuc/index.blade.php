@@ -43,7 +43,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-16 h-16 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
-                                        <img src="{{ asset('storage/' . $post->anh_dai_dien) }}" class="w-full h-full object-cover">
+                                        <img src="{{ asset('storage/' . $post->anh_dai_dien) }}" class="w-full h-full object-contain">
                                     </div>
                                     <div>
                                         <div class="font-bold text-gray-800 text-sm mb-1 line-clamp-2" title="{{ $post->tieu_de }}">{{ $post->tieu_de }}</div>

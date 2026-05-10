@@ -52,7 +52,7 @@
                 <div class="lg:col-span-1">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Ảnh bản vẽ / Kích thước</label>
                     <div class="aspect-square w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group">
-                        <img id="preview-size" src="{{ $product->size_image ? asset('storage/' . $product->size_image) : 'https://placehold.co/400x400?text=Chon+Ban+Ve' }}" class="w-full h-full object-cover">
+                        <img id="preview-size" src="{{ $product->size_image ? asset('storage/' . $product->size_image) : 'https://placehold.co/400x400?text=Chon+Ban+Ve' }}" class="w-full h-full object-contain">
                         <input type="file" name="size_image" accept="image/*" onchange="previewImage(event, 'preview-size')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     @foreach($product->images as $path)
                         <div class="relative group aspect-square rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
-                            <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $path) }}" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center">
                                 <button type="button" onclick="openDeleteImageModal('{{ $path }}')" class="px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700">Xóa ảnh</button>
                             </div>
@@ -173,7 +173,7 @@
                     reader.onload = function(e) {
                         const div = document.createElement('div');
                         div.className = 'image-preview-item relative aspect-square rounded-lg overflow-hidden bg-gray-100';
-                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">
+                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain">
                                          <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
                                             <button type="button" onclick="removeFile(${index})" class="text-white">X</button>
                                          </div>`;

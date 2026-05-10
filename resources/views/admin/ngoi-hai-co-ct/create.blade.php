@@ -5,18 +5,33 @@
         </div>
         <form method="POST" action="{{ route('admin.ngoi-hai-co-ct.store') }}" enctype="multipart/form-data" class="p-6">
             @csrf
+
+            <!-- HIỂN THỊ LỖI CHUNG -->
+            @if ($errors->any())
+                <div class="mb-6 flex items-start gap-3 px-4 py-3 rounded text-sm text-red-800 bg-red-50 border border-red-200 shadow-sm">
+                    <div>
+                        <strong class="font-semibold block mb-1">Vui lòng kiểm tra lại các thông tin sau:</strong>
+                        <ul class="list-disc ml-4">
+                            @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- CỘT THÔNG TIN CHUNG (Không Code, Không Giá) -->
                 <div class="lg:col-span-2 space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Tên dáng ngói <span class="text-red-500">*</span></label>
-                            <input type="text" name="name" value="{{ old('name') }}" required placeholder="VD: Ngói Hài Cổ Cỡ Nhỏ" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                            <input type="text" name="name" value="{{ old('name') }}" required placeholder="VD: Ngói Hài Cổ Cỡ Nhỏ" 
+                                class="w-full px-4 py-2.5 text-sm border rounded-lg focus:ring-1 outline-none transition-all {{ $errors->has('name') ? 'border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-gray-300 focus:border-[#A31D1D] focus:ring-[#A31D1D]' }}">
                             @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Kích thước (Text)</label>
-                            <input type="text" name="size" value="{{ old('size') }}" placeholder="VD: L200 x W200 x D20 mm" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                            <input type="text" name="size" value="{{ old('size') }}" placeholder="VD: L200 x W200 x D20 mm" 
+                                class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
                         </div>
                     </div>
 
@@ -35,14 +50,15 @@
                         <div id="des-blocks-container" class="space-y-2.5">
                             <!-- JS sẽ render input vào đây -->
                         </div>
+                        @error('des.*') <p class="mt-2 text-xs text-red-600">Một trong các dòng mô tả bị lỗi, vui lòng kiểm tra lại độ dài.</p> @enderror
                     </div>
                 </div>
 
                 <!-- CỘT HÌNH ẢNH KÍCH THƯỚC -->
                 <div class="lg:col-span-1">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Ảnh bản vẽ / Kích thước</label>
-                    <div class="aspect-square w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
-                        <img id="preview-size" src="https://placehold.co/400x400?text=Chon+Ban+Ve" class="w-full h-full object-cover">
+                    <div class="aspect-square w-full rounded-xl border-2 border-dashed bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors {{ $errors->has('size_image') ? 'border-red-500' : 'border-gray-300' }}">
+                        <img id="preview-size" src="https://placehold.co/400x400?text=Chon+Ban+Ve" class="w-full h-full object-contain">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Tải ảnh lên</span>
                         </div>
@@ -54,15 +70,15 @@
 
             <!-- CHỌN ẢNH SẢN PHẨM CHUNG -->
             <hr class="border-gray-100 my-8">
-            <div class="flex flex-col h-full border border-gray-200 rounded-xl p-6 bg-gray-50/50">
+            <div class="flex flex-col h-full border rounded-xl p-6 bg-gray-50/50 {{ $errors->has('images') ? 'border-red-300 bg-red-50/30' : 'border-gray-200' }}">
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Hình ảnh dáng sản phẩm chung <span class="text-red-500">*</span></label>
                 <p class="text-xs text-gray-500 mb-4">Chọn 1 hoặc nhiều ảnh chi tiết chung của sản phẩm (Hình học, góc cạnh...). Màu sắc sẽ được quản lý ở phần Biến Thể.</p>
                 <div class="relative mb-4">
                     <input type="file" id="multipleImagesInput" name="images[]" multiple required accept="image/*"
-                        class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white"
+                        class="w-full text-sm border rounded-lg p-1.5 cursor-pointer bg-white {{ $errors->has('images') ? 'border-red-500' : 'border-gray-300' }}"
                         onchange="handleMultipleFiles(event)">
                 </div>
-                @error('images') <p class="mb-4 text-xs text-red-600">{{ $message }}</p> @enderror
+                @error('images') <p class="mb-4 text-xs text-red-600 font-bold">{{ $message }}</p> @enderror
                 <div class="h-[250px] bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner flex flex-col">
                     <div id="multiple-preview-container" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-3">
                         <div id="empty-preview-state" class="col-span-full h-full min-h-[180px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium gap-2">
@@ -90,22 +106,31 @@
         }
 
         const desContainer = document.getElementById('des-blocks-container');
-        function addDesBlock(value = '') {
+        function addDesBlock(value = '', autoFocus = false) {
             const div = document.createElement('div');
             div.className = 'flex items-center bg-white rounded-lg border border-gray-200 shadow-sm group focus-within:border-[#A31D1D] focus-within:ring-1 focus-within:ring-[#A31D1D] transition-all overflow-hidden';
             div.innerHTML = `
                 <div class="pl-3 pr-2 text-gray-300 cursor-move">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
                 </div>
-                <input type="text" name="des[]" value="${value}" placeholder="VD: Trọng lượng: 1kg / viên" class="flex-1 py-2.5 px-2 text-sm border-none focus:ring-0 outline-none text-gray-700 bg-transparent placeholder-gray-400">
+                <input type="text" name="des[]" value="${value.replace(/"/g, '&quot;')}" placeholder="VD: Trọng lượng: 1kg / viên" class="flex-1 py-2.5 px-2 text-sm border-none focus:ring-0 outline-none text-gray-700 bg-transparent placeholder-gray-400">
                 <button type="button" onclick="this.parentElement.remove()" class="px-3 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100" title="Xóa dòng này">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             `;
             desContainer.appendChild(div);
-            if(value === '') div.querySelector('input').focus();
+            if(autoFocus && value === '') div.querySelector('input').focus();
         }
-        addDesBlock('');
+        
+        // Populate from old()
+        const oldDes = @json(old('des',[]));
+        if (oldDes && oldDes.length > 0) {
+            oldDes.forEach(val => {
+                if (val !== null) addDesBlock(val);
+            });
+        } else {
+            addDesBlock('');
+        }
 
         let selectedFiles =[];
         const multipleImagesInput = document.getElementById('multipleImagesInput');
@@ -133,7 +158,7 @@
                         const div = document.createElement('div');
                         div.className = 'image-preview-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100';
                         div.innerHTML = `
-                            <img src="${e.target.result}" class="w-full h-full object-cover">
+                            <img src="${e.target.result}" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <button type="button" onclick="removeFile(${index})" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors shadow-sm">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>

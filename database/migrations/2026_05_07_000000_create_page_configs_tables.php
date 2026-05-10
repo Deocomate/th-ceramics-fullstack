@@ -15,7 +15,7 @@ return new class extends Migration
             $table->json('loi_tri_an');
             $table->string('loi_tri_an_anh');
             $table->longText('ve_chung_toi_logo');
-            $table->string('video')->nullable();
+            $table->longText('video')->nullable();
             $table->json('nhung_con_so')->nullable();
             $table->longText('showroom_images');
             $table->longText('showroom_noidung')->nullable();

@@ -24,7 +24,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Hình ảnh màu <span class="text-red-500">*</span></label>
                             <div class="aspect-square w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
-                                <img id="preview-new" src="https://placehold.co/400x400?text=Chon+Anh" class="w-full h-full object-cover">
+                                <img id="preview-new" src="https://placehold.co/400x400?text=Chon+Anh" class="w-full h-full object-contain">
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Chọn ảnh</span>
                                 </div>
@@ -56,7 +56,7 @@
                     @forelse($mauSacs as $mauSac)
                         <div class="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col group relative">
                             <div class="aspect-square w-full relative bg-gray-100 flex-shrink-0">
-                                <img src="{{ asset('storage/' . $mauSac->image) }}" class="w-full h-full object-cover">
+                                <img src="{{ asset('storage/' . $mauSac->image) }}" class="w-full h-full object-contain">
                                 <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-[2px]">
                                     <button type="button" 
                                         data-name="{{ $mauSac->name }}" 
@@ -96,7 +96,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Hình ảnh</label>
                     <div class="aspect-square w-full rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden relative group">
-                        <img id="preview-edit" src="" class="w-full h-full object-cover">
+                        <img id="preview-edit" src="" class="w-full h-full object-contain">
                         <input type="file" name="image" accept="image/*" onchange="previewImage(event, 'preview-edit')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </div>
                 </div>

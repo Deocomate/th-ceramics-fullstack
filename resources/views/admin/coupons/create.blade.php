@@ -144,7 +144,7 @@
                                class="w-full text-sm border border-gray-300 rounded-lg p-1.5 cursor-pointer bg-white">
                         <div class="mt-3">
                             <img id="image-preview" src="#" alt="Xem trước ảnh"
-                                 class="hidden max-h-40 rounded-lg border border-gray-200 object-cover">
+                                 class="hidden max-h-40 rounded-lg border border-gray-200 object-contain">
                         </div>
                         @error('banner_image') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>

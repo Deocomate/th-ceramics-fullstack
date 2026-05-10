@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreNgoiAmDuongCtRequest extends FormRequest
+class StoreNgoiHaiCoCtRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,33 +14,21 @@ class StoreNgoiAmDuongCtRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code'           => ['required', 'string', 'max:50'],
-            'name'           =>['required', 'string', 'max:255'],
-            'price'          =>['required', 'integer', 'min:0'],
-            'size'           =>['nullable', 'string', 'max:255'],
-            
-            // Xóa rỗng để tránh mảng null
-            'des'            => ['nullable', 'array'],
-            'des.*'          => ['nullable', 'string', 'max:500'], 
-
-            // Ràng buộc bắt buộc phải có ít nhất 1 ảnh chung khi tạo mới
-            'images'         =>['required', 'array', 'min:1'],
-            'images.*'       =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            
-            'size_image'     =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'name'       =>['required', 'string', 'max:255'],
+            'size'       => ['nullable', 'string', 'max:255'],
+            'des'        => ['nullable', 'array'],
+            'des.*'      =>['nullable', 'string', 'max:500'],
+            'images'     =>['required', 'array', 'min:1'],
+            'images.*'   =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'size_image' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 
     public function messages(): array
     {
         return[
-            'code.required'   => 'Mã sản phẩm là bắt buộc.',
-            'code.max'        => 'Mã sản phẩm không được vượt quá 50 ký tự.',
             'name.required'   => 'Tên sản phẩm là bắt buộc.',
             'name.max'        => 'Tên sản phẩm không được vượt quá 255 ký tự.',
-            'price.required'  => 'Giá sản phẩm là bắt buộc.',
-            'price.integer'   => 'Giá sản phẩm phải là số hợp lệ.',
-            'price.min'       => 'Giá sản phẩm không được nhỏ hơn 0.',
             'images.required' => 'Vui lòng tải lên ít nhất một hình ảnh sản phẩm.',
             'images.min'      => 'Vui lòng tải lên ít nhất một hình ảnh sản phẩm.',
             'images.*.image'  => 'File tải lên phải là định dạng hình ảnh.',

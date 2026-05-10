@@ -22,7 +22,7 @@
                 <div class="lg:col-span-1">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Ảnh Đại Diện (Thumbnail) <span class="text-red-500">*</span></label>
                     <div class="w-full aspect-[4/3] rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
-                        <img id="preview-thumbnail" src="{{ asset('storage/' . $tinTuc->anh_dai_dien) }}" class="w-full h-full object-cover">
+                        <img id="preview-thumbnail" src="{{ asset('storage/' . $tinTuc->anh_dai_dien) }}" class="w-full h-full object-contain">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                             <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay ảnh</span>
                         </div>
@@ -112,7 +112,7 @@
                                 <div class="space-y-4">
                                     <label class="block text-xs font-semibold text-gray-500 mb-1">Ảnh minh họa</label>
                                     <div class="aspect-[4/3] rounded-lg border-2 border-dashed border-gray-300 relative overflow-hidden bg-white">
-                                        <img :src="block.preview_url || getAssetUrl(block.data.image_url) || 'https://placehold.co/800x600?text=Chon+Anh'" class="w-full h-full object-cover">
+                                        <img :src="block.preview_url || getAssetUrl(block.data.image_url) || 'https://placehold.co/800x600?text=Chon+Anh'" class="w-full h-full object-contain">
                                         <input type="file" :name="`block_images[${index}][image_url]`" accept="image/*" @change="previewBlockImage($event, block)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                                     </div>
                                     <input type="text" :name="`blocks[${index}][data][image_alt]`" x-model="block.data.image_alt" placeholder="Thẻ Alt (Chuẩn SEO)" class="w-full text-sm border-gray-300 rounded focus:border-[#A31D1D] p-2">
@@ -126,7 +126,7 @@
                                 <div class="space-y-4">
                                     <label class="block text-xs font-semibold text-gray-500 mb-1">Ảnh chính</label>
                                     <div class="aspect-video rounded-lg border-2 border-dashed border-gray-300 relative overflow-hidden bg-white">
-                                        <img :src="block.preview_url || getAssetUrl(block.data.image_url) || 'https://placehold.co/600x800?text=Chon+Anh'" class="w-full h-full object-cover">
+                                        <img :src="block.preview_url || getAssetUrl(block.data.image_url) || 'https://placehold.co/600x800?text=Chon+Anh'" class="w-full h-full object-contain">
                                         <input type="file" :name="`block_images[${index}][image_url]`" accept="image/*" @change="previewBlockImage($event, block)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                                     </div>
                                     <input type="text" :name="`blocks[${index}][data][image_alt]`" x-model="block.data.image_alt" placeholder="Thẻ Alt (Chuẩn SEO)" class="w-full text-sm border-gray-300 rounded focus:border-[#A31D1D] p-2">
@@ -152,7 +152,7 @@
                             <div class="pt-4 space-y-4">
                                 <label class="block text-xs font-semibold text-gray-500 mb-1">Ảnh cỡ lớn (Tỷ lệ Panorama 21:9 khuyến nghị)</label>
                                 <div class="aspect-[21/9] rounded-lg border-2 border-dashed border-gray-300 relative overflow-hidden bg-white">
-                                    <img :src="block.preview_url || getAssetUrl(block.data.image_url) || 'https://placehold.co/1200x500?text=Chon+Anh+Bia'" class="w-full h-full object-cover">
+                                    <img :src="block.preview_url || getAssetUrl(block.data.image_url) || 'https://placehold.co/1200x500?text=Chon+Anh+Bia'" class="w-full h-full object-contain">
                                     <input type="file" :name="`block_images[${index}][image_url]`" accept="image/*" @change="previewBlockImage($event, block)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                                 </div>
                                 <input type="text" :name="`blocks[${index}][data][image_alt]`" x-model="block.data.image_alt" placeholder="Thẻ Alt (Chuẩn SEO)" class="w-full text-sm border-gray-300 rounded focus:border-[#A31D1D] p-2">
@@ -181,7 +181,7 @@
                                 <div class="space-y-4">
                                     <label class="block text-xs font-semibold text-gray-500 mb-1">Ảnh minh họa bên cạnh</label>
                                     <div class="aspect-[16/9] rounded-lg border-2 border-dashed border-gray-300 relative overflow-hidden bg-white">
-                                        <img :src="block.preview_url || getAssetUrl(block.data.image_url) || 'https://placehold.co/800x450?text=Chon+Anh'" class="w-full h-full object-cover">
+                                        <img :src="block.preview_url || getAssetUrl(block.data.image_url) || 'https://placehold.co/800x450?text=Chon+Anh'" class="w-full h-full object-contain">
                                         <input type="file" :name="`block_images[${index}][image_url]`" accept="image/*" @change="previewBlockImage($event, block)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                                     </div>
                                     <input type="text" :name="`blocks[${index}][data][image_alt]`" x-model="block.data.image_alt" placeholder="Thẻ Alt (Chuẩn SEO)" class="w-full text-sm border-gray-300 rounded focus:border-[#A31D1D] p-2">
@@ -197,7 +197,7 @@
                                     <div class="space-y-2 w-3/4 md:w-2/3 self-center">
                                         <label class="block text-xs font-semibold text-gray-500 mb-1">Ảnh 1 (Nhỏ - Phía trên)</label>
                                         <div class="aspect-[4/3] rounded-lg border-2 border-dashed border-gray-300 relative overflow-hidden bg-white">
-                                            <img :src="block.preview_url_1 || getAssetUrl(block.data.image_url_1) || 'https://placehold.co/400x300?text=Anh+Nho'" class="w-full h-full object-cover">
+                                            <img :src="block.preview_url_1 || getAssetUrl(block.data.image_url_1) || 'https://placehold.co/400x300?text=Anh+Nho'" class="w-full h-full object-contain">
                                             <input type="file" :name="`block_images[${index}][image_url_1]`" accept="image/*" @change="previewBlockImage($event, block, 'preview_url_1')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                                         </div>
                                         <input type="text" :name="`blocks[${index}][data][image_alt_1]`" x-model="block.data.image_alt_1" placeholder="Thẻ Alt 1" class="w-full text-sm border-gray-300 rounded p-1.5">
@@ -205,7 +205,7 @@
                                     <div class="space-y-2 w-full">
                                         <label class="block text-xs font-semibold text-gray-500 mb-1">Ảnh 2 (Lớn - Phía dưới)</label>
                                         <div class="aspect-[16/9] lg:aspect-[4/3] rounded-lg border-2 border-dashed border-gray-300 relative overflow-hidden bg-white">
-                                            <img :src="block.preview_url_2 || getAssetUrl(block.data.image_url_2) || 'https://placehold.co/800x600?text=Anh+Lon'" class="w-full h-full object-cover">
+                                            <img :src="block.preview_url_2 || getAssetUrl(block.data.image_url_2) || 'https://placehold.co/800x600?text=Anh+Lon'" class="w-full h-full object-contain">
                                             <input type="file" :name="`block_images[${index}][image_url_2]`" accept="image/*" @change="previewBlockImage($event, block, 'preview_url_2')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                                         </div>
                                         <input type="text" :name="`blocks[${index}][data][image_alt_2]`" x-model="block.data.image_alt_2" placeholder="Thẻ Alt 2" class="w-full text-sm border-gray-300 rounded p-1.5">

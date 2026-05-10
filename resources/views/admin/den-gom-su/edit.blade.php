@@ -13,7 +13,7 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh nền</label>
                         <div class="aspect-video w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
-                            <img id="preview-main" src="{{ asset('storage/' . $denGomSu->thumbnail_main) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover">
+                            <img id="preview-main" src="{{ asset('storage/' . $denGomSu->thumbnail_main) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                             </div>
@@ -45,7 +45,7 @@
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1.5">Hình ảnh 1</label>
                         <div class="aspect-video w-full rounded-lg border-2 border-dashed border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-gray-50 transition-colors">
-                            <img id="preview-1" src="{{ asset('storage/' . $denGomSu->image1) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover">
+                            <img id="preview-1" src="{{ asset('storage/' . $denGomSu->image1) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                             </div>
@@ -65,7 +65,7 @@
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1.5">Hình ảnh 2</label>
                         <div class="aspect-video w-full rounded-lg border-2 border-dashed border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-gray-50 transition-colors">
-                            <img id="preview-2" src="{{ asset('storage/' . $denGomSu->image2) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover">
+                            <img id="preview-2" src="{{ asset('storage/' . $denGomSu->image2) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                             </div>
@@ -88,7 +88,7 @@
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1.5">Hình ảnh 3</label>
                         <div class="aspect-video w-full rounded-lg border-2 border-dashed border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-gray-50 transition-colors">
-                            <img id="preview-3" src="{{ asset('storage/' . $denGomSu->image3) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover">
+                            <img id="preview-3" src="{{ asset('storage/' . $denGomSu->image3) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                             </div>
@@ -103,7 +103,7 @@
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1.5">Hình ảnh 4</label>
                         <div class="aspect-video w-full rounded-lg border-2 border-dashed border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group hover:bg-gray-50 transition-colors">
-                            <img id="preview-4" src="{{ asset('storage/' . $denGomSu->image4) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-cover">
+                            <img id="preview-4" src="{{ asset('storage/' . $denGomSu->image4) }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                             </div>
@@ -160,7 +160,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
                     @foreach ($denGomSu->anh as $anh)
                         <div class="relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                            <img src="{{ asset('storage/' . $anh->image) }}" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $anh->image) }}" class="w-full h-full object-contain">
                             <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
                                 <form action="{{ route('admin.den-gom-su.anh.destroy', $anh) }}" method="POST" onsubmit="return confirm('Xóa ảnh thư viện này?')">
                                     @csrf @method('DELETE')
@@ -220,7 +220,7 @@
                             div.className = 'image-preview-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100';
                             
                             div.innerHTML = `
-                                <img src="${e.target.result}" class="w-full h-full object-cover">
+                                <img src="${e.target.result}" class="w-full h-full object-contain">
                                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
                                     <button type="button" onclick="removeFile(${index})" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors shadow-sm" title="Xóa ảnh này">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>

@@ -3,6 +3,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\NgoiHaiCoCtService;
+use App\Http\Requests\StoreNgoiHaiCoCtRequest;
+use App\Http\Requests\UpdateNgoiHaiCoCtRequest;
 use Illuminate\Http\Request;
 
 class NgoiHaiCoCtController extends Controller
@@ -21,20 +23,11 @@ class NgoiHaiCoCtController extends Controller
         return view('admin.ngoi-hai-co-ct.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreNgoiHaiCoCtRequest $request)
     {
-        $data = $request->validate([
-            'name'       =>['required', 'string', 'max:255'],
-            'size'       =>['nullable', 'string', 'max:255'],
-            'des'        => ['nullable', 'array'],
-            'des.*'      =>['nullable', 'string', 'max:500'],
-            'images'     => ['required', 'array'],
-            'images.*'   =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'size_image' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ]);
-
-        $this->service->create($data);
-        return redirect()->route('admin.ngoi-hai-co-ct.index')->with('success', 'Thêm mới Ngói Hài Cổ thành công.');
+        $this->service->create($request->validated());
+        return redirect()->route('admin.ngoi-hai-co-ct.index')
+            ->with('success', 'Thêm mới Ngói Hài Cổ thành công.');
     }
 
     public function edit(int $id)
@@ -43,18 +36,9 @@ class NgoiHaiCoCtController extends Controller
         return view('admin.ngoi-hai-co-ct.edit', compact('product'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(UpdateNgoiHaiCoCtRequest $request, int $id)
     {
-        $data = $request->validate([
-            'name'       => ['required', 'string', 'max:255'],
-            'size'       =>['nullable', 'string', 'max:255'],
-            'des'        => ['nullable', 'array'],
-            'new_images' => ['nullable', 'array'],
-            'new_images.*'=>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'size_image' =>['nullable', 'image', 'max:5120'],
-        ]);
-
-        $this->service->update($id, $data);
+        $this->service->update($id, $request->validated());
         return back()->with('success', 'Cập nhật thành công.');
     }
 
@@ -72,6 +56,7 @@ class NgoiHaiCoCtController extends Controller
 
     public function destroyImage(Request $request, int $id)
     {
+        $request->validate(['image_path' =>['required', 'string']]);
         $this->service->removeImageFromJson($id, $request->input('image_path'));
         return back()->with('success', 'Đã xóa ảnh khỏi sản phẩm.');
     }

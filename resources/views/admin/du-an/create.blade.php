@@ -87,7 +87,7 @@
                     reader.onload = function(e) {
                         const div = document.createElement('div');
                         div.className = 'image-preview-item relative aspect-square rounded-lg overflow-hidden bg-gray-100';
-                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">
+                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain">
                                          <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 flex items-center justify-center">
                                             <button type="button" onclick="removeFile(${index})" class="w-8 h-8 bg-red-600 text-white rounded-full">X</button>
                                          </div>`;
