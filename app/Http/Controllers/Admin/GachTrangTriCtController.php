@@ -3,6 +3,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\GachTrangTriCtService;
+use App\Http\Requests\StoreGachTrangTriCtRequest;
+use App\Http\Requests\UpdateGachTrangTriCtRequest;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 
@@ -22,22 +24,10 @@ class GachTrangTriCtController extends Controller
         return view('admin.gach-trang-tri-ct.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreGachTrangTriCtRequest $request)
     {
-        $data = $request->validate([
-            'code'       => ['required', 'string', 'max:50'],
-            'name'       => ['required', 'string', 'max:255'],
-            'price'      => ['required', 'integer', 'min:0'],
-            'size'       =>['nullable', 'string', 'max:255'],
-            'des'        => ['nullable', 'array'],
-            'des.*'      => ['nullable', 'string', 'max:500'],
-            'images'     =>['nullable', 'array'],
-            'images.*'   =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'size_image' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ]);
-
         try {
-            $this->service->create($data);
+            $this->service->create($request->validated());
             return redirect()->route('admin.gach-trang-tri-ct.index')
                 ->with('success', 'Thêm mới Gạch Trang Trí thành công.');
         } catch (InvalidArgumentException $e) {
@@ -51,22 +41,10 @@ class GachTrangTriCtController extends Controller
         return view('admin.gach-trang-tri-ct.edit', compact('product'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(UpdateGachTrangTriCtRequest $request, int $id)
     {
-        $data = $request->validate([
-            'code'         => ['required', 'string', 'max:50'],
-            'name'         =>['required', 'string', 'max:255'],
-            'price'        =>['required', 'integer', 'min:0'],
-            'size'         => ['nullable', 'string', 'max:255'],
-            'des'          => ['nullable', 'array'],
-            'des.*'        =>['nullable', 'string', 'max:500'],
-            'new_images'   => ['nullable', 'array'],
-            'new_images.*' =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'size_image'   =>['nullable', 'image', 'max:5120'],
-        ]);
-
         try {
-            $this->service->update($id, $data);
+            $this->service->update($id, $request->validated());
             return back()->with('success', 'Cập nhật sản phẩm thành công.');
         } catch (InvalidArgumentException $e) {
             return back()->withInput()->withErrors(['code' => $e->getMessage()]);
