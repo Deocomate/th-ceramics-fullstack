@@ -95,9 +95,18 @@
 
             <!-- Desktop Icons -->
             <div class="hidden xl:flex items-center gap-6">
-                <button class="hover:text-secondary transition-colors" aria-label="Search">
-                    <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
-                </button>
+                <form action="{{ route('client.products.ngoi-am-duong.index') }}" method="GET" class="flex items-center gap-2">
+                    <input
+                        type="search"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Tìm kiếm"
+                        class="w-32 rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white placeholder:text-white/60 outline-none focus:border-secondary"
+                    />
+                    <button type="submit" class="hover:text-secondary transition-colors" aria-label="Search">
+                        <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
+                    </button>
+                </form>
                 <a href="{{ route('client.cart.index') }}" class="hover:text-secondary transition-colors"
                     aria-label="Cart">
                     <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-5 h-5" />
@@ -130,9 +139,9 @@
             </a>
 
             <div class="absolute right-[23px] flex items-center gap-[14px]">
-                <button class="hover:text-secondary transition-colors" aria-label="Search">
+                <a href="{{ route('client.products.ngoi-am-duong.index') }}" class="hover:text-secondary transition-colors" aria-label="Search">
                     <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-[18px] h-[18px]" />
-                </button>
+                </a>
                 <a href="{{ route('client.cart.index') }}" class="hover:text-secondary transition-colors"
                     aria-label="Cart">
                     <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-[18px] h-[18px]" />
@@ -160,9 +169,9 @@
                     <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="h-[90px] w-[90px]" />
                 </a>
                 <div class="flex items-center gap-5">
-                    <button class="hover:text-secondary transition-colors" aria-label="Search">
+                    <a href="{{ route('client.products.ngoi-am-duong.index') }}" class="hover:text-secondary transition-colors" aria-label="Search">
                         <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
-                    </button>
+                    </a>
                     <a href="{{ route('client.cart.index') }}" class="hover:text-secondary transition-colors"
                         aria-label="Cart">
                         <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-5 h-5" />
@@ -183,6 +192,18 @@
                     </button>
                 </div>
             </div>
+            <form action="{{ route('client.products.ngoi-am-duong.index') }}" method="GET" class="mb-6 flex items-center gap-2">
+                <input
+                    type="search"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Tìm kiếm sản phẩm"
+                    class="min-w-0 flex-1 rounded-sm border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/60 outline-none focus:border-secondary"
+                />
+                <button type="submit" class="w-11 h-11 flex items-center justify-center rounded-sm border border-white/20">
+                    <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
+                </button>
+            </form>
             <div class="flex flex-col space-y-6 flex-grow z-10">
                 <a href="{{ route('client.home') }}"
                     class="mobile-nav-link text-white font-semibold text-lg uppercase hover:text-secondary"

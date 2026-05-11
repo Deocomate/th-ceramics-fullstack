@@ -2,7 +2,7 @@
 
 ## Overview
 
-Laravel 12 monolith with Blade frontend. 45 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Session-based cart with AJAX controls, checkout flow with Orders/OrderItems persistence (COD-only payment), email notification system (order confirmation + status updates via database queue), coupon/discount code system with percent and fixed discount types. Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js (auto-resize textareas, tab navigation, image management), order management (list, detail, status update with email notification), and coupon management (full CRUD with restore). Client-side dynamic order status tracking page with tab filtering. Dynamic customer service pages: installation guide (ThiCong model), catalog list with PDF flipbook reader (Catalog model, PDF.js + StPageFlip).
+Laravel 12 monolith with Blade frontend. 45 database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Home page fully dynamic via HomeController (queries TrangChu, DuAn, NgoiAmDuongCt, NgoiHaiVanMieuCt, GachHoaThongGioCt). Session-based cart with AJAX controls, checkout flow with Orders/OrderItems persistence (COD-only payment), email notification system (order confirmation + status updates via database queue), coupon/discount code system with percent and fixed discount types. Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js (auto-resize textareas, tab navigation, image management), order management (list, detail, status update with email notification), and coupon management (full CRUD with restore). Client-side dynamic order status tracking page with tab filtering. Dynamic customer service pages: installation guide (ThiCong model), catalog list with PDF flipbook reader (Catalog model, PDF.js + StPageFlip).
 
 ## Directory Tree
 
@@ -87,7 +87,7 @@ th-ceramics-fullstack/
 | `resources/views/admin/` | 77 | Admin Blade templates (incl. orders/index, orders/show) |
 | `resources/views/clients/` | 136 | Client Blade templates (incl. order status page) |
 | `resources/views/emails/` | 3 | Email templates (order created, status updated, password reset) |
-| `resources/views/components/` | 29 | Shared Blade components |
+| `resources/views/components/` | 30 | Shared Blade components (incl. admin-preview-button) |
 | `config/` | 10 | App, database, cache, session, etc. |
 | `tests/` | 8 | Pest test files (29 tests, all passing) |
 
@@ -105,8 +105,8 @@ Multi-row product items: `NgoiAmDuongCt`, `NgoiHaiCoCt`, `NgoiHaiVanMieuCt`, `Ga
 ### Dinh Muc Models (6)
 Rating/estimation tables: `DinhMucNgoiAmDuong`, `DinhMucNgoiHaiCo`, `DinhMucNgoiHaiVanMieu`, `DinhMucGachHoaThongGio`, `DinhMucGachTrangTri`, `DinhMucGachCoBatTrang`
 
-### Page Configuration Models (4)
-Single-row config for static pages: `PageFactory` (14+ fields for factory tour page), `PageContact` (5 fields for contact page), `PageFaq` (FAQ page config), `Faq` (FAQ items with WYSIWYG answers)
+### Page Configuration Models (6)
+Single-row config for static pages: `PageFactory` (14+ fields for factory tour page), `PageContact` (5 fields for contact page), `PageFaq` (FAQ page config), `Faq` (FAQ items with WYSIWYG answers), `TrangChu` (home page: banner, khach_hang_doi_tac, loi_tri_an, ve_chung_toi_logo, nhung_con_so, showroom_images -- all JSON arrays), `GiaiThuongThanhTuu` (awards: image, des)
 
 ### System Models (1)
 `User` — authentication with role-based access

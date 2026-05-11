@@ -8,6 +8,9 @@ use App\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiHaiVanMieuCtService;
 use App\Services\NgoiHaiVanMieuCtService;
 use App\Services\NgoiHaiVanMieuService;
+use App\Support\CollectionPaginator;
+use App\Support\ProductCollectionFilter;
+use Illuminate\Http\Request;
 
 class NgoiHaiVanMieuController extends Controller
 {
@@ -19,10 +22,14 @@ class NgoiHaiVanMieuController extends Controller
         private readonly GiaTriVuotTroiService $giaTriVuotTroiService,
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         $config = $this->ngoiHaiVanMieuService->getFirstRecord();
-        $products = $this->ngoiHaiVanMieuCtService->getAll('active');
+        $products = ProductCollectionFilter::apply(
+            $this->ngoiHaiVanMieuCtService->getAll('active'),
+            $request->only(['search', 'sort'])
+        );
+        $products = CollectionPaginator::paginate($products, 12);
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();
 
         return view('clients.products.ngoi-hai-van-mieu.index', compact(

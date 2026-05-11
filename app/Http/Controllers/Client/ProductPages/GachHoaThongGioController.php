@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Services\DinhMucGachHoaThongGioService;
 use App\Services\GachHoaThongGioCtService;
 use App\Services\GachHoaThongGioService;
+use App\Support\CollectionPaginator;
+use App\Support\ProductCollectionFilter;
+use Illuminate\Http\Request;
 
 class GachHoaThongGioController extends Controller
 {
@@ -15,10 +18,14 @@ class GachHoaThongGioController extends Controller
         private readonly DinhMucGachHoaThongGioService $dinhMucService,
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         $config = $this->gachHoaThongGioService->getFirstRecord();
-        $products = $this->gachHoaThongGioCtService->getAll('active');
+        $products = ProductCollectionFilter::apply(
+            $this->gachHoaThongGioCtService->getAll('active'),
+            $request->only(['search', 'sort'])
+        );
+        $products = CollectionPaginator::paginate($products, 12);
 
         return view('clients.products.gach-hoa-thong-gio.index', compact(
             'config', 'products'

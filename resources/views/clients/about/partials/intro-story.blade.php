@@ -1,3 +1,19 @@
+@php
+  $headItems = collect($about->gs_head ?? [])->values();
+  $journeyItems = collect($about->gs_hanh_trinh ?? [])->values();
+
+  $firstSection = $headItems->get(0, []);
+  $secondSection = $journeyItems->get(0, $headItems->get(1, []));
+
+  $firstImage = \App\Support\AssetPath::url(data_get($firstSection, 'image'), 'assets/images/about-01.png');
+  $firstTitle = data_get($firstSection, 'head', 'Những công việc giản dị và ngọn lửa nghề luôn ấm');
+  $firstBody = data_get($firstSection, 'body', 'Từ những bàn tay khéo léo của người thợ Việt tới ngôi nhà của bạn.');
+
+  $secondImage = \App\Support\AssetPath::url(data_get($secondSection, 'image'), 'assets/images/about-02.jpg');
+  $secondTitle = data_get($secondSection, 'head', 'Kiên định một con đường, bền vững qua thời gian');
+  $secondBody = data_get($secondSection, 'body', 'Thanh Hải vẫn kiên định với lựa chọn ban đầu: gốm sứ xây dựng.');
+@endphp
+
 <!-- Section 1: Những công việc giản dị -->
 <div
   class="flex flex-col md:flex-row items-center gap-8 md:gap-16 mb-[30px] md:mb-24"
@@ -6,7 +22,7 @@
   <div class="w-full max-w-[604px] md:w-1/2">
     <div class="aspect-[1/1] relative overflow-hidden shadow-lg">
       <img
-        src="{{ asset('assets/images/about-01.png') }}"
+        src="{{ $firstImage }}"
         alt="Nghệ nhân làm gốm"
         class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
       />
@@ -16,17 +32,12 @@
     <h3
       class="text-[20px] md:text-[36px] font-archivo font-bold text-textPrimary mb-5 leading-[30px] md:leading-[55px] text-center md:text-left"
     >
-      Những công việc giản dị<br />và ngọn lửa nghề luôn ấm
+      {!! nl2br(e($firstTitle)) !!}
     </h3>
     <p
       class="text-textPrimary font-['Roboto'] text-[16px] font-medium leading-[28px] tracking-[0.32px] text-justify md:text-left mb-4 lg:max-w-md"
     >
-      Từ những bàn tay khéo léo của người thợ Việt tới ngôi nhà của bạn. Từ
-      những ngày làm thuê trong xí nghiệp gốm, nghệ nhân Vũ Mạnh Hải và Nguyễn
-      Thị Thanh – hai người sáng lập đầy tâm huyết – đã sớm nuôi dưỡng khát khao
-      tạo ra những sản phẩm của riêng mình. Những mẫu lan can gốm sứ đầu tiên,
-      được tự tay thiết kế, sản xuất và mang đi chào hàng trên phố Cát Linh, đã
-      đặt nền móng cho hành trình theo nghề nhiều thử thách nhưng bền bỉ.
+      {{ $firstBody }}
     </p>
   </div>
 </div>
@@ -38,7 +49,7 @@
   <div class="w-full max-w-[604px] md:w-1/2">
     <div class="aspect-[1/1] relative overflow-hidden shadow-lg">
       <img
-        src="{{ asset('assets/images/about-02.jpg') }}"
+        src="{{ $secondImage }}"
         alt="Công trình gốm sứ"
         class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
       />
@@ -48,23 +59,12 @@
     <h3
       class="text-[20px] md:text-4xl font-bold text-textPrimary mb-6 flex flex-col gap-2 md:gap-4 leading-[30px] md:leading-normal text-center md:text-left"
     >
-      <span>Kiên định một con đường,</span>
-      <span>bền vững qua thời gian</span>
+      <span>{!! nl2br(e($secondTitle)) !!}</span>
     </h3>
     <p
       class="text-textPrimary leading-[28px] text-justify md:text-left lg:max-w-md font-medium tracking-wide mb-4 md:mb-0"
     >
-      Dù Bát Tràng đã trải qua nhiều giai đoạn chuyển đổi và thử nghiệm các loại
-      hình gốm sứ khác nhau, Thanh Hải vẫn kiên định với lựa chọn ban đầu: gốm
-      sứ xây dựng – gạch và ngói – làm nền tảng phát triển lâu dài.
-    </p>
-    <p
-      class="text-textPrimary leading-[28px] text-justify md:text-left lg:max-w-md font-medium tracking-wide"
-    >
-      Mỗi sản phẩm được nghiên cứu kỹ về chất liệu và kỹ thuật, đồng thời được
-      tinh chỉnh trong thiết kế để phù hợp với kiến trúc hôm nay. Thanh Hải tin
-      rằng giá trị bền vững nhất nằm ở sự kết hợp hài hòa giữa di sản nghề gốm
-      và hơi thở của thời đại.
+      {{ $secondBody }}
     </p>
   </div>
 </div>

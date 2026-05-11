@@ -13,18 +13,27 @@
       <!-- padding-left calculated to match the 1320px container's left edge -->
       <div class="flex" style="padding-left: max(7.5%, calc((100% - 1320px) / 2))">
         <div class="works-track flex gap-[10px] lg:gap-6 pr-12">
-          @for ($i = 0; $i < 10; $i++)
-          <div
+          @foreach($projects as $project)
+            @php
+              $firstImage = !empty($project->images) ? $project->images[0] : null;
+            @endphp
+          <a href="{{ route('client.projects.detail', $project->slug) }}"
             class="works-item flex-shrink-0 w-[151px] lg:w-96 h-[125px] lg:h-80 rounded-sm overflow-hidden group cursor-pointer relative">
-            <img src="{{ asset('assets/images/work-01.jpg') }}" alt="Chùa Bái Đính, Ninh Bình" class="w-full h-full object-cover" />
+            @if($firstImage)
+            <img
+              src="{{ Str::startsWith($firstImage, 'assets/') ? asset($firstImage) : asset('storage/' . $firstImage) }}"
+              alt="{{ $project->ten_du_an }}"
+              class="w-full h-full object-cover"
+            />
+            @endif
             <div
               class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 md:p-4 pt-12">
               <p class="works-item-title text-white">
-                Chùa Bái Đính, Ninh Bình
+                {{ $project->ten_du_an }}
               </p>
             </div>
-          </div>
-          @endfor
+          </a>
+          @endforeach
         </div>
       </div>
     </div>
@@ -99,8 +108,6 @@
 
     const worksCarousel = worksSection.querySelector(".works-carousel");
     const worksTrack = worksSection.querySelector(".works-track");
-    const worksPrev = worksSection.querySelector(".works-prev");
-    const worksNext = worksSection.querySelector(".works-next");
     const scrollbarThumb = worksSection.querySelector(".works-scrollbar-thumb");
     const scrollbarTrack = worksSection.querySelector(".works-scrollbar-track");
 
@@ -115,22 +122,6 @@
       const gap = parseFloat(trackStyles.columnGap || trackStyles.gap || "0") || 0;
       return itemWidth + gap;
     };
-
-    worksPrev?.addEventListener("click", () => {
-      const scrollStep = getScrollStep();
-      worksCarousel.scrollBy({
-        left: -scrollStep,
-        behavior: "smooth",
-      });
-    });
-
-    worksNext?.addEventListener("click", () => {
-      const scrollStep = getScrollStep();
-      worksCarousel.scrollBy({
-        left: scrollStep,
-        behavior: "smooth",
-      });
-    });
 
     const updateScrollbar = () => {
       if (!scrollbarThumb || !scrollbarTrack) return;

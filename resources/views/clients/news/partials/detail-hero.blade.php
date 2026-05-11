@@ -2,8 +2,8 @@
     <!-- Left Half: Image -->
     <div class="w-full lg:w-1/2 h-[400px] lg:h-full relative overflow-hidden" data-aos="fade-right">
         <img
-            src="{{ asset('assets/images/news-01.jpg') }}"
-            alt="News Detail"
+            src="{{ \App\Support\AssetPath::url($article->anh_dai_dien ?? null, 'assets/images/news-01.jpg') }}"
+            alt="{{ $article->tieu_de ?? 'News Detail' }}"
             class="w-full h-full object-cover"
         >
     </div>
@@ -15,10 +15,10 @@
     >
         <div class="max-w-md flex flex-col items-start gap-4">
             <h1 class="max-w-sm text-3xl md:text-5xl xl:text-4xl font-arima text-primary leading-tight tracking-wide">
-                Gạch thông gió 300x300 thường được sử dụng trong các công trình nào?
+                {{ $article->tieu_de ?? '' }}
             </h1>
             <p class="text-base text-primary opacity-80 leading-relaxed text-left md:text-justify">
-                Điều này có nghĩa là chúng tôi tạo ra từng viên gạch hoàn toàn bằng tay, từ đầu đến cuối. Chúng tôi ép đất sét và cắt thủ công thành các hình dạng khác nhau mà chúng tôi cung cấp.
+                {{ $article->mo_ta_ngan ?? '' }}
             </p>
         </div>
     </div>

@@ -26,7 +26,7 @@
 @include('clients.products.den-gom-su.partials.advantages-section')
 <x-products.fabrication-process />
 <x-products.journey-video :hide-title="true" />
-<x-products.recommendations />
+<x-products.recommendations :related-products="collect()" />
 
 <!-- FAQ Section -->
 <section class="w-full relative pb-[70px] md:pb-32 bg-background-secondary overflow-visible" data-aos="fade-up">

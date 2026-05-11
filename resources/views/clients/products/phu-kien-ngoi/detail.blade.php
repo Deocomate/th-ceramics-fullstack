@@ -125,7 +125,11 @@
 
 <x-products.journey-video :hide-title="true" />
 <x-products.works />
-<x-products.recommendations />
+<x-products.recommendations
+    :related-products="$relatedProducts"
+    route-name="client.products.phu-kien-ngoi.detail"
+    product-type="phu_kien_ngoi"
+/>
 
 <!-- Related Products -->
 @if($relatedProducts->isNotEmpty())

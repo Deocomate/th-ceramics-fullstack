@@ -79,7 +79,12 @@
 
 <x-products.journey-video :hide-title="true" />
 <x-products.works />
-<x-products.recommendations />
+<x-products.recommendations
+    :related-products="$relatedProducts"
+    route-name="client.products.linh-vat-phong-thuy.detail"
+    pk-field="linh_vat_phong_thuy_ct_id"
+    product-type="linh_vat_phong_thuy_ct"
+/>
 
 <!-- Related Products -->
 @if($relatedProducts->isNotEmpty())

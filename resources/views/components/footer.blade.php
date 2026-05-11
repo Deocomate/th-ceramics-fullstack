@@ -1,5 +1,16 @@
 @props(['hideNewsletter' => false])
 
+@php
+  $contactHotline = $globalContact->hotline ?? '0966 55 8808';
+  $contactHotlineLink = preg_replace('/\D+/', '', $contactHotline) ?: '0966558808';
+  $contactEmail = data_get($globalContact, 'email', 'gshaithanh@gmail.com');
+  $contactAddress = data_get($globalContact, 'address', '18 Phố Gốm – Giang Cao, Bát Tràng, Gia Lâm, Hà Nội');
+  $facebookLink = data_get($globalContact, 'facebook_link', '#');
+  $youtubeLink = data_get($globalContact, 'youtube_link', '#');
+  $pinterestLink = data_get($globalContact, 'pinterest_link', '#');
+  $zaloLink = data_get($globalContact, 'zalo_link', 'https://zalo.me/0966558808');
+@endphp
+
 <footer class="bg-[#262723] text-white">
   <!-- Main Footer -->
   <div class="relative bg-[#262723] overflow-hidden">
@@ -49,9 +60,9 @@
               CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI<br class="block lg:hidden" />
               THANH HẢI
             </p>
-            <p>18 Phố Gốm – Giang Cao, Bát Tràng, Gia Lâm, Hà Nội</p>
-            <p>0966 55 8808</p>
-            <p>gshaithanh@gmail.com</p>
+            <p>{{ $contactAddress }}</p>
+            <p>{{ $contactHotline }}</p>
+            <p>{{ $contactEmail }}</p>
           </div>
 
           <div class="block lg:hidden mb-8">
@@ -69,21 +80,21 @@
           </div>
 
           <div class="hidden lg:flex items-center gap-[20px] mb-8">
-            <a href="#" aria-label="Facebook">
+            <a href="{{ $facebookLink }}" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
               <img
                 src="{{ asset('assets/images/facebook.svg') }}"
                 alt="Facebook"
                 class="w-[18px] h-[18px] opacity-70 hover:opacity-100 transition-opacity"
               />
             </a>
-            <a href="#" aria-label="YouTube">
+            <a href="{{ $youtubeLink }}" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
               <img
                 src="{{ asset('assets/images/youtube.svg') }}"
                 alt="YouTube"
                 class="w-[24px] h-[18px] opacity-70 hover:opacity-100 transition-opacity"
               />
             </a>
-            <a href="#" aria-label="Pinterest">
+            <a href="{{ $pinterestLink }}" aria-label="Pinterest" target="_blank" rel="noopener noreferrer">
               <img
                 src="{{ asset('assets/images/pinterest.svg') }}"
                 alt="Pinterest"
@@ -283,7 +294,7 @@
     </button>
 
     <a
-      href="https://zalo.me/0966558808"
+      href="{{ $zaloLink }}"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Hỗ trợ Zalo"

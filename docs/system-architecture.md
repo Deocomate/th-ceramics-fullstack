@@ -186,7 +186,9 @@ Page Configuration Tables (static pages, single-record sections)
 │
 ├── PageFactory (factory tour page, 14+ fields)
 ├── PageContact (contact page, 5 fields)
-└── PageFaq -- Faqs (FAQ items, 5 fields)
+├── PageFaq -- Faqs (FAQ items, 5 fields)
+├── TrangChu (home page config: banner, khach_hang_doi_tac, loi_tri_an, ve_chung_toi_logo, nhung_con_so, showroom_images -- all JSON arrays)
+└── GiaiThuongThanhTuu (awards: image, des)
 
 Users table (separate, for admin auth)
 
@@ -225,7 +227,7 @@ Mail & Queue
 /admin/pages/contact       → Contact page config (single-record edit)
 /admin/pages/faq           → FAQ page config + FAQ items CRUD
 
-/                          → Home page
+/                          → Home page (fully dynamic: HomeController queries TrangChu, DuAn, NgoiAmDuongCt, NgoiHaiVanMieuCt, GachHoaThongGioCt)
 /xuong-san-xuat             → Factory tour (dynamic from DB)
 /lien-he                    → Contact page (dynamic from DB)
 /cau-hoi-thuong-gap          → FAQ page (dynamic from DB)

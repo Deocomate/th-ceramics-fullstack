@@ -7,6 +7,12 @@
       Khách hàng & đối tác
     </h2>
 
+    @php
+      $partners = $trangChu?->khach_hang_doi_tac ?? [];
+      $pages = !empty($partners) ? array_chunk($partners, 5) : [];
+    @endphp
+
+    @if(!empty($pages))
     <div
       class="relative overflow-hidden mb-0 lg:mb-6 -mx-[8%] lg:mx-0"
       data-aos="fade-up"
@@ -17,88 +23,26 @@
         class="flex w-max animate-marquee lg:animate-none lg:w-[200%] lg:transition-transform lg:duration-500"
         id="partners-track"
       >
+        @foreach($pages as $pageIndex => $pageItems)
         <div
-          class="flex gap-6 pl-6 pr-6 lg:pl-0 lg:pr-0 lg:w-1/2 lg:grid lg:grid-cols-5 lg:gap-6"
+          class="flex gap-6 {{ $pageIndex === 0 ? 'pl-6 pr-6 lg:pl-0 lg:pr-0' : 'pr-6' }} lg:w-1/2 lg:grid lg:grid-cols-5 lg:gap-6 {{ $pageIndex > 0 ? 'lg:pr-0' : '' }}"
+          @if($pageIndex > 0) aria-hidden="true" @endif
         >
+          @foreach($pageItems as $logo)
           <div class="partner-card-item">
             <img
-              src="{{ asset('assets/images/partner-01.png') }}"
+              src="{{ Str::startsWith($logo, 'assets/') ? asset($logo) : asset('storage/' . $logo) }}"
               alt="Partner"
               class="partner-image"
             />
           </div>
-          <div class="partner-card-item">
-            <img
-              src="{{ asset('assets/images/partner-02.png') }}"
-              alt="Partner"
-              class="partner-image"
-            />
-          </div>
-          <div class="partner-card-item">
-            <img
-              src="{{ asset('assets/images/partner-03.png') }}"
-              alt="Partner"
-              class="partner-image"
-            />
-          </div>
-          <div class="partner-card-item">
-            <img
-              src="{{ asset('assets/images/partner-04.png') }}"
-              alt="Partner"
-              class="partner-image"
-            />
-          </div>
-          <div class="partner-card-item">
-            <img
-              src="{{ asset('assets/images/partner-05.png') }}"
-              alt="Partner"
-              class="partner-image"
-            />
-          </div>
+          @endforeach
         </div>
-
-        <div
-          class="flex gap-6 pr-6 lg:w-1/2 lg:grid lg:grid-cols-5 lg:gap-6 lg:pr-0"
-          aria-hidden="true"
-        >
-          <div class="partner-card-item">
-            <img
-              src="{{ asset('assets/images/partner-01.png') }}"
-              alt="Partner"
-              class="partner-image"
-            />
-          </div>
-          <div class="partner-card-item">
-            <img
-              src="{{ asset('assets/images/partner-02.png') }}"
-              alt="Partner"
-              class="partner-image"
-            />
-          </div>
-          <div class="partner-card-item">
-            <img
-              src="{{ asset('assets/images/partner-03.png') }}"
-              alt="Partner"
-              class="partner-image"
-            />
-          </div>
-          <div class="partner-card-item">
-            <img
-              src="{{ asset('assets/images/partner-04.png') }}"
-              alt="Partner"
-              class="partner-image"
-            />
-          </div>
-          <div class="partner-card-item">
-            <img
-              src="{{ asset('assets/images/partner-05.png') }}"
-              alt="Partner"
-              class="partner-image"
-            />
-          </div>
-        </div>
+        @endforeach
       </div>
     </div>
+    @endif
+
     <!-- Partners Navigation -->
     <button
       class="partner-prev hidden lg:flex absolute -left-16 top-[60%] -translate-y-1/2 z-20 w-10 h-10 border border-white/50 rounded-full items-center justify-center text-white/70 hover:border-white hover:text-white transition-all focus:outline-none"
@@ -140,20 +84,19 @@
   </div>
 
   <!-- Partners Dots -->
+  @if(count($pages) > 1)
   <div
     class="hidden lg:flex absolute bottom-6 left-1/2 transform -translate-x-1/2 gap-3 z-20"
   >
+    @foreach($pages as $pageIndex => $page)
     <button
-      class="partner-dot active w-3 h-3 rounded-full bg-secondary transition-all"
-      data-slide="0"
-      aria-label="Page 1"
+      class="partner-dot {{ $pageIndex === 0 ? 'active' : '' }} w-3 h-3 rounded-full {{ $pageIndex === 0 ? 'bg-secondary' : 'bg-white/40 hover:bg-white/60' }} transition-all"
+      data-slide="{{ $pageIndex }}"
+      aria-label="Page {{ $pageIndex + 1 }}"
     ></button>
-    <button
-      class="partner-dot w-3 h-3 rounded-full bg-white/40 hover:bg-white/60 transition-all"
-      data-slide="1"
-      aria-label="Page 2"
-    ></button>
+    @endforeach
   </div>
+  @endif
 </section>
 
 @push('styles')
@@ -161,21 +104,11 @@
   .partner-card-item {
     flex-shrink: 0;
     width: 40vw;
-    /* height: 10rem; */
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
   }
-
-  /* .partner-card-item:first-child {
-    padding: 1.5rem;
-  }
-
-  .partner-card-item:not(:first-child) {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-  } */
 
   .partner-image {
     max-width: 86px;
@@ -244,7 +177,7 @@
     const partnerDots = Array.from(section.querySelectorAll(".partner-dot"));
     const partnerPrev = section.querySelector(".partner-prev");
     const partnerNext = section.querySelector(".partner-next");
-    const totalPartnerSlides = Math.max(partnerDots.length, 2);
+    const totalPartnerSlides = Math.max(partnerDots.length, 1);
 
     let partnerCurrentSlide = 0;
 

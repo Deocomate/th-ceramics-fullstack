@@ -6,13 +6,14 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div class="flex flex-col justify-center lg:max-w-xl" data-aos="fade-right">
           <h2 class="text-secondary text-2xl lg:text-4xl font-bold mb-8 uppercase">Lời tri ân</h2>
-          <p class="text-neutral-1 text-sm/5 lg:text-base/7 font-normal tracking-wider">
-            Hơn 40 năm gắn bó với gốm sứ trang trí nội - ngoại thất, chúng tôi tin rằng mỗi sản phẩm không chỉ là vật liệu xây dựng, mà là kết tinh của đất, lửa và tấm lòng người làm nghề.
-            <br/><br/>
-            Sinh ra và lớn lên tại làng gốm Bát Tràng, nơi lưu giữ di sản nghề gốm được truyền qua nhiều thế hệ, chúng tôi thừa hưởng nền tảng thủ công truyền thống cùng nguồn nguyên liệu quý giá của quê hương. Là người kế thừa thể hệ thứ ba của dòng họ Vũ Gia, tôi tiếp bước con đường cha ông đã gây dựng, gìn giữ và làm giàu thêm giá trị di sản gốm Việt, đặc biệt là ngói âm dương loại ngói gắn liền với kiến trúc cung đình, đền chùa từ thời Lý – Trần đến nay.
-            <br/><br/>
-            Từ ngói lợp gốm sứ, gạch hoa thông gió đến các phụ kiện trang trí, mỗi sản phẩm đều là sự giao thoa giữa di sản truyền thống và tinh thần đương đại. Hành trình ấy đã đưa sản phẩm của chúng tôi hiện diện trên khắp mọi miền đất nước, trở thành một phần trong nhiều công trình mang đậm bản sắc và thẩm mỹ Việt.
-          </p>
+          @if($trangChu && !empty($trangChu->loi_tri_an))
+            @foreach($trangChu->loi_tri_an as $paragraph)
+            <p class="text-neutral-1 text-sm/5 lg:text-base/7 font-normal tracking-wider">
+              {{ $paragraph }}
+            </p>
+            @if(!$loop->last)<br/><br/>@endif
+            @endforeach
+          @endif
           <div class="flex flex-col items-start">
             <div class="flex flex-col items-center">
               <img src="{{ asset('assets/images/sign.png') }}" alt="Signature">
@@ -21,7 +22,12 @@
           </div>
         </div>
         <div class="relative" data-aos="fade-left" data-aos-delay="200">
-          <img src="{{ asset('assets/images/ceo.jpg') }}" alt="Director" class="w-full rounded-lg shadow-lg">
+          <img
+            src="{{ $trangChu?->loi_tri_an_anh
+                ? (Str::startsWith($trangChu->loi_tri_an_anh, 'assets/') ? asset($trangChu->loi_tri_an_anh) : asset('storage/' . $trangChu->loi_tri_an_anh))
+                : asset('assets/images/ceo.jpg') }}"
+            alt="Director" class="w-full rounded-lg shadow-lg"
+          >
         </div>
       </div>
     </div>
@@ -32,9 +38,11 @@
       <h2 class="text-center text-[20px] font-bold uppercase leading-[32px] text-secondary">Lời tri ân</h2>
 
       <div class="mt-6 space-y-6 text-justify text-[14px] font-light leading-[20px] tracking-[0.28px] text-white" style="font-family: 'Roboto', sans-serif;">
-        <p>Hơn 40 năm gắn bó với gốm sứ trang trí nội - ngoại thất, chúng tôi tin rằng mỗi sản phẩm không chỉ là vật liệu xây dựng, mà là kết tinh của đất, lửa và tấm lòng người làm nghề.</p>
-        <p>Sinh ra và lớn lên tại làng gốm Bát Tràng, nơi lưu giữ di sản nghề gốm được truyền qua nhiều thế hệ, chúng tôi thừa hưởng nền tảng thủ công truyền thống cùng nguồn nguyên liệu quý giá của quê hương. Là người kế thừa thế hệ thứ ba của dòng họ Vũ Gia, tôi tiếp bước con đường cha ông đã gây dựng, gìn giữ và làm giàu thêm giá trị di sản gốm Việt, đặc biệt là ngói âm dương – loại ngói gắn liền với kiến trúc cung đình, đền chùa từ thời Lý – Trần đến nay.</p>
-        <p>Từ ngói lợp gốm sứ, gạch hoa thông gió đến các phụ kiện trang trí, mỗi sản phẩm đều là sự giao thoa giữa di sản truyền thống và tinh thần đương đại. Hành trình ấy đã đưa sản phẩm của chúng tôi hiện diện trên khắp mọi miền đất nước, trở thành một phần trong nhiều công trình mang đậm bản sắc và thẩm mỹ Việt.</p>
+        @if($trangChu && !empty($trangChu->loi_tri_an))
+          @foreach($trangChu->loi_tri_an as $paragraph)
+          <p>{{ $paragraph }}</p>
+          @endforeach
+        @endif
       </div>
 
       <div class="mt-8 flex w-full justify-end pr-[38px]">
@@ -44,7 +52,12 @@
         </div>
       </div>
 
-      <img src="{{ asset('assets/images/ceo.jpg') }}" alt="Giám đốc Vũ Mạnh Hải" class="mt-10 aspect-square w-full object-cover">
+      <img
+        src="{{ $trangChu?->loi_tri_an_anh
+            ? (Str::startsWith($trangChu->loi_tri_an_anh, 'assets/') ? asset($trangChu->loi_tri_an_anh) : asset('storage/' . $trangChu->loi_tri_an_anh))
+            : asset('assets/images/ceo.jpg') }}"
+        alt="Giám đốc Vũ Mạnh Hải" class="mt-10 aspect-square w-full object-cover"
+      >
     </div>
   </div>
 </section>

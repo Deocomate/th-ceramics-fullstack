@@ -11,6 +11,7 @@
       class="relative w-full aspect-video mb-8 lg:mb-12 rounded-lg overflow-hidden cursor-pointer group"
       data-aos="fade-up"
       data-aos-delay="200"
+      @if($trangChu?->video) data-video-url="{{ $trangChu->video }}" @endif
     >
       <img
         src="{{ asset('assets/images/video-placeholder.jpg') }}"
@@ -32,72 +33,35 @@
       </div>
     </div>
 
+    @if($trangChu && !empty($trangChu->nhung_con_so))
     <div
       class="grid grid-cols-5 gap-1 lg:gap-8"
       data-aos="fade-up"
       data-aos-delay="400"
     >
+      @foreach($trangChu->nhung_con_so as $conSo)
+        @php
+          preg_match('/^(\d+)(.*)$/', trim($conSo['head']), $matches);
+          $target = $matches[1] ?? 0;
+          $suffix = $matches[2] ?? '';
+        @endphp
       <div class="flex flex-col items-center lg:items-start">
         <div
           class="text-white lg:text-neutral-1 text-[16px] leading-[40px] lg:text-[42px] lg:leading-tight font-bold mb-0 lg:mb-3 text-center lg:text-left"
         >
-          <span class="stat-number" data-target="1000">0</span>
+          <span class="stat-number"
+                data-target="{{ $target }}"
+                @if($suffix !== '') data-suffix="{{ $suffix }}" @endif>0{{ $suffix }}</span>
         </div>
         <p
           class="text-white lg:text-neutral-1 font-light lg:font-semibold text-[11px] leading-[15px] lg:text-xl text-center lg:text-left"
         >
-          Công trình<br class="block lg:hidden" />lớn nhỏ
+          {!! nl2br(e($conSo['body'])) !!}
         </p>
       </div>
-      <div class="flex flex-col items-center lg:items-start">
-        <div
-          class="text-white lg:text-neutral-1 text-[16px] leading-[40px] lg:text-[42px] lg:leading-tight font-bold mb-0 lg:mb-3 text-center lg:text-left"
-        >
-          <span class="stat-number" data-target="5000">0</span>m<sup>2</sup>
-        </div>
-        <p
-          class="text-white lg:text-neutral-1 font-light lg:font-semibold text-[11px] leading-[15px] lg:text-xl text-center lg:text-left"
-        >
-          Nhà xưởng
-        </p>
-      </div>
-      <div class="flex flex-col items-center lg:items-start">
-        <div
-          class="text-white lg:text-neutral-1 text-[16px] leading-[40px] lg:text-[42px] lg:leading-tight font-bold mb-0 lg:mb-3 text-center lg:text-left"
-        >
-          <span class="stat-number" data-target="100" data-suffix="%">0%</span>
-        </div>
-        <p
-          class="text-white lg:text-neutral-1 font-light lg:font-semibold text-[11px] leading-[15px] lg:text-xl text-center lg:text-left"
-        >
-          Sản xuất<br class="block lg:hidden" />thủ công
-        </p>
-      </div>
-      <div class="flex flex-col items-center lg:items-start">
-        <div
-          class="text-white lg:text-neutral-1 text-[16px] leading-[40px] lg:text-[42px] lg:leading-tight font-bold mb-0 lg:mb-3 text-center lg:text-left"
-        >
-          <span class="stat-number" data-target="50">0</span>
-        </div>
-        <p
-          class="text-white lg:text-neutral-1 font-light lg:font-semibold text-[11px] leading-[15px] lg:text-xl text-center lg:text-left"
-        >
-          Dòng<br class="block lg:hidden" />sản phẩm
-        </p>
-      </div>
-      <div class="flex flex-col items-center lg:items-start">
-        <div
-          class="text-white lg:text-neutral-1 text-[16px] leading-[40px] lg:text-[42px] lg:leading-tight font-bold mb-0 lg:mb-3 text-center lg:text-left"
-        >
-          <span class="stat-number" data-target="40">0</span>
-        </div>
-        <p
-          class="text-white lg:text-neutral-1 font-light lg:font-semibold text-[11px] leading-[15px] lg:text-xl text-center lg:text-left"
-        >
-          Năm kinh<br class="block lg:hidden" />nghiệm
-        </p>
-      </div>
+      @endforeach
     </div>
+    @endif
 
     @push('scripts')
     <script>
@@ -105,7 +69,6 @@
         const counters = document.querySelectorAll(".stat-number");
         if (!counters.length) return;
 
-        // Store active interval per element
         const timers = new WeakMap();
 
         const reset = (el) => {
@@ -118,7 +81,6 @@
         };
 
         const animate = (el) => {
-          // Clear any existing animation first
           if (timers.has(el)) {
             clearInterval(timers.get(el));
             timers.delete(el);
@@ -154,7 +116,6 @@
               if (entry.isIntersecting) {
                 animate(entry.target);
               } else {
-                // Reset when scrolled away so it replays next time
                 reset(entry.target);
               }
             });

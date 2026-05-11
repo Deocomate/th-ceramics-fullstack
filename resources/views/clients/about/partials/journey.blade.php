@@ -1,3 +1,17 @@
+@php
+  $defaultJourney = [
+      ['image' => 'assets/images/about-02.jpg', 'head' => '1985', 'body' => 'Khởi đầu hành trình gìn giữ nghề gốm truyền thống.'],
+      ['image' => 'assets/images/about-01.png', 'head' => '1993', 'body' => 'Mở rộng thị trường với các mẫu sản phẩm thủ công đặc trưng.'],
+      ['image' => 'assets/images/about-02.jpg', 'head' => '2000', 'body' => 'Chính thức vận hành theo mô hình doanh nghiệp chuyên nghiệp.'],
+      ['image' => 'assets/images/about-01.png', 'head' => '2008', 'body' => 'Xây dựng showroom đầu tiên tại Bát Tràng.'],
+      ['image' => 'assets/images/about-02.jpg', 'head' => '2024', 'body' => 'Mở showroom thế hệ mới và nâng cấp hệ sinh thái sản phẩm.'],
+  ];
+  $journeyItems = collect($about->gs_hanh_trinh ?? [])->filter(fn ($item) => is_array($item))->values();
+  if ($journeyItems->isEmpty()) {
+      $journeyItems = collect($defaultJourney);
+  }
+@endphp
+
 <!-- Section 4: Our Journey / Hành trình của chúng tôi -->
 <div class="md:mt-24 md:mb-16">
   <h3
@@ -12,9 +26,10 @@
     <div
       class="w-full md:flex-1 min-w-0 flex flex-row md:flex-col overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none gap-6 md:gap-0 space-y-0 md:space-y-[50vh] py-4 md:py-[20vh] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] items-stretch"
     >
+      @foreach ($journeyItems as $index => $item)
       <div
         class="timeline-item flex-shrink-0 w-[85%] md:w-full snap-center flex flex-col items-start md:items-center justify-start md:justify-center text-left md:text-center min-h-min md:min-h-[30vh]"
-        data-index="0"
+        data-index="{{ $index }}"
         data-aos="fade-up"
       >
         <div class="md:hidden w-full flex justify-center mb-6">
@@ -22,8 +37,8 @@
             class="aspect-[332/285] md:aspect-[3/4] w-full max-w-sm relative overflow-hidden shadow-lg rounded-sm"
           >
             <img
-              src="{{ asset('assets/images/about-02.jpg') }}"
-              alt="1985 - Khởi đầu"
+              src="{{ \App\Support\AssetPath::url(data_get($item, 'image'), 'assets/images/about-02.jpg') }}"
+              alt="{{ data_get($item, 'head', 'Cột mốc') }}"
               class="w-full h-full object-cover"
             />
           </div>
@@ -31,156 +46,15 @@
         <h4
           class="text-[30px] md:text-5xl font-bold text-textPrimary mb-4 md:mb-6 leading-[36px] md:leading-tight"
         >
-          1985
+          {{ data_get($item, 'head', '') }}
         </h4>
         <p
           class="text-textPrimary leading-relaxed text-justify md:text-center max-w-lg font-medium tracking-wide w-full"
         >
-          Hai người sáng&nbsp;lập là ông Vũ Mạnh Hải và bà Nguyễn Thị Thanh bắt
-          đầu được giao lại toàn&nbsp;bộ công&nbsp;việc sản&nbsp;xuất gốm sứ từ
-          cụ Vũ Đình Sơn. Nhận thấy thị&nbsp;trường sản&nbsp;xuất bát đĩa đang
-          dần bão&nbsp;hòa và nhiều cạnh&nbsp;tranh, ông bà bắt đầu tìm hướng đi
-          mới thông qua việc tự thiết&nbsp;kế mẫu mã mới cho dòng sản&nbsp;phẩm
-          gốm sứ xây&nbsp;dựng, gốm sứ trang&nbsp;trí – đặt những viên gạch
-          đầu&nbsp;tiên cho con đường làm nghề.
+          {{ data_get($item, 'body', '') }}
         </p>
       </div>
-      <div
-        class="timeline-item flex-shrink-0 w-[85%] md:w-full snap-center flex flex-col items-start md:items-center justify-start md:justify-center text-left md:text-center min-h-min md:min-h-[30vh]"
-        data-index="1"
-        data-aos="fade-up"
-      >
-        <div class="md:hidden w-full flex justify-center mb-6">
-          <div
-            class="aspect-[332/285] md:aspect-[3/4] w-full max-w-sm relative overflow-hidden shadow-lg rounded-sm"
-          >
-            <img
-              src="{{ asset('assets/images/about-01.png') }}"
-              alt="1993 - Phát triển"
-              class="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-        <h4
-          class="text-[30px] md:text-5xl font-bold text-textPrimary mb-4 md:mb-6 leading-[36px] md:leading-tight"
-        >
-          1993
-        </h4>
-        <p
-          class="text-textPrimary leading-relaxed text-justify md:text-center max-w-lg font-medium tracking-wide w-full"
-        >
-          Cửa&nbsp;hàng bán&nbsp;lẻ đầu&nbsp;tiên được mở ra, đánh&nbsp;dấu bước
-          phát&nbsp;triển mới trong hoạt&nbsp;động kinh&nbsp;doanh. Từ đây, mẫu
-          mã không ngừng được nghiên&nbsp;cứu và sáng&nbsp;tạo, chủng loại
-          sản&nbsp;phẩm ngày&nbsp;càng đa&nbsp;dạng nhằm đáp&nbsp;ứng các
-          nhu&nbsp;cầu khác&nbsp;nhau của khách&nbsp;hàng. Đồng&nbsp;thời, Gốm
-          Sứ Thanh Hải dần tạo được sự tín&nbsp;nhiệm từ các doanh&nbsp;nghiệp
-          lớn và được giao thực&nbsp;hiện những công&nbsp;trình quy&nbsp;mô
-          đầu&nbsp;tiên.
-        </p>
-      </div>
-      <div
-        class="timeline-item flex-shrink-0 w-[85%] md:w-full snap-center flex flex-col items-start md:items-center justify-start md:justify-center text-left md:text-center min-h-min md:min-h-[30vh]"
-        data-index="2"
-        data-aos="fade-up"
-      >
-        <div class="md:hidden w-full flex justify-center mb-6">
-          <div
-            class="aspect-[332/285] md:aspect-[3/4] w-full max-w-sm relative overflow-hidden shadow-lg rounded-sm"
-          >
-            <img
-              src="{{ asset('assets/images/about-02.jpg') }}"
-              alt="2000 - Chuyên nghiệp"
-              class="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-        <h4
-          class="text-[30px] md:text-5xl font-bold text-textPrimary mb-4 md:mb-6 leading-[36px] md:leading-tight"
-        >
-          2000
-        </h4>
-        <p
-          class="text-textPrimary leading-relaxed text-justify md:text-center max-w-lg font-medium tracking-wide w-full"
-        >
-          Công&nbsp;ty TNHH Sản&nbsp;xuất và Thương&nbsp;mại Thanh&nbsp;Hải
-          chính&nbsp;thức được thành&nbsp;lập, đánh&nbsp;dấu bước chuyển
-          quan&nbsp;trọng sang mô&nbsp;hình hoạt&nbsp;động chuyên&nbsp;nghiệp.
-          Hệ&nbsp;thống xưởng sản&nbsp;xuất gốm&nbsp;sứ xây&nbsp;dựng được
-          đầu&nbsp;tư đồng&nbsp;bộ, từng bước áp&nbsp;dụng quy&nbsp;trình để
-          nâng&nbsp;cao tay&nbsp;nghề thợ thủ&nbsp;công, mở&nbsp;rộng
-          quy&nbsp;mô sản&nbsp;xuất.
-        </p>
-      </div>
-      <div
-        class="timeline-item flex-shrink-0 w-[85%] md:w-full snap-center flex flex-col items-start md:items-center justify-start md:justify-center text-left md:text-center min-h-min md:min-h-[30vh]"
-        data-index="3"
-        data-aos="fade-up"
-      >
-        <div class="md:hidden w-full flex justify-center mb-6">
-          <div
-            class="aspect-[332/285] md:aspect-[3/4] w-full max-w-sm relative overflow-hidden shadow-lg rounded-sm"
-          >
-            <img
-              src="{{ asset('assets/images/about-01.png') }}"
-              alt="2008 - Showroom"
-              class="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-        <h4
-          class="text-[30px] md:text-5xl font-bold text-textPrimary mb-4 md:mb-6 leading-[36px] md:leading-tight"
-        >
-          2008
-        </h4>
-        <p
-          class="text-textPrimary leading-relaxed text-justify md:text-center max-w-lg font-medium tracking-wide w-full"
-        >
-          Showroom chuyên&nbsp;nghiệp đầu&nbsp;tiên được xây&nbsp;dựng tại số 42
-          Phố Gốm, đánh&nbsp;dấu bước phát&nbsp;triển trong việc nâng&nbsp;cao
-          trải&nbsp;nghiệm tham&nbsp;quan và giới&nbsp;thiệu sản&nbsp;phẩm
-          gốm&nbsp;sứ Thanh&nbsp;Hải. Từ đây, không&nbsp;gian trưng&nbsp;bày
-          được chú&nbsp;trọng đầu&nbsp;tư bài&nbsp;bản, sắp&nbsp;đặt
-          sản&nbsp;phẩm theo từng nhóm ứng&nbsp;dụng và giá&nbsp;trị
-          thẩm&nbsp;mỹ, góp&nbsp;phần thể&nbsp;hiện rõ nét hơn tinh&nbsp;thần và
-          chất&nbsp;lượng của thương&nbsp;hiệu.
-        </p>
-      </div>
-      <div
-        class="timeline-item flex-shrink-0 w-[85%] md:w-full snap-center flex flex-col items-start md:items-center justify-start md:justify-center text-left md:text-center min-h-min md:min-h-[30vh]"
-        data-index="4"
-        data-aos="fade-up"
-      >
-        <div class="md:hidden w-full flex justify-center mb-6">
-          <div
-            class="aspect-[332/285] md:aspect-[3/4] w-full max-w-sm relative overflow-hidden shadow-lg rounded-sm"
-          >
-            <img
-              src="{{ asset('assets/images/about-02.jpg') }}"
-              alt="2024 - Di sản"
-              class="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-        <h4
-          class="text-[30px] md:text-5xl font-bold text-textPrimary mb-4 md:mb-6 leading-[36px] md:leading-tight"
-        >
-          2024
-        </h4>
-        <p
-          class="text-textPrimary leading-relaxed text-justify md:text-center max-w-lg font-medium tracking-wide w-full"
-        >
-          Showroom thứ hai với diện&nbsp;tích gần 400m² tại số 18 Phố Gốm được
-          hình&nbsp;thành như một không&nbsp;gian trưng&nbsp;bày và
-          kể&nbsp;chuyện di&nbsp;sản. Tại đây, ngói âm&nbsp;dương được tái hiện
-          thông&nbsp;qua việc kết&nbsp;hợp ngói âm và gạch xây cũ, tạo nên các
-          họa&nbsp;tiết mô&nbsp;phỏng ngói thời Lý – Trần, dấu&nbsp;ấn
-          tiêu&nbsp;biểu của kiến&nbsp;trúc cổ Việt&nbsp;Nam. Không gian vừa là
-          nơi giới&nbsp;thiệu sản&nbsp;phẩm, vừa là điểm kết&nbsp;nối
-          văn&nbsp;hóa, lưu&nbsp;giữ và lan&nbsp;tỏa giá&nbsp;trị kiến&nbsp;trúc
-          truyền&nbsp;thống.
-        </p>
-      </div>
+      @endforeach
     </div>
     <div
       class="hidden md:flex w-full md:w-[565px] md:shrink-0 sticky top-[94px] h-[calc(100vh-94px)] items-start justify-end"
@@ -188,36 +62,14 @@
       <div
         class="w-full h-full relative overflow-hidden shadow-2xl rounded-sm bg-gray-100"
       >
+        @foreach ($journeyItems as $index => $item)
         <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          class="timeline-image-layer absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] translate-y-0 z-[1]"
-          data-index="0"
-          alt="1985"
+          src="{{ \App\Support\AssetPath::url(data_get($item, 'image'), 'assets/images/about-02.jpg') }}"
+          class="timeline-image-layer absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] {{ $index === 0 ? 'translate-y-0 z-[1]' : 'translate-y-full z-[2]' }}"
+          data-index="{{ $index }}"
+          alt="{{ data_get($item, 'head', 'Journey image') }}"
         />
-        <img
-          src="{{ asset('assets/images/about-01.png') }}"
-          class="timeline-image-layer absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] translate-y-full z-[2]"
-          data-index="1"
-          alt="1993"
-        />
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          class="timeline-image-layer absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] translate-y-full z-[3]"
-          data-index="2"
-          alt="2000"
-        />
-        <img
-          src="{{ asset('assets/images/about-01.png') }}"
-          class="timeline-image-layer absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] translate-y-full z-[4]"
-          data-index="3"
-          alt="2008"
-        />
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          class="timeline-image-layer absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] translate-y-full z-[5]"
-          data-index="4"
-          alt="2024"
-        />
+        @endforeach
       </div>
     </div>
   </div>

@@ -26,66 +26,25 @@
   <div
     class="banner-carousel relative w-[85%] max-w-[1320px] mx-auto h-[488px] md:h-full z-10"
   >
-    <!-- Slides -->
-    <div
-      class="banner-slide active absolute inset-0 transition-opacity duration-500"
-    >
-      <img
-        src="{{ asset('assets/images/home-hero-01.png') }}"
-        alt="Banner 1"
-        class="w-full h-full object-cover"
-      />
+    @if($trangChu && !empty($trangChu->banner))
+      @foreach($trangChu->banner as $index => $bg)
       <div
-        class="absolute inset-0 flex items-end justify-center pb-[29px] md:pb-16"
+        class="banner-slide {{ $index === 0 ? 'active' : '' }} absolute inset-0 transition-opacity duration-500"
+        style="opacity: {{ $index === 0 ? '1' : '0' }}"
       >
-        <a href="#" class="banner-cta-btn"> XEM CHI TIẾT </a>
+        <img
+          src="{{ Str::startsWith($bg, 'assets/') ? asset($bg) : asset('storage/' . $bg) }}"
+          alt="Banner {{ $index + 1 }}"
+          class="w-full h-full object-cover"
+        />
+        <div
+          class="absolute inset-0 flex items-end justify-center pb-[29px] md:pb-16"
+        >
+          <a href="#" class="banner-cta-btn"> XEM CHI TIẾT </a>
+        </div>
       </div>
-    </div>
-
-    <div
-      class="banner-slide active absolute inset-0 transition-opacity duration-500"
-    >
-      <img
-        src="{{ asset('assets/images/home-hero-01.png') }}"
-        alt="Banner 2"
-        class="w-full h-full object-cover"
-      />
-      <div
-        class="absolute inset-0 flex items-end justify-center pb-[29px] md:pb-16"
-      >
-        <a href="#" class="banner-cta-btn"> XEM CHI TIẾT </a>
-      </div>
-    </div>
-
-    <div
-      class="banner-slide active absolute inset-0 transition-opacity duration-500"
-    >
-      <img
-        src="{{ asset('assets/images/home-hero-01.png') }}"
-        alt="Banner 3"
-        class="w-full h-full object-cover"
-      />
-      <div
-        class="absolute inset-0 flex items-end justify-center pb-[29px] md:pb-16"
-      >
-        <a href="#" class="banner-cta-btn"> XEM CHI TIẾT </a>
-      </div>
-    </div>
-
-    <div
-      class="banner-slide active absolute inset-0 transition-opacity duration-500"
-    >
-      <img
-        src="{{ asset('assets/images/home-hero-01.png') }}"
-        alt="Banner 4"
-        class="w-full h-full object-cover"
-      />
-      <div
-        class="absolute inset-0 flex items-end justify-center pb-[29px] md:pb-16"
-      >
-        <a href="#" class="banner-cta-btn"> XEM CHI TIẾT </a>
-      </div>
-    </div>
+      @endforeach
+    @endif
   </div>
 
   <!-- Banner Navigation & Dots -->
@@ -113,26 +72,15 @@
     </button>
 
     <div class="banner-dots flex items-center gap-[7px] md:gap-3">
-      <button
-        class="banner-dot active w-2 h-2 md:w-3 md:h-3 rounded-full bg-secondary transition-all"
-        data-slide="0"
-        aria-label="Slide 1"
-      ></button>
-      <button
-        class="banner-dot w-2 h-2 md:w-3 md:h-3 rounded-full bg-white/40 hover:bg-white/60 transition-all"
-        data-slide="1"
-        aria-label="Slide 2"
-      ></button>
-      <button
-        class="banner-dot w-2 h-2 md:w-3 md:h-3 rounded-full bg-white/40 hover:bg-white/60 transition-all"
-        data-slide="2"
-        aria-label="Slide 3"
-      ></button>
-      <button
-        class="banner-dot w-2 h-2 md:w-3 md:h-3 rounded-full bg-white/40 hover:bg-white/60 transition-all"
-        data-slide="3"
-        aria-label="Slide 4"
-      ></button>
+      @if($trangChu && !empty($trangChu->banner))
+        @foreach($trangChu->banner as $index => $bg)
+        <button
+          class="banner-dot {{ $index === 0 ? 'active' : '' }} w-2 h-2 md:w-3 md:h-3 rounded-full {{ $index === 0 ? 'bg-secondary' : 'bg-white/40 hover:bg-white/60' }} transition-all"
+          data-slide="{{ $index }}"
+          aria-label="Slide {{ $index + 1 }}"
+        ></button>
+        @endforeach
+      @endif
     </div>
 
     <!-- Next Button (desktop/tablet only) -->
@@ -161,7 +109,6 @@
 <style>
   .banner-section {
     height: 100%;
-    /* padding: 59px 0; */
   }
 
   @media (min-width: 768px) {

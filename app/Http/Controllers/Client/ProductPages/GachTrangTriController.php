@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Services\DinhMucGachTrangTriService;
 use App\Services\GachTrangTriCtService;
 use App\Services\GachTrangTriService;
+use App\Support\CollectionPaginator;
+use App\Support\ProductCollectionFilter;
+use Illuminate\Http\Request;
 
 class GachTrangTriController extends Controller
 {
@@ -15,10 +18,14 @@ class GachTrangTriController extends Controller
         private readonly DinhMucGachTrangTriService $dinhMucService,
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         $config = $this->gachTrangTriService->getFirstRecord();
-        $products = $this->gachTrangTriCtService->getAll('active');
+        $products = ProductCollectionFilter::apply(
+            $this->gachTrangTriCtService->getAll('active'),
+            $request->only(['search', 'sort'])
+        );
+        $products = CollectionPaginator::paginate($products, 12);
 
         return view('clients.products.gach-trang-tri.index', compact(
             'config', 'products'

@@ -158,7 +158,12 @@
 
 <x-products.fabrication-process />
 <x-products.journey-video :hide-title="true" />
-<x-products.recommendations />
+<x-products.recommendations
+    :related-products="$products->take(4)"
+    route-name="client.products.linh-vat-phong-thuy.detail"
+    pk-field="linh_vat_phong_thuy_ct_id"
+    product-type="linh_vat_phong_thuy_ct"
+/>
 
 <!-- FAQ Section -->
 <section class="w-full relative pb-[70px] md:pb-32 bg-background-secondary overflow-visible" data-aos="fade-up">

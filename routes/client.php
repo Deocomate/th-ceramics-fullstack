@@ -27,6 +27,7 @@ use App\Http\Controllers\Client\ProductPages\NgoiAmDuongController;
 use App\Http\Controllers\Client\ProductPages\NgoiHaiVanMieuController;
 use App\Http\Controllers\Client\ProductPages\PhuKienNgoiController;
 use App\Http\Controllers\Client\ProjectController;
+use App\Http\Controllers\Client\ShowroomController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,10 +42,11 @@ Route::name('client.')->group(function () {
     Route::get('/ve-chung-toi', [AboutController::class, 'index'])->name('about');
     Route::get('/xuong-san-xuat', [FactoryController::class, 'index'])->name('factory');
     Route::get('/lien-he', [ContactController::class, 'index'])->name('contact');
+    Route::post('/lien-he', [ContactController::class, 'submit'])->middleware('throttle:3,1')->name('contact.submit');
     Route::get('/cau-hoi-thuong-gap', [FaqController::class, 'index'])->name('faq');
 
     // Showroom
-    Route::view('/showroom', 'clients.showroom.index')->name('showroom');
+    Route::get('/showroom', [ShowroomController::class, 'index'])->name('showroom');
 
     // Tin tức (News)
     Route::prefix('tin-tuc')->name('news.')->group(function () {

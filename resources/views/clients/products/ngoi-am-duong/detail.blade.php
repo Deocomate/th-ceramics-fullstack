@@ -149,7 +149,12 @@
 </div>
 
 <x-products.works />
-<x-products.recommendations />
+<x-products.recommendations
+    :related-products="$relatedProducts"
+    route-name="client.products.ngoi-am-duong.detail"
+    pk-field="ngoi_am_duong_ct_id"
+    product-type="ngoi_am_duong_ct"
+/>
 <x-products.faq2 />
 
 @push('scripts')

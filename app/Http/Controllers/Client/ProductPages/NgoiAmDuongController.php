@@ -8,6 +8,9 @@ use App\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiAmDuongCtService;
 use App\Services\NgoiAmDuongCtService;
 use App\Services\NgoiAmDuongService;
+use App\Support\CollectionPaginator;
+use App\Support\ProductCollectionFilter;
+use Illuminate\Http\Request;
 
 class NgoiAmDuongController extends Controller
 {
@@ -22,13 +25,17 @@ class NgoiAmDuongController extends Controller
     /**
      * Trang danh mục Ngói Âm Dương
      */
-    public function index()
+    public function index(Request $request)
     {
         // 1. Lấy cấu hình chung (Banner, Video trang ngói âm dương)
         $config = $this->ngoiAmDuongService->getFirstRecord();
 
         // 2. Lấy danh sách sản phẩm (chỉ lấy các SP đang active)
-        $products = $this->ngoiAmDuongCtService->getAll('active');
+        $products = ProductCollectionFilter::apply(
+            $this->ngoiAmDuongCtService->getAll('active'),
+            $request->only(['search', 'sort'])
+        );
+        $products = CollectionPaginator::paginate($products, 12);
 
         // 3. Lấy giá trị vượt trội chung
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();

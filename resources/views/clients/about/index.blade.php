@@ -27,8 +27,8 @@
 
     <x-catalog-button />
 
-    @include('clients.about.partials.banner')
-    @include('clients.about.partials.tabs')
+    @include('clients.about.partials.banner', ['about' => $about ?? null])
+    @include('clients.about.partials.tabs', ['about' => $about ?? null])
     <x-newsletter />
 
     @push('scripts')

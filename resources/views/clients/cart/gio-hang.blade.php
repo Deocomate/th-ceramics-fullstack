@@ -171,7 +171,7 @@
     </div>
 </div>
 
-<x-products.recommendations />
+<x-products.recommendations :related-products="collect()" />
 <x-faq-faq-contact />
 
 <script>

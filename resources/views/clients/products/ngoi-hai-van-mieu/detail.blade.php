@@ -56,7 +56,12 @@
 <x-products.trang-tri-process />
 <hr class="md:mb-16 mb-8" />
 <x-products.works-simple :show-nav="true" />
-<x-products.recommendations />
+<x-products.recommendations
+    :related-products="$relatedProducts"
+    route-name="client.products.ngoi-hai-van-mieu.detail"
+    pk-field="ngoi_hai_van_mieu_ct_id"
+    product-type="ngoi_hai_van_mieu_ct"
+/>
 <x-products.faq2 />
 
 </x-layouts.client>

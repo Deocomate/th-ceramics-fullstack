@@ -25,7 +25,7 @@
         data-aos="fade-right"
       >
         <h2 class="text-4xl lg:text-[48px] font-arima font-light text-primary leading-tight mb-4">
-          Gạch thông<br /> gió 300x300<br /> thường
+          {{ $article->tieu_de ?? 'Tin tức Thanh Hải' }}
         </h2>
         <a
           href="#"
@@ -42,8 +42,8 @@
       >
         <div class="relative group">
           <img
-            src="{{ asset('assets/images/news-detail-5.png') }}"
-            alt="Gạch thông gió"
+            src="{{ \App\Support\AssetPath::url($article->anh_dai_dien ?? null, 'assets/images/news-detail-5.png') }}"
+            alt="{{ $article->tieu_de ?? 'Tin tức' }}"
             class="w-full h-auto object-cover shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
           />
         </div>

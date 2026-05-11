@@ -1,3 +1,7 @@
+@php
+    $awards = \App\Models\GiaiThuongThanhTuu::latest()->get();
+@endphp
+
 @push('styles')
 <style>
   .awards-component .awards-swiper {
@@ -270,171 +274,31 @@
 </style>
 @endpush
 
+@if($awards->isNotEmpty())
 <div
   class="awards-component w-full max-w-[1320px] mx-auto relative px-0 lg:px-0"
 >
   <div class="swiper awards-swiper w-full py-0 lg:py-10">
     <div class="swiper-wrapper">
-      <!-- Slide 1 -->
+      @foreach($awards as $award)
+        @php
+          $imgUrl = Str::startsWith($award->image, 'assets/')
+              ? asset($award->image)
+              : asset('storage/' . $award->image);
+        @endphp
       <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
         <img
-          src="{{ asset('assets/images/award-01.jpg') }}"
-          alt="Award 1"
+          src="{{ $imgUrl }}"
+          alt="{{ $award->des }}"
           class="w-full h-full object-cover"
         />
         <div
           class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
         >
-          <p class="text-white font-medium text-sm">
-            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
-            Nội trao tặng
-          </p>
+          <p class="text-white font-medium text-sm">{{ $award->des }}</p>
         </div>
       </div>
-      <!-- Slide 2 -->
-      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
-        <img
-          src="{{ asset('assets/images/ceo.jpg') }}"
-          alt="Award 2"
-          class="w-full h-full object-cover"
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
-        >
-          <p class="text-white font-medium text-sm">
-            Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội
-            trao tặng
-          </p>
-        </div>
-      </div>
-      <!-- Slide 3 -->
-      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
-        <img
-          src="{{ asset('assets/images/award-03.jpg') }}"
-          alt="Award 3"
-          class="w-full h-full object-cover"
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
-        >
-          <p class="text-white font-medium text-sm">
-            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
-            Nội trao tặng
-          </p>
-        </div>
-      </div>
-      <!-- Slide 4 -->
-      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
-        <img
-          src="{{ asset('assets/images/award-02.jpg') }}"
-          alt="Award 4"
-          class="w-full h-full object-cover"
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
-        >
-          <p class="text-white font-medium text-sm">
-            Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội
-            trao tặng
-          </p>
-        </div>
-      </div>
-      <!-- Slide 5 -->
-      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
-        <img
-          src="{{ asset('assets/images/award-05.jpg') }}"
-          alt="Award 5"
-          class="w-full h-full object-cover"
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
-        >
-          <p class="text-white font-medium text-sm">
-            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
-            Nội trao tặng
-          </p>
-        </div>
-      </div>
-      <!-- Slide 6 -->
-      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
-        <img
-          src="{{ asset('assets/images/award-01.jpg') }}"
-          alt="Award 1"
-          class="w-full h-full object-cover"
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
-        >
-          <p class="text-white font-medium text-sm">
-            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
-            Nội trao tặng
-          </p>
-        </div>
-      </div>
-      <!-- Slide 7 -->
-      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
-        <img
-          src="{{ asset('assets/images/ceo.jpg') }}"
-          alt="Award 2"
-          class="w-full h-full object-cover"
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
-        >
-          <p class="text-white font-medium text-sm">
-            Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội
-            trao tặng
-          </p>
-        </div>
-      </div>
-      <!-- Slide 8 -->
-      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
-        <img
-          src="{{ asset('assets/images/award-03.jpg') }}"
-          alt="Award 3"
-          class="w-full h-full object-cover"
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
-        >
-          <p class="text-white font-medium text-sm">
-            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
-            Nội trao tặng
-          </p>
-        </div>
-      </div>
-      <!-- Slide 9 -->
-      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
-        <img
-          src="{{ asset('assets/images/award-02.jpg') }}"
-          alt="Award 4"
-          class="w-full h-full object-cover"
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
-        >
-          <p class="text-white font-medium text-sm">
-            Ông Vũ Mạnh Hải - Nghệ nhân Hà Nội năm 2024 do UBND thành phố Hà Nội
-            trao tặng
-          </p>
-        </div>
-      </div>
-      <!-- Slide 10 -->
-      <div class="swiper-slide aspect-[10/17] relative overflow-hidden">
-        <img
-          src="{{ asset('assets/images/award-05.jpg') }}"
-          alt="Award 5"
-          class="w-full h-full object-cover"
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"
-        >
-          <p class="text-white font-medium text-sm">
-            Bà Nguyễn Thị Thanh - Nghệ nhân Hà Nội năm 2025 do UBND thành phố Hà
-            Nội trao tặng
-          </p>
-        </div>
-      </div>
+      @endforeach
     </div>
   </div>
 
@@ -486,6 +350,7 @@
     />
   </div>
 </div>
+@endif
 
 @push('scripts')
 <script>
@@ -510,6 +375,7 @@
       var isAboutPage = window.location.pathname.indexOf("/about") === 0;
       var isMobile = window.matchMedia("(max-width: 767px)").matches;
       var transitionSpeed = isMobile ? 780 : 620;
+      var awardCount = root.querySelectorAll(".swiper-slide").length;
       var swiper = new Swiper(swiperEl, {
         effect: "slide",
         speed: transitionSpeed,
@@ -519,7 +385,7 @@
         spaceBetween: 15,
         initialSlide: isMobile ? 0 : 1,
         loop: true,
-        loopedSlides: 5,
+        loopedSlides: awardCount,
         roundLengths: true,
         navigation: {
           nextEl: nextEl,

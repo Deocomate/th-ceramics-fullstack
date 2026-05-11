@@ -1,5 +1,15 @@
 # Project Changelog
 
+## 0.5.5 (2026-05-11)
+
+### Added
+- **Admin Preview-as-Guest Floating Button**: A fixed FAB button in the admin panel that maps admin routes to their corresponding client-side URLs for quick guest-view verification. Supports route-to-URL mapping and page-level overrides via `@section('preview_url')`.
+
+### Changed
+- **Home Page Fully Dynamic**: All home page sections now pull data from the database
+  - `HomeController::index()` queries 5 models: `TrangChu` (banner, partners, thank-you, press logos, stats, showroom), `DuAn` (projects carousel, latest 10), `NgoiAmDuongCt`, `NgoiHaiVanMieuCt`, `GachHoaThongGioCt` (product sections, 8 each)
+  - 13 view files updated: `banner.blade.php` (dynamic slides/dots from `TrangChu->banner`), `partners.blade.php` (dynamic logos from `TrangChu->khach_hang_doi_tac`), `thank-you.blade.php` (dynamic paragraphs from `TrangChu->loi_tri_an`), `press.blade.php` (dynamic logos from `TrangChu->ve_chung_toi_logo`), `why-choose-us.blade.php` (dynamic stats from `TrangChu->nhung_con_so`), `showroom.blade.php` (dynamic images from `TrangChu->showroom_images`), `works.blade.php` (dynamic projects from `DuAn`), `product-section.blade.php` (refactored to accept `$products` collection), 3 product-specific partials (`products-ngoi-am-duong`, `products-ngoi-hai`, `products-gach-hoa`) simplified to pass collections, `home-awards.blade.php` (self-queries `GiaiThuongThanhTuu`)
+
 ## 0.5.4 (2026-05-10)
 
 ### Added

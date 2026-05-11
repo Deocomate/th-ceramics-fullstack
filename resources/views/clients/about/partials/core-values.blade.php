@@ -1,3 +1,27 @@
+@php
+  $defaultCoreValues = [
+      [
+          'image' => 'assets/images/about-02.jpg',
+          'head' => 'Tính kế thừa',
+          'body' => 'Gốm sứ xây dựng Thanh Hải là câu chuyện được tiếp nối qua nhiều thế hệ.',
+      ],
+      [
+          'image' => 'assets/images/about-02.jpg',
+          'head' => 'Nghệ thuật thủ công',
+          'body' => '"Nghệ thuật thủ công" là giá trị cốt lõi khiến sản phẩm khác biệt.',
+      ],
+      [
+          'image' => 'assets/images/about-02.jpg',
+          'head' => 'Giá trị vượt thời gian',
+          'body' => 'Mỗi viên gạch, viên ngói không chỉ để dựng nhà, mà để gìn giữ một tổ ấm.',
+      ],
+  ];
+  $coreValues = collect($about->gs_gia_tri ?? [])->filter(fn ($item) => is_array($item))->values();
+  if ($coreValues->isEmpty()) {
+      $coreValues = collect($defaultCoreValues);
+  }
+@endphp
+
 <!-- Section 3: Core Values / Giá trị cốt lõi -->
 <div class="mt-[40px] md:mt-24">
   <h3
@@ -9,15 +33,18 @@
   <div
     class="flex flex-row md:grid md:grid-cols-3 gap-6 md:gap-10 overflow-x-auto snap-x snap-mandatory pb-5 md:pb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
   >
-    <!-- Item 1 -->
+    @foreach ($coreValues as $index => $value)
     <div
       class="flex flex-col items-center min-w-[85%] md:min-w-0 snap-center"
       data-aos="fade-up"
+      @if ($index > 0)
+      data-aos-delay="{{ min($index * 150, 450) }}"
+      @endif
     >
       <div class="w-full aspect-[1/1] overflow-hidden shadow-lg mb-6 md:mb-12">
         <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          alt="Tính kế thừa"
+          src="{{ \App\Support\AssetPath::url(data_get($value, 'image'), 'assets/images/about-02.jpg') }}"
+          alt="{{ data_get($value, 'head', 'Giá trị cốt lõi') }}"
           class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
         />
       </div>
@@ -25,85 +52,15 @@
       <h4
         class="text-[20px] md:text-[36px] leading-[55px] font-archivo font-bold text-center text-textPrimary mb-2 md:mb-6"
       >
-        Tính kế thừa
+        {{ data_get($value, 'head', 'Giá trị cốt lõi') }}
       </h4>
       <!-- Description -->
       <p
         class="text-textPrimary text-justify md:text-center font-['Roboto'] text-[16px] font-medium leading-[28px] tracking-[0.32px]"
       >
-        Gốm sứ xây&nbsp;dựng Thanh Hải là câu chuyện được tiếp nối qua nhiều thế
-        hệ. Từ những ngày đầu cha ông nhóm lửa lò nung, qua năm tháng thế hệ kế
-        thừa vẫn bền&nbsp;bỉ tích lũy kinh&nbsp;nghiệm. Mỗi thế hệ sau không chỉ
-        học cách làm gốm, mà còn học cách tôn&nbsp;trọng nghề, giữ chữ tín và
-        làm ra những sản&nbsp;phẩm đủ bền để đi cùng thời&nbsp;gian. Chính sự
-        kế&nbsp;thừa lặng&nbsp;lẽ nhưng bền&nbsp;bỉ ấy đã tạo nên Thanh Hải của
-        hôm&nbsp;nay.
+        {{ data_get($value, 'body', '') }}
       </p>
     </div>
-    <!-- Item 2 -->
-    <div
-      class="flex flex-col items-center min-w-[85%] md:min-w-0 snap-center"
-      data-aos="fade-up"
-      data-aos-delay="150"
-    >
-      <div class="w-full aspect-[1/1] overflow-hidden shadow-lg mb-6 md:mb-12">
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          alt="Nghệ thuật thủ công"
-          class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-        />
-      </div>
-      <!-- Title -->
-      <h4
-        class="text-[20px] md:text-[36px] leading-[55px] font-archivo font-bold text-center text-textPrimary mb-2 md:mb-6"
-      >
-        Nghệ thuật thủ công
-      </h4>
-      <!-- Description -->
-      <p
-        class="text-textPrimary text-justify md:text-center font-['Roboto'] text-[16px] font-medium leading-[28px] tracking-[0.32px]"
-      >
-        "Nghệ&nbsp;thuật thủ&nbsp;công" là giá&nbsp;trị cốt&nbsp;lõi khiến
-        sản&nbsp;phẩm Gốm sứ xây&nbsp;dựng của Thanh Hải khác&nbsp;biệt với các
-        vật&nbsp;liệu công&nbsp;nghiệp trên thị&nbsp;trường. Từ đất thô qua bàn
-        tay người thợ, mỗi viên gạch, viên ngói được chế&nbsp;tác bằng sự
-        am&nbsp;hiểu vật&nbsp;liệu, kết&nbsp;hợp kỹ&nbsp;thuật nung
-        truyền&nbsp;thống và sự tuyển&nbsp;chọn nguyên&nbsp;liệu hàng&nbsp;đầu
-        nhằm đảm bảo độ bền, tính thẩm&nbsp;mỹ và giá&nbsp;trị sử&nbsp;dụng
-        lâu&nbsp;dài cho từng công&nbsp;trình.
-      </p>
-    </div>
-    <!-- Item 3 -->
-    <div
-      class="flex flex-col items-center min-w-[85%] md:min-w-0 snap-center"
-      data-aos="fade-up"
-      data-aos-delay="300"
-    >
-      <div class="w-full aspect-[1/1] overflow-hidden shadow-lg mb-6 md:mb-12">
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          alt="Giá trị vượt thời gian"
-          class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-        />
-      </div>
-      <!-- Title -->
-      <h4
-        class="text-[20px] md:text-[36px] leading-[55px] font-archivo font-bold text-center text-textPrimary mb-2 md:mb-6"
-      >
-        Giá trị vượt thời gian
-      </h4>
-      <!-- Description -->
-      <p
-        class="text-textPrimary text-justify md:text-center font-['Roboto'] text-[16px] font-medium leading-[28px] tracking-[0.32px]"
-      >
-        Với Thanh Hải, mỗi viên gạch, viên ngói không chỉ để dựng nhà, mà để gìn
-        giữ một tổ&nbsp;ấm. Đó là nơi che mưa nắng, chứng kiến những bữa cơm
-        sum&nbsp;họp và những đổi thay của đời người theo năm tháng. Chính vì
-        vậy, từng sản&nbsp;phẩm đều được làm ra bằng sự nâng&nbsp;niu và
-        trách&nbsp;nhiệm, đủ bền để ở lại cùng gia&nbsp;đình qua nhiều
-        thế&nbsp;hệ. Với Thanh Hải, góp phần xây tổ&nbsp;ấm cho người khác luôn
-        là một sứ&nbsp;mệnh cao&nbsp;cả.
-      </p>
-    </div>
+    @endforeach
   </div>
 </div>

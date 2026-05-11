@@ -44,7 +44,7 @@
 |--------|------|---------|
 | 100% | Client routing | Vietnamese SEO URLs with 301 redirects from English paths |
 | 100% | Client layout | Tailwind CDN, Swiper.js, AOS, Google Fonts, responsive design |
-| 100% | Home page | Featured products, services, brand highlights |
+| 100% | Home page | Fully dynamic: all sections query DB via HomeController (TrangChu, DuAn, product detail models) |
 | 100% | About / Factory / Contact / FAQ | Dynamic content pages bound to DB via page config admin panels |
 | 100% | Product listing pages | 9 category index views |
 | 100% | Product detail pages | 9 category detail views with images, specs, pricing |
@@ -52,7 +52,7 @@
 | 100% | Page config admin panels | Factory (5-tab Alpine.js, auto-resize textareas), Contact (form), FAQ (banner + FAQ items CRUD with modal) |
 | 0% | SEO meta tags | Per-page title/description via `@props` |
 | 0% | News pages | Controller + routes exist, views need implementation |
-| 0% | Projects pages | Controller + routes exist, views need implementation |
+| 100% | Projects pages | Dynamic index with category filters + pagination, detail with GLightbox/Swiper gallery + related projects |
 | 100% | Customer service pages | Dynamic installation guide (ThiCong model), catalog list + PDF flipbook reader (Catalog model) |
 
 **Deliverables**: Fully functional public website displaying product data from the database.
@@ -80,7 +80,7 @@
 | Status | Task | Details |
 |--------|------|---------|
 | 0% | News CMS | Admin CRUD for news articles, client display |
-| 0% | Projects CMS | Admin CRUD for projects, client display |
+| 100% | Projects CMS | Admin CRUD for projects, client display (completed 0.5.4) |
 | 0% | Customer request form | Contact form with email notification |
 | 0% | Product search | Full-text search across product catalog |
 | 0% | Product filtering | Filter by category, price, size, color |

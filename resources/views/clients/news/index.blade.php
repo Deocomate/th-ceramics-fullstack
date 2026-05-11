@@ -2,8 +2,11 @@
 
     {{-- Nội dung chính của trang Tin tức --}}
     @include('clients.news.partials.hero')
-    @include('clients.news.partials.main-content')
-    @include('clients.news.partials.history-related')
+    @include('clients.news.partials.main-content', [
+        'categories' => $categories ?? collect(),
+        'featuredNews' => $featuredNews ?? collect(),
+        'news' => $news ?? null,
+    ])
     <x-products.faq2 />
 
 </x-layouts.client>

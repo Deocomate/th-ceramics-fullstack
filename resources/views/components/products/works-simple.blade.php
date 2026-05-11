@@ -1,3 +1,14 @@
+@php
+  $worksItems = $works->map(function ($work) {
+      $firstImage = collect($work->images ?? [])->first();
+
+      return [
+          'image' => \App\Support\AssetPath::url($firstImage, 'assets/images/gach-co-work-1.jpg'),
+          'title' => $work->ten_du_an ?? 'Dấu ấn trên những công trình',
+      ];
+  })->values();
+@endphp
+
 <section
   class="w-full pb-8 md:pb-16 bg-background-secondary overflow-hidden"
   data-aos="fade-up"
@@ -12,31 +23,19 @@
     <div class="relative px-4 md:px-0">
       <div class="swiper projects-slider overflow-visible">
         <div class="swiper-wrapper">
+          @forelse ($worksItems as $item)
+          <div class="swiper-slide transition-all duration-500">
+            <div class="aspect-[3/2] md:aspect-[4/3] overflow-hidden rounded-sm shadow-xl">
+              <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" />
+            </div>
+          </div>
+          @empty
           <div class="swiper-slide transition-all duration-500">
             <div class="aspect-[3/2] md:aspect-[4/3] overflow-hidden rounded-sm shadow-xl">
               <img src="{{ asset('assets/images/gach-co-work-1.jpg') }}" alt="Dấu ấn trên những công trình" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" />
             </div>
           </div>
-          <div class="swiper-slide transition-all duration-500">
-            <div class="aspect-[3/2] md:aspect-[4/3] overflow-hidden rounded-sm shadow-xl">
-              <img src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}" alt="Dấu ấn trên những công trình" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" />
-            </div>
-          </div>
-          <div class="swiper-slide transition-all duration-500">
-            <div class="aspect-[3/2] md:aspect-[4/3] overflow-hidden rounded-sm shadow-xl">
-              <img src="{{ asset('assets/images/gach-co-work-2.jpg') }}" alt="Dấu ấn trên những công trình" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" />
-            </div>
-          </div>
-          <div class="swiper-slide transition-all duration-500">
-            <div class="aspect-[3/2] md:aspect-[4/3] overflow-hidden rounded-sm shadow-xl">
-              <img src="{{ asset('assets/images/gach-co-work-1.jpg') }}" alt="Dấu ấn trên những công trình" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" />
-            </div>
-          </div>
-          <div class="swiper-slide transition-all duration-500">
-            <div class="aspect-[3/2] md:aspect-[4/3] overflow-hidden rounded-sm shadow-xl">
-              <img src="{{ asset('assets/images/gach-co-work-2.jpg') }}" alt="Dấu ấn trên những công trình" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" />
-            </div>
-          </div>
+          @endforelse
         </div>
       </div>
 
@@ -44,7 +43,7 @@
         class="projects-pagination mt-6 md:mt-12 flex justify-center gap-[7px] md:gap-3"
       ></div>
 
-      @isset($showNav)
+      @if($showNav)
       <div
         class="hidden md:flex projects-prev absolute left-2 md:left-6 lg:left-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded rotate-45 items-center justify-center text-white cursor-pointer hover:bg-secondary/90 shadow-lg transition-all"
       >
@@ -63,7 +62,7 @@
           </svg>
         </div>
       </div>
-      @endisset
+      @endif
     </div>
   </div>
 </section>

@@ -1,5 +1,12 @@
 @props([])
 
+@php
+  $contactHotline = $globalContact->hotline ?? '0966 55 8808';
+  $contactHotlineLink = preg_replace('/\D+/', '', $contactHotline) ?: '0966558808';
+  $contactEmail = data_get($globalContact, 'email', 'gshaithanh@gmail.com');
+  $contactAddress = data_get($globalContact, 'address', '18 Giang Cao, Bát Tràng, Gia Lâm, Hà Nội');
+@endphp
+
 <!-- FAQ Contact Section -->
 <section
   class="pt-16 lg:pt-24 pb-[70px] md:pb-32 lg:pb-48 bg-background-secondary overflow-hidden"
@@ -47,9 +54,9 @@
             />
           </div>
           <a
-            href="tel:0966558808"
+            href="tel:{{ $contactHotlineLink }}"
             class="hover:text-secondary transition-colors text-primary"
-            >0966 55 8808</a
+            >{{ $contactHotline }}</a
           >
         </div>
 
@@ -62,9 +69,9 @@
             </svg>
           </div>
           <a
-            href="mailto:gshaithanh@gmail.com"
+            href="mailto:{{ $contactEmail }}"
             class="hover:text-secondary transition-colors text-primary"
-            >gshaithanh@gmail.com</a
+            >{{ $contactEmail }}</a
           >
         </div>
 
@@ -87,7 +94,7 @@
               >
             </p>
             <p class="text-sm md:text-base text-primary">
-              18 Giang Cao, Bát Tràng, Gia Lâm, Hà Nội
+              {{ $contactAddress }}
             </p>
           </div>
         </div>

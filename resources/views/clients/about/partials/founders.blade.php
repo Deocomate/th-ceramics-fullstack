@@ -1,3 +1,8 @@
+@php
+  $founderImage = \App\Support\AssetPath::url($about->gs_nguoi_sang_lap_anh ?? null, 'assets/images/about-01.png');
+  $founderContent = $about->gs_nguoi_sang_lap_noi_dung ?? 'Trải qua nhiều thăng trầm của nghề, hai người sáng lập vẫn bền bỉ theo đuổi sản phẩm gốm sứ xây dựng.';
+@endphp
+
 <!-- Section 5: Founders / Người sáng lập -->
 <div class="md:mt-24 mb-[30px] md:mb-16">
   <h3
@@ -17,7 +22,7 @@
         class="aspect-[1/1] relative overflow-hidden shadow-lg rounded-sm mx-auto md:mx-0 max-w-[604px]"
       >
         <img
-          src="{{ asset('assets/images/about-01.png') }}"
+          src="{{ $founderImage }}"
           alt="Người sáng lập"
           class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
         />
@@ -28,18 +33,7 @@
       <p
         class="text-textPrimary leading-[28px] text-justify md:text-left font-medium tracking-wide"
       >
-        Trải&nbsp;qua nhiều thăng&nbsp;trầm của nghề, ông Vũ Mạnh Hải và bà
-        Nguyễn Thị Thanh vẫn bền&nbsp;bỉ đồng&nbsp;hành, kiên&nbsp;định
-        theo&nbsp;đuổi dòng sản&nbsp;phẩm gốm&nbsp;sứ xây&nbsp;dựng. Dù ngói
-        thủ&nbsp;công không phải là sản&nbsp;phẩm phổ&nbsp;biến, Thanh&nbsp;Hải
-        vẫn xây&nbsp;dựng được một cộng&nbsp;đồng khách&nbsp;hàng
-        trung&nbsp;thành và tin&nbsp;cậy, thể&nbsp;hiện qua việc được
-        lựa&nbsp;chọn cho nhiều công&nbsp;trình lớn&nbsp;nhỏ trên cả&nbsp;nước
-        như Chùa Bái&nbsp;Đính, Bệnh&nbsp;viện Y&nbsp;học cổ&nbsp;truyền
-        Quân&nbsp;đội, Viện 103, Vinpearl&nbsp;Land Nha&nbsp;Trang. Những
-        dấu&nbsp;ấn ấy đã đưa hai nhà&nbsp;sáng&nbsp;lập đến niềm vinh&nbsp;dự
-        khi lần&nbsp;lượt được UBND Thành&nbsp;phố Hà&nbsp;Nội trao&nbsp;tặng
-        danh&nbsp;hiệu Nghệ&nbsp;nhân Hà&nbsp;Nội vào các năm 2023 và 2025.
+        {{ $founderContent }}
       </p>
     </div>
   </div>

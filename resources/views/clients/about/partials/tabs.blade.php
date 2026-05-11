@@ -17,6 +17,6 @@
       </button>
     </div>
   </div>
-  @include('clients.about.partials.tab-introduction')
-  @include('clients.about.partials.tab-craft')
+  @include('clients.about.partials.tab-introduction', ['about' => $about ?? null])
+  @include('clients.about.partials.tab-craft', ['about' => $about ?? null])
 </section>

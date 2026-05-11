@@ -1,10 +1,17 @@
+@php
+  $bannerImage = \App\Support\AssetPath::url($about->banner ?? null, 'assets/images/about-banner.jpg');
+  $bannerHeader = $about->header_banner ?? 'GỐM SỨ THANH HẢI';
+  $bannerBody = $about->body_banner ?? "40 NĂM - LỬA NGHỀ\nCHƯA BAO GIỜ TẮT";
+  $bannerLines = preg_split('/\r\n|\r|\n/', trim((string) $bannerBody)) ?: [];
+@endphp
+
 <section
   class="relative h-[572px] md:h-[70vh] md:min-h-[500px] md:max-h-[740px] lg:h-[663px] flex items-start md:items-center justify-center overflow-hidden"
   style="color-scheme: light"
 >
   <div class="absolute inset-0 z-0">
     <img
-      src="{{ asset('assets/images/about-banner.jpg') }}"
+      src="{{ $bannerImage }}"
       alt="About Banner"
       class="w-full h-full object-cover"
     />
@@ -26,13 +33,17 @@
     <h1
       class="text-[20px] md:text-2xl font-semibold mb-4 uppercase leading-[28px] tracking-[0.5px] md:tracking-wide !text-[#F5EDE7] md:!text-[#EFE4DE]"
     >
-      GỐM SỨ THANH HẢI
+      {{ $bannerHeader }}
     </h1>
     <h2
       class="text-[32px] md:text-[48px] font-archivo font-extrabold uppercase leading-[44px] md:leading-[65px] max-w-4xl flex flex-col gap-2 md:gap-4 !text-[#F5EDE7] md:!text-[#EFE4DE]"
     >
-      <span>40 NĂM - LỬA NGHỀ</span>
-      <span>CHƯA BAO GIỜ TẮT</span>
+      @forelse ($bannerLines as $line)
+        <span>{{ $line }}</span>
+      @empty
+        <span>40 NĂM - LỬA NGHỀ</span>
+        <span>CHƯA BAO GIỜ TẮT</span>
+      @endforelse
     </h2>
   </div>
 </section>

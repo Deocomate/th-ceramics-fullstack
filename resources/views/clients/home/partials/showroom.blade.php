@@ -11,22 +11,32 @@
       </a>
     </div>
 
+    @php $showroomImages = $trangChu?->showroom_images ?? []; @endphp
+
+    @if(!empty($showroomImages))
     <div class="showroom-container grid grid-cols-3 gap-[5px] md:gap-6 mb-4 md:mb-0" data-aos="fade-up" data-aos-delay="200">
-      <img src="{{ asset('assets/images/showroom-01.png') }}" alt="Showroom" class="w-full h-[119px] md:h-64 lg:h-80 object-cover rounded-none md:rounded-lg shadow-md md:shadow-lg">
-      <img src="{{ asset('assets/images/showroom-02.png') }}" alt="Showroom" class="w-full h-[119px] md:h-64 lg:h-80 object-cover rounded-none md:rounded-lg shadow-md md:shadow-lg mt-[10px] md:mt-0">
-      <img src="{{ asset('assets/images/showroom-03.png') }}" alt="Showroom" class="w-full h-[119px] md:h-64 lg:h-80 object-cover rounded-none md:rounded-lg shadow-md md:shadow-lg">
+      @foreach($showroomImages as $image)
+      <img src="{{ Str::startsWith($image, 'assets/') ? asset($image) : asset('storage/' . $image) }}"
+           alt="Showroom"
+           class="w-full h-[119px] md:h-64 lg:h-80 object-cover rounded-none md:rounded-lg shadow-md md:shadow-lg {{ $loop->index === 1 ? 'mt-[10px] md:mt-0' : '' }}">
+      @endforeach
     </div>
+    @endif
 
     <div class="hidden">
-      <button class="showroom-dot active w-3 h-3 rounded-full bg-secondary transition-all" data-index="0" aria-label="Showroom image 1"></button>
-      <button class="showroom-dot w-3 h-3 rounded-full bg-white/40 hover:bg-white/60 transition-all" data-index="1" aria-label="Showroom image 2"></button>
-      <button class="showroom-dot w-3 h-3 rounded-full bg-white/40 hover:bg-white/60 transition-all" data-index="2" aria-label="Showroom image 3"></button>
+      @if(!empty($showroomImages))
+        @foreach($showroomImages as $index => $image)
+        <button class="showroom-dot {{ $index === 0 ? 'active' : '' }} w-3 h-3 rounded-full {{ $index === 0 ? 'bg-secondary' : 'bg-white/40 hover:bg-white/60' }} transition-all" data-index="{{ $index }}" aria-label="Showroom image {{ $index + 1 }}"></button>
+        @endforeach
+      @endif
     </div>
 
     <div class="mt-8 md:mt-12 flex flex-col items-center" data-aos="fade-up" data-aos-delay="400">
+      @if($trangChu?->showroom_noidung)
       <p class="text-neutral-1 text-[12px] md:text-[20px] lg:text-[26px] font-['Roboto'] italic font-normal leading-[20px] md:leading-[32px] lg:leading-[43px] text-center max-w-[1142px] mx-auto tracking-[0.52px]">
-        Xưởng sản xuất và showroom Thanh Hải Ceramics là nơi quá khứ và hiện tại giao thoa. Từ ngọn lửa lò nung Bát Tràng, những viên ngói âm dương ra đời, mang theo tinh hoa làng nghề, dấu ấn kiến trúc Việt và câu chuyện di sản sống động. Trong từng lớp ngói xếp là ký ức của thời gian, được tiếp nối bằng bàn tay người thợ hôm nay để gìn giữ và lan tỏa giá trị truyền thống.
+        {{ $trangChu->showroom_noidung }}
       </p>
+      @endif
       <img src="{{ asset('assets/images/quotation-mark.svg') }}" alt="Quotation mark" class="w-10 h-10 md:w-16 md:h-16 mt-6 md:mt-8">
     </div>
   </div>

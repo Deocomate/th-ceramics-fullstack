@@ -278,7 +278,12 @@
 <x-products.works-simple :show-nav="true" />
 
 <!-- CÓ THỂ BẠN QUAN TÂM SECTION -->
-<x-products.recommendations />
+<x-products.recommendations
+    :related-products="$products->take(4)"
+    route-name="client.products.gach-co-bat-trang.detail"
+    pk-field="gach_co_bat_trang_ct_id"
+    product-type="gach_co_bat_trang_ct"
+/>
 
 <!-- FAQ Section -->
 <section class="w-full relative pb-[70px] md:pb-32 bg-background-secondary overflow-visible" data-aos="fade-up">

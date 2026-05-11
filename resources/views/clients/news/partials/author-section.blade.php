@@ -1,3 +1,9 @@
+@php
+  $authorName = $author->ten_tac_gia ?? 'Gốm sứ Thanh Hải';
+  $authorAvatar = \App\Support\AssetPath::url($author->anh_dai_dien ?? null, 'assets/images/author.svg');
+  $authorDesc = $author->mo_ta ?? 'Thông tin tác giả đang được cập nhật.';
+@endphp
+
 <!-- Author Section for News Detail -->
 <section class="w-[85%] max-w-[1320px] mx-auto pb-6 md:pb-16 bg-background-secondary pt-4">
   <div class="w-full max-w-[1000px] border-t md:border-b border-gray-300 md:ml-[5%]">
@@ -60,12 +66,12 @@
     <div class="flex-col md:flex-row items-center md:items-start gap-10 mb-12 hidden md:flex">
       <!-- Author Image -->
       <div class="w-48 h-48 rounded-full overflow-hidden flex-shrink-0 shadow-md">
-        <img src="{{ asset('assets/images/author.svg') }}" alt="Hồ Diễm Quỳnh" class="w-full h-full object-cover" />
+        <img src="{{ $authorAvatar }}" alt="{{ $authorName }}" class="w-full h-full object-cover" />
       </div>
 
       <!-- Author Content -->
       <div class="flex-grow">
-        <h3 class="text-3xl font-arima font-semibold text-primary mb-3">Hồ Diễm Quỳnh</h3>
+        <h3 class="text-3xl font-arima font-semibold text-primary mb-3">{{ $authorName }}</h3>
 
         <!-- Handle Icons -->
         <div class="flex items-center gap-4 mb-6">
@@ -84,9 +90,7 @@
         </div>
 
         <p class="text-base text-primary/80 leading-relaxed text-justify max-w-4xl">
-          Tác giả Hồ Diễm Quỳnh đã tốt nghiệp loại xuất sắc trong chương trình đào tạo về tài chính - ngân hàng của Trường Đại học Tài chính
-          - Marketing ( UFM ). Với thành tích học tập xuất sắc và kinh nghiệm làm việc lâu dài trong lĩnh vực tài chính ngân hàng của mình,
-          tác giả sẽ giúp cung cấp cho bạn những kiến thức chất lượng và chính xác nhất trong các bài viết chuyên môn của mình.
+          {{ $authorDesc }}
         </p>
       </div>
     </div>

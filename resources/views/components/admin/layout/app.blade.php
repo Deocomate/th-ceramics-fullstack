@@ -115,6 +115,7 @@
         </div>
     </div>
 
+    <x-admin.preview-button />
     @stack('scripts')
 </body>
 

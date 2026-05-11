@@ -1,3 +1,18 @@
+@php
+  $fallbackImage = 'assets/images/work-01.jpg';
+  $worksData = $works->map(function ($work) use ($fallbackImage) {
+      $firstImage = collect($work->images ?? [])->first();
+
+      return [
+          'title' => mb_strtoupper($work->ten_du_an ?? '', 'UTF-8'),
+          'location' => $work->dia_diem ?? '',
+          'product' => $work->san_pham ?? '',
+          'link' => route('client.projects.detail', $work->slug),
+          'image' => \App\Support\AssetPath::url($firstImage, $fallbackImage),
+      ];
+  })->values();
+@endphp
+
 <section
   class="w-full bg-background-secondary pb-12 md:pb-16 relative overflow-visible animate-fade-in-up xl:min-h-[760px]"
   data-aos="fade-up"
@@ -79,101 +94,23 @@
       class="swiper product-works-swiper w-full pb-[15px] md:pb-10 pr-[20%] order-1"
     >
       <div class="swiper-wrapper flex items-end">
+        @forelse ($worksData as $item)
+        <div class="swiper-slide product-works-slide overflow-hidden">
+          <img
+            src="{{ $item['image'] }}"
+            alt="{{ $item['title'] }}"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        @empty
         <div class="swiper-slide product-works-slide overflow-hidden">
           <img
             src="{{ asset('assets/images/work-01.jpg') }}"
-            alt="Chùa Bái Đính"
+            alt="Dự án"
             class="w-full h-full object-cover"
           />
         </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/about-01.png') }}"
-            alt="Thiền Viện Trúc Lâm"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/work-03.jpg') }}"
-            alt="Đền Trần"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/work-01.jpg') }}"
-            alt="Chùa Bái Đính"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/about-01.png') }}"
-            alt="Thiền Viện Trúc Lâm"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/work-03.jpg') }}"
-            alt="Đền Trần"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/work-01.jpg') }}"
-            alt="Chùa Bái Đính"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/about-01.png') }}"
-            alt="Thiền Viện Trúc Lâm"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/work-03.jpg') }}"
-            alt="Đền Trần"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/work-01.jpg') }}"
-            alt="Chùa Bái Đính"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/about-01.png') }}"
-            alt="Thiền Viện Trúc Lâm"
-            class="w-full h-full object-cover"
-          />
-        </div>
-
-        <div class="swiper-slide product-works-slide overflow-hidden">
-          <img
-            src="{{ asset('assets/images/work-03.jpg') }}"
-            alt="Đền Trần"
-            class="w-full h-full object-cover"
-          />
-        </div>
+        @endforelse
       </div>
     </div>
 
@@ -190,7 +127,7 @@
             id="slide-title"
             class="text-base font-bold uppercase tracking-wide slide-text-transition"
           >
-            CHÙA BÁI ĐÍNH
+            {{ data_get($worksData->first(), 'title', 'Dự án') }}
           </h3>
         </div>
 
@@ -200,16 +137,16 @@
         >
           <p>
             <span class="font-bold">Địa điểm:</span>
-            <span id="slide-location">Ninh Bình</span>
+            <span id="slide-location">{{ data_get($worksData->first(), 'location', '') }}</span>
           </p>
           <p>
             <span class="font-bold">Sản phẩm:</span>
-            <span id="slide-product">Ngói âm dương nâu đen</span>
+            <span id="slide-product">{{ data_get($worksData->first(), 'product', '') }}</span>
           </p>
         </div>
 
         <a
-          href="#"
+          href="{{ data_get($worksData->first(), 'link', '#') }}"
           id="slide-link"
           class="font-bold text-black border-b-[1.5px] border-black inline-block hover:text-secondary hover:border-secondary tracking-[0.05em] text-[13px] slide-text-transition"
           >See more</a
@@ -225,20 +162,15 @@
     var swiperEl = document.querySelector(".product-works-swiper");
     if (!swiperEl) return;
 
-    var slideData = [
-      { title: "CHÙA BÁI ĐÍNH", location: "Ninh Bình", product: "Ngói âm dương nâu đen", link: "#baidinh" },
-      { title: "THIỀN VIỆN TRÚC LÂM", location: "Sapa", product: "Ngói âm dương tráng men", link: "#truclam" },
-      { title: "ĐỀN TRẦN", location: "Nam Định", product: "Ngói âm dương cổ", link: "#dentran" },
-      { title: "CHÙA BÁI ĐÍNH", location: "Ninh Bình", product: "Ngói âm dương nâu đen", link: "#baidinh" },
-      { title: "THIỀN VIỆN TRÚC LÂM", location: "Sapa", product: "Ngói âm dương tráng men", link: "#truclam" },
-      { title: "ĐỀN TRẦN", location: "Nam Định", product: "Ngói âm dương cổ", link: "#dentran" },
-      { title: "CHÙA BÁI ĐÍNH", location: "Ninh Bình", product: "Ngói âm dương nâu đen", link: "#baidinh" },
-      { title: "THIỀN VIỆN TRÚC LÂM", location: "Sapa", product: "Ngói âm dương tráng men", link: "#truclam" },
-      { title: "ĐỀN TRẦN", location: "Nam Định", product: "Ngói âm dương cổ", link: "#dentran" },
-      { title: "CHÙA BÁI ĐÍNH", location: "Ninh Bình", product: "Ngói âm dương nâu đen", link: "#baidinh" },
-      { title: "THIỀN VIỆN TRÚC LÂM", location: "Sapa", product: "Ngói âm dương tráng men", link: "#truclam" },
-      { title: "ĐỀN TRẦN", location: "Nam Định", product: "Ngói âm dương cổ", link: "#dentran" },
-    ];
+    var slideData = @json($worksData);
+    if (!Array.isArray(slideData) || slideData.length === 0) {
+      slideData = [{
+        title: "DỰ ÁN",
+        location: "",
+        product: "",
+        link: "#",
+      }];
+    }
 
     var titleEl = document.getElementById("slide-title");
     var locationEl = document.getElementById("slide-location");
@@ -268,10 +200,10 @@
     function updateTextBlock(index) {
       var currentData = slideData[index];
       if (!currentData) return;
-      if (titleEl) titleEl.textContent = currentData.title;
-      if (locationEl) locationEl.textContent = currentData.location;
-      if (productEl) productEl.textContent = currentData.product;
-      if (linkEl) linkEl.href = currentData.link;
+      if (titleEl) titleEl.textContent = currentData.title || "";
+      if (locationEl) locationEl.textContent = currentData.location || "";
+      if (productEl) productEl.textContent = currentData.product || "";
+      if (linkEl) linkEl.href = currentData.link || "#";
     }
 
     updateTextBlock(productWorksSwiper.realIndex);

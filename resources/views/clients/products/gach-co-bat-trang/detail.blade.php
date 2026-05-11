@@ -71,7 +71,13 @@ productId="{{ $product->gach_co_bat_trang_ct_id }}"
 <hr class="md:mb-16 mb-8" />
 
 <x-products.works-simple :show-nav="true" />
-<x-products.recommendations :show-decor="true" />
+<x-products.recommendations
+    :related-products="$relatedProducts"
+    :show-decor="true"
+    route-name="client.products.gach-co-bat-trang.detail"
+    pk-field="gach_co_bat_trang_ct_id"
+    product-type="gach_co_bat_trang_ct"
+/>
 <x-products.faq2 />
 
 </x-layouts.client>

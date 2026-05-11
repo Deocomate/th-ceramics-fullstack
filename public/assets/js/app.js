@@ -418,12 +418,70 @@ const initMobileScrollIndicators = () => {
     });
 };
 
+const initAddToCartButtons = () => {
+    if (window.__clientAddToCartBound) {
+        return;
+    }
+
+    window.__clientAddToCartBound = true;
+
+    document.addEventListener("click", (event) => {
+        const button = event.target.closest(".js-add-to-cart");
+        if (!button) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const productType = button.dataset.productType;
+        const productId = parseInt(button.dataset.productId || "", 10);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || "";
+
+        if (!productType || !productId) {
+            alert("Thông tin sản phẩm không đầy đủ.");
+            return;
+        }
+
+        button.disabled = true;
+
+        fetch("/gio-hang/them", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken,
+                Accept: "application/json",
+            },
+            body: JSON.stringify({
+                product_type: productType,
+                product_id: productId,
+                variant_id: null,
+                qty: 1,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    alert("Đã thêm vào giỏ hàng!");
+                    return;
+                }
+
+                alert(data.message || "Có lỗi xảy ra.");
+            })
+            .catch(() => alert("Lỗi kết nối. Vui lòng thử lại."))
+            .finally(() => {
+                button.disabled = false;
+            });
+    });
+};
+
 const initSharedScripts = () => {
     initProductSectionCarousels();
     initAboutTabs();
     initCertificatesSwiper();
     initMobileFloatingActions();
     initMobileScrollIndicators();
+    initAddToCartButtons();
 };
 
 document.addEventListener("DOMContentLoaded", initSharedScripts);

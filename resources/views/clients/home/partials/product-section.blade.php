@@ -2,14 +2,20 @@
     'sectionClass' => '',
     'sectionTitle' => '',
     'desktopLinkHref' => '',
-    'image1' => '',
-    'image2' => '',
-    'image3' => '',
-    'image4' => '',
-    'cardTitle' => '',
-    'cardCode' => '',
-    'cardPrice' => '',
+    'products' => collect(),
+    'routePrefix' => '',
 ])
+
+@php
+    if (!function_exists('getProductImageUrl')) {
+        function getProductImageUrl($product) {
+            $productImage = !empty($product->images) ? $product->images[0] : null;
+            return $productImage
+                ? (Str::startsWith($productImage, 'assets/') ? asset($productImage) : asset('storage/' . $productImage))
+                : asset('assets/images/placeholder.jpg');
+        }
+    }
+@endphp
 
 <section class="bg-neutral-2 {{ $sectionClass }}" data-product-section>
   <div class="w-[85%] max-w-[1320px] mx-auto">
@@ -41,43 +47,58 @@
       </a>
     </div>
 
+    @if($products->isNotEmpty())
     <div class="lg:hidden" data-product-carousel-shell>
       <div
         class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide"
         data-product-carousel
       >
-        {{ $slot }}
+        @foreach($products->chunk(4) as $chunk)
+        <article class="flex-shrink-0 w-full snap-start pb-1" data-product-slide>
+          <div class="grid grid-cols-2 gap-4">
+            @foreach($chunk as $product)
+              @php $imageUrl = getProductImageUrl($product); @endphp
+              @include('clients.home.partials.mobile-product-card', [
+                  'href' => '#',
+                  'image' => $imageUrl,
+                  'title' => $product->name,
+                  'code' => 'MSP: ' . ($product->code ?? '—'),
+                  'price' => number_format($product->price, 0, ',', '.') . ' đ/m²',
+              ])
+            @endforeach
+          </div>
+        </article>
+        @endforeach
       </div>
 
       <div
         class="mt-5 flex justify-center gap-[7px]"
         aria-label="Product mobile pagination"
       >
+        @foreach($products->chunk(4) as $index => $chunk)
         <button
-          class="product-section-dot h-2 w-2 rounded-full bg-secondary"
-          data-product-dot="0"
-          aria-label="Slide 1"
+          class="product-section-dot h-2 w-2 rounded-full {{ $index === 0 ? 'bg-secondary' : 'bg-[#C76E00]/30' }}"
+          data-product-dot="{{ $index }}"
+          aria-label="Slide {{ $index + 1 }}"
         ></button>
-        <button
-          class="product-section-dot h-2 w-2 rounded-full bg-[#C76E00]/30"
-          data-product-dot="1"
-          aria-label="Slide 2"
-        ></button>
+        @endforeach
       </div>
     </div>
 
     <div
-      class="hidden lg:grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6"
+      class="hidden lg:grid grid-cols-4 gap-6"
       data-aos="fade-up"
       data-aos-delay="200"
     >
+      @foreach($products->take(4) as $product)
+        @php $imageUrl = getProductImageUrl($product); @endphp
       <div class="flex flex-col">
         <div
           class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square group cursor-pointer"
         >
           <img
-            src="{{ $image1 }}"
-            alt="Sản phẩm"
+            src="{{ $imageUrl }}"
+            alt="{{ $product->name }}"
             class="w-full h-full object-cover"
           />
           <div class="product-overlay">
@@ -86,74 +107,48 @@
           </div>
         </div>
         <h3 class="text-primary font-semibold text-sm uppercase mb-2">
-          {{ $cardTitle }}
+          {{ $product->name }}
         </h3>
-        <p class="text-gray-500 text-sm mb-2">{{ $cardCode }}</p>
-        <p class="text-secondary font-bold text-sm">Giá: {{ $cardPrice }}</p>
+        <p class="text-gray-500 text-sm mb-2">MSP: {{ $product->code ?? '—' }}</p>
+        <p class="text-secondary font-bold text-sm">Giá: {{ number_format($product->price, 0, ',', '.') }} đ/m²</p>
       </div>
-
-      <div class="flex flex-col">
-        <div
-          class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square group cursor-pointer"
-        >
-          <img
-            src="{{ $image2 }}"
-            alt="Sản phẩm"
-            class="w-full h-full object-cover"
-          />
-          <div class="product-overlay">
-            <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
-            <span>Xem chi tiết</span>
-          </div>
-        </div>
-        <h3 class="text-primary font-semibold text-sm uppercase mb-2">
-          {{ $cardTitle }}
-        </h3>
-        <p class="text-gray-500 text-sm mb-2">{{ $cardCode }}</p>
-        <p class="text-secondary font-bold text-sm">Giá: {{ $cardPrice }}</p>
-      </div>
-
-      <div class="flex flex-col">
-        <div
-          class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square group cursor-pointer"
-        >
-          <img
-            src="{{ $image3 }}"
-            alt="Sản phẩm"
-            class="w-full h-full object-cover"
-          />
-          <div class="product-overlay">
-            <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
-            <span>Xem chi tiết</span>
-          </div>
-        </div>
-        <h3 class="text-primary font-semibold text-sm uppercase mb-2">
-          {{ $cardTitle }}
-        </h3>
-        <p class="text-gray-500 text-sm mb-2">{{ $cardCode }}</p>
-        <p class="text-secondary font-bold text-sm">Giá: {{ $cardPrice }}</p>
-      </div>
-
-      <div class="flex flex-col">
-        <div
-          class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square group cursor-pointer"
-        >
-          <img
-            src="{{ $image4 }}"
-            alt="Sản phẩm"
-            class="w-full h-full object-cover"
-          />
-          <div class="product-overlay">
-            <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
-            <span>Xem chi tiết</span>
-          </div>
-        </div>
-        <h3 class="text-primary font-semibold text-sm uppercase mb-2">
-          {{ $cardTitle }}
-        </h3>
-        <p class="text-gray-500 text-sm mb-2">{{ $cardCode }}</p>
-        <p class="text-secondary font-bold text-sm">Giá: {{ $cardPrice }}</p>
-      </div>
+      @endforeach
     </div>
+    @else
+    <p class="text-center text-gray-500 py-12">Chưa có sản phẩm nào.</p>
+    @endif
   </div>
 </section>
+
+@push('scripts')
+<script>
+  (function () {
+    document.querySelectorAll('[data-product-section]').forEach(function (section) {
+      const dots = Array.from(section.querySelectorAll('[data-product-dot]'));
+      const carousel = section.querySelector('[data-product-carousel]');
+      if (!carousel || !dots.length) return;
+
+      const updateDots = function () {
+        const idx = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+        dots.forEach(function (dot, i) {
+          if (i === idx) {
+            dot.classList.add('bg-secondary');
+            dot.classList.remove('bg-[#C76E00]/30');
+          } else {
+            dot.classList.remove('bg-secondary');
+            dot.classList.add('bg-[#C76E00]/30');
+          }
+        });
+      };
+
+      carousel.addEventListener('scroll', updateDots);
+
+      dots.forEach(function (dot, idx) {
+        dot.addEventListener('click', function () {
+          carousel.scrollTo({ left: carousel.offsetWidth * idx, behavior: 'smooth' });
+        });
+      });
+    });
+  })();
+</script>
+@endpush

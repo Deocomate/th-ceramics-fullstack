@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class PageContact extends Model
 {
@@ -16,4 +17,15 @@ class PageContact extends Model
         'zalo_link',
         'form_title',
     ];
+
+    protected static function booted(): void
+    {
+        static::saved(static function (): void {
+            Cache::forget('global_contact');
+        });
+
+        static::deleted(static function (): void {
+            Cache::forget('global_contact');
+        });
+    }
 }

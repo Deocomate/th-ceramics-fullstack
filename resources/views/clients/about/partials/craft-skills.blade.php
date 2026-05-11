@@ -1,282 +1,96 @@
+@php
+  $craftTitle = $about->nt_che_tac_head ?? 'NGHỆ THUẬT CHẾ TÁC THỦ CÔNG ĐIÊU LUYỆN';
+  $craftBody = $about->nt_che_tac_body ?? 'Nghệ thuật chế tác của Thanh Hải bắt đầu từ những đôi tay thuần thục mỗi ngày.';
+  $craftImages = collect($about->nt_che_tac_anh ?? [])->values();
+
+  $luyenDatTitle = $about->nt_luyen_dat_head ?? 'Kỹ thuật luyện đất';
+  $luyenDatBody = $about->nt_luyen_dat_body ?? 'Đất là gốc rễ, nền tảng của mọi sản phẩm gốm chất lượng.';
+  $luyenDatItem = collect($about->nt_luyen_dat_item ?? [])->first() ?? [];
+  $luyenDatItemTitle = data_get($luyenDatItem, 'head', 'Kỹ thuật tạo hình');
+  $luyenDatItemBody = data_get($luyenDatItem, 'body', 'Tạo hình bắt đầu từ bản vẽ, nơi tỉ lệ và hình dáng sản phẩm được tính toán kỹ lưỡng.');
+
+  $dunLoTitle = $about->nt_dun_lo_head ?? 'Kỹ thuật đun lò';
+  $dunLoBody = $about->nt_dun_lo_body ?? 'Công đoạn nung sản phẩm trong lò là bước quyết định chất lượng gốm.';
+  $dunLoImages = collect($about->nt_dun_lo_anh ?? [])->values();
+@endphp
+
 <!-- Craft Section 3: Nghệ thuật chế tác thủ công điêu luyện -->
 <div class="mt-[25px] md:mt-32 text-center max-w-7xl mx-auto">
   <h2
     class="text-[20px] md:text-4xl font-bold text-secondary mb-[20px] md:mb-12 uppercase tracking-[0.6px] md:tracking-wide leading-[32px] md:leading-normal"
     data-aos="fade-up"
   >
-    NGHỆ THUẬT CHẾ TÁC<br class="md:hidden" />
-    THỦ CÔNG ĐIÊU LUYỆN
+    {{ $craftTitle }}
   </h2>
   <p
     class="text-textPrimary leading-[28px] text-justify md:text-center mb-[30px] md:mb-24 max-w-2xl mx-auto font-medium tracking-[0.48px] md:tracking-wide"
     data-aos="fade-up"
   >
-    Nghệ thuật chế tác của Thanh Hải bắt đầu từ những đôi tay thuần thục mỗi
-    ngày. Dù thị trường ngày càng đòi hỏi tốc độ và sản lượng, chúng tôi vẫn giữ
-    lại gần như trọn vẹn các công đoạn thủ công, vì đó là cách duy nhất để mỗi
-    sản phẩm còn giữ được "chất" của nghề. Những đôi tay cạo hàng thuần thục,
-    những đôi tay dội men uyển chuyển, hay đôi tay rắn rỏi đổ khuôn mỗi ngày -
-    tất cả đều mang theo sự tập trung, kiên nhẫn và tình yêu nghề. Chúng tôi
-    khác biệt ngay từ chất liệu ban đầu, và lựa chọn gìn giữ sự khác biệt ấy đến
-    tận cùng. Men và lửa, qua những biến thiên tự nhiên, tạo nên sắc độ đậm nhạt
-    không lặp lại - mộc mạc, thuần khiết như chính thiên nhiên ban tặng.
+    {{ $craftBody }}
   </p>
 
-  <!-- ==================== DESKTOP CONTENT ==================== -->
   <div
     class="hidden md:grid grid-cols-1 md:grid-cols-2 gap-[59px] mb-16"
     data-aos="fade-up"
   >
     <div class="aspect-[1/1] relative overflow-hidden shadow-lg">
       <img
-        src="{{ asset('assets/images/about-02.jpg') }}"
+        src="{{ \App\Support\AssetPath::url($craftImages->get(0), 'assets/images/about-02.jpg') }}"
         alt="Chế tác thủ công 1"
         class="w-full h-full object-cover"
       />
     </div>
     <div class="aspect-[1/1] relative overflow-hidden shadow-lg">
       <img
-        src="{{ asset('assets/images/about-02.jpg') }}"
+        src="{{ \App\Support\AssetPath::url($craftImages->get(1), 'assets/images/about-02.jpg') }}"
         alt="Chế tác thủ công 2"
         class="w-full h-full object-cover"
       />
     </div>
   </div>
-  <div class="hidden md:block max-w-4xl mx-auto" data-aos="fade-up">
-    <h3
-      class="text-2xl md:text-3xl font-bold text-textPrimary mb-[20px] md:mb-6"
-    >
-      Kỹ thuật luyện đất
-    </h3>
-    <p
-      class="text-textPrimary leading-relaxed text-center font-medium tracking-wide"
-    >
-      Đất là gốc rễ, nền tảng của mọi sản phẩm gốm chất lượng. Chúng tôi tuyển
-      chọn nguyên liệu đất sét tinh khiết, loại bỏ tạp chất để đảm bảo độ dẻo,
-      độ bám và khả năng chịu nhiệt vượt trội. Đất sau khi được ngâm, lắng và
-      luyện qua nhiều giai đoạn xử lý truyền thống sẽ cho ra hỗn hợp mịn, ổn
-      định, sẵn sàng cho từng bước tạo hình, nung và hoàn thiện.
-    </p>
-  </div>
-  <div
-    class="hidden md:grid grid-cols-1 md:grid-cols-2 gap-[59px] mt-16 mb-16 text-left"
-    data-aos="fade-up"
-  >
-    <section class="w-full">
-      <div>
-        <h3
-          class="text-2xl md:text-3xl font-bold text-textPrimary mb-[20px] md:mb-6"
-        >
-          Kỹ thuật tạo hình
-        </h3>
-        <p
-          class="text-textPrimary leading-relaxed text-left font-medium tracking-wide"
-        >
-          Tạo hình bắt đầu từ bản vẽ, nơi tỉ lệ và hình dáng sản phẩm được tính
-          toán kỹ lưỡng. Để tạo hình hàng loạt, nghệ nhân sẽ bắt đầu với cốt sản
-          phẩm. Phần cốt này sẽ được điêu khắc hoàn toàn bằng tay với nguyên
-          liệu chính là thạch cao. Cốt càng sắc nét, khuôn thạch cao càng chuẩn,
-          hàng càng đẹp. Đất sau luyện được đổ rót vào khuôn. Cách để kiểm soát
-          độ dày đồng đều giữa các sản phẩm phụ thuộc nhiều vào khuôn và tay
-          nghề cũng như sức bền của mỗi người thợ đổ rót.
-        </p>
-      </div>
-    </section>
-    <section class="w-full">
-      <div>
-        <h3
-          class="text-2xl md:text-3xl font-bold text-textPrimary mb-[20px] md:mb-6"
-        >
-          Kỹ thuật tráng men
-        </h3>
-        <p
-          class="text-textPrimary leading-relaxed text-left font-medium tracking-wide"
-        >
-          Mỗi nghệ&nbsp;nhân sẽ có một bí&nbsp;quyết pha men riêng, kế&nbsp;thừa
-          từ cha&nbsp;ông và tiếp&nbsp;tục sáng&nbsp;tạo trên nền&nbsp;tảng đó.
-          Thông&nbsp;thường, men sẽ được nghiền một&nbsp;cách cẩn&nbsp;thận, sau
-          đó trộn, lọc kỹ rồi mới pha theo tỷ&nbsp;lệ để tạo nên màu&nbsp;sắc và
-          bề&nbsp;mặt khác&nbsp;nhau. Với ngói, chúng tôi phát&nbsp;triển hơn
-          hai&nbsp;mươi màu men, quý khách&nbsp;hàng hoàn&nbsp;toàn có thể
-          lựa&nbsp;chọn theo ngũ&nbsp;hành, hay tính&nbsp;chất từng
-          công&nbsp;trình như: Chùa&nbsp;chiền, Từ&nbsp;đường hay Khu
-          nghỉ&nbsp;dưỡng.
-        </p>
-      </div>
-    </section>
-    <section class="w-full h-full">
-      <div class="relative overflow-hidden shadow-lg h-full min-h-[320px]">
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          alt="Kỹ thuật tạo hình"
-          class="w-full h-full object-cover"
-        />
-      </div>
-    </section>
-    <section class="w-full h-full">
-      <div class="relative overflow-hidden shadow-lg h-full min-h-[320px]">
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          alt="Kỹ thuật tráng men"
-          class="w-full h-full object-cover"
-        />
-      </div>
-    </section>
-  </div>
-  <div class="hidden md:block max-w-3xl mx-auto mt-16" data-aos="fade-up">
-    <h3
-      class="text-2xl md:text-3xl font-bold text-textPrimary mb-[20px] md:mb-6"
-    >
-      Kỹ thuật đun lò
-    </h3>
-    <p
-      class="text-textPrimary leading-relaxed text-center font-medium tracking-wide"
-    >
-      Công đoạn nung sản&nbsp;phẩm trong lò là bước quyết&nbsp;định
-      chất&nbsp;lượng gốm của Thanh Hải. Lò được đun ở nhiệt&nbsp;độ cao, có thể
-      lên tới 1.300°C, đòi&nbsp;hỏi đất và men đạt chuẩn để chịu nhiệt
-      bền&nbsp;vững. Việc tăng – giữ – hạ nhiệt theo từng giai&nbsp;đoạn là
-      bí&nbsp;quyết riêng của các nghệ&nbsp;nhân. Sau khi nung, sản&nbsp;phẩm
-      được ủ chậm khoảng 12 giờ để nguội dần, giúp gốm đanh&nbsp;chắc,
-      hạn&nbsp;chế nứt vỡ và bền&nbsp;bỉ theo thời&nbsp;gian.
-    </p>
-  </div>
-  <div
-    class="hidden md:grid grid-cols-1 md:grid-cols-2 gap-[59px] mt-16 mb-16"
-    data-aos="fade-up"
-  >
-    <div class="aspect-[1/1] relative overflow-hidden shadow-lg">
-      <img
-        src="{{ asset('assets/images/about-02.jpg') }}"
-        alt="Kỹ thuật tạo hình"
-        class="w-full h-full object-cover"
-      />
-    </div>
-    <div class="aspect-[1/1] relative overflow-hidden shadow-lg">
-      <img
-        src="{{ asset('assets/images/about-02.jpg') }}"
-        alt="Kỹ thuật đun lò"
-        class="w-full h-full object-cover"
-      />
-    </div>
-  </div>
 
-  <!-- ==================== MOBILE CONTENT: HORIZONTAL SCROLL SLIDER ==================== -->
-  <div
-    class="md:hidden flex flex-row overflow-x-auto snap-x snap-mandatory pb-8 gap-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-    data-aos="fade-up"
-  >
-    <!-- Thẻ 1: Luyện đất -->
-    <div class="flex flex-col items-center min-w-[85%] snap-center">
-      <div
-        class="w-full aspect-[1/1] relative overflow-hidden shadow-lg rounded-sm mb-[20px] md:mb-6"
-      >
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          alt="Kỹ thuật luyện đất"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <h3
-        class="text-[20px] font-bold text-textPrimary leading-[55px] mb-2 text-center w-full"
-      >
-        Kỹ thuật luyện đất
-      </h3>
-      <p
-        class="text-textPrimary text-justify font-['Roboto'] text-[16px] leading-[28px] tracking-[0.48px]"
-      >
-        Đất là gốc rễ, nền tảng của mọi sản phẩm gốm chất lượng. Chúng tôi tuyển
-        chọn nguyên liệu đất sét tinh khiết, loại bỏ tạp chất để đảm bảo độ dẻo,
-        độ bám và khả năng chịu nhiệt vượt trội. Đất sau khi được ngâm, lắng và
-        luyện qua nhiều giai đoạn xử lý truyền thống sẽ cho ra hỗn hợp mịn, ổn
-        định, sẵn sàng cho từng bước tạo hình, nung và hoàn thiện.
-      </p>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left">
+    <article>
+      <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $luyenDatTitle }}</h3>
+      <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ $luyenDatBody }}</p>
+    </article>
+    <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+      <img
+        src="{{ \App\Support\AssetPath::url(data_get($luyenDatItem, 'image'), 'assets/images/about-02.jpg') }}"
+        alt="{{ $luyenDatTitle }}"
+        class="w-full h-full object-cover"
+      />
     </div>
-    <!-- Thẻ 2: Tạo hình -->
-    <div class="flex flex-col items-center min-w-[85%] snap-center">
-      <div
-        class="w-full aspect-[1/1] relative overflow-hidden shadow-lg rounded-sm mb-[20px] md:mb-6"
-      >
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          alt="Kỹ thuật tạo hình"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <h3
-        class="text-[20px] font-bold text-textPrimary leading-[55px] mb-2 text-center w-full"
-      >
-        Kỹ thuật tạo hình
-      </h3>
-      <p
-        class="text-textPrimary text-justify font-['Roboto'] text-[16px] leading-[28px] tracking-[0.32px]"
-      >
-        Tạo hình bắt đầu từ bản vẽ, nơi tỉ lệ và hình dáng sản phẩm được tính
-        toán kỹ lưỡng. Để tạo hình hàng loạt, nghệ nhân sẽ bắt đầu với cốt sản
-        phẩm. Phần cốt này sẽ được điêu khắc hoàn toàn bằng tay với nguyên liệu
-        chính là thạch cao. Cốt càng sắc nét, khuôn thạch cao càng chuẩn, hàng
-        càng đẹp. Đất sau luyện được đổ rót vào khuôn. Cách để kiểm soát độ dày
-        đồng đều giữa các sản phẩm phụ thuộc nhiều vào khuôn và tay nghề cũng
-        như sức bền của mỗi người thợ đổ rót.
-      </p>
+
+    <article>
+      <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $luyenDatItemTitle }}</h3>
+      <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ $luyenDatItemBody }}</p>
+    </article>
+    <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+      <img
+        src="{{ \App\Support\AssetPath::url($craftImages->get(0), 'assets/images/about-02.jpg') }}"
+        alt="{{ $luyenDatItemTitle }}"
+        class="w-full h-full object-cover"
+      />
     </div>
-    <!-- Thẻ 3: Tráng men -->
-    <div class="flex flex-col items-center min-w-[85%] snap-center">
-      <div
-        class="w-full aspect-[1/1] relative overflow-hidden shadow-lg rounded-sm mb-[20px] md:mb-6"
-      >
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          alt="Kỹ thuật tráng men"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <h3
-        class="text-[20px] font-bold text-textPrimary leading-[55px] mb-2 text-center w-full"
-      >
-        Kỹ thuật tráng men
-      </h3>
-      <p
-        class="text-textPrimary text-justify font-['Roboto'] text-[16px] leading-[28px] tracking-[0.32px]"
-      >
-        Mỗi nghệ&nbsp;nhân sẽ có một bí&nbsp;quyết pha men riêng, kế&nbsp;thừa
-        từ cha&nbsp;ông và tiếp&nbsp;tục sáng&nbsp;tạo trên nền&nbsp;tảng đó.
-        Thông&nbsp;thường, men sẽ được nghiền một&nbsp;cách cẩn&nbsp;thận, sau
-        đó trộn, lọc kỹ rồi mới pha theo tỷ&nbsp;lệ để tạo nên màu&nbsp;sắc và
-        bề&nbsp;mặt khác&nbsp;nhau. Với ngói, chúng tôi phát&nbsp;triển hơn
-        hai&nbsp;mươi màu men, quý khách&nbsp;hàng hoàn&nbsp;toàn có thể
-        lựa&nbsp;chọn theo ngũ&nbsp;hành, hay tính&nbsp;chất từng
-        công&nbsp;trình như: Chùa&nbsp;chiền, Từ&nbsp;đường hay Khu
-        nghỉ&nbsp;dưỡng.
-      </p>
+
+    <article class="md:col-span-2 text-center">
+      <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $dunLoTitle }}</h3>
+      <p class="text-textPrimary leading-relaxed font-medium tracking-wide max-w-3xl mx-auto">{{ $dunLoBody }}</p>
+    </article>
+    <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+      <img
+        src="{{ \App\Support\AssetPath::url($dunLoImages->get(0), 'assets/images/about-02.jpg') }}"
+        alt="{{ $dunLoTitle }}"
+        class="w-full h-full object-cover"
+      />
     </div>
-    <!-- Thẻ 4: Đun lò -->
-    <div class="flex flex-col items-center min-w-[85%] snap-center">
-      <div
-        class="w-full aspect-[1/1] relative overflow-hidden shadow-lg rounded-sm mb-[20px] md:mb-6"
-      >
-        <img
-          src="{{ asset('assets/images/about-02.jpg') }}"
-          alt="Kỹ thuật đun lò"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <h3
-        class="text-[20px] font-bold text-textPrimary leading-[55px] mb-2 text-center w-full"
-      >
-        Kỹ thuật đun lò
-      </h3>
-      <p
-        class="text-textPrimary text-justify font-['Roboto'] text-[16px] leading-[28px] tracking-[0.32px]"
-      >
-        Công đoạn nung sản&nbsp;phẩm trong lò là bước quyết&nbsp;định
-        chất&nbsp;lượng gốm của Thanh Hải. Lò được đun ở nhiệt&nbsp;độ cao, có
-        thể lên tới 1.300°C, đòi&nbsp;hỏi đất và men đạt chuẩn để chịu nhiệt
-        bền&nbsp;vững. Việc tăng – giữ – hạ nhiệt theo từng giai&nbsp;đoạn là
-        bí&nbsp;quyết riêng của các nghệ&nbsp;nhân. Sau khi nung, sản&nbsp;phẩm
-        được ủ chậm khoảng 12 giờ để nguội dần, giúp gốm đanh&nbsp;chắc,
-        hạn&nbsp;chế nứt vỡ và bền&nbsp;bỉ theo thời&nbsp;gian.
-      </p>
+    <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+      <img
+        src="{{ \App\Support\AssetPath::url($dunLoImages->get(1), 'assets/images/about-02.jpg') }}"
+        alt="{{ $dunLoTitle }}"
+        class="w-full h-full object-cover"
+      />
     </div>
   </div>
 </div>

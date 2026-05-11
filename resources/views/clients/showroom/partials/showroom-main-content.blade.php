@@ -1,3 +1,10 @@
+@php
+  $slides = collect($showroomImages ?? [])->values();
+  if ($slides->isEmpty()) {
+      $slides = collect(['assets/images/showroom-01.jpg', 'assets/images/showroom-02.jpg']);
+  }
+@endphp
+
 <!-- Main Content -->
 <section
   class="md:w-full max-w-[1920px] px-6 lg:px-[8%] 2xl:pl-[12.5%] mx-auto pt-12 pb-16 md:py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 xl:gap-20 items-center overflow-hidden"
@@ -58,20 +65,15 @@
       class="swiper showroomSwiper h-[400px] md:h-[500px] lg:h-[600px] relative w-full overflow-visible md:[clip-path:inset(-100px_-100vw_-100px_-20px)] lg:[clip-path:inset(-50px_-100vw_-50px_-40px)] xl:[clip-path:inset(-50px_-100vw_-50px_-60px)]"
     >
       <div class="swiper-wrapper">
+        @foreach ($slides as $index => $slide)
         <div class="swiper-slide w-[85%] sm:w-[75%] h-full">
           <img
-            src="{{ asset('assets/images/showroom-01.jpg') }}"
-            alt="Showroom 01"
+            src="{{ \App\Support\AssetPath::url($slide, 'assets/images/showroom-01.jpg') }}"
+            alt="Showroom {{ $index + 1 }}"
             class="w-full h-full object-cover shadow-2xl"
           />
         </div>
-        <div class="swiper-slide w-[85%] sm:w-[75%] h-full">
-          <img
-            src="{{ asset('assets/images/showroom-02.jpg') }}"
-            alt="Showroom 02"
-            class="w-full h-full object-cover shadow-2xl"
-          />
-        </div>
+        @endforeach
       </div>
 
       <!-- Navigation -->

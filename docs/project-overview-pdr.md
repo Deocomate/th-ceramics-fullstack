@@ -39,7 +39,7 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 - **FR9**: Sub-resource management (colors, classifications, ratings, galleries, hallmarks per category)
 
 ### Public Site (Client Pages)
-- **FR10**: Home page with featured content
+- **FR10**: Home page with fully dynamic content (banner, partners, thank-you, press, stats, showroom, projects, product sections, awards -- all from DB)
 - **FR11**: Product category pages with listing and detail views (9 categories)
 - **FR12**: About us, factory tour, contact, FAQ pages (now dynamic from DB via page config admin panels)
 - **FR13**: News section with listing and detail
@@ -130,3 +130,4 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 | 0.5.2 | 2026-05-10 | Custom password reset notification: branded Vietnamese email, role-based routing (admin vs client), ShouldQueue, 15 Pest tests |
 | 0.5.3 | 2026-05-10 | Seeder system rewrite: 6 seeders refactored with firstOrCreate idempotency, Eloquent instead of raw SQL/DB::table, real Vietnamese content, string-path images, GiaTriVuotTroi seeded, DatabaseSeeder reordered |
 | 0.5.4 | 2026-05-10 | Project module client dynamic: DuAnSeeder (5 categories + 20 real projects), dynamic project index with category filters + pagination, dynamic project detail with hero banner + GLightbox/Swiper gallery + related projects |
+| 0.5.5 | 2026-05-11 | Home page fully dynamic: HomeController queries 5 models (TrangChu, DuAn, NgoiAmDuongCt, NgoiHaiVanMieuCt, GachHoaThongGioCt), 13 view files bound to DB data |

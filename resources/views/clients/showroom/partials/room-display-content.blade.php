@@ -1,3 +1,10 @@
+@php
+  $slides = collect($showroomImages ?? [])->values();
+  if ($slides->isEmpty()) {
+      $slides = collect(['assets/images/showroom-01.jpg', 'assets/images/showroom-02.jpg']);
+  }
+@endphp
+
 <!-- Room Display Content (Symmetrical) -->
 <section
   class="w-full max-w-[1920px] px-6 lg:px-[8%] 2xl:pr-[12.5%] mx-auto pb-16 lg:pb-32 lg:pt-8 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 xl:gap-20 items-center overflow-hidden"
@@ -11,20 +18,15 @@
       class="swiper showroomSwiper2 h-[400px] md:h-[500px] lg:h-[600px] relative w-full overflow-visible md:[clip-path:inset(-100px_-20px_-100px_-100vw)] lg:[clip-path:inset(-50px_-40px_-50px_-100vw)] xl:[clip-path:inset(-50px_-60px_-50px_-100vw)]"
     >
       <div class="swiper-wrapper flex flex-row">
-        <div class="swiper-slide w-[85%] sm:w-[75%] h-full ml-auto">
+        @foreach ($slides->reverse()->values() as $index => $slide)
+        <div class="swiper-slide w-[85%] sm:w-[75%] h-full {{ $index === 0 ? 'ml-auto' : '' }}">
           <img
-            src="{{ asset('assets/images/showroom-02.jpg') }}"
-            alt="Phòng trưng bày 02"
+            src="{{ \App\Support\AssetPath::url($slide, 'assets/images/showroom-01.jpg') }}"
+            alt="Phòng trưng bày {{ $index + 1 }}"
             class="w-full h-full object-cover shadow-2xl"
           />
         </div>
-        <div class="swiper-slide w-[85%] sm:w-[75%] h-full">
-          <img
-            src="{{ asset('assets/images/showroom-01.jpg') }}"
-            alt="Phòng trưng bày 01"
-            class="w-full h-full object-cover shadow-2xl"
-          />
-        </div>
+        @endforeach
       </div>
     </div>
   </div>
@@ -41,7 +43,7 @@
     <div class="w-[85%] md:w-full mx-auto md:mx-0 flex flex-col gap-5 text-xs mb-8">
       <div class="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr] gap-4 items-start">
         <span class="font-medium tracking-[0.1em] uppercase text-xs mt-[3px]">ĐỊA CHỈ</span>
-        <span class="font-semibold text-sm leading-snug w-full max-w-[320px]">10 ngõ 252 - Thôn 3, Giang Cao, Bát Tràng, Hà Nội</span>
+        <span class="font-semibold text-sm leading-snug w-full max-w-[320px]">{{ $showroomContent ?? '10 ngõ 252 - Thôn 3, Giang Cao, Bát Tràng, Hà Nội' }}</span>
       </div>
       <div class="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr] gap-4 items-center mt-2">
         <span class="font-medium tracking-[0.1em] uppercase text-xs">email</span>

@@ -67,29 +67,42 @@
             {!! $contact->form_title ?? 'Hãy nói với chúng tôi <br /> những mong muốn của bạn' !!}
           </h1>
 
-          <form action="#" class="space-y-8 w-full lg:max-w-[80%] font-archivo">
+          <form action="{{ route('client.contact.submit') }}" method="POST" class="space-y-8 w-full lg:max-w-[80%] font-archivo">
+            @csrf
             <div class="input-group">
               <label class="block text-[#EFE4DE] text-base mb-1 font-medium leading-6">Họ và tên</label>
-              <input type="text" placeholder="Nhập họ và tên của bạn"
+              <input type="text" name="name" value="{{ old('name') }}" placeholder="Nhập họ và tên của bạn"
                 class="contact-input w-full font-light bg-transparent border-b border-[#EFE4DE] py-3 text-white focus:outline-none focus:border-secondary transition-colors text-[14px] placeholder:text-white/40" />
+              @error('name')
+                <p class="mt-2 text-sm text-red-200">{{ $message }}</p>
+              @enderror
             </div>
 
             <div class="input-group">
               <label class="block text-[#EFE4DE] text-base mb-1 font-medium leading-6">Email</label>
-              <input type="email" placeholder="Nhập thông tin email của bạn"
+              <input type="email" name="email" value="{{ old('email') }}" placeholder="Nhập thông tin email của bạn"
                 class="contact-input w-full font-light bg-transparent border-b border-[#EFE4DE] py-3 text-white focus:outline-none focus:border-secondary transition-colors text-[14px] placeholder:text-white/40" />
+              @error('email')
+                <p class="mt-2 text-sm text-red-200">{{ $message }}</p>
+              @enderror
             </div>
 
             <div class="input-group">
               <label class="block text-[#EFE4DE] text-base mb-1 font-medium leading-6">Số điện thoại</label>
-              <input type="tel" placeholder="Nhập số điện thoại của bạn"
+              <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="Nhập số điện thoại của bạn"
                 class="contact-input w-full font-light bg-transparent border-b border-[#EFE4DE] py-3 text-white focus:outline-none focus:border-secondary transition-colors text-[14px] placeholder:text-white/40" />
+              @error('phone')
+                <p class="mt-2 text-sm text-red-200">{{ $message }}</p>
+              @enderror
             </div>
 
             <div class="input-group">
               <label class="block text-[#EFE4DE] text-base mb-1 font-medium leading-6">Nội dung</label>
-              <input type="text" placeholder="Nhập nội dung bất kì"
-                class="contact-input w-full font-light bg-transparent border-b border-[#EFE4DE] py-3 text-white focus:outline-none focus:border-secondary transition-colors text-[14px] placeholder:text-white/40" />
+              <textarea name="message" rows="3" placeholder="Nhập nội dung bất kì"
+                class="contact-input w-full font-light bg-transparent border-b border-[#EFE4DE] py-3 text-white focus:outline-none focus:border-secondary transition-colors text-[14px] placeholder:text-white/40">{{ old('message') }}</textarea>
+              @error('message')
+                <p class="mt-2 text-sm text-red-200">{{ $message }}</p>
+              @enderror
             </div>
 
             <div class="pt-6">
