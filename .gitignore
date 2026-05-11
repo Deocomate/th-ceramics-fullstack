@@ -28,3 +28,6 @@ _codebase/
 # Added by CodebaseTracker
 .codebase/
 .claude/
+plans/
+.github/
+.vscode/
