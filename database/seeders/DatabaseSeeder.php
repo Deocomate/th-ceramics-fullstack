@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             CatalogSeeder::class,
             VeChungToiSeeder::class,
             TinTucSeeder::class,
+            ThiCongSeeder::class,
         ]);
     }
 }
