@@ -1,3 +1,5 @@
+@section('preview_url', route('client.products.gach-hoa-thong-gio.detail', $product->gach_hoa_thong_gio_ct_id))
+
 <x-admin.layout.app title="Cập nhật Gạch Hoa Thông Gió" breadcrumb="Admin › DS Sản phẩm chi tiết › Chỉnh sửa">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">

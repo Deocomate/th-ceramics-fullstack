@@ -1,3 +1,5 @@
+@section('preview_url', route('client.products.ngoi-am-duong.detail', $product->ngoi_am_duong_ct_id))
+
 <x-admin.layout.app title="Cập nhật Ngói Âm Dương" breadcrumb="Admin › DS Sản phẩm chi tiết › Chỉnh sửa">
     
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">

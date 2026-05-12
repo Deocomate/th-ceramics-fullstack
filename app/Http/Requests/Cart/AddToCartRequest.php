@@ -14,7 +14,7 @@ class AddToCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_type' => ['required', 'string', 'in:ngoi_am_duong_ct,ngoi_hai_van_mieu_ct,gach_hoa_thong_gio_ct,gach_trang_tri_ct,gach_co_bat_trang_ct,linh_vat_phong_thuy_ct,lan_can_gom_xu,den_gom_su,phu_kien_ngoi'],
+            'product_type' => ['required', 'string', 'in:ngoi_am_duong_ct,ngoi_hai_van_mieu_ct,ngoi_hai_co_ct,gach_hoa_thong_gio_ct,gach_trang_tri_ct,gach_co_bat_trang_ct,linh_vat_phong_thuy_ct,lan_can_gom_xu,den_gom_su,phu_kien_ngoi'],
             'product_id' => ['required', 'integer', 'min:1'],
             'variant_id' => ['nullable', 'integer'],
             'qty' => ['required', 'integer', 'min:1', 'max:99999'],

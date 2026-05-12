@@ -34,7 +34,7 @@
             @php
               $productImage = (!empty($product->images) && is_array($product->images)) ? $product->images[0] : null;
             @endphp
-            <div class="flex flex-col group cursor-pointer" onclick="window.location.href = '{{ route('client.products.phu-kien-ngoi.detail', $product->bo_noc_chu_van_ct_id) }}'">
+            <div class="flex flex-col group cursor-pointer" onclick="window.location.href = '{{ route('client.products.phu-kien-ngoi.detail', ['id' => $product->bo_noc_chu_van_ct_id, 'type' => 'chu_van']) }}'">
               <div
                 class="product-card relative w-full aspect-square mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1 shadow-md">
                 <img src="{{ $productImage ? asset('storage/' . $productImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />

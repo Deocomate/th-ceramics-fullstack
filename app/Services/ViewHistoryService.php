@@ -11,6 +11,7 @@ use App\Models\LanCanGomXu;
 use App\Models\LinhVatPhongThuyCt;
 use App\Models\NgoiAmDuongCt;
 use App\Models\NgoiBoNocCt;
+use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\TinTuc;
 use App\Support\AssetPath;
@@ -128,8 +129,16 @@ class ViewHistoryService
 
     private function resolveAccessoryProduct(int $id, array $item): ?object
     {
-        $product = NgoiBoNocCt::query()->where('is_delete', false)->find($id)
-            ?: BoNocChuVanCt::query()->where('is_delete', false)->find($id);
+        $accessoryType = $item['accessory_type'] ?? null;
+
+        if ($accessoryType === 'bo_noc') {
+            $product = NgoiBoNocCt::query()->where('is_delete', false)->find($id);
+        } elseif ($accessoryType === 'chu_van') {
+            $product = BoNocChuVanCt::query()->where('is_delete', false)->find($id);
+        } else {
+            $product = NgoiBoNocCt::query()->where('is_delete', false)->find($id)
+                ?: BoNocChuVanCt::query()->where('is_delete', false)->find($id);
+        }
 
         if (! $product instanceof Model) {
             return null;
@@ -142,6 +151,7 @@ class ViewHistoryService
             price: (float) ($item['price'] ?? 0),
             image: $this->productImage($product, 'images'),
             routeName: 'client.products.phu-kien-ngoi.detail',
+            routeParams: $accessoryType ? ['id' => $id, 'type' => $accessoryType] : null,
         );
     }
 
@@ -151,7 +161,8 @@ class ViewHistoryService
         string $name,
         float $price,
         ?string $image,
-        string $routeName
+        string $routeName,
+        ?array $routeParams = null
     ): object {
         return (object) [
             'type' => $type,
@@ -159,7 +170,7 @@ class ViewHistoryService
             'name' => $name,
             'price' => $price,
             'image' => AssetPath::url($image, 'assets/images/ngoi-01.jpg'),
-            'url' => Route::has($routeName) ? route($routeName, $id) : '#',
+            'url' => Route::has($routeName) ? route($routeName, $routeParams ?? $id) : '#',
         ];
     }
 
@@ -200,6 +211,13 @@ class ViewHistoryService
                 'route' => 'client.products.ngoi-hai-van-mieu.detail',
                 'image_field' => 'images',
                 'fallback_name' => 'Ngói hài văn miếu',
+                'has_delete' => true,
+            ],
+            'ngoi_hai_co_ct' => [
+                'model' => NgoiHaiCoCt::class,
+                'route' => 'client.products.ngoi-hai-co.detail',
+                'image_field' => 'images',
+                'fallback_name' => 'Ngói hài cổ',
                 'has_delete' => true,
             ],
             'gach_hoa_thong_gio_ct' => [

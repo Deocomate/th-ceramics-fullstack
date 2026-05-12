@@ -8,6 +8,7 @@ use App\Services\NgoiBoNocCtService;
 use App\Services\PhuKienNgoiService;
 use App\Services\ViewHistoryService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 
 class PhuKienNgoiController extends Controller
 {
@@ -28,12 +29,26 @@ class PhuKienNgoiController extends Controller
         ));
     }
 
-    public function detail($id, ViewHistoryService $historyService)
+    public function detail($id, Request $request, ViewHistoryService $historyService)
     {
+        $requestedType = $request->query('type');
+
         try {
-            $product = $this->ngoiBoNocCtService->findById($id);
-            $type = 'bo_noc';
+            if ($requestedType === 'bo_noc') {
+                $product = $this->ngoiBoNocCtService->findById($id);
+                $type = 'bo_noc';
+            } elseif ($requestedType === 'chu_van') {
+                $product = $this->boNocChuVanCtService->findById($id);
+                $type = 'chu_van';
+            } else {
+                $product = $this->ngoiBoNocCtService->findById($id);
+                $type = 'bo_noc';
+            }
         } catch (ModelNotFoundException $e) {
+            if ($requestedType === 'bo_noc' || $requestedType === 'chu_van') {
+                abort(404);
+            }
+
             try {
                 $product = $this->boNocChuVanCtService->findById($id);
                 $type = 'chu_van';
@@ -47,16 +62,16 @@ class PhuKienNgoiController extends Controller
         }
 
         $productId = $product->ngoi_bo_noc_ct_id ?? $product->bo_noc_chu_van_ct_id ?? (int) $id;
-        $historyService->trackProduct('phu_kien_ngoi', (int) $productId);
+        $historyService->trackProduct('phu_kien_ngoi', (int) $productId, ['accessory_type' => $type]);
 
         $phanLoais = $product->phanLoais;
 
         $relatedBoNoc = $this->ngoiBoNocCtService->getAll('active')
-            ->where('ngoi_bo_noc_ct_id', '!=', $id)
+            ->where('ngoi_bo_noc_ct_id', '!=', $type === 'bo_noc' ? $id : 0)
             ->take(2);
 
         $relatedChuVan = $this->boNocChuVanCtService->getAll('active')
-            ->where('bo_noc_chu_van_ct_id', '!=', $id)
+            ->where('bo_noc_chu_van_ct_id', '!=', $type === 'chu_van' ? $id : 0)
             ->take(2);
 
         $relatedProducts = $relatedBoNoc->concat($relatedChuVan);

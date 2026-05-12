@@ -11,6 +11,7 @@ class CouponService
     private const PRODUCT_TYPES = [
         'ngoi_am_duong_ct' => 'Ngói Âm Dương',
         'ngoi_hai_van_mieu_ct' => 'Ngói Hài Văn Miếu',
+        'ngoi_hai_co_ct' => 'Ngói Hài Cổ',
         'gach_hoa_thong_gio_ct' => 'Gạch Hoa Thông Gió',
         'gach_trang_tri_ct' => 'Gạch Trang Trí',
         'gach_co_bat_trang_ct' => 'Gạch Cổ Bát Tràng',

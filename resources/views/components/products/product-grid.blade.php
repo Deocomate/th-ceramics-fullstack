@@ -4,6 +4,7 @@
   $typeByRoute = [
       'client.products.ngoi-am-duong.detail' => 'ngoi_am_duong_ct',
       'client.products.ngoi-hai-van-mieu.detail' => 'ngoi_hai_van_mieu_ct',
+      'client.products.ngoi-hai-co.detail' => 'ngoi_hai_co_ct',
       'client.products.gach-hoa-thong-gio.detail' => 'gach_hoa_thong_gio_ct',
       'client.products.gach-trang-tri.detail' => 'gach_trang_tri_ct',
       'client.products.gach-co-bat-trang.detail' => 'gach_co_bat_trang_ct',

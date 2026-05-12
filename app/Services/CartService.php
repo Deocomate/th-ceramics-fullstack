@@ -9,8 +9,10 @@ use App\Models\GachTrangTriCt;
 use App\Models\LanCanGomXu;
 use App\Models\LinhVatPhongThuyCt;
 use App\Models\MauSacNgoiAmDuongCt;
+use App\Models\MauSacNgoiHaiCoCt;
 use App\Models\MauSacNgoiHaiVanMieuCt;
 use App\Models\NgoiAmDuongCt;
+use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\PhuKienNgoi;
 use Exception;
@@ -29,6 +31,7 @@ class CartService
         return match ($productType) {
             'ngoi_am_duong_ct' => $this->getNgoiAmDuongDetails($productId, $variantId),
             'ngoi_hai_van_mieu_ct' => $this->getNgoiHaiVanMieuDetails($productId, $variantId),
+            'ngoi_hai_co_ct' => $this->getNgoiHaiCoDetails($productId, $variantId),
             'gach_hoa_thong_gio_ct' => $this->getSimpleCtDetails(GachHoaThongGioCt::class, $productId, 'gach_hoa_thong_gio_ct_id'),
             'gach_trang_tri_ct' => $this->getSimpleCtDetails(GachTrangTriCt::class, $productId, 'gach_trang_tri_ct_id'),
             'gach_co_bat_trang_ct' => $this->getSimpleCtDetails(GachCoBatTrangCt::class, $productId, 'gach_co_bat_trang_ct_id'),
@@ -212,6 +215,37 @@ class CartService
             'variant_name' => null,
             'sku' => null,
             'price' => $product->price,
+            'image' => $this->firstImage($product->images),
+        ];
+    }
+
+    private function getNgoiHaiCoDetails(int $productId, ?int $variantId): array
+    {
+        $product = NgoiHaiCoCt::findOrFail($productId);
+
+        if ($variantId) {
+            $variant = MauSacNgoiHaiCoCt::query()
+                ->where('ngoi_hai_co_ct_id', $productId)
+                ->find($variantId);
+
+            if (! $variant) {
+                throw new Exception('Biến thể không tồn tại.');
+            }
+
+            return [
+                'name' => $product->name,
+                'variant_name' => $variant->name,
+                'sku' => $variant->code,
+                'price' => $variant->price,
+                'image' => $variant->image,
+            ];
+        }
+
+        return [
+            'name' => $product->name,
+            'variant_name' => null,
+            'sku' => null,
+            'price' => 0,
             'image' => $this->firstImage($product->images),
         ];
     }

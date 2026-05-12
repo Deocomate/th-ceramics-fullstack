@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
+use App\Services\DinhMucNgoiHaiCoService;
 use App\Services\DinhMucNgoiHaiVanMieuService;
 use App\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiHaiVanMieuCtService;
+use App\Services\NgoiHaiCoCtService;
 use App\Services\NgoiHaiVanMieuCtService;
 use App\Services\NgoiHaiVanMieuService;
 use App\Services\ViewHistoryService;
@@ -18,8 +20,10 @@ class NgoiHaiVanMieuController extends Controller
     public function __construct(
         private readonly NgoiHaiVanMieuService $ngoiHaiVanMieuService,
         private readonly NgoiHaiVanMieuCtService $ngoiHaiVanMieuCtService,
+        private readonly NgoiHaiCoCtService $ngoiHaiCoCtService,
         private readonly MauSacNgoiHaiVanMieuCtService $mauSacService,
         private readonly DinhMucNgoiHaiVanMieuService $dinhMucService,
+        private readonly DinhMucNgoiHaiCoService $dinhMucNgoiHaiCoService,
         private readonly GiaTriVuotTroiService $giaTriVuotTroiService,
     ) {}
 
@@ -58,6 +62,41 @@ class NgoiHaiVanMieuController extends Controller
 
         return view('clients.products.ngoi-hai-van-mieu.detail', compact(
             'product', 'colors', 'dinhMuc', 'relatedProducts'
+        ));
+    }
+
+    public function detailNgoiHaiCo($id, ViewHistoryService $historyService)
+    {
+        $product = $this->ngoiHaiCoCtService->findById($id);
+
+        if ($product->is_delete == 1) {
+            abort(404);
+        }
+
+        $historyService->trackProduct('ngoi_hai_co_ct', (int) $product->ngoi_hai_co_ct_id);
+
+        $colors = $product->mauSacs()->where('is_delete', 0)->get();
+        $dinhMuc = $this->dinhMucNgoiHaiCoService->getAll();
+        $relatedProducts = $this->ngoiHaiCoCtService->getAll('active')
+            ->where('ngoi_hai_co_ct_id', '!=', $id)
+            ->take(4);
+
+        $pageLabel = 'Ngói Hài Cổ';
+        $detailRouteName = 'client.products.ngoi-hai-co.detail';
+        $productType = 'ngoi_hai_co_ct';
+        $productPkField = 'ngoi_hai_co_ct_id';
+        $variantPkField = 'mau_sac_ngoi_hai_co_ct_id';
+
+        return view('clients.products.ngoi-hai-van-mieu.detail', compact(
+            'product',
+            'colors',
+            'dinhMuc',
+            'relatedProducts',
+            'pageLabel',
+            'detailRouteName',
+            'productType',
+            'productPkField',
+            'variantPkField'
         ));
     }
 }

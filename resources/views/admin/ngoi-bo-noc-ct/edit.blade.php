@@ -1,3 +1,5 @@
+@section('preview_url', route('client.products.phu-kien-ngoi.detail', ['id' => $product->ngoi_bo_noc_ct_id, 'type' => 'bo_noc']))
+
 <x-admin.layout.app title="Cập nhật Ngói Bò Nóc" breadcrumb="Admin › DS Sản phẩm chi tiết › Chỉnh sửa">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">

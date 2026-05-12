@@ -142,8 +142,9 @@
             @php
                 $relatedImage = (!empty($related->images) && is_array($related->images)) ? $related->images[0] : null;
                 $relatedId = $related->ngoi_bo_noc_ct_id ?? $related->bo_noc_chu_van_ct_id ?? 0;
+                $relatedType = isset($related->ngoi_bo_noc_ct_id) ? 'bo_noc' : 'chu_van';
             @endphp
-            <a href="{{ route('client.products.phu-kien-ngoi.detail', $relatedId) }}" class="flex flex-col group cursor-pointer">
+            <a href="{{ route('client.products.phu-kien-ngoi.detail', ['id' => $relatedId, 'type' => $relatedType]) }}" class="flex flex-col group cursor-pointer">
                 <div class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square transition-all duration-300 group-hover:-translate-y-1">
                     <img src="{{ $relatedImage ? asset('storage/' . $relatedImage) : asset('assets/images/ngoi-01.jpg') }}" alt="{{ $related->name }}" class="w-full h-full object-cover mix-blend-multiply" />
                     <div class="product-overlay">

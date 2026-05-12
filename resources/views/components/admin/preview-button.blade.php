@@ -2,54 +2,55 @@
     use Illuminate\Support\Str;
     use Illuminate\Support\Facades\View;
 
-    $currentRoute = request()->route() ? request()->route()->getName() : '';
     $previewUrl = null;
-
-    $routeMap = [
-        'admin.trang_chu.' => 'client.home',
-        'admin.pages.ve_chung_toi.' => 'client.about',
-        'admin.pages.factory.' => 'client.factory',
-        'admin.pages.contact.' => 'client.contact',
-        'admin.pages.faq' => 'client.faq',
-        'admin.ngoi-am-duong' => 'client.products.ngoi-am-duong.index',
-        'admin.mau-sac-ngoi-am-duong' => 'client.products.ngoi-am-duong.index',
-        'admin.dinh-muc-ngoi-am-duong' => 'client.products.ngoi-am-duong.index',
-        'admin.ngoi-hai-van-mieu' => 'client.products.ngoi-hai-van-mieu.index',
-        'admin.mau-sac-ngoi-hai-van-mieu' => 'client.products.ngoi-hai-van-mieu.index',
-        'admin.dinh-muc-ngoi-hai-van-mieu' => 'client.products.ngoi-hai-van-mieu.index',
-        'admin.ngoi-hai-co' => 'client.products.ngoi-hai-van-mieu.index',
-        'admin.mau-sac-ngoi-hai-co' => 'client.products.ngoi-hai-van-mieu.index',
-        'admin.dinh-muc-ngoi-hai-co' => 'client.products.ngoi-hai-van-mieu.index',
-        'admin.gach-hoa-thong-gio' => 'client.products.gach-hoa-thong-gio.index',
-        'admin.dinh-muc-gach-hoa-thong-gio' => 'client.products.gach-hoa-thong-gio.index',
-        'admin.gach-trang-tri' => 'client.products.gach-trang-tri.index',
-        'admin.dinh-muc-gach-trang-tri' => 'client.products.gach-trang-tri.index',
-        'admin.gach-co-bat-trang' => 'client.products.gach-co-bat-trang.index',
-        'admin.dinh-muc-gach-co-bat-trang' => 'client.products.gach-co-bat-trang.index',
-        'admin.phu-kien-ngoi' => 'client.products.phu-kien-ngoi.index',
-        'admin.ngoi-bo-noc' => 'client.products.phu-kien-ngoi.index',
-        'admin.phan-loai-ngoi-bo-noc' => 'client.products.phu-kien-ngoi.index',
-        'admin.bo-noc-chu-van' => 'client.products.phu-kien-ngoi.index',
-        'admin.phan-loai-bo-noc-chu-van' => 'client.products.phu-kien-ngoi.index',
-        'admin.lan-can-gom-xu' => 'client.products.lan-can-gom-su.index',
-        'admin.linh-vat-phong-thuy' => 'client.products.linh-vat-phong-thuy.index',
-        'admin.den-gom-su' => 'client.products.den-gom-su.index',
-        'admin.tin-tuc' => 'client.news.index',
-        'admin.danh-muc-tin-tuc' => 'client.news.index',
-        'admin.du-an' => 'client.projects.index',
-        'admin.danh-muc-du-an' => 'client.projects.index',
-        'admin.catalog' => 'client.dich-vu.tai-catalog',
-    ];
-
-    foreach ($routeMap as $prefix => $clientRoute) {
-        if (Str::startsWith($currentRoute, $prefix)) {
-            $previewUrl = route($clientRoute);
-            break;
-        }
-    }
 
     if (View::hasSection('preview_url')) {
         $previewUrl = trim(View::getSection('preview_url'));
+    } else {
+        $currentRoute = request()->route() ? request()->route()->getName() : '';
+
+        $routeMap = [
+            'admin.trang_chu.' => 'client.home',
+            'admin.pages.ve_chung_toi.' => 'client.about',
+            'admin.pages.factory.' => 'client.factory',
+            'admin.pages.contact.' => 'client.contact',
+            'admin.pages.faq' => 'client.faq',
+            'admin.ngoi-am-duong' => 'client.products.ngoi-am-duong.index',
+            'admin.mau-sac-ngoi-am-duong' => 'client.products.ngoi-am-duong.index',
+            'admin.dinh-muc-ngoi-am-duong' => 'client.products.ngoi-am-duong.index',
+            'admin.ngoi-hai-van-mieu' => 'client.products.ngoi-hai-van-mieu.index',
+            'admin.mau-sac-ngoi-hai-van-mieu' => 'client.products.ngoi-hai-van-mieu.index',
+            'admin.dinh-muc-ngoi-hai-van-mieu' => 'client.products.ngoi-hai-van-mieu.index',
+            'admin.ngoi-hai-co' => 'client.products.ngoi-hai-van-mieu.index',
+            'admin.mau-sac-ngoi-hai-co' => 'client.products.ngoi-hai-van-mieu.index',
+            'admin.dinh-muc-ngoi-hai-co' => 'client.products.ngoi-hai-van-mieu.index',
+            'admin.gach-hoa-thong-gio' => 'client.products.gach-hoa-thong-gio.index',
+            'admin.dinh-muc-gach-hoa-thong-gio' => 'client.products.gach-hoa-thong-gio.index',
+            'admin.gach-trang-tri' => 'client.products.gach-trang-tri.index',
+            'admin.dinh-muc-gach-trang-tri' => 'client.products.gach-trang-tri.index',
+            'admin.gach-co-bat-trang' => 'client.products.gach-co-bat-trang.index',
+            'admin.dinh-muc-gach-co-bat-trang' => 'client.products.gach-co-bat-trang.index',
+            'admin.phu-kien-ngoi' => 'client.products.phu-kien-ngoi.index',
+            'admin.ngoi-bo-noc' => 'client.products.phu-kien-ngoi.index',
+            'admin.phan-loai-ngoi-bo-noc' => 'client.products.phu-kien-ngoi.index',
+            'admin.bo-noc-chu-van' => 'client.products.phu-kien-ngoi.index',
+            'admin.phan-loai-bo-noc-chu-van' => 'client.products.phu-kien-ngoi.index',
+            'admin.lan-can-gom-xu' => 'client.products.lan-can-gom-su.index',
+            'admin.linh-vat-phong-thuy' => 'client.products.linh-vat-phong-thuy.index',
+            'admin.den-gom-su' => 'client.products.den-gom-su.index',
+            'admin.tin-tuc' => 'client.news.index',
+            'admin.danh-muc-tin-tuc' => 'client.news.index',
+            'admin.du-an' => 'client.projects.index',
+            'admin.danh-muc-du-an' => 'client.projects.index',
+            'admin.catalog' => 'client.dich-vu.tai-catalog',
+        ];
+
+        foreach ($routeMap as $prefix => $clientRoute) {
+            if (Str::startsWith($currentRoute, $prefix)) {
+                $previewUrl = route($clientRoute);
+                break;
+            }
+        }
     }
 @endphp
 

@@ -1,3 +1,5 @@
+@section('preview_url', route('client.products.gach-trang-tri.detail', $product->gach_trang_tri_ct_id))
+
 <x-admin.layout.app title="Cập nhật Gạch Trang Trí" breadcrumb="Admin › DS Sản phẩm chi tiết › Chỉnh sửa">
     
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">

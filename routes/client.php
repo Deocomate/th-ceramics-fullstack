@@ -95,6 +95,7 @@ Route::name('client.')->group(function () {
         // Ngói Hài Văn Miếu
         Route::get('/ngoi-hai-van-mieu', [NgoiHaiVanMieuController::class, 'index'])->name('ngoi-hai-van-mieu.index');
         Route::get('/ngoi-hai-van-mieu/{id}', [NgoiHaiVanMieuController::class, 'detail'])->name('ngoi-hai-van-mieu.detail');
+        Route::get('/ngoi-hai-co/{id}', [NgoiHaiVanMieuController::class, 'detailNgoiHaiCo'])->name('ngoi-hai-co.detail');
 
         // Gạch Hoa Thông Gió
         Route::get('/gach-hoa-thong-gio', [GachHoaThongGioController::class, 'index'])->name('gach-hoa-thong-gio.index');
