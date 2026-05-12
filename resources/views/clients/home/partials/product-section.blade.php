@@ -3,7 +3,7 @@
     'sectionTitle' => '',
     'desktopLinkHref' => '',
     'products' => collect(),
-    'routePrefix' => '',
+    'detailRouteName' => '',
 ])
 
 @php
@@ -13,6 +13,39 @@
             return $productImage
                 ? (Str::startsWith($productImage, 'assets/') ? asset($productImage) : asset('storage/' . $productImage))
                 : asset('assets/images/placeholder.jpg');
+        }
+    }
+
+    if (!function_exists('getHomeProductCode')) {
+        function getHomeProductCode($product) {
+            $variantCode = $product->relationLoaded('mauSacs')
+                ? optional($product->mauSacs->first())->code
+                : null;
+
+            return $product->code ?? $variantCode ?? '—';
+        }
+    }
+
+    if (!function_exists('getHomeProductPrice')) {
+        function getHomeProductPrice($product) {
+            $basePrice = (float) ($product->price ?? 0);
+            $variantPrice = $product->relationLoaded('mauSacs')
+                ? (float) (optional($product->mauSacs->first())->price ?? 0)
+                : 0;
+
+            $price = $basePrice > 0 ? $basePrice : $variantPrice;
+
+            return $price > 0 ? number_format($price, 0, ',', '.') . ' đ/m²' : 'Liên hệ';
+        }
+    }
+
+    if (!function_exists('getHomeProductUrl')) {
+        function getHomeProductUrl($product, $detailRouteName) {
+            if (!$detailRouteName || !\Illuminate\Support\Facades\Route::has($detailRouteName)) {
+                return '#';
+            }
+
+            return route($detailRouteName, $product->getKey());
         }
     }
 @endphp
@@ -57,13 +90,16 @@
         <article class="flex-shrink-0 w-full snap-start pb-1" data-product-slide>
           <div class="grid grid-cols-2 gap-4">
             @foreach($chunk as $product)
-              @php $imageUrl = getProductImageUrl($product); @endphp
+              @php
+                $imageUrl = getProductImageUrl($product);
+                $detailUrl = getHomeProductUrl($product, $detailRouteName);
+              @endphp
               @include('clients.home.partials.mobile-product-card', [
-                  'href' => '#',
+                  'href' => $detailUrl,
                   'image' => $imageUrl,
                   'title' => $product->name,
-                  'code' => 'MSP: ' . ($product->code ?? '—'),
-                  'price' => number_format($product->price, 0, ',', '.') . ' đ/m²',
+                  'code' => 'MSP: ' . getHomeProductCode($product),
+                  'price' => getHomeProductPrice($product),
               ])
             @endforeach
           </div>
@@ -91,26 +127,34 @@
       data-aos-delay="200"
     >
       @foreach($products->take(4) as $product)
-        @php $imageUrl = getProductImageUrl($product); @endphp
+        @php
+          $imageUrl = getProductImageUrl($product);
+          $detailUrl = getHomeProductUrl($product, $detailRouteName);
+        @endphp
       <div class="flex flex-col">
-        <div
-          class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square group cursor-pointer"
+        <a
+          href="{{ $detailUrl }}"
+          class="flex flex-col group cursor-pointer"
         >
-          <img
-            src="{{ $imageUrl }}"
-            alt="{{ $product->name }}"
-            class="w-full h-full object-cover"
-          />
-          <div class="product-overlay">
-            <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
-            <span>Xem chi tiết</span>
+          <div
+            class="product-card relative bg-white rounded-sm shadow-lg overflow-hidden mb-4 aspect-square transition-all duration-300 group-hover:-translate-y-1"
+          >
+            <img
+              src="{{ $imageUrl }}"
+              alt="{{ $product->name }}"
+              class="w-full h-full object-cover"
+            />
+            <div class="product-overlay">
+              <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
+              <span>Xem chi tiết</span>
+            </div>
           </div>
-        </div>
-        <h3 class="text-primary font-semibold text-sm uppercase mb-2">
-          {{ $product->name }}
-        </h3>
-        <p class="text-gray-500 text-sm mb-2">MSP: {{ $product->code ?? '—' }}</p>
-        <p class="text-secondary font-bold text-sm">Giá: {{ number_format($product->price, 0, ',', '.') }} đ/m²</p>
+          <h3 class="text-primary font-semibold text-sm uppercase mb-2 transition-colors group-hover:text-secondary">
+            {{ $product->name }}
+          </h3>
+          <p class="text-gray-500 text-sm mb-2">MSP: {{ getHomeProductCode($product) }}</p>
+          <p class="text-secondary font-bold text-sm">Giá: {{ getHomeProductPrice($product) }}</p>
+        </a>
       </div>
       @endforeach
     </div>

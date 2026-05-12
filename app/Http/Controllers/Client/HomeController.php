@@ -22,7 +22,10 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-        $ngoiHais = NgoiHaiVanMieuCt::where('is_delete', 0)
+        $ngoiHais = NgoiHaiVanMieuCt::with(['mauSacs' => function ($query) {
+                $query->where('is_delete', 0);
+            }])
+            ->where('is_delete', 0)
             ->latest()
             ->take(8)
             ->get();

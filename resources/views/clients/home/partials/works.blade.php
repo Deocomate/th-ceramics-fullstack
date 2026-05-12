@@ -57,10 +57,18 @@
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
   }
 
   .works-carousel::-webkit-scrollbar {
     display: none;
+  }
+
+  .works-carousel.is-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
   }
 
   .works-scrollbar-track {
@@ -80,6 +88,11 @@
     left: 0;
     transition: width 0.1s ease;
     cursor: pointer;
+    touch-action: none;
+  }
+
+  .works-scrollbar-thumb.is-dragging {
+    transition: none;
   }
 
   .works-item-title {
@@ -113,16 +126,6 @@
 
     if (!worksCarousel || !worksTrack) return;
 
-    const getScrollStep = () => {
-      const firstItem = worksTrack.querySelector(".works-item");
-      if (!firstItem) return 0;
-
-      const itemWidth = firstItem.getBoundingClientRect().width;
-      const trackStyles = window.getComputedStyle(worksTrack);
-      const gap = parseFloat(trackStyles.columnGap || trackStyles.gap || "0") || 0;
-      return itemWidth + gap;
-    };
-
     const updateScrollbar = () => {
       if (!scrollbarThumb || !scrollbarTrack) return;
 
@@ -144,6 +147,105 @@
       scrollbarThumb.style.width = `${thumbWidth}px`;
       scrollbarThumb.style.left = `${thumbLeft}px`;
     };
+
+    let carouselPointerId = null;
+    let carouselStartX = 0;
+    let carouselStartScrollLeft = 0;
+    let carouselDidDrag = false;
+
+    const endCarouselDrag = () => {
+      if (carouselPointerId === null) return;
+
+      worksCarousel.classList.remove("is-dragging");
+      carouselPointerId = null;
+
+      window.setTimeout(() => {
+        carouselDidDrag = false;
+      }, 0);
+    };
+
+    worksCarousel.addEventListener("pointerdown", (event) => {
+      if (event.button !== undefined && event.button !== 0) return;
+
+      carouselPointerId = event.pointerId;
+      carouselStartX = event.clientX;
+      carouselStartScrollLeft = worksCarousel.scrollLeft;
+      carouselDidDrag = false;
+      worksCarousel.classList.add("is-dragging");
+      worksCarousel.setPointerCapture?.(event.pointerId);
+    });
+
+    worksCarousel.addEventListener("pointermove", (event) => {
+      if (carouselPointerId !== event.pointerId) return;
+
+      const deltaX = event.clientX - carouselStartX;
+      if (Math.abs(deltaX) > 4) {
+        carouselDidDrag = true;
+      }
+
+      worksCarousel.scrollLeft = carouselStartScrollLeft - deltaX;
+    });
+
+    worksCarousel.addEventListener("pointerup", endCarouselDrag);
+    worksCarousel.addEventListener("pointercancel", endCarouselDrag);
+    worksCarousel.addEventListener("pointerleave", endCarouselDrag);
+
+    worksCarousel.addEventListener(
+      "click",
+      (event) => {
+        if (!carouselDidDrag) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+      },
+      true,
+    );
+
+    if (scrollbarThumb && scrollbarTrack) {
+      let thumbPointerId = null;
+      let thumbStartX = 0;
+      let thumbStartScrollLeft = 0;
+
+      const endThumbDrag = () => {
+        if (thumbPointerId === null) return;
+
+        scrollbarThumb.classList.remove("is-dragging");
+        thumbPointerId = null;
+        document.body.style.userSelect = "";
+      };
+
+      scrollbarThumb.addEventListener("pointerdown", (event) => {
+        if (event.button !== undefined && event.button !== 0) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        thumbPointerId = event.pointerId;
+        thumbStartX = event.clientX;
+        thumbStartScrollLeft = worksCarousel.scrollLeft;
+        scrollbarThumb.classList.add("is-dragging");
+        scrollbarThumb.setPointerCapture?.(event.pointerId);
+        document.body.style.userSelect = "none";
+      });
+
+      scrollbarThumb.addEventListener("pointermove", (event) => {
+        if (thumbPointerId !== event.pointerId) return;
+
+        const scrollableWidth = worksCarousel.scrollWidth - worksCarousel.clientWidth;
+        const thumbWidth = scrollbarThumb.offsetWidth;
+        const draggableWidth = scrollbarTrack.clientWidth - thumbWidth;
+
+        if (scrollableWidth <= 0 || draggableWidth <= 0) return;
+
+        const deltaX = event.clientX - thumbStartX;
+        worksCarousel.scrollLeft =
+          thumbStartScrollLeft + (deltaX / draggableWidth) * scrollableWidth;
+      });
+
+      scrollbarThumb.addEventListener("pointerup", endThumbDrag);
+      scrollbarThumb.addEventListener("pointercancel", endThumbDrag);
+      scrollbarThumb.addEventListener("lostpointercapture", endThumbDrag);
+    }
 
     worksCarousel.addEventListener("scroll", updateScrollbar);
     window.addEventListener("resize", updateScrollbar);
