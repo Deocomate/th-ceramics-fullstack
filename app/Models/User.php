@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\VerifyEmailQueued;
+use App\Support\AssetPath;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -24,6 +27,7 @@ class User extends Authenticatable
         'name',
         'role',
         'email',
+        'email_verified_at',
         'phone',       // Thêm dòng này
         'gender',      // Thêm dòng này
         'birth_year',  // Thêm dòng này
@@ -53,6 +57,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected function avatarUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => AssetPath::url($this->avatar, 'assets/images/default-avatar.png'),
+        );
     }
 
     // -------------------------------------------------------------------------
@@ -91,6 +102,14 @@ class User extends Authenticatable
         $this->notify(new ResetPasswordNotification($token));
     }
 
+    /**
+     * Send the email verification notification via queue.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new VerifyEmailQueued);
+    }
+
     // -------------------------------------------------------------------------
     // Query Scopes
     // -------------------------------------------------------------------------
@@ -117,5 +136,13 @@ class User extends Authenticatable
     public function scopeSuperAdmins(Builder $query): Builder
     {
         return $query->where('role', 'superadmin');
+    }
+
+    /**
+     * Scope to get customer users.
+     */
+    public function scopeCustomers(Builder $query): Builder
+    {
+        return $query->where('role', 'customer');
     }
 }

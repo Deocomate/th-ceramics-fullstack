@@ -25,10 +25,7 @@
           <tbody>
             <!-- Noi thanh Ha Noi -->
             <tr>
-              <td
-                rowspan="2"
-                class="font-bold text-center align-middle"
-              >
+              <td rowspan="2" class="font-bold text-center align-middle">
                 Nội thành Hà Nội
               </td>
               <td class="italic font-bold text-center align-middle">Ship ghép chuyến</td>
@@ -52,10 +49,7 @@
 
             <!-- Tinh thanh mien Bac -->
             <tr>
-              <td
-                rowspan="2"
-                class="font-bold text-center align-middle"
-              >
+              <td rowspan="2" class="font-bold text-center align-middle">
                 Tỉnh thành miền Bắc
               </td>
               <td class="italic font-bold text-center align-middle">Xe tải chuyên dụng</td>
@@ -78,14 +72,11 @@
 
             <!-- Mien Trung & Mien Nam -->
             <tr>
-              <td
-                rowspan="2"
-                class="font-bold text-center align-middle"
-              >
+              <td rowspan="2" class="font-bold text-center align-middle">
                 Miền Trung & Miền Nam
               </td>
               <td class="italic font-bold text-center align-middle">
-                Xe tải ghép <br />
+                Xe tải ghép <br>
                 Bắc - Nam
               </td>
               <td>

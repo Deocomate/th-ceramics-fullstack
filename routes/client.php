@@ -35,6 +35,17 @@ use Illuminate\Support\Facades\Route;
 | CLIENT ROUTES (SEO Vietnamese URLs)
 |--------------------------------------------------------------------------
 */
+Route::middleware('auth')->group(function () {
+    Route::get('/tai-khoan/xac-thuc-email', [AuthController::class, 'verifyNotice'])
+        ->name('verification.notice');
+    Route::get('/tai-khoan/xac-thuc-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+        ->middleware('signed')
+        ->name('verification.verify');
+    Route::post('/tai-khoan/xac-thuc-email/gui-lai', [AuthController::class, 'resendVerification'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+});
+
 Route::name('client.')->group(function () {
 
     // Static & Main Pages
@@ -62,11 +73,11 @@ Route::name('client.')->group(function () {
 
     // Giỏ hàng / Thanh toán
     Route::get('/gio-hang', [CartController::class, 'cart'])->name('cart.index');
-    Route::get('/thanh-toan', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::get('/thanh-toan', [CartController::class, 'checkout'])->middleware(['auth', 'verified'])->name('cart.checkout');
     Route::post('/gio-hang/them', [CartController::class, 'add'])->name('cart.add');
     Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('cart.update');
     Route::post('/gio-hang/xoa', [CartController::class, 'remove'])->name('cart.remove');
-    Route::post('/thanh-toan/xu-ly', [CartController::class, 'processCheckout'])->name('cart.checkout.process');
+    Route::post('/thanh-toan/xu-ly', [CartController::class, 'processCheckout'])->middleware(['auth', 'verified'])->name('cart.checkout.process');
     Route::post('/thanh-toan/ap-dung-ma', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
     Route::post('/thanh-toan/go-ma', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
 
@@ -153,23 +164,22 @@ Route::name('client.')->group(function () {
             // Google OAuth
             Route::get('/google', [AuthController::class, 'redirectToGoogle'])->name('google');
             Route::get('/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google.callback');
+            Route::get('/google/hoan-tat-dang-ky', [AuthController::class, 'showCompleteGoogleRegistration'])->name('google.complete');
+            Route::post('/google/hoan-tat-dang-ky', [AuthController::class, 'submitCompleteGoogleRegistration'])->name('google.complete.post');
         });
 
         // Only for authenticated users
         Route::middleware('auth')->group(function () {
             Route::post('/dang-xuat', [AuthController::class, 'logout'])->name('logout');
+        });
 
+        // Only for verified authenticated users
+        Route::middleware(['auth', 'verified'])->group(function () {
             // --- THÊM MỚI ROUTE CHO TRANG TÀI KHOẢN CỦA TÔI ---
             Route::get('/cua-toi', [TaiKhoanCuaToiController::class, 'index'])->name('profile');
             Route::post('/cua-toi/cap-nhat-thong-tin', [TaiKhoanCuaToiController::class, 'updateProfile'])->name('profile.update');
             Route::post('/cua-toi/doi-mat-khau', [TaiKhoanCuaToiController::class, 'updatePassword'])->name('password.update');
             Route::post('/cua-toi/cap-nhat-anh', [TaiKhoanCuaToiController::class, 'updateAvatar'])->name('profile.update-avatar');
-            Route::post('/cua-toi/doi-mat-khau', [TaiKhoanCuaToiController::class, 'updatePassword'])->name('password.update');
-        });
-
-        // Only for authenticated users
-        Route::middleware('auth')->group(function () {
-            Route::post('/dang-xuat', [AuthController::class, 'logout'])->name('logout');
         });
     });
 });

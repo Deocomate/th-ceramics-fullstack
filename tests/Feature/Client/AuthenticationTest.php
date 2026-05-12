@@ -3,7 +3,14 @@
 namespace Tests\Feature\Client;
 
 use App\Models\User;
+use App\Notifications\VerifyEmailQueued;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
+use Laravel\Socialite\Contracts\User as SocialiteUser;
+use Laravel\Socialite\Facades\Socialite;
+use Mockery;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -37,6 +44,8 @@ class AuthenticationTest extends TestCase
      */
     public function test_register_with_valid_data(): void
     {
+        Notification::fake();
+
         $response = $this->post(route('client.auth.register.post'), [
             'name' => 'Nguyễn Văn A',
             'email' => 'test@example.com',
@@ -44,13 +53,83 @@ class AuthenticationTest extends TestCase
             'password_confirmation' => 'Password123',
         ]);
 
-        $response->assertRedirect(route('client.home'));
+        $response->assertRedirect(route('verification.notice'));
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
             'name' => 'Nguyễn Văn A',
             'role' => 'customer',
+            'email_verified_at' => null,
         ]);
-        $this->assertAuthenticatedAs(User::where('email', 'test@example.com')->first());
+        $user = User::where('email', 'test@example.com')->first();
+        $this->assertAuthenticatedAs($user);
+        Notification::assertSentTo($user, VerifyEmailQueued::class, function ($notification) {
+            return $notification instanceof ShouldQueue;
+        });
+    }
+
+    public function test_user_can_verify_email_with_signed_link(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email_verified_at' => null,
+        ]);
+
+        $url = URL::temporarySignedRoute('verification.verify', now()->addMinutes(60), [
+            'id' => $user->id,
+            'hash' => sha1($user->email),
+        ]);
+
+        $this->actingAs($user)
+            ->get($url)
+            ->assertRedirect(route('client.home'));
+
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+    }
+
+    public function test_unverified_user_is_redirected_from_profile_and_checkout(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email_verified_at' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('client.auth.profile'))
+            ->assertRedirect(route('verification.notice'));
+
+        $this->actingAs($user)
+            ->get(route('client.cart.checkout'))
+            ->assertRedirect(route('verification.notice'));
+    }
+
+    public function test_verified_user_can_reach_protected_profile(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email_verified_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('client.auth.profile'))
+            ->assertOk();
+    }
+
+    public function test_resend_verification_sends_notification(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email_verified_at' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('verification.send'))
+            ->assertSessionHas('success');
+
+        Notification::assertSentTo($user, VerifyEmailQueued::class, function ($notification) {
+            return $notification instanceof ShouldQueue;
+        });
     }
 
     /**
@@ -168,6 +247,104 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_google_callback_logs_in_existing_google_user(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email' => 'google@example.com',
+            'google_id' => 'google-123',
+            'email_verified_at' => now(),
+        ]);
+
+        $this->mockGoogleUser('google-123', 'google@example.com', 'Google User');
+
+        $this->get(route('client.auth.google.callback'))
+            ->assertRedirect(route('client.home'));
+
+        $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_google_callback_links_existing_verified_email(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email' => 'verified@example.com',
+            'google_id' => null,
+            'email_verified_at' => now(),
+        ]);
+
+        $this->mockGoogleUser('google-456', 'verified@example.com', 'Verified User');
+
+        $this->get(route('client.auth.google.callback'))
+            ->assertRedirect(route('client.home'));
+
+        $this->assertAuthenticatedAs($user);
+        $this->assertSame('google-456', $user->fresh()->google_id);
+    }
+
+    public function test_google_callback_force_updates_unverified_email_and_requires_phone(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email' => 'pending@example.com',
+            'google_id' => null,
+            'phone' => null,
+            'email_verified_at' => null,
+        ]);
+
+        $this->mockGoogleUser('google-789', 'pending@example.com', 'Pending User');
+
+        $this->get(route('client.auth.google.callback'))
+            ->assertRedirect(route('client.auth.google.complete'))
+            ->assertSessionHas('google_user');
+
+        $freshUser = $user->fresh();
+        $this->assertSame('google-789', $freshUser->google_id);
+        $this->assertTrue($freshUser->hasVerifiedEmail());
+        $this->assertSame(1, User::where('email', 'pending@example.com')->count());
+    }
+
+    public function test_new_google_user_completes_registration_with_phone(): void
+    {
+        $this->mockGoogleUser('google-new', 'new-google@example.com', 'New Google User');
+
+        $this->get(route('client.auth.google.callback'))
+            ->assertRedirect(route('client.auth.google.complete'));
+
+        $this->post(route('client.auth.google.complete.post'), [
+            'phone' => '0909123456',
+        ])->assertRedirect(route('client.home'));
+
+        $user = User::where('email', 'new-google@example.com')->first();
+
+        $this->assertNotNull($user);
+        $this->assertSame('0909123456', $user->phone);
+        $this->assertSame('google-new', $user->google_id);
+        $this->assertTrue($user->hasVerifiedEmail());
+        $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_complete_google_registration_requires_session(): void
+    {
+        $this->get(route('client.auth.google.complete'))
+            ->assertRedirect(route('client.auth.login'))
+            ->assertSessionHasErrors();
+    }
+
+    public function test_avatar_url_handles_google_and_local_paths(): void
+    {
+        $googleUser = User::factory()->make([
+            'avatar' => 'https://lh3.googleusercontent.com/avatar.png',
+        ]);
+
+        $localUser = User::factory()->make([
+            'avatar' => 'users/avatars/photo.jpg',
+        ]);
+
+        $this->assertSame('https://lh3.googleusercontent.com/avatar.png', $googleUser->avatar_url);
+        $this->assertStringContainsString('/storage/users/avatars/photo.jpg', $localUser->avatar_url);
+    }
+
     /**
      * Test: Show forgot password form
      */
@@ -231,5 +408,22 @@ class AuthenticationTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect();
+    }
+
+    private function mockGoogleUser(string $id, string $email, string $name, ?string $avatar = 'https://example.com/avatar.png'): void
+    {
+        $googleUser = Mockery::mock(SocialiteUser::class);
+        $googleUser->shouldReceive('getId')->andReturn($id);
+        $googleUser->shouldReceive('getEmail')->andReturn($email);
+        $googleUser->shouldReceive('getName')->andReturn($name);
+        $googleUser->shouldReceive('getAvatar')->andReturn($avatar);
+
+        $provider = Mockery::mock();
+        $provider->shouldReceive('user')->once()->andReturn($googleUser);
+
+        Socialite::shouldReceive('driver')
+            ->once()
+            ->with('google')
+            ->andReturn($provider);
     }
 }

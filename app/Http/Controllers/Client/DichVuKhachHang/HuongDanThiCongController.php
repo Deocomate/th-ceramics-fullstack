@@ -9,7 +9,7 @@ class HuongDanThiCongController extends Controller
 {
     public function index()
     {
-        $guides = ThiCong::query()->latest()->get();
+        $guides = ThiCong::query()->orderBy('thi_cong')->get();
 
         return view('clients.dich-vu-khach-hang.huong-dan-thi-cong', compact('guides'));
     }

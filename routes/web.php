@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -402,6 +403,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}',[\App\Http\Controllers\Admin\CatalogController::class, 'update'])->name('update');
             Route::delete('/{id}',[\App\Http\Controllers\Admin\CatalogController::class, 'destroy'])->name('destroy');
         });
+
+        Route::get('customers', [CustomerController::class, 'index'])
+            ->middleware('role:superadmin,admin')
+            ->name('customers.index');
 
         // ── Superadmin-only: account management ──────────────────────────────
         Route::middleware('role:superadmin')->group(function () {

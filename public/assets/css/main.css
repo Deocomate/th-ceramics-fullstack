@@ -115,19 +115,6 @@
     display: none !important;
   }
 
-  .shipping-table th,
-  .shipping-table td {
-    border: 1px solid #2e2f2a;
-    padding: 1.5rem 1rem;
-  }
-
-  .shipping-table th {
-    background-color: transparent;
-    color: #2e2f2a;
-    font-weight: bold;
-    text-align: center;
-  }
-
   .spec-table th,
   .spec-table td {
     @apply py-[10px] md:py-4 text-center;
@@ -248,4 +235,18 @@
     font-size: 16px;
     line-height: 1.7;
   }
+}
+
+/* Customer service shipping policy tables */
+.shipping-table th,
+.shipping-table td {
+  border: 1px solid #2e2f2a;
+  padding: 1.5rem 1rem;
+}
+
+.shipping-table th {
+  background-color: transparent;
+  color: #2e2f2a;
+  font-weight: 700;
+  text-align: center;
 }

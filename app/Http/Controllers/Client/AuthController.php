@@ -7,7 +7,10 @@ use App\Http\Requests\Client\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Client\Auth\LoginRequest;
 use App\Http\Requests\Client\Auth\RegisterRequest;
 use App\Http\Requests\Client\Auth\ResetPasswordRequest;
+use App\Models\User;
 use App\Services\AuthService;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
@@ -51,9 +54,11 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         $user = $this->authService->registerClient($request->validated());
+        event(new Registered($user));
         Auth::login($user);
 
-        return redirect()->route('client.home')->with('success', 'Đăng ký thành công');
+        return redirect()->route('verification.notice')
+            ->with('success', 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản.');
     }
 
     /**
@@ -124,13 +129,139 @@ class AuthController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-            $user = $this->authService->handleGoogleUser($googleUser);
-            Auth::login($user);
+            $googleId = $googleUser->getId();
+            $email = $googleUser->getEmail();
+            $avatar = $googleUser->getAvatar();
 
-            return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
+            $user = User::where('google_id', $googleId)->first();
+
+            if ($user) {
+                Auth::login($user);
+
+                return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
+            }
+
+            $existingUser = User::where('email', $email)->first();
+
+            if ($existingUser) {
+                $wasVerified = $existingUser->hasVerifiedEmail();
+
+                $existingUser->forceFill([
+                    'google_id' => $googleId,
+                    'avatar' => $existingUser->avatar ?: $avatar,
+                    'email_verified_at' => $existingUser->email_verified_at ?: now(),
+                ])->save();
+
+                if (! $wasVerified && empty($existingUser->phone)) {
+                    session()->put('google_user', [
+                        'user_id' => $existingUser->id,
+                        'name' => $existingUser->name,
+                        'email' => $existingUser->email,
+                        'google_id' => $googleId,
+                        'avatar' => $existingUser->avatar,
+                    ]);
+
+                    return redirect()->route('client.auth.google.complete');
+                }
+
+                Auth::login($existingUser);
+
+                return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
+            }
+
+            session()->put('google_user', [
+                'name' => $googleUser->getName() ?: $email,
+                'email' => $email,
+                'google_id' => $googleId,
+                'avatar' => $avatar,
+            ]);
+
+            return redirect()->route('client.auth.google.complete');
         } catch (\Exception $e) {
             return redirect()->route('client.auth.login')
                 ->withErrors(['error' => 'Đăng nhập bằng Google thất bại. Vui lòng thử lại.']);
         }
+    }
+
+    public function showCompleteGoogleRegistration()
+    {
+        if (! session()->has('google_user')) {
+            return redirect()->route('client.auth.login')
+                ->withErrors(['error' => 'Phiên đăng nhập Google đã hết hạn. Vui lòng thử lại.']);
+        }
+
+        return view('clients.auth.complete-google-registration', [
+            'googleUser' => session('google_user'),
+        ]);
+    }
+
+    public function submitCompleteGoogleRegistration(Request $request)
+    {
+        $googleUser = session('google_user');
+
+        if (! $googleUser) {
+            return redirect()->route('client.auth.login')
+                ->withErrors(['error' => 'Phiên đăng nhập Google đã hết hạn. Vui lòng thử lại.']);
+        }
+
+        $validated = $request->validate(
+            [
+                'phone' => ['required', 'string', 'max:20'],
+            ],
+            [
+                'phone.required' => 'Vui lòng nhập số điện thoại.',
+                'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự.',
+            ]
+        );
+
+        if (! empty($googleUser['user_id'])) {
+            $user = User::findOrFail($googleUser['user_id']);
+            $user->forceFill([
+                'phone' => $validated['phone'],
+                'google_id' => $googleUser['google_id'],
+                'avatar' => $user->avatar ?: ($googleUser['avatar'] ?? null),
+                'email_verified_at' => $user->email_verified_at ?: now(),
+            ])->save();
+        } else {
+            $user = User::create([
+                'name' => $googleUser['name'],
+                'email' => $googleUser['email'],
+                'phone' => $validated['phone'],
+                'google_id' => $googleUser['google_id'],
+                'avatar' => $googleUser['avatar'] ?? null,
+                'role' => 'customer',
+                'password' => null,
+                'email_verified_at' => now(),
+            ]);
+        }
+
+        session()->forget('google_user');
+        Auth::login($user);
+
+        return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
+    }
+
+    public function verifyNotice()
+    {
+        return view('clients.auth.verify-email');
+    }
+
+    public function verifyEmail(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+
+        return redirect()->route('client.home')
+            ->with('success', 'Email đã được xác thực thành công.');
+    }
+
+    public function resendVerification(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->route('client.home');
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('success', 'Email xác thực đã được gửi lại.');
     }
 }

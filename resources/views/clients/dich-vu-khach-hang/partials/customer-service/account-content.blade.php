@@ -19,7 +19,7 @@
             @csrf
             <div class="relative w-24 h-24 mb-3 rounded-full overflow-hidden border-2 border-secondary/50">
                 @if (Auth::user()->avatar)
-                    <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar"
+                    <img src="{{ Auth::user()->avatar_url }}" alt="Avatar"
                         class="w-full h-full object-cover">
                 @else
                     <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=EBDDD0&color=2E2F2A"
