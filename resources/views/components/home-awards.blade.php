@@ -1,5 +1,10 @@
 @php
     $awards = \App\Models\GiaiThuongThanhTuu::latest()->get();
+    $renderAwards = collect($awards->all());
+
+    while ($renderAwards->count() > 0 && $renderAwards->count() < 12) {
+        $renderAwards = $renderAwards->concat($awards->all())->values();
+    }
 @endphp
 
 @push('styles')
@@ -274,13 +279,13 @@
 </style>
 @endpush
 
-@if($awards->isNotEmpty())
+@if($renderAwards->isNotEmpty())
 <div
   class="awards-component w-full max-w-[1320px] mx-auto relative px-0 lg:px-0"
 >
   <div class="swiper awards-swiper w-full py-0 lg:py-10">
     <div class="swiper-wrapper">
-      @foreach($awards as $award)
+      @foreach($renderAwards as $award)
         @php
           $imgUrl = Str::startsWith($award->image, 'assets/')
               ? asset($award->image)
@@ -376,6 +381,7 @@
       var isMobile = window.matchMedia("(max-width: 767px)").matches;
       var transitionSpeed = isMobile ? 780 : 620;
       var awardCount = root.querySelectorAll(".swiper-slide").length;
+      var initialAwardSlide = isMobile ? 0 : Math.min(2, Math.max(awardCount - 1, 0));
       var swiper = new Swiper(swiperEl, {
         effect: "slide",
         speed: transitionSpeed,
@@ -383,9 +389,9 @@
         centeredSlides: true,
         slidesPerView: "auto",
         spaceBetween: 15,
-        initialSlide: isMobile ? 0 : 1,
-        loop: true,
-        loopedSlides: awardCount,
+        initialSlide: initialAwardSlide,
+        loop: awardCount > 6,
+        slidesPerGroup: 1,
         roundLengths: true,
         navigation: {
           nextEl: nextEl,

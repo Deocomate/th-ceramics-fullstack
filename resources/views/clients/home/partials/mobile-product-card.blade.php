@@ -13,7 +13,7 @@
     <img
       src="{{ $image }}"
       alt="{{ $title }}"
-      class="w-full h-full object-containmix-blend-multiply"
+      class="w-full h-full object-contain mix-blend-multiply"
     />
   </div>
   <h3

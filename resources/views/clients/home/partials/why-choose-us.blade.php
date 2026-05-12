@@ -11,7 +11,7 @@
       class="relative w-full aspect-video mb-8 lg:mb-12 rounded-lg overflow-hidden cursor-pointer group"
       data-aos="fade-up"
       data-aos-delay="200"
-      @if($trangChu?->video) data-video-url="{{ $trangChu->video }}" @endif
+      @if($trangChu?->video) data-video-url="{{ $trangChu->video }}" role="button" tabindex="0" @endif
     >
       <img
         src="{{ asset('assets/images/video-placeholder.jpg') }}"
@@ -125,7 +125,123 @@
 
         counters.forEach((el) => observer.observe(el));
       })();
+
+      (function () {
+        const videoTrigger = document.querySelector("[data-video-url]");
+        const videoModal = document.getElementById("youtube-video-modal");
+        const iframe = document.getElementById("youtube-iframe");
+        const closeBtn = document.getElementById("close-video-modal");
+
+        if (!videoTrigger || !videoModal || !iframe || !closeBtn) return;
+
+        const getYoutubeId = (url) => {
+          if (!url) return null;
+
+          try {
+            const parsedUrl = new URL(url, window.location.origin);
+            const host = parsedUrl.hostname.replace(/^www\./, "");
+
+            if (host === "youtu.be") {
+              const id = parsedUrl.pathname.split("/").filter(Boolean)[0];
+              return id && id.length === 11 ? id : null;
+            }
+
+            if (host === "youtube.com" || host === "m.youtube.com") {
+              const watchId = parsedUrl.searchParams.get("v");
+              if (watchId && watchId.length === 11) return watchId;
+
+              const pathParts = parsedUrl.pathname.split("/").filter(Boolean);
+              const embedIndex = pathParts.findIndex((part) =>
+                ["embed", "shorts", "v"].includes(part),
+              );
+              const embedId = embedIndex >= 0 ? pathParts[embedIndex + 1] : null;
+              return embedId && embedId.length === 11 ? embedId : null;
+            }
+          } catch (error) {
+            const match = url.match(
+              /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|&v=)([^#&?]*).*/,
+            );
+            return match && match[2].length === 11 ? match[2] : null;
+          }
+
+          return null;
+        };
+
+        const openModal = () => {
+          const videoId = getYoutubeId(videoTrigger.getAttribute("data-video-url"));
+          if (!videoId) return;
+
+          iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+          videoModal.classList.remove("hidden");
+          videoModal.classList.add("flex");
+          document.body.style.overflow = "hidden";
+
+          window.requestAnimationFrame(() => {
+            videoModal.classList.remove("opacity-0");
+          });
+        };
+
+        const closeModal = () => {
+          videoModal.classList.add("opacity-0");
+
+          window.setTimeout(() => {
+            videoModal.classList.add("hidden");
+            videoModal.classList.remove("flex");
+            iframe.src = "";
+            document.body.style.overflow = "";
+          }, 300);
+        };
+
+        videoTrigger.addEventListener("click", openModal);
+        videoTrigger.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openModal();
+          }
+        });
+        closeBtn.addEventListener("click", closeModal);
+
+        videoModal.addEventListener("click", (event) => {
+          if (event.target === videoModal) {
+            closeModal();
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !videoModal.classList.contains("hidden")) {
+            closeModal();
+          }
+        });
+      })();
     </script>
     @endpush
+  </div>
+
+  <div
+    id="youtube-video-modal"
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 p-4 opacity-0 transition-opacity duration-300"
+    aria-hidden="true"
+  >
+    <button
+      id="close-video-modal"
+      type="button"
+      class="absolute right-4 top-4 z-10 p-2 text-white transition-colors hover:text-secondary"
+      aria-label="Đóng video"
+    >
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <div class="relative w-full max-w-5xl aspect-video overflow-hidden rounded-lg shadow-2xl">
+      <iframe
+        id="youtube-iframe"
+        class="w-full h-full"
+        src=""
+        title="TH Ceramics video"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
   </div>
 </section>

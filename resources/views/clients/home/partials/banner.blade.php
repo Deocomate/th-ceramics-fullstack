@@ -30,7 +30,6 @@
       @foreach($trangChu->banner as $index => $bg)
       <div
         class="banner-slide {{ $index === 0 ? 'active' : '' }} absolute inset-0 transition-opacity duration-500"
-        style="opacity: {{ $index === 0 ? '1' : '0' }}"
       >
         <img
           src="{{ Str::startsWith($bg, 'assets/') ? asset($bg) : asset('storage/' . $bg) }}"
@@ -49,11 +48,11 @@
 
   <!-- Banner Navigation & Dots -->
   <div
-    class="w-[85%] max-w-[1320px] mx-auto mt-[25px] md:mt-6 flex items-center justify-center md:justify-between z-20"
+    class="relative z-50 w-[85%] max-w-[1320px] mx-auto mt-[25px] md:mt-6 flex items-center justify-center md:justify-between"
   >
     <!-- Prev Button (desktop/tablet only) -->
     <button
-      class="banner-prev hidden md:flex w-10 h-10 border border-white/50 rounded-full items-center justify-center text-white/70 hover:border-white hover:text-white transition-all"
+      class="banner-prev relative z-50 hidden md:flex w-10 h-10 border border-white/50 rounded-full items-center justify-center text-white/70 hover:border-white hover:text-white transition-all"
       aria-label="Previous slide"
     >
       <svg
@@ -71,7 +70,7 @@
       </svg>
     </button>
 
-    <div class="banner-dots flex items-center gap-[7px] md:gap-3">
+    <div class="banner-dots relative z-50 flex items-center gap-[7px] md:gap-3">
       @if($trangChu && !empty($trangChu->banner))
         @foreach($trangChu->banner as $index => $bg)
         <button
@@ -85,7 +84,7 @@
 
     <!-- Next Button (desktop/tablet only) -->
     <button
-      class="banner-next hidden md:flex w-10 h-10 border border-white/50 rounded-full items-center justify-center text-white/70 hover:border-white hover:text-white transition-all"
+      class="banner-next relative z-50 hidden md:flex w-10 h-10 border border-white/50 rounded-full items-center justify-center text-white/70 hover:border-white hover:text-white transition-all"
       aria-label="Next slide"
     >
       <svg
@@ -209,8 +208,8 @@
       bannerSlides.forEach((slide, slideIndex) => {
         const isActive = slideIndex === index;
         slide.classList.toggle("active", isActive);
-        slide.classList.toggle("opacity-100", isActive);
-        slide.classList.toggle("opacity-0", !isActive);
+        slide.style.opacity = isActive ? "1" : "0";
+        slide.style.pointerEvents = isActive ? "auto" : "none";
       });
 
       bannerDots.forEach((dot, dotIndex) => {
@@ -245,7 +244,9 @@
     });
 
     showBannerSlide(bannerCurrentSlide);
-    window.setInterval(nextBannerSlide, 5000);
+    if (totalBannerSlides > 1) {
+      window.setInterval(nextBannerSlide, 5000);
+    }
   });
 </script>
 @endpush
