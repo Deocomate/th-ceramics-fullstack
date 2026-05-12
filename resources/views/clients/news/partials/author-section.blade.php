@@ -1,7 +1,8 @@
 @php
-  $authorName = $author->ten_tac_gia ?? 'Gốm sứ Thanh Hải';
-  $authorAvatar = \App\Support\AssetPath::url($author->anh_dai_dien ?? null, 'assets/images/author.svg');
-  $authorDesc = $author->mo_ta ?? 'Thông tin tác giả đang được cập nhật.';
+  $authorData = $author ?? null;
+  $authorName = $authorData?->ten_tac_gia ?? 'Gốm sứ Thanh Hải';
+  $authorAvatar = \App\Support\AssetPath::url($authorData?->anh_dai_dien, 'assets/images/author.svg');
+  $authorDesc = $authorData?->mo_ta ?? 'Thông tin tác giả đang được cập nhật.';
 @endphp
 
 <!-- Author Section for News Detail -->

@@ -44,62 +44,61 @@
 
   <div class="space-y-12 md:space-y-16">
     <div
-      class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left items-center"
+      class="hidden md:block max-w-4xl mx-auto"
       data-aos="fade-up"
     >
-      <article>
-        <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $luyenDatTitle }}</h3>
-        <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ $luyenDatBody }}</p>
-      </article>
-      <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
-        <img
-          src="{{ \App\Support\AssetPath::url($craftImages->first(), 'assets/images/about-02.jpg') }}"
-          alt="{{ $luyenDatTitle }}"
-          class="w-full h-full object-cover"
-        />
-      </div>
+      <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-[20px] md:mb-6">
+        {{ $luyenDatTitle }}
+      </h3>
+      <p class="text-textPrimary leading-relaxed text-center font-medium tracking-wide">
+        {{ $luyenDatBody }}
+      </p>
     </div>
 
-    @foreach($luyenDatItems as $item)
-      @if($loop->index % 2 === 0)
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left items-center"
-        data-aos="fade-up"
-      >
-        <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+    @if($luyenDatItems->isNotEmpty())
+    <div
+      class="hidden md:grid grid-cols-1 md:grid-cols-2 gap-[59px] text-left"
+      data-aos="fade-up"
+    >
+      @foreach($luyenDatItems as $item)
+      <section class="w-full">
+        <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-[20px] md:mb-6">{{ data_get($item, 'head') }}</h3>
+        <p class="text-textPrimary leading-relaxed text-left font-medium tracking-wide">{{ data_get($item, 'body') }}</p>
+      </section>
+      @endforeach
+
+      @foreach($luyenDatItems as $item)
+      <section class="w-full h-full">
+        <div class="relative overflow-hidden shadow-lg h-full min-h-[320px]">
           <img
             src="{{ \App\Support\AssetPath::url(data_get($item, 'image'), 'assets/images/about-02.jpg') }}"
             alt="{{ data_get($item, 'head', 'Nghệ thuật thủ công') }}"
             class="w-full h-full object-cover"
           />
         </div>
-        <article>
-          <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ data_get($item, 'head') }}</h3>
-          <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ data_get($item, 'body') }}</p>
-        </article>
-      </div>
-      @else
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left items-center"
-        data-aos="fade-up"
-      >
-        <article>
-          <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ data_get($item, 'head') }}</h3>
-          <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ data_get($item, 'body') }}</p>
-        </article>
-        <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+      </section>
+      @endforeach
+    </div>
+
+    <div class="grid grid-cols-1 gap-12 md:hidden">
+      @foreach($luyenDatItems as $item)
+      <section class="text-left">
+        <div class="relative overflow-hidden shadow-lg aspect-[1/1] mb-6">
           <img
             src="{{ \App\Support\AssetPath::url(data_get($item, 'image'), 'assets/images/about-02.jpg') }}"
             alt="{{ data_get($item, 'head', 'Nghệ thuật thủ công') }}"
             class="w-full h-full object-cover"
           />
         </div>
-      </div>
-      @endif
-    @endforeach
+        <h3 class="text-2xl font-bold text-textPrimary mb-4">{{ data_get($item, 'head') }}</h3>
+        <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ data_get($item, 'body') }}</p>
+      </section>
+      @endforeach
+    </div>
+    @endif
 
     <div
-      class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left"
+      class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-[59px] text-left"
       data-aos="fade-up"
     >
       <article class="md:col-span-2 text-center">

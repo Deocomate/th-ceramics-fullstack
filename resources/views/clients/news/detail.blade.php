@@ -1,4 +1,4 @@
-<x-layouts.client title="Chi tiết tin tức" data-page="news-detail" main-class="bg-background-secondary pb-14 lg:pb-20">
+<x-layouts.client title="{{ $article->tieu_de ?? 'Chi tiết tin tức' }}" data-page="news-detail" main-class="bg-background-secondary pb-14 lg:pb-20">
 
     {{-- NỘI DUNG TRANG CHI TIẾT TIN TỨC --}}
     @include('clients.news.partials.detail-hero')

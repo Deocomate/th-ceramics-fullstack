@@ -8,6 +8,7 @@ use App\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiHaiVanMieuCtService;
 use App\Services\NgoiHaiVanMieuCtService;
 use App\Services\NgoiHaiVanMieuService;
+use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
 use Illuminate\Http\Request;
@@ -37,13 +38,15 @@ class NgoiHaiVanMieuController extends Controller
         ));
     }
 
-    public function detail($id)
+    public function detail($id, ViewHistoryService $historyService)
     {
         $product = $this->ngoiHaiVanMieuCtService->findById($id);
 
         if ($product->is_delete == 1) {
             abort(404);
         }
+
+        $historyService->trackProduct('ngoi_hai_van_mieu_ct', (int) $product->ngoi_hai_van_mieu_ct_id);
 
         $colors = $product->mauSacs;
 

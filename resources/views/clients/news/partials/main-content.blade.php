@@ -1,80 +1,57 @@
-@php
-  $categoryId = request()->integer('category');
-@endphp
+<section class="py-16 md:py-24 bg-neutral-2">
+  <div class="w-[85%] max-w-[1320px] mx-auto flex flex-col gap-12 md:gap-32">
+    @if (($categoryId ?? 0) > 0)
+      <div class="news-category-section">
+        <h2 class="text-2xl md:text-4xl font-arima font-semibold text-secondary uppercase mb-8 md:mb-12 tracking-wide" data-aos="fade-right">
+          {{ $currentCategory->ten_danh_muc ?? 'Tin tức' }}
+        </h2>
 
-<section class="py-12 md:py-20 bg-neutral-2">
-  <div class="w-[85%] max-w-[1320px] mx-auto flex flex-col gap-10 md:gap-14">
-    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-      <h2 class="text-2xl md:text-4xl font-arima font-semibold text-secondary uppercase">Tin tức mới nhất</h2>
-      <form method="GET" action="{{ route('client.news.index') }}" class="flex flex-wrap gap-2">
-        <a
-          href="{{ route('client.news.index') }}"
-          class="px-4 py-2 text-xs md:text-sm font-bold uppercase border {{ $categoryId ? 'border-black/20 text-primary/70' : 'border-secondary text-secondary' }}"
-        >
-          Tất cả
-        </a>
-        @foreach ($categories as $category)
-        <button
-          type="submit"
-          name="category"
-          value="{{ $category->danh_muc_tin_tuc_id }}"
-          class="px-4 py-2 text-xs md:text-sm font-bold uppercase border transition-colors {{ $categoryId === $category->danh_muc_tin_tuc_id ? 'border-secondary text-secondary' : 'border-black/20 text-primary/70 hover:text-secondary hover:border-secondary' }}"
-        >
-          {{ $category->ten_danh_muc }}
-        </button>
-        @endforeach
-      </form>
-    </div>
-
-    @if ($featuredNews->isNotEmpty())
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-      @foreach ($featuredNews as $article)
-      <article class="bg-white shadow-sm overflow-hidden">
-        <a href="{{ route('client.news.detail', $article->slug) }}" class="block aspect-[16/10] overflow-hidden">
-          <img
-            src="{{ \App\Support\AssetPath::url($article->anh_dai_dien, 'assets/images/news-01.jpg') }}"
-            alt="{{ $article->tieu_de }}"
-            class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-          />
-        </a>
-        <div class="p-5">
-          <p class="text-[11px] font-bold text-primary/70 uppercase mb-2">{{ $article->danhMuc->ten_danh_muc ?? 'Tin tức' }}</p>
-          <a href="{{ route('client.news.detail', $article->slug) }}" class="text-xl font-arima text-primary hover:text-secondary transition-colors">
-            {{ $article->tieu_de }}
-          </a>
-          <p class="text-xs text-primary/60 mt-3">{{ optional($article->ngay_dang)->format('d/m/Y') ?? optional($article->created_at)->format('d/m/Y') }}</p>
+        <div class="max-w-[90%] flex flex-col mx-auto gap-12 md:gap-16">
+          @forelse ($news as $article)
+            @include('clients.news.partials.article-horizontal-card', ['article' => $article])
+          @empty
+            <p class="text-primary/60">Chưa có bài viết nào trong danh mục này.</p>
+          @endforelse
         </div>
-      </article>
-      @endforeach
-    </div>
-    @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-      @forelse ($news as $article)
-      <article class="flex flex-col">
-        <a href="{{ route('client.news.detail', $article->slug) }}" class="aspect-[16/10] overflow-hidden mb-4 block">
-          <img
-            src="{{ \App\Support\AssetPath::url($article->anh_dai_dien, 'assets/images/news-01.jpg') }}"
-            alt="{{ $article->tieu_de }}"
-            class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-          />
-        </a>
-        <p class="text-[11px] font-bold text-primary/70 uppercase mb-2">{{ $article->danhMuc->ten_danh_muc ?? 'Tin tức' }}</p>
-        <a href="{{ route('client.news.detail', $article->slug) }}" class="text-xl font-arima text-primary hover:text-secondary transition-colors mb-2">
-          {{ $article->tieu_de }}
-        </a>
-        <p class="text-xs text-primary/60 mb-3">{{ optional($article->ngay_dang)->format('d/m/Y') ?? optional($article->created_at)->format('d/m/Y') }}</p>
-        <p class="text-sm text-primary/80 leading-relaxed line-clamp-3">{{ $article->mo_ta_ngan }}</p>
-      </article>
+        @if ($news && method_exists($news, 'links') && $news->hasPages())
+          <div class="pt-8 flex justify-end">
+            {{ $news->links() }}
+          </div>
+        @endif
+      </div>
+    @else
+      @forelse ($categoriesWithNews as $category)
+        <div class="news-category-section">
+          <h2 class="text-2xl md:text-4xl font-arima font-semibold text-secondary uppercase mb-8 md:mb-12 tracking-wide" data-aos="fade-right">
+            {{ $category->ten_danh_muc }}
+          </h2>
+
+          <div class="max-w-[90%] flex flex-col mx-auto gap-12 md:gap-16">
+            @foreach ($category->tinTucs as $article)
+              @include('clients.news.partials.article-horizontal-card', ['article' => $article])
+            @endforeach
+          </div>
+
+          <div class="flex justify-end mt-4 md:mt-8">
+            <a
+              href="{{ route('client.news.index', ['category' => $category->danh_muc_tin_tuc_id]) }}"
+              class="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary hover:text-secondary transition-all group"
+            >
+              Xem thêm
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="transition-transform group-hover:translate-x-1" aria-hidden="true">
+                <path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        @if (! $loop->last)
+          <div class="border-t border-gray-200 pt-3 md:pt-0"></div>
+        @endif
       @empty
-      <p class="col-span-full text-center text-primary/60 py-6">Chưa có bài viết nào.</p>
+        <p class="text-center text-primary/60 py-6">Chưa có bài viết nào.</p>
       @endforelse
-    </div>
-
-    @if ($news && method_exists($news, 'links'))
-    <div class="pt-4">
-      {{ $news->links() }}
-    </div>
     @endif
   </div>
 </section>

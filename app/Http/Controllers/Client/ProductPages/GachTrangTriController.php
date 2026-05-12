@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\DinhMucGachTrangTriService;
 use App\Services\GachTrangTriCtService;
 use App\Services\GachTrangTriService;
+use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
 use Illuminate\Http\Request;
@@ -32,13 +33,15 @@ class GachTrangTriController extends Controller
         ));
     }
 
-    public function detail($id)
+    public function detail($id, ViewHistoryService $historyService)
     {
         $product = $this->gachTrangTriCtService->findById($id);
 
         if ($product->is_delete == 1) {
             abort(404);
         }
+
+        $historyService->trackProduct('gach_trang_tri_ct', (int) $product->gach_trang_tri_ct_id);
 
         $dinhMuc = $this->dinhMucService->getAll();
 

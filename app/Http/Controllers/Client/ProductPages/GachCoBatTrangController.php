@@ -7,6 +7,7 @@ use App\Services\DinhMucGachCoBatTrangService;
 use App\Services\GachCoBatTrangCtService;
 use App\Services\GachCoBatTrangService;
 use App\Services\GiaTriVuotTroiService;
+use App\Services\ViewHistoryService;
 
 class GachCoBatTrangController extends Controller
 {
@@ -28,13 +29,15 @@ class GachCoBatTrangController extends Controller
         ));
     }
 
-    public function detail($id)
+    public function detail($id, ViewHistoryService $historyService)
     {
         $product = $this->gachCoBatTrangCtService->findById($id);
 
         if ($product->is_delete == 1) {
             abort(404);
         }
+
+        $historyService->trackProduct('gach_co_bat_trang_ct', (int) $product->gach_co_bat_trang_ct_id);
 
         $dinhMuc = $this->dinhMucService->getAll();
 

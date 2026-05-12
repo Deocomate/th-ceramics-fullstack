@@ -8,6 +8,7 @@ use App\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiAmDuongCtService;
 use App\Services\NgoiAmDuongCtService;
 use App\Services\NgoiAmDuongService;
+use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
 use Illuminate\Http\Request;
@@ -51,7 +52,7 @@ class NgoiAmDuongController extends Controller
     /**
      * Trang chi tiết 1 sản phẩm Ngói Âm Dương cụ thể
      */
-    public function detail($id)
+    public function detail($id, ViewHistoryService $historyService)
     {
         // 1. Lấy thông tin chi tiết của sản phẩm theo ID
         $product = $this->ngoiAmDuongCtService->findById($id);
@@ -60,6 +61,8 @@ class NgoiAmDuongController extends Controller
         if ($product->is_delete == 1) {
             abort(404, 'Sản phẩm không tồn tại hoặc đã bị gỡ.');
         }
+
+        $historyService->trackProduct('ngoi_am_duong_ct', (int) $product->ngoi_am_duong_ct_id);
 
         // 2. Lấy danh sách màu sắc của ngói âm dương
         $colors = $this->mauSacService->getAll();

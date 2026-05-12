@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\DinhMucGachHoaThongGioService;
 use App\Services\GachHoaThongGioCtService;
 use App\Services\GachHoaThongGioService;
+use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
 use Illuminate\Http\Request;
@@ -32,13 +33,15 @@ class GachHoaThongGioController extends Controller
         ));
     }
 
-    public function detail($id)
+    public function detail($id, ViewHistoryService $historyService)
     {
         $product = $this->gachHoaThongGioCtService->findById($id);
 
         if ($product->is_delete == 1) {
             abort(404);
         }
+
+        $historyService->trackProduct('gach_hoa_thong_gio_ct', (int) $product->gach_hoa_thong_gio_ct_id);
 
         $dinhMuc = $this->dinhMucService->getAll();
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\BoNocChuVanCtService;
 use App\Services\NgoiBoNocCtService;
 use App\Services\PhuKienNgoiService;
+use App\Services\ViewHistoryService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PhuKienNgoiController extends Controller
@@ -27,7 +28,7 @@ class PhuKienNgoiController extends Controller
         ));
     }
 
-    public function detail($id)
+    public function detail($id, ViewHistoryService $historyService)
     {
         try {
             $product = $this->ngoiBoNocCtService->findById($id);
@@ -44,6 +45,9 @@ class PhuKienNgoiController extends Controller
         if ($product->is_delete == 1) {
             abort(404);
         }
+
+        $productId = $product->ngoi_bo_noc_ct_id ?? $product->bo_noc_chu_van_ct_id ?? (int) $id;
+        $historyService->trackProduct('phu_kien_ngoi', (int) $productId);
 
         $phanLoais = $product->phanLoais;
 

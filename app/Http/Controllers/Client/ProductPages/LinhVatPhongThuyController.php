@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client\ProductPages;
 use App\Http\Controllers\Controller;
 use App\Services\LinhVatPhongThuyCtService;
 use App\Services\LinhVatPhongThuyService;
+use App\Services\ViewHistoryService;
 
 class LinhVatPhongThuyController extends Controller
 {
@@ -23,13 +24,15 @@ class LinhVatPhongThuyController extends Controller
         ));
     }
 
-    public function detail($id)
+    public function detail($id, ViewHistoryService $historyService)
     {
         $product = $this->linhVatPhongThuyCtService->findById($id);
 
         if ($product->is_delete == 1) {
             abort(404);
         }
+
+        $historyService->trackProduct('linh_vat_phong_thuy_ct', (int) $product->linh_vat_phong_thuy_ct_id);
 
         $relatedProducts = $this->linhVatPhongThuyCtService->getAll('active')
             ->where('linh_vat_phong_thuy_ct_id', '!=', $id)
