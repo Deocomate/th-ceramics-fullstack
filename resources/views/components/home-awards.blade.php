@@ -1,9 +1,11 @@
+@props(['awards' => null])
+
 @php
-    $awards = \App\Models\GiaiThuongThanhTuu::latest()->get();
-    $renderAwards = collect($awards->all());
+    $awardItems = collect($awards ?? \App\Models\GiaiThuongThanhTuu::latest()->get())->values();
+    $renderAwards = collect($awardItems->all());
 
     while ($renderAwards->count() > 0 && $renderAwards->count() < 12) {
-        $renderAwards = $renderAwards->concat($awards->all())->values();
+        $renderAwards = $renderAwards->concat($awardItems->all())->values();
     }
 @endphp
 

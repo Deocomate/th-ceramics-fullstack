@@ -65,7 +65,8 @@
         @foreach ($journeyItems as $index => $item)
         <img
           src="{{ \App\Support\AssetPath::url(data_get($item, 'image'), 'assets/images/about-02.jpg') }}"
-          class="timeline-image-layer absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] {{ $index === 0 ? 'translate-y-0 z-[1]' : 'translate-y-full z-[2]' }}"
+          class="timeline-image-layer absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] {{ $index === 0 ? 'translate-y-0' : 'translate-y-full' }}"
+          style="z-index: {{ $index === 0 ? 1 : 2 }}"
           data-index="{{ $index }}"
           alt="{{ data_get($item, 'head', 'Journey image') }}"
         />
@@ -74,3 +75,70 @@
     </div>
   </div>
 </div>
+
+@push('scripts')
+<script>
+  (() => {
+    const initAboutJourneyImages = () => {
+      if (window.__aboutJourneyImagesInitialized) {
+        return;
+      }
+
+      const timelineItems = document.querySelectorAll(".timeline-item");
+      const timelineImages = document.querySelectorAll(".timeline-image-layer");
+
+      if (timelineItems.length === 0 || timelineImages.length === 0 || typeof IntersectionObserver !== "function") {
+        return;
+      }
+
+      window.__aboutJourneyImagesInitialized = true;
+
+      const setActiveImage = (activeIndex) => {
+        timelineImages.forEach((image) => {
+          const imageIndex = Number.parseInt(image.dataset.index || "0", 10);
+
+          image.classList.remove("translate-y-0", "translate-y-full");
+
+          if (imageIndex === activeIndex) {
+            image.classList.add("translate-y-0");
+            image.style.zIndex = "1";
+            return;
+          }
+
+          if (imageIndex < activeIndex) {
+            image.classList.add("translate-y-0");
+            image.style.zIndex = "0";
+            return;
+          }
+
+          image.classList.add("translate-y-full");
+          image.style.zIndex = "2";
+        });
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          setActiveImage(Number.parseInt(entry.target.dataset.index || "0", 10));
+        });
+      }, {
+        root: null,
+        rootMargin: "-45% 0px -45% 0px",
+        threshold: 0,
+      });
+
+      timelineItems.forEach((item) => observer.observe(item));
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initAboutJourneyImages);
+      return;
+    }
+
+    initAboutJourneyImages();
+  })();
+</script>
+@endpush

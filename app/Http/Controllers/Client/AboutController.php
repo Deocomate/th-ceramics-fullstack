@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\GiaiThuongThanhTuu;
 use App\Models\VeChungToi;
 
 class AboutController extends Controller
@@ -11,6 +12,7 @@ class AboutController extends Controller
     {
         return view('clients.about.index', [
             'about' => VeChungToi::first(),
+            'giaiThuongThanhTuu' => GiaiThuongThanhTuu::latest()->get(),
         ]);
     }
 }

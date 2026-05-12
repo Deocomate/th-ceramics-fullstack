@@ -1,9 +1,8 @@
 @php
   $headItems = collect($about->gs_head ?? [])->values();
-  $journeyItems = collect($about->gs_hanh_trinh ?? [])->values();
 
   $firstSection = $headItems->get(0, []);
-  $secondSection = $journeyItems->get(0, $headItems->get(1, []));
+  $secondSection = $headItems->get(1, []);
 
   $firstImage = \App\Support\AssetPath::url(data_get($firstSection, 'image'), 'assets/images/about-01.png');
   $firstTitle = data_get($firstSection, 'head', 'Những công việc giản dị và ngọn lửa nghề luôn ấm');

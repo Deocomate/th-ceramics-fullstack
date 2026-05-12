@@ -10,5 +10,5 @@
   @include('clients.about.partials.founders', ['about' => $about ?? null])
   </div>
   @include('clients.about.partials.awards', ['about' => $about ?? null])
-  @include('clients.about.partials.certificates')
+  @include('clients.about.partials.certificates', ['about' => $about ?? null])
 </div>

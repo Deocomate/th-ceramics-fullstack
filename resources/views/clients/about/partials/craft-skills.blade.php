@@ -5,9 +5,7 @@
 
   $luyenDatTitle = $about->nt_luyen_dat_head ?? 'Kỹ thuật luyện đất';
   $luyenDatBody = $about->nt_luyen_dat_body ?? 'Đất là gốc rễ, nền tảng của mọi sản phẩm gốm chất lượng.';
-  $luyenDatItem = collect($about->nt_luyen_dat_item ?? [])->first() ?? [];
-  $luyenDatItemTitle = data_get($luyenDatItem, 'head', 'Kỹ thuật tạo hình');
-  $luyenDatItemBody = data_get($luyenDatItem, 'body', 'Tạo hình bắt đầu từ bản vẽ, nơi tỉ lệ và hình dáng sản phẩm được tính toán kỹ lưỡng.');
+  $luyenDatItems = collect($about->nt_luyen_dat_item ?? [])->filter(fn ($item) => is_array($item))->values();
 
   $dunLoTitle = $about->nt_dun_lo_head ?? 'Kỹ thuật đun lò';
   $dunLoBody = $about->nt_dun_lo_body ?? 'Công đoạn nung sản phẩm trong lò là bước quyết định chất lượng gốm.';
@@ -33,64 +31,91 @@
     class="hidden md:grid grid-cols-1 md:grid-cols-2 gap-[59px] mb-16"
     data-aos="fade-up"
   >
+    @foreach($craftImages->take(2) as $image)
     <div class="aspect-[1/1] relative overflow-hidden shadow-lg">
       <img
-        src="{{ \App\Support\AssetPath::url($craftImages->get(0), 'assets/images/about-02.jpg') }}"
-        alt="Chế tác thủ công 1"
+        src="{{ \App\Support\AssetPath::url($image, 'assets/images/about-02.jpg') }}"
+        alt="Chế tác thủ công"
         class="w-full h-full object-cover"
       />
     </div>
-    <div class="aspect-[1/1] relative overflow-hidden shadow-lg">
-      <img
-        src="{{ \App\Support\AssetPath::url($craftImages->get(1), 'assets/images/about-02.jpg') }}"
-        alt="Chế tác thủ công 2"
-        class="w-full h-full object-cover"
-      />
-    </div>
+    @endforeach
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left">
-    <article>
-      <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $luyenDatTitle }}</h3>
-      <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ $luyenDatBody }}</p>
-    </article>
-    <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
-      <img
-        src="{{ \App\Support\AssetPath::url(data_get($luyenDatItem, 'image'), 'assets/images/about-02.jpg') }}"
-        alt="{{ $luyenDatTitle }}"
-        class="w-full h-full object-cover"
-      />
+  <div class="space-y-12 md:space-y-16">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left items-center"
+      data-aos="fade-up"
+    >
+      <article>
+        <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $luyenDatTitle }}</h3>
+        <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ $luyenDatBody }}</p>
+      </article>
+      <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+        <img
+          src="{{ \App\Support\AssetPath::url($craftImages->first(), 'assets/images/about-02.jpg') }}"
+          alt="{{ $luyenDatTitle }}"
+          class="w-full h-full object-cover"
+        />
+      </div>
     </div>
 
-    <article>
-      <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $luyenDatItemTitle }}</h3>
-      <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ $luyenDatItemBody }}</p>
-    </article>
-    <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
-      <img
-        src="{{ \App\Support\AssetPath::url($craftImages->get(0), 'assets/images/about-02.jpg') }}"
-        alt="{{ $luyenDatItemTitle }}"
-        class="w-full h-full object-cover"
-      />
-    </div>
+    @foreach($luyenDatItems as $item)
+      @if($loop->index % 2 === 0)
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left items-center"
+        data-aos="fade-up"
+      >
+        <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+          <img
+            src="{{ \App\Support\AssetPath::url(data_get($item, 'image'), 'assets/images/about-02.jpg') }}"
+            alt="{{ data_get($item, 'head', 'Nghệ thuật thủ công') }}"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <article>
+          <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ data_get($item, 'head') }}</h3>
+          <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ data_get($item, 'body') }}</p>
+        </article>
+      </div>
+      @else
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left items-center"
+        data-aos="fade-up"
+      >
+        <article>
+          <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ data_get($item, 'head') }}</h3>
+          <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ data_get($item, 'body') }}</p>
+        </article>
+        <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+          <img
+            src="{{ \App\Support\AssetPath::url(data_get($item, 'image'), 'assets/images/about-02.jpg') }}"
+            alt="{{ data_get($item, 'head', 'Nghệ thuật thủ công') }}"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+      @endif
+    @endforeach
 
-    <article class="md:col-span-2 text-center">
-      <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $dunLoTitle }}</h3>
-      <p class="text-textPrimary leading-relaxed font-medium tracking-wide max-w-3xl mx-auto">{{ $dunLoBody }}</p>
-    </article>
-    <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
-      <img
-        src="{{ \App\Support\AssetPath::url($dunLoImages->get(0), 'assets/images/about-02.jpg') }}"
-        alt="{{ $dunLoTitle }}"
-        class="w-full h-full object-cover"
-      />
-    </div>
-    <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
-      <img
-        src="{{ \App\Support\AssetPath::url($dunLoImages->get(1), 'assets/images/about-02.jpg') }}"
-        alt="{{ $dunLoTitle }}"
-        class="w-full h-full object-cover"
-      />
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left"
+      data-aos="fade-up"
+    >
+      <article class="md:col-span-2 text-center">
+        <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $dunLoTitle }}</h3>
+        <p class="text-textPrimary leading-relaxed font-medium tracking-wide max-w-3xl mx-auto">{{ $dunLoBody }}</p>
+      </article>
+
+      @foreach($dunLoImages->take(2) as $image)
+      <div class="relative overflow-hidden shadow-lg aspect-[1/1]">
+        <img
+          src="{{ \App\Support\AssetPath::url($image, 'assets/images/about-02.jpg') }}"
+          alt="{{ $dunLoTitle }}"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      @endforeach
     </div>
   </div>
 </div>
