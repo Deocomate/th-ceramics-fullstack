@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             DuAnSeeder::class,
             CatalogSeeder::class,
             VeChungToiSeeder::class,
+            TinTucSeeder::class,
         ]);
     }
 }
