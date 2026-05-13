@@ -303,6 +303,44 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('anh/{anh}', [\App\Http\Controllers\Admin\DenGomSuController::class, 'destroyAnh'])->name('anh.destroy');
         });
 
+        // 10. Lan Can Gốm Sứ (Chi tiết & Phân loại)
+        Route::prefix('lan-can-gom-su-ct')->name('lan-can-gom-su-ct.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\LanCanGomSuCtController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\LanCanGomSuCtController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\LanCanGomSuCtController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\LanCanGomSuCtController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\LanCanGomSuCtController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\LanCanGomSuCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [\App\Http\Controllers\Admin\LanCanGomSuCtController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/image', [\App\Http\Controllers\Admin\LanCanGomSuCtController::class, 'destroyImage'])->name('image.destroy');
+        });
+        Route::prefix('phan-loai-lan-can-gom-su-ct')->name('phan-loai-lan-can-gom-su-ct.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\PhanLoaiLanCanGomSuCtController::class, 'index'])->name('index');
+            Route::post('/', [\App\Http\Controllers\Admin\PhanLoaiLanCanGomSuCtController::class, 'store'])->name('store');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\PhanLoaiLanCanGomSuCtController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\PhanLoaiLanCanGomSuCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [\App\Http\Controllers\Admin\PhanLoaiLanCanGomSuCtController::class, 'restore'])->name('restore');
+        });
+
+        // 11. Đèn Vườn Gốm Sứ (Chi tiết & Phân loại)
+        Route::prefix('den-vuon-gom-su-ct')->name('den-vuon-gom-su-ct.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\DenVuonGomSuCtController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\DenVuonGomSuCtController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\DenVuonGomSuCtController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\DenVuonGomSuCtController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\DenVuonGomSuCtController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\DenVuonGomSuCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [\App\Http\Controllers\Admin\DenVuonGomSuCtController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/image', [\App\Http\Controllers\Admin\DenVuonGomSuCtController::class, 'destroyImage'])->name('image.destroy');
+        });
+        Route::prefix('phan-loai-den-vuon-gom-su-ct')->name('phan-loai-den-vuon-gom-su-ct.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\PhanLoaiDenVuonGomSuCtController::class, 'index'])->name('index');
+            Route::post('/', [\App\Http\Controllers\Admin\PhanLoaiDenVuonGomSuCtController::class, 'store'])->name('store');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\PhanLoaiDenVuonGomSuCtController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\PhanLoaiDenVuonGomSuCtController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [\App\Http\Controllers\Admin\PhanLoaiDenVuonGomSuCtController::class, 'restore'])->name('restore');
+        });
+
         // Chi tiết Bò Nóc Chữ Vạn
         Route::prefix('bo-noc-chu-van-ct')->name('bo-noc-chu-van-ct.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\BoNocChuVanCtController::class, 'index'])->name('index');

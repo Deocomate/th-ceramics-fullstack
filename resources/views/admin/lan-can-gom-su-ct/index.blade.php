@@ -1,20 +1,20 @@
-<x-admin.layout.app title="Sản phẩm: Ngói Bò Nóc" breadcrumb="Admin › DS Sản phẩm chi tiết › Ngói Bò Nóc">
+<x-admin.layout.app title="Sản phẩm: Lan Can Gốm Sứ" breadcrumb="Admin › DS Sản phẩm chi tiết › Lan Can Gốm Sứ">
     <div class="flex items-center justify-between mb-5">
         <div>
-            <h2 class="text-sm font-semibold text-gray-700">Danh sách Ngói Bò Nóc</h2>
+            <h2 class="text-sm font-semibold text-gray-700">Danh sách Lan Can Gốm Sứ</h2>
             <p class="text-xs text-gray-400 mt-0.5">Tổng cộng {{ count($products) }} sản phẩm (Dáng ngói)</p>
         </div>
         <div class="flex items-center gap-3">
-            <form method="GET" action="{{ route('admin.ngoi-bo-noc-ct.index') }}" class="flex items-center">
+            <form method="GET" action="{{ route('admin.lan-can-gom-su-ct.index') }}" class="flex items-center">
                 <select name="status" onchange="this.form.submit()" class="px-3 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:border-[#A31D1D] bg-white cursor-pointer">
                     <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Sản phẩm đang bán</option>
                     <option value="deleted" {{ $status === 'deleted' ? 'selected' : '' }}>Sản phẩm đã ẩn</option>
                     <option value="all" {{ $status === 'all' ? 'selected' : '' }}>Tất cả</option>
                 </select>
             </form>
-            <a href="{{ route('admin.ngoi-bo-noc-ct.create') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg transition-colors duration-200" style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'" onmouseout="this.style.background='#A31D1D'">
+            <a href="{{ route('admin.lan-can-gom-su-ct.create') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg transition-colors duration-200" style="background:#A31D1D;" onmouseover="this.style.background='#8A1818'" onmouseout="this.style.background='#A31D1D'">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                Thêm dáng ngói
+                Thêm
             </a>
         </div>
     </div>
@@ -50,7 +50,7 @@
                         <!-- NÚT CHUYỂN QUA QUẢN LÝ phân loại -->
                         <td class="px-6 py-4 text-center">
                             @if(!$product->is_delete)
-                            <a href="{{ route('admin.phan-loai-ngoi-bo-noc-ct.index',['product_id' => $product->ngoi_bo_noc_ct_id]) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-xs font-bold hover:bg-purple-100 transition-colors shadow-sm">
+                            <a href="{{ route('admin.phan-loai-lan-can-gom-su-ct.index',['product_id' => $product->lan_can_gom_su_ct_id]) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-xs font-bold hover:bg-purple-100 transition-colors shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
                                 Quản lý {{ $product->phan_loais_count ?? 0 }} phân loại
                             </a>
@@ -66,14 +66,14 @@
                         <td class="px-6 py-4 text-right">
                             <div class="flex justify-end gap-2">
                                 @if(!$product->is_delete)
-                                    <a href="{{ route('admin.ngoi-bo-noc-ct.edit', $product->ngoi_bo_noc_ct_id) }}" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Sửa">
+                                    <a href="{{ route('admin.lan-can-gom-su-ct.edit', $product->lan_can_gom_su_ct_id) }}" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Sửa">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </a>
-                                    <button type="button" onclick="openDeleteModal('{{ route('admin.ngoi-bo-noc-ct.destroy', $product->ngoi_bo_noc_ct_id) }}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Ẩn/Xóa">
+                                    <button type="button" onclick="openDeleteModal('{{ route('admin.lan-can-gom-su-ct.destroy', $product->lan_can_gom_su_ct_id) }}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Ẩn/Xóa">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                     </button>
                                 @else
-                                    <button type="button" onclick="openRestoreModal('{{ route('admin.ngoi-bo-noc-ct.restore', $product->ngoi_bo_noc_ct_id) }}')" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 hover:bg-green-100 rounded-lg transition-colors" title="Khôi phục">
+                                    <button type="button" onclick="openRestoreModal('{{ route('admin.lan-can-gom-su-ct.restore', $product->lan_can_gom_su_ct_id) }}')" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 hover:bg-green-100 rounded-lg transition-colors" title="Khôi phục">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                                         Khôi phục
                                     </button>

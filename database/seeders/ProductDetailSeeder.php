@@ -14,7 +14,12 @@ use App\Models\NgoiBoNocCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\PhanLoaiBoNocChuVanCt;
+use App\Models\LanCanGomSuCt;
 use App\Models\PhanLoaiNgoiBoNocCt;
+use App\Models\PhanLoaiLanCanGomSuCt;
+use App\Models\PhanLoaiDenVuonGomSuCt;
+use App\Models\DenVuonGomSuCt;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -37,6 +42,10 @@ class ProductDetailSeeder extends Seeder
         MauSacNgoiHaiVanMieuCt::truncate();
         PhanLoaiNgoiBoNocCt::truncate();
         PhanLoaiBoNocChuVanCt::truncate();
+        LanCanGomSuCt::truncate();
+        PhanLoaiLanCanGomSuCt::truncate();
+        DenVuonGomSuCt::truncate();
+        PhanLoaiDenVuonGomSuCt::truncate();
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
@@ -49,6 +58,8 @@ class ProductDetailSeeder extends Seeder
         $this->seedNgoiHaiVanMieuCt();
         $this->seedNgoiBoNocCt();
         $this->seedBoNocChuVanCt();
+        $this->seedLanCanGomSuCt();
+        $this->seedDenVuonGomSuCt();
     }
 
     private function seedNgoiAmDuongCt(): void
@@ -825,6 +836,214 @@ class ProductDetailSeeder extends Seeder
                 'bo_noc_chu_van_ct_id' => $product->bo_noc_chu_van_ct_id,
                 'is_delete' => 0,
             ]);
+        }
+    }
+
+    private function seedLanCanGomSuCt(): void
+    {
+        $products = [
+            [
+                'name' => 'Lan Can Gốm Sứ Hoa Chanh',
+                'images' => ['assets/images/lan-can-01.jpg', 'assets/images/lan-can-02.png'],
+                'des' =>[
+                    'Họa tiết hoa chanh truyền thống mang ý nghĩa thịnh vượng, tươi mới.',
+                    'Gốm sứ Bát Tràng nung ở nhiệt độ 1200°C đảm bảo độ bền cơ học cao.',
+                ],
+                'size' => 'L400 x W150 x H500 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Dành cho kiến trúc tâm linh', 'Lắp đặt khuôn viên sân vườn'],
+                'variants' => [
+                    ['name' => 'Men Xanh Lục', 'price' => 250000],
+                    ['name' => 'Đất Nung Tự Nhiên', 'price' => 180000],
+                ]
+            ],
+            [
+                'name' => 'Lan Can Gốm Sứ Lục Bình',
+                'images' => ['assets/images/lan-can-03.png', 'assets/images/lan-can-04.jpg'],
+                'des' => [
+                    'Hình dáng lục bình thu hút tài lộc, giữ gìn vượng khí.',
+                    'Dễ dàng vệ sinh, không bám rong rêu dưới thời tiết khắc nghiệt.',
+                ],
+                'size' => 'L300 x W150 x H600 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Chuyên dùng cho ban công biệt thự', 'Hoa văn tinh xảo'],
+                'variants' => [
+                    ['name' => 'Men Trắng Sứ', 'price' => 280000],
+                    ['name' => 'Men Vàng Đồng', 'price' => 290000],
+                ]
+            ],
+            [
+                'name' => 'Lan Can Gốm Sứ Chữ Thọ',
+                'images' => ['assets/images/lan-can-05.jpg', 'assets/images/lan-can-06.png'],
+                'des' => [
+                    'Chữ Thọ đắp nổi mang ý nghĩa trường thọ, bình an cho gia chủ.',
+                    'Chất men rạn độc quyền của Thanh Hải Ceramics.',
+                ],
+                'size' => 'L450 x W150 x H450 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Phù hợp với đình chùa', 'Độ bền trên 50 năm'],
+                'variants' => [
+                    ['name' => 'Men Xanh Đồng', 'price' => 320000],
+                    ['name' => 'Men Đỏ Nâu', 'price' => 300000],
+                ]
+            ],
+            [
+                'name' => 'Lan Can Gốm Sứ Trúc Lâm',
+                'images' => ['assets/images/lan-can-07.jpg', 'assets/images/lan-can-08.jpg'],
+                'des' => [
+                    'Họa tiết đốt trúc mộc mạc, tượng trưng cho người quân tử kiên cường.',
+                    'Cốt gốm dày dặn, chịu lực va đập cực tốt.',
+                ],
+                'size' => 'L250 x W150 x H700 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Thiết kế cho các khu resort', 'Phong cách Indochine'],
+                'variants' => [
+                    ['name' => 'Men Rêu Cổ', 'price' => 260000],
+                    ['name' => 'Men Xanh Ngọc', 'price' => 275000],
+                ]
+            ],
+            [
+                'name' => 'Lan Can Gốm Sứ Hoa Sen',
+                'images' => ['assets/images/lan-can-02.jpg', 'assets/images/lan-can-02.png'],
+                'des' => [
+                    'Biểu tượng quốc hoa Việt Nam, thanh tao và thuần khiết.',
+                    'Lớp men tráng bóng, chống thấm nước tuyệt đối.',
+                ],
+                'size' => 'L400 x W150 x H400 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Lắp đặt tiểu cảnh hồ cá', 'Trang trí cầu đá'],
+                'variants' => [
+                    ['name' => 'Men Hỏa Biến', 'price' => 350000],
+                    ['name' => 'Đất Nung Mộc', 'price' => 200000],
+                ]
+            ],
+        ];
+
+        foreach ($products as $idx => $p) {
+            $product = LanCanGomSuCt::create([
+                'name' => $p['name'],
+                'images' => $p['images'],
+                'des' => $p['des'],
+                'size' => $p['size'],
+                'size_image' => $p['size_image'],
+                'size_des' => $p['size_des'],
+                'is_delete' => 0,
+            ]);
+
+            foreach ($p['variants'] as $vIndex => $v) {
+                PhanLoaiLanCanGomSuCt::create([
+                    // Tên biến thể phải Unique theo logic DB, nên nối với Tên SP cha
+                    'name' => $product->name . ' - ' . $v['name'],
+                    'code' => 'LCGS-' . str_pad($product->lan_can_gom_su_ct_id, 3, '0', STR_PAD_LEFT) . '-V' . ($vIndex + 1),
+                    'price' => $v['price'],
+                    'lan_can_gom_su_ct_id' => $product->lan_can_gom_su_ct_id,
+                    'is_delete' => 0,
+                ]);
+            }
+        }
+    }
+
+    private function seedDenVuonGomSuCt(): void
+    {
+        $products = [
+            [
+                'name' => 'Đèn Vườn Gốm Sứ Lục Giác',
+                'images' => ['assets/images/den-gom-01.png', 'assets/images/den-gom-02.png'],
+                'des' =>[
+                    'Thiết kế mái lục giác cổ điển, ánh sáng tản đều qua các khung hoa văn.',
+                    'Chịu mưa nắng tốt, chuyên dùng cho sân vườn ngoài trời.',
+                ],
+                'size' => 'H500 x D200 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Trọng lượng: 8kg', 'Đế lắp bóng E27 tiêu chuẩn'],
+                'variants' => [
+                    ['name' => 'Men Nâu Đất', 'price' => 450000],
+                    ['name' => 'Men Trắng Sứ', 'price' => 480000],
+                ]
+            ],
+            [
+                'name' => 'Đèn Vườn Hình Tháp Chùa',
+                'images' => ['assets/images/den-gom-02.png', 'assets/images/den-gom-01.png'],
+                'des' => [
+                    'Mô phỏng tháp chùa cổ, mang đậm phong cách Á Đông thiền định.',
+                    'Tích hợp sẵn chuôi đèn chống nước IP65.',
+                ],
+                'size' => 'H700 x D250 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Trọng lượng: 12kg', 'Dễ dàng thay bóng điện'],
+                'variants' => [
+                    ['name' => 'Men Xanh Rêu', 'price' => 650000],
+                    ['name' => 'Đất Nung Thô', 'price' => 550000],
+                ]
+            ],
+            [
+                'name' => 'Đèn Nấm Gốm Sứ Kiểu Nhật',
+                'images' => ['assets/images/den-gom-01.png', 'assets/images/den-gom-02.png'],
+                'des' =>[
+                    'Kiểu dáng thấp, tròn trịa, ánh sáng hắt nhẹ nhàng xuống lối đi.',
+                    'Tạo không gian lung linh, lãng mạn cho khu vườn phong cách Wabi-sabi.',
+                ],
+                'size' => 'H350 x D250 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Trọng lượng: 6kg', 'Chóa đèn khuếch tán ánh sáng'],
+                'variants' => [
+                    ['name' => 'Men Đen Nhám', 'price' => 380000],
+                    ['name' => 'Men Xanh Ngọc', 'price' => 420000],
+                ]
+            ],
+            [
+                'name' => 'Đèn Vườn Quả Nhót Cổ Điển',
+                'images' => ['assets/images/den-gom-02.png', 'assets/images/den-gom-01.png'],
+                'des' =>[
+                    'Họa tiết quả nhót truyền thống, thích hợp treo cột cổng hoặc đặt góc vườn.',
+                    'Chống phai màu vĩnh viễn nhờ nung ở 1200°C.',
+                ],
+                'size' => 'H450 x D180 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Trọng lượng: 5.5kg', 'Phù hợp làm đèn dẫn lối'],
+                'variants' => [
+                    ['name' => 'Cỡ Vừa (H450)', 'price' => 350000],
+                    ['name' => 'Cỡ Lớn (H600)', 'price' => 550000],
+                ]
+            ],
+            [
+                'name' => 'Đèn Trang Trí Sân Vườn Lồng Chim',
+                'images' => ['assets/images/den-gom-01.png', 'assets/images/den-gom-02.png'],
+                'des' => [
+                    'Thiết kế dạng lồng chim thanh thoát, có thể treo hoặc đặt trên bệ đá.',
+                    'Các khe hở tạo hiệu ứng hắt bóng vô cùng bắt mắt vào ban đêm.',
+                ],
+                'size' => 'H400 x D220 mm',
+                'size_image' => 'assets/images/ngoi-am-duong-size.png',
+                'size_des' => ['Kèm xích treo đồng bộ', 'Gốm xuyên sáng mờ'],
+                'variants' => [
+                    ['name' => 'Men Hỏa Biến', 'price' => 520000],
+                    ['name' => 'Men Vàng Hoàng Gia', 'price' => 490000],
+                ]
+            ],
+        ];
+
+        foreach ($products as $idx => $p) {
+            $product = DenVuonGomSuCt::create([
+                'name' => $p['name'],
+                'images' => $p['images'],
+                'des' => $p['des'],
+                'size' => $p['size'],
+                'size_image' => $p['size_image'],
+                'size_des' => $p['size_des'],
+                'is_delete' => 0,
+            ]);
+
+            foreach ($p['variants'] as $vIndex => $v) {
+                PhanLoaiDenVuonGomSuCt::create([
+                    // Tên biến thể phải Unique theo logic DB, nên nối với Tên SP cha
+                    'name' => $product->name . ' - ' . $v['name'],
+                    'code' => 'DVGS-' . str_pad($product->den_vuon_gom_su_ct_id, 3, '0', STR_PAD_LEFT) . '-V' . ($vIndex + 1),
+                    'price' => $v['price'],
+                    'den_vuon_gom_su_ct_id' => $product->den_vuon_gom_su_ct_id,
+                    'is_delete' => 0,
+                ]);
+            }
         }
     }
 }

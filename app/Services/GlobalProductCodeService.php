@@ -21,6 +21,8 @@ class GlobalProductCodeService
         'linh_vat_phong_thuy_ct'       => 'linh_vat_phong_thuy_ct_id',
         'phan_loai_ngoi_bo_noc_ct'     => 'phan_loai_ngoi_bo_noc_ct_id',
         'phan_loai_bo_noc_chu_van_ct'  => 'phan_loai_bo_noc_chu_van_ct_id',
+        'phan_loai_lan_can_gom_su_ct'  => 'phan_loai_lan_can_gom_su_ct_id',
+        'phan_loai_den_vuon_gom_su_ct' => 'phan_loai_den_vuon_gom_su_ct_id',
     ];
 
     /**

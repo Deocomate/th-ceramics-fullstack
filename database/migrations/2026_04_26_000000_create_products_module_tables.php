@@ -336,6 +336,48 @@ return new class extends Migration
             $table->foreignId('den_gom_su_id')->constrained('den_gom_su', 'den_gom_su_id')->cascadeOnDelete();
             $table->timestamps();
         });
+
+        Schema::create('lan_can_gom_su_ct', function (Blueprint $table) {
+            $table->id('lan_can_gom_su_ct_id');
+            $table->string('name');
+            $table->json('images');
+            $table->json('des')->nullable();
+            $table->string('size')->nullable();
+            $table->string('size_image')->nullable();
+            $table->json('size_des')->nullable();
+            $table->boolean('is_delete')->default(0);
+            $table->timestamps();
+        });
+        Schema::create('phan_loai_lan_can_gom_su_ct', function (Blueprint $table) {
+            $table->id('phan_loai_lan_can_gom_su_ct_id');
+            $table->string('name')->unique();
+            $table->string('code', 50)->unique();
+            $table->integer('price');
+            $table->foreignId('lan_can_gom_su_ct_id')->constrained('lan_can_gom_su_ct', 'lan_can_gom_su_ct_id')->cascadeOnDelete();
+            $table->boolean('is_delete')->default(0);
+            $table->timestamps();
+        });
+
+        Schema::create('den_vuon_gom_su_ct', function (Blueprint $table) {
+            $table->id('den_vuon_gom_su_ct_id');
+            $table->string('name');
+            $table->json('images');
+            $table->json('des')->nullable();
+            $table->string('size')->nullable();
+            $table->string('size_image')->nullable();
+            $table->json('size_des')->nullable();
+            $table->boolean('is_delete')->default(0);
+            $table->timestamps();
+        });
+        Schema::create('phan_loai_den_vuon_gom_su_ct', function (Blueprint $table) {
+            $table->id('phan_loai_den_vuon_gom_su_ct_id');
+            $table->string('name')->unique();
+            $table->string('code', 50)->unique();
+            $table->integer('price');
+            $table->foreignId('den_vuon_gom_su_ct_id')->constrained('den_vuon_gom_su_ct', 'den_vuon_gom_su_ct_id')->cascadeOnDelete();
+            $table->boolean('is_delete')->default(0);
+            $table->timestamps();
+        });
     }
 
     public function down(): void
@@ -352,6 +394,8 @@ return new class extends Migration
             'dinh_muc_ngoi_hai_co', 'mau_sac_ngoi_hai_co_ct', 'ngoi_hai_co_ct', 'ngoi_hai_van_mieu',
             'dinh_muc_ngoi_am_duong', 'mau_sac_ngoi_am_duong_ct', 'ngoi_am_duong_ct', 'ngoi_am_duong',
             'lan_can_gom_xu', 'den_gom_su_anh', 'den_gom_su',
+            'lan_can_gom_su_ct', 'phan_loai_lan_can_gom_su_ct',
+            'den_vuon_gom_su_ct', 'phan_loai_den_vuon_gom_su_ct',
         ];
         foreach ($tables as $table) {
             Schema::dropIfExists($table);

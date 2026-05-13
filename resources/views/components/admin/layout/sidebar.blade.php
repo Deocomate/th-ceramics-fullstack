@@ -159,22 +159,47 @@
             </div>
         </div>
 
-        {{-- 7. Sản phẩm khác (Gồm Lan Can, Linh Vật, Đèn Gốm) --}}
-        @php $isSPKhac = request()->routeIs(['admin.lan-can-gom-xu.*', 'admin.linh-vat-phong-thuy.*', 'admin.linh-vat-phong-thuy-ct.*', 'admin.den-gom-su.*']); @endphp
+        {{-- 7. Lan Can Gốm Sứ --}}
+        @php $isLCGS = request()->routeIs(['admin.lan-can-gom-xu.*', 'admin.lan-can-gom-su-ct.*', 'admin.phan-loai-lan-can-gom-su-ct.*']); @endphp
         <div>
-            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-spkhac', this)">
-                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-yellow-600"></span>Sản Phẩm Khác</div>
-                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isSPKhac ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-lcgs', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-yellow-500"></span>Lan Can Gốm Sứ</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isLCGS ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </button>
-            <div id="menu-spkhac" class="grid transition-all duration-300 ease-in-out {{ $isSPKhac ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+            <div id="menu-lcgs" class="grid transition-all duration-300 ease-in-out {{ $isLCGS ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
                 <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
-                    <div class="px-3 py-1 mt-1 text-[10px] font-bold text-gray-600 uppercase">Linh Vật Phong Thủy</div>
+                    <a href="{{ route('admin.lan-can-gom-xu.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.lan-can-gom-xu.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang</a>
+                    <a href="{{ route('admin.lan-can-gom-su-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs(['admin.lan-can-gom-su-ct.*', 'admin.phan-loai-lan-can-gom-su-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Sản phẩm & Phân loại</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- 8. Đèn Vườn Gốm Sứ --}}
+        @php $isDVS = request()->routeIs(['admin.den-gom-su.*', 'admin.den-vuon-gom-su-ct.*', 'admin.phan-loai-den-vuon-gom-su-ct.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-dvs', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-yellow-300"></span>Đèn Vườn Gốm Sứ</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isDVS ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-dvs" class="grid transition-all duration-300 ease-in-out {{ $isDVS ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
+                    <a href="{{ route('admin.den-gom-su.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.den-gom-su.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang</a>
+                    <a href="{{ route('admin.den-vuon-gom-su-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs(['admin.den-vuon-gom-su-ct.*', 'admin.phan-loai-den-vuon-gom-su-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Sản phẩm & Phân loại</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- 9. Linh Vật Phong Thủy --}}
+        @php $isLVPT = request()->routeIs(['admin.linh-vat-phong-thuy.*', 'admin.linh-vat-phong-thuy-ct.*']); @endphp
+        <div>
+            <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-lvpt', this)">
+                <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-cyan-600"></span>Linh Vật Phong Thủy</div>
+                <svg class="chevron-icon w-4 h-4 transition-transform duration-300 {{ $isLVPT ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div id="menu-lvpt" class="grid transition-all duration-300 ease-in-out {{ $isLVPT ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
+                <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
                     <a href="{{ route('admin.linh-vat-phong-thuy.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.linh-vat-phong-thuy.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang</a>
                     <a href="{{ route('admin.linh-vat-phong-thuy-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.linh-vat-phong-thuy-ct.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Sản phẩm chi tiết</a>
-                    
-                    <div class="px-3 py-1 mt-2 text-[10px] font-bold text-gray-600 uppercase">Khác</div>
-                    <a href="{{ route('admin.lan-can-gom-xu.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.lan-can-gom-xu.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Lan Can Gốm Sứ</a>
-                    <a href="{{ route('admin.den-gom-su.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.den-gom-su.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Đèn Gốm Sứ</a>
                 </div>
             </div>
         </div>
