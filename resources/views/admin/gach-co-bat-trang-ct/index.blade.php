@@ -1,3 +1,11 @@
+@php
+    $categoryLabels = [
+        'bat' => 'Gạch Bát',
+        'that' => 'Gạch Thất & Xây',
+        'the' => 'Gạch Thẻ',
+    ];
+@endphp
+
 <x-admin.layout.app title="Sản phẩm: Gạch Cổ Bát Tràng" breadcrumb="Admin › DS Sản phẩm chi tiết › Gạch Cổ Bát Tràng">
 
     <div class="flex items-center justify-between mb-5">
@@ -30,6 +38,7 @@
                     <tr>
                         <th class="px-6 py-4 font-semibold">Sản phẩm</th>
                         <th class="px-6 py-4 font-semibold">Mã sản phẩm</th>
+                        <th class="px-6 py-4 font-semibold">Phân loại</th>
                         <th class="px-6 py-4 font-semibold">Giá / Kích thước</th>
                         <th class="px-6 py-4 font-semibold text-center">Trạng thái</th>
                         <th class="px-6 py-4 font-semibold text-right">Thao tác</th>
@@ -58,8 +67,15 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-100">
+                                    {{ $categoryLabels[$product->category_type ?? 'bat'] ?? 'Gạch Bát' }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
                                 <div class="font-semibold text-[#A31D1D] mb-1 {{ $product->is_delete ? 'text-gray-400 line-through' : '' }}">{{ number_format($product->price, 0, ',', '.') }} VNĐ</div>
                                 <div class="text-xs text-gray-500">Size: {{ $product->size ?? 'N/A' }}</div>
+                                <div class="text-xs text-gray-500">Định mức: {{ $product->dinh_muc ?? 'N/A' }}</div>
+                                <div class="text-xs text-gray-500">Cân nặng: {{ $product->weight ?? 'N/A' }}</div>
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if($product->is_delete)
@@ -89,7 +105,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-gray-500">Chưa có sản phẩm nào. Hãy thêm mới ngay!</td>
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500">Chưa có sản phẩm nào. Hãy thêm mới ngay!</td>
                         </tr>
                     @endforelse
                 </tbody>

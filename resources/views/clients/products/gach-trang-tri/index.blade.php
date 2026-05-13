@@ -130,6 +130,38 @@
 </style>
 @endpush
 
+@php
+  $mediaUrl = function (?string $path, string $fallback = '') {
+    if (empty($path)) {
+      return $fallback;
+    }
+
+    if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+      return $path;
+    }
+
+    if (\Illuminate\Support\Str::startsWith($path, 'assets/')) {
+      return asset($path);
+    }
+
+    return asset('storage/' . $path);
+  };
+
+  $applicationSlots = [
+    'main' => 'Tường trang trí',
+    'sub_1' => 'Lát nền',
+    'sub_2' => 'Phòng khách',
+    'sub_3' => 'Ngoài trời',
+    'sub_4' => 'Phòng tắm',
+  ];
+  $applications = $config && is_array($config->ung_dung_da_dang) ? $config->ung_dung_da_dang : [];
+  $hasApplications = collect($applicationSlots)->keys()->contains(function ($slot) use ($applications) {
+    $item = is_array($applications[$slot] ?? null) ? $applications[$slot] : [];
+
+    return !empty($item['title']) || !empty($item['image']);
+  });
+@endphp
+
 <x-catalog-button />
 
 <!-- Top Banner -->
@@ -162,62 +194,55 @@
   </div>
 </section>
 
-<!-- Ứng dụng đa dạng Section -->
-<section class="max-w-[1320px] w-[85%] mx-auto pb-4 pt-8 md:py-12" data-aos="fade-up">
-  <h2
-    class="font-archivo text-[20px] sm:text-[24px] md:text-[32px] font-semibold uppercase text-secondary leading-[36px] sm:leading-[44px] md:leading-[80px] mb-5 sm:mb-6 md:mb-10 text-left">
-    Ứng dụng đa dạng
-  </h2>
+@if($hasApplications)
+  <!-- Ứng dụng đa dạng Section -->
+  <section class="max-w-[1320px] w-[85%] mx-auto pb-4 pt-8 md:py-12" data-aos="fade-up">
+    <h2
+      class="font-archivo text-[20px] sm:text-[24px] md:text-[32px] font-semibold uppercase text-secondary leading-[36px] sm:leading-[44px] md:leading-[80px] mb-5 sm:mb-6 md:mb-10 text-left">
+      Ứng dụng đa dạng
+    </h2>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 sm:gap-6 md:gap-8 lg:gap-16">
-    <!-- Left large box -->
-    <div class="flex flex-col">
-      <div class="w-full aspect-[23/25] bg-[#E2E2E2] shadow-lg"></div>
-      <p
-        class="mt-0 sm:mt-[11px] flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-left text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
-        Tường trang trí
-      </p>
-    </div>
-
-    <!-- Right 2x2 grid -->
-    <div class="flex flex-col justify-between gap-0 sm:gap-5 h-full">
-      <!-- Top Row -->
-      <div class="grid grid-cols-2 gap-[10px] sm:gap-4 md:gap-8 lg:gap-16">
-        <div class="flex flex-col">
-          <div class="w-full aspect-[179/192] sm:aspect-square bg-[#E2E2E2] shadow-lg"></div>
-          <p
-            class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
-            Lát nền
-          </p>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 sm:gap-6 md:gap-8 lg:gap-16">
+      @php
+        $mainItem = is_array($applications['main'] ?? null) ? $applications['main'] : [];
+      @endphp
+      <div class="flex flex-col">
+        <div class="w-full aspect-[23/25] bg-[#E2E2E2] shadow-lg overflow-hidden">
+          @if(!empty($mainItem['image']))
+            <img src="{{ $mediaUrl($mainItem['image']) }}" alt="{{ $mainItem['title'] ?? $applicationSlots['main'] }}" class="w-full h-full object-cover">
+          @endif
         </div>
-        <div class="flex flex-col">
-          <div class="w-full aspect-[179/192] sm:aspect-square bg-[#E2E2E2] shadow-lg"></div>
-          <p
-            class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
-            Phòng khách
-          </p>
-        </div>
+        <p
+          class="mt-0 sm:mt-[11px] flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-left text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
+          {{ $mainItem['title'] ?? $applicationSlots['main'] }}
+        </p>
       </div>
-      <!-- Bottom Row -->
-      <div class="grid grid-cols-2 gap-[10px] sm:gap-4 md:gap-8 lg:gap-16">
-        <div class="flex flex-col">
-          <div class="w-full aspect-[179/192] sm:aspect-square bg-[#E2E2E2] shadow-lg"></div>
-          <p
-            class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
-            Ngoài trời
-          </p>
-        </div>
-        <div class="flex flex-col">
-          <div class="w-full aspect-[179/192] sm:aspect-square bg-[#E2E2E2] shadow-lg"></div>
-          <p
-            class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
-            Phòng tắm
-          </p>
-        </div>
+
+      <div class="flex flex-col justify-between gap-0 sm:gap-5 h-full">
+        @foreach([['sub_1', 'sub_2'], ['sub_3', 'sub_4']] as $row)
+          <div class="grid grid-cols-2 gap-[10px] sm:gap-4 md:gap-8 lg:gap-16">
+            @foreach($row as $slot)
+              @php
+                $item = is_array($applications[$slot] ?? null) ? $applications[$slot] : [];
+              @endphp
+              <div class="flex flex-col">
+                <div class="w-full aspect-[179/192] sm:aspect-square bg-[#E2E2E2] shadow-lg overflow-hidden">
+                  @if(!empty($item['image']))
+                    <img src="{{ $mediaUrl($item['image']) }}" alt="{{ $item['title'] ?? $applicationSlots[$slot] }}" class="w-full h-full object-cover">
+                  @endif
+                </div>
+                <p
+                  class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
+                  {{ $item['title'] ?? $applicationSlots[$slot] }}
+                </p>
+              </div>
+            @endforeach
+          </div>
+        @endforeach
       </div>
     </div>
-  </div>
-</section>
+  </section>
+@endif
 
 <!-- Breadcrumb -->
 <div class="w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
@@ -226,7 +251,7 @@
 
 <x-products.product-filter />
 <x-products.product-grid category="gach-trang-tri" :products="$products" routeName="client.products.gach-trang-tri.detail" />
-<x-products.trang-tri-process />
+<x-products.trang-tri-process :images="$config && is_array($config->images) ? $config->images : []" />
 
 <!-- Công đoạn chế tác -->
 <section class="relative w-full overflow-hidden py-12 md:py-20" data-aos="fade-up">
@@ -311,21 +336,25 @@
 
   <div class="swiper project-showcase-swiper w-full">
     <div class="swiper-wrapper">
-      @if($config && $config->dauAn && $config->dauAn->count() > 0)
-        @foreach($config->dauAn as $dauAn)
+      @if(isset($projects) && $projects->count() > 0)
+        @foreach($projects as $project)
+        @php
+          $projectImages = is_array($project->images) ? $project->images : [];
+          $projectImage = $projectImages[0] ?? null;
+        @endphp
         <div class="swiper-slide project-item group relative cursor-pointer">
-          <img src="{{ $dauAn->background ? asset('storage/' . $dauAn->background) : asset('assets/images/trang-tri-slide-01.jpg') }}" alt="{{ $dauAn->title ?? 'Công trình' }}"
+          <img src="{{ $mediaUrl($projectImage, asset('assets/images/trang-tri-slide-01.jpg')) }}" alt="{{ $project->ten_du_an ?? 'Công trình' }}"
             class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
           <div class="project-overlay absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent"></div>
           <div class="project-content absolute bottom-[65px] left-[80px] text-white z-10 min-w-[130px] md:min-w-[400px]">
-            <h3 class="font-bold text-base md:text-lg lg:text-xl mb-1 md:mb-2 leading-tight">{{ $dauAn->title ?? '' }}</h3>
-            <p class="text-xs md:text-sm lg:text-base"><span class="font-bold">Địa điểm:</span> {{ $dauAn->location ?? '' }}</p>
-            <p class="text-xs md:text-sm lg:text-base"><span class="font-bold">Sản phẩm:</span> {{ $dauAn->description ?? '' }}</p>
+            <h3 class="font-bold text-base md:text-lg lg:text-xl mb-1 md:mb-2 leading-tight">{{ $project->ten_du_an ?? '' }}</h3>
+            <p class="text-xs md:text-sm lg:text-base"><span class="font-bold">Địa điểm:</span> {{ $project->dia_diem ?? '' }}</p>
+            <p class="text-xs md:text-sm lg:text-base"><span class="font-bold">Sản phẩm:</span> {{ $project->san_pham ?? '' }}</p>
           </div>
         </div>
         @endforeach
       @else
-        {{-- Fallback static slides when no dauAn data --}}
+        {{-- Fallback static slides when no project data --}}
         <div class="swiper-slide project-item group relative cursor-pointer">
           <img src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}" alt="Công trình 1"
             class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -342,8 +371,8 @@
 
   <!-- Pagination Dots -->
   <div class="flex justify-center gap-[7px] md:gap-3 mt-6 md:hidden">
-    @php $dauAnCount = $config && $config->dauAn ? $config->dauAn->count() : 5; @endphp
-    @for($i = 0; $i < max($dauAnCount, 5); $i++)
+    @php $projectCount = isset($projects) && $projects->count() > 0 ? $projects->count() : 5; @endphp
+    @for($i = 0; $i < max($projectCount, 5); $i++)
     <button class="project-dot {{ $i === 0 ? 'active' : '' }} w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 cursor-pointer"
       data-index="{{ $i }}"></button>
     @endfor

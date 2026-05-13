@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GachTrangTri extends Model
 {
@@ -15,17 +14,14 @@ class GachTrangTri extends Model
         'thumbnail_main',
         'video',
         'images',
+        'ung_dung_da_dang',
     ];
 
     protected function casts(): array
     {
         return [
             'images' => 'array',
+            'ung_dung_da_dang' => 'array',
         ];
-    }
-
-    public function dauAn(): HasMany
-    {
-        return $this->hasMany(DauAnGachTrangTri::class, 'gach_trang_tri_id', 'gach_trang_tri_id');
     }
 }

@@ -234,9 +234,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('gach-trang-tri')->name('gach-trang-tri.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\GachTrangTriController::class, 'index'])->name('index');
             Route::put('/', [\App\Http\Controllers\Admin\GachTrangTriController::class, 'update'])->name('update');
-            Route::post('dau-an', [\App\Http\Controllers\Admin\GachTrangTriController::class, 'storeDauAn'])->name('dau-an.store');
-            Route::put('dau-an/{dauAn}', [\App\Http\Controllers\Admin\GachTrangTriController::class, 'updateDauAn'])->name('dau-an.update');
-            Route::delete('dau-an/{dauAn}', [\App\Http\Controllers\Admin\GachTrangTriController::class, 'destroyDauAn'])->name('dau-an.destroy');
             Route::delete('cong-doan-image', [\App\Http\Controllers\Admin\GachTrangTriController::class, 'destroyCongDoanImage'])->name('cong-doan-image.destroy');
         });
 
@@ -272,6 +269,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/', [\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'update'])->name('update');
             Route::delete('anh/{anh}', [\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'destroyAnh'])->name('anh.destroy');
             Route::delete('cong-doan-image', [\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'destroyCongDoanImage'])->name('cong-doan-image.destroy');
+            Route::delete('section-image', [\App\Http\Controllers\Admin\GachCoBatTrangController::class, 'destroySectionImage'])->name('section-image.destroy');
         });
 
         // 8. Linh Vật Phong Thủy

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
+use App\Models\DuAn;
 use App\Services\DinhMucGachTrangTriService;
 use App\Services\GachTrangTriCtService;
 use App\Services\GachTrangTriService;
@@ -22,6 +23,7 @@ class GachTrangTriController extends Controller
     public function index(Request $request)
     {
         $config = $this->gachTrangTriService->getFirstRecord();
+        $projects = DuAn::query()->latest()->take(6)->get();
         $products = ProductCollectionFilter::apply(
             $this->gachTrangTriCtService->getAll('active'),
             $request->only(['search', 'sort'])
@@ -29,7 +31,7 @@ class GachTrangTriController extends Controller
         $products = CollectionPaginator::paginate($products, 12);
 
         return view('clients.products.gach-trang-tri.index', compact(
-            'config', 'products'
+            'config', 'products', 'projects'
         ));
     }
 
