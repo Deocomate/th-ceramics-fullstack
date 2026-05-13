@@ -19,51 +19,53 @@ class GachTrangTriSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         GachTrangTri::create([
-            'thumbnail_main'   => $this->generateSingleImage('gach-trang-tri', 'main-banner.jpg'),
+            'thumbnail_main'   => $this->copySingleImage('gach-trang-tri', 'gach-trang-tri-banner.png'),
             'video'            => $this->generateVideoLink(),
-            'images'           => $this->generateGallery('gach-trang-tri-cong-doan', 15),
+            'images'           => $this->copySpecificImages('gach-trang-tri-cong-doan', ['trang-tri-slide-01.jpg', 'trang-tri-slide-02.jpg', 'trang-tri-slide-03.jpg']),
             'ung_dung_da_dang' => [
                 'main' =>[
-                    'title' => 'Ốp Tường Mặt Tiền Công Trình — Điểm Nhấn Kiến Trúc Đẳng Cấp Cho Biệt Thự Và Nhà Phố',
-                    'image' => $this->generateSingleImage('gach-trang-tri', 'app-main.jpg'),
+                    'title' => 'Ốp Tường Mặt Tiền - Điểm Nhấn Kiến Trúc',
+                    'image' => $this->copySingleImage('gach-trang-tri', 'work-01.jpg'),
                 ],
                 'sub_1' =>[
-                    'title' => 'Ốp Tường Rào — Tạo Vẻ Đẹp Sang Trọng Và Bảo Vệ Công Trình Khỏi Tác Động Thời Tiết',
-                    'image' => $this->generateSingleImage('gach-trang-tri', 'app-sub-1.jpg'),
+                    'title' => 'Ốp Tường Rào - Sang Trọng Và Bảo Vệ',
+                    'image' => $this->copySingleImage('gach-trang-tri', 'work-02.jpg'),
                 ],
                 'sub_2' => [
-                    'title' => 'Trang Trí Quầy Bar Và Khu Lễ Tân — Mang Phong Cách Indochine Độc Đáo',
-                    'image' => $this->generateSingleImage('gach-trang-tri', 'app-sub-2.jpg'),
+                    'title' => 'Trang Trí Quầy Bar - Phong Cách Indochine',
+                    'image' => $this->copySingleImage('gach-trang-tri', 'work-03.jpg'),
                 ],
                 'sub_3' => [
-                    'title' => 'Ốp Tường Phòng Khách — Tạo Điểm Nhấn Nghệ Thuật Cho Không Gian Sống',
-                    'image' => $this->generateSingleImage('gach-trang-tri', 'app-sub-3.jpg'),
+                    'title' => 'Phòng Khách - Nghệ Thuật Không Gian',
+                    'image' => $this->copySingleImage('gach-trang-tri', 'trang-tri-01.png'),
                 ],
                 'sub_4' => [
-                    'title' => 'Trang Trí Ngoại Thất Sân Vườn — Kết Nối Không Gian Sống Với Thiên Nhiên',
-                    'image' => $this->generateSingleImage('gach-trang-tri', 'app-sub-4.jpg'),
+                    'title' => 'Ngoại Thất Sân Vườn - Hài Hòa Thiên Nhiên',
+                    'image' => $this->copySingleImage('gach-trang-tri', 'trang-tri-02.png'),
                 ],
             ],
         ]);
 
         $applications =[
-            'Ốp Tường Rào Biệt Thự', 'Ốp Mặt Tiền Nhà Phố', 'Trang Trí Quầy Bar',
-            'Ốp Tường Phòng Khách', 'Trang Trí Đại Sảnh Khách Sạn', 'Ốp Cổng Nhà',
-            'Trang Trí Khu Lễ Tân', 'Ốp Chân Tường Ngoại Thất', 'Trang Trí Hành Lang',
-            'Ốp Tường Bếp', 'Trang Trí Sân Vườn', 'Ốp Mặt Tiền Nhà Hàng',
-            'Trang Trí Hồ Bơi', 'Ốp Tường Phòng Thờ', 'Ốp Cột Trụ Cổng',
+            'Ốp Tường Rào', 'Ốp Mặt Tiền', 'Trang Trí Quầy Bar',
+            'Ốp Tường Phòng Khách', 'Đại Sảnh Khách Sạn', 'Ốp Cổng Nhà',
+            'Khu Lễ Tân', 'Chân Tường Ngoại Thất', 'Hành Lang',
+            'Tường Bếp', 'Sân Vườn', 'Mặt Tiền Nhà Hàng',
+            'Hồ Bơi', 'Phòng Thờ', 'Cột Trụ Cổng',
         ];
 
+        $files = ['trang-tri-01.png', 'trang-tri-02.png', 'trang-tri-slide-01.jpg', 'trang-tri-slide-02.jpg', 'trang-tri-slide-03.jpg', 'trang-tri-slide-04.jpg', 'gach-detail.png'];
+
         for ($i = 1; $i <= 15; $i++) {
+            shuffle($files);
             GachTrangTriCt::create([
                 'code'       => 'GTT-2026-' . str_pad($i, 3, '0', STR_PAD_LEFT),
-                'name'       => "Gạch Trang Trí Men Hỏa Biến Cao Cấp - {$applications[$i-1]}",
-                // GỌI HÀM RANDOM Ở ĐÂY CHO MỖI SẢN PHẨM:
-                'images'     => $this->generateRandomGallery('gach-trang-tri-chi-tiet', 30, 10),
+                'name'       => "Gạch Trang Trí Men Hỏa Biến - {$applications[$i-1]}",
+                'images'     => $this->copySpecificImages('gach-trang-tri-chi-tiet', array_slice($files, 0, 5)),
                 'price'      => 28000 + ($i * 1500),
                 'des'        => $this->generateDescription(),
-                'size'       => '10 x 20 cm (Tiêu chuẩn phổ biến cho ốp tường trang trí)',
-                'size_image' => $this->generateSingleImage('gach-trang-tri', 'size-guide.jpg'),
+                'size'       => '10 x 20 cm',
+                'size_image' => $this->copySingleImage('gach-trang-tri', 'gach-detail.png'),
                 'is_delete'  => 0,
             ]);
         }

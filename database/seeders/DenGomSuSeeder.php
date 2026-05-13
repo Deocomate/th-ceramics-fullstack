@@ -23,55 +23,43 @@ class DenGomSuSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $parent = DenGomSu::create([
-            'thumbnail_main' => $this->generateSingleImage('den-gom', 'main-banner.jpg'),
+            'thumbnail_main' => $this->copySingleImage('den-gom', 'den-gom-banner.png'),
             'video'          => $this->generateVideoLink(),
-            'image1'         => $this->generateSingleImage('den-gom', 'thumb-1.jpg'),
-            'image2'         => $this->generateSingleImage('den-gom', 'thumb-2.jpg'),
+            'image1'         => $this->copySingleImage('den-gom', 'den-gom-01.png'),
+            'image2'         => $this->copySingleImage('den-gom', 'den-gom-02.png'),
             'title2'         => 'Đèn gốm cao cấp',
-            'image3'         => $this->generateSingleImage('den-gom', 'thumb-3.jpg'),
+            'image3'         => $this->copySingleImage('den-gom', 'den-gom-bg.png'),
             'title3'         => 'Sản phẩm tiêu biểu',
-            'image4'         => $this->generateSingleImage('den-gom', 'thumb-4.jpg'),
+            'image4'         => $this->copySingleImage('den-gom', 'den-gom-01.png'),
         ]);
 
-        for ($i = 1; $i <= 15; $i++) {
+        $dgFiles = ['den-gom-01.png', 'den-gom-02.png', 'den-gom-bg.png'];
+
+        foreach ($dgFiles as $file) {
             DenGomSuAnh::create([
-                'image'         => $this->generateSingleImage('den-gom-gallery', "gallery-{$i}.jpg"),
+                'image'         => $this->copySingleImage('den-gom-gallery', $file),
                 'den_gom_su_id' => $parent->den_gom_su_id,
             ]);
         }
 
-        $shapes = ['Lục Giác', 'Hình Tháp Chùa', 'Kiểu Nhật', 'Quả Nhót', 'Lồng Chim'];
+        $shapes = ['Lục Giác', 'Hình Tháp', 'Kiểu Nhật', 'Quả Nhót', 'Lồng Chim'];
 
         for ($i = 1; $i <= 15; $i++) {
             $shapeName = $shapes[$i % 5];
+            shuffle($dgFiles);
             $product = DenVuonGomSuCt::create([
-                'name'       => "Đèn Vườn Gốm Sứ Kiểu {$shapeName} - Mẫu Số {$i}",
-                // GỌI HÀM RANDOM Ở ĐÂY:
-                'images'     => $this->generateRandomGallery('den-gom-chi-tiet', 30, 10),
+                'name'       => "Đèn Vườn Gốm Sứ {$shapeName} - Mẫu {$i}",
+                'images'     => $this->copySpecificImages('den-gom-chi-tiet', $dgFiles),
                 'des'        => $this->generateDescription(),
                 'size'       => 'H500 x D200 mm',
-                'size_image' => $this->generateSingleImage('den-gom', 'size-guide.jpg'),
+                'size_image' => $this->copySingleImage('den-gom', 'ngoi-hai-size.png'),
                 'size_des'   => $this->generateSizeDescription(),
                 'is_delete'  => 0,
             ]);
 
             $pid = str_pad($product->den_vuon_gom_su_ct_id, 3, '0', STR_PAD_LEFT);
-            
-            PhanLoaiDenVuonGomSuCt::create([
-                'name'                  => "Cỡ Vừa (H400) - {$shapeName} (#{$pid})",
-                'code'                  => "DGS-{$pid}-M",
-                'price'                 => 350000 + ($i * 10000),
-                'den_vuon_gom_su_ct_id' => $product->den_vuon_gom_su_ct_id,
-                'is_delete'             => 0,
-            ]);
-
-            PhanLoaiDenVuonGomSuCt::create([
-                'name'                  => "Cỡ Lớn (H600) - {$shapeName} (#{$pid})",
-                'code'                  => "DGS-{$pid}-L",
-                'price'                 => 550000 + ($i * 10000),
-                'den_vuon_gom_su_ct_id' => $product->den_vuon_gom_su_ct_id,
-                'is_delete'             => 0,
-            ]);
+            PhanLoaiDenVuonGomSuCt::create(['name' => "Cỡ Vừa (H400) (#{$pid})", 'code' => "DGS-{$pid}-M", 'price' => 350000 + ($i * 10000), 'den_vuon_gom_su_ct_id' => $product->den_vuon_gom_su_ct_id, 'is_delete' => 0]);
+            PhanLoaiDenVuonGomSuCt::create(['name' => "Cỡ Lớn (H600) (#{$pid})", 'code' => "DGS-{$pid}-L", 'price' => 550000 + ($i * 10000), 'den_vuon_gom_su_ct_id' => $product->den_vuon_gom_su_ct_id, 'is_delete' => 0]);
         }
     }
 }

@@ -23,39 +23,38 @@ class GachThongGioSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $parent = GachHoaThongGio::create([
-            'video_thumbnail' => $this->generateSingleImage('gach-thong-gio', 'main-banner.jpg'),
+            'video_thumbnail' => $this->copySingleImage('gach-thong-gio', 'gach-hoa-01.jpg'),
             'video_url'       => $this->generateVideoLink(),
-            'process_images'  => $this->generateGallery('gach-thong-gio-cong-doan', 15),
+            'process_images'  => $this->copySpecificImages('gach-thong-gio-cong-doan', ['cong-doan-01.jpg', 'cong-doan-02.jpg', 'work-01.jpg', 'work-02.jpg']),
         ]);
 
-        $giaTris = [[
-                'title'        => 'Cách Nhiệt Tự Nhiên Tối Ưu',
-                'background'   => '#1D78AD',
-                'desscription' => 'Cấu trúc rỗng độc đáo của gạch hoa thông gió tạo ra lớp đệm không khí cách nhiệt hoàn hảo. Kết hợp với chất liệu đất sét nung ở 1.250 độ C, sản phẩm giúp giảm nhiệt độ công trình từ 3-5 độ C vào mùa hè, tiết kiệm 30% chi phí điện năng làm mát.',
-            ],[
-                'title'        => 'Điều Tiết Ánh Sáng Tinh Tế',
-                'background'   => '#B28373',
-                'desscription' => 'Những ô trống được thiết kế theo tỉ lệ vàng trong kiến trúc giúp điều tiết ánh sáng một cách tinh tế. Ánh sáng xuyên qua từng ô gạch tạo nên hiệu ứng thị giác đầy nghệ thuật, mang đến vẻ đẹp sống động biến đổi theo từng thời điểm trong ngày.',
-            ],[
-                'title'        => 'Thẩm Mỹ Độc Bản Nghệ Thuật',
-                'background'   => '#5A7E46',
-                'desscription' => 'Vượt ra khỏi khái niệm vật liệu xây dựng thông thường, mỗi viên gạch hoa thông gió là một tác phẩm nghệ thuật. Lớp men hỏa biến phủ lên bề mặt giúp mỗi sản phẩm sở hữu một phổ màu riêng biệt, không có viên gạch nào hoàn toàn giống nhau.',
-            ],
+        $giaTris = [
+            ['title' => 'Cách Nhiệt Tự Nhiên Tối Ưu', 'background' => '#1D78AD', 'image' => 'value-01.png', 'desscription' => 'Cấu trúc rỗng độc đáo của gạch hoa thông gió tạo ra lớp đệm không khí cách nhiệt hoàn hảo...'],
+            ['title' => 'Điều Tiết Ánh Sáng Tinh Tế', 'background' => '#B28373', 'image' => 'value-02.png', 'desscription' => 'Những ô trống được thiết kế theo tỉ lệ vàng trong kiến trúc giúp điều tiết ánh sáng một cách tinh tế...'],
+            ['title' => 'Thẩm Mỹ Độc Bản Nghệ Thuật', 'background' => '#5A7E46', 'image' => 'value-03.png', 'desscription' => 'Vượt ra khỏi khái niệm vật liệu xây dựng thông thường, mỗi viên gạch hoa là một tác phẩm...'],
+            ['title' => 'Độ Bền Thách Thức Thời Tiết', 'background' => '#C08B5C', 'image' => 'value-04.png', 'desscription' => 'Nhờ nung luyện chuyên sâu ở 1.250 độ C, đất sét được thủy tinh hóa, mang lại độ nén đáng kinh ngạc...'],['title' => 'Hài Hòa Phong Thủy Vượng Khí', 'background' => '#7B6B8A', 'image' => 'gach-hoa-value.png', 'desscription' => 'Lưu thông không khí đóng vai trò quan trọng, thu hút vượng khí, xua tan tà khí, mang lại bình an...'],
         ];
 
-        foreach ($giaTris as $index => $gt) {
+        foreach ($giaTris as $gt) {
             GiaTriGachHoaThongGio::create([
                 'title'                 => $gt['title'],
-                'image'                 => $this->generateSingleImage('gach-thong-gio', "value-{$index}.jpg"),
+                'image'                 => $this->copySingleImage('gach-thong-gio', $gt['image']),
                 'background'            => $gt['background'],
                 'desscription'          => $gt['desscription'],
                 'gach_hoa_thong_gio_id' => $parent->gach_hoa_thong_gio_id,
             ]);
         }
 
-        for ($i = 1; $i <= 15; $i++) {
+        $allGachHoaFiles =[
+            'gach-hoa-01.jpg', 'gach-hoa-01.png', 'gach-hoa-02.jpg', 'gach-hoa-02.png',
+            'gach-hoa-03.jpg', 'gach-hoa-03.png', 'gach-hoa-04.jpg', 'gach-hoa-04.png',
+            'gach-hoa-05.jpg', 'gach-hoa-05.png', 'gach-hoa-06.jpg', 'gach-hoa-06.png',
+            'gach-hoa-07.jpg', 'gach-hoa-07.png', 'gach-hoa-08.jpg', 'gach-hoa-08.png'
+        ];
+
+        foreach ($allGachHoaFiles as $file) {
             GachHoaThongGioAnh::create([
-                'image'                 => $this->generateSingleImage('gach-thong-gio-gallery', "gallery-{$i}.jpg"),
+                'image'                 => $this->copySingleImage('gach-thong-gio-gallery', $file),
                 'gach_hoa_thong_gio_id' => $parent->gach_hoa_thong_gio_id,
             ]);
         }
@@ -68,15 +67,17 @@ class GachThongGioSeeder extends Seeder
         ];
 
         for ($i = 1; $i <= 16; $i++) {
+            shuffle($allGachHoaFiles);
+            $selectedFiles = array_slice($allGachHoaFiles, 0, 10);
+            
             GachHoaThongGioCt::create([
                 'code'       => 'GTG-2026-' . str_pad($i, 3, '0', STR_PAD_LEFT),
                 'name'       => "Gạch Hoa Thông Gió {$patterns[$i-1]}",
-                // GỌI HÀM RANDOM Ở ĐÂY CHO MỖI SẢN PHẨM:
-                'images'     => $this->generateRandomGallery('gach-thong-gio-chi-tiet', 30, 10),
+                'images'     => $this->copySpecificImages('gach-thong-gio-chi-tiet', $selectedFiles),
                 'price'      => 22000 + ($i * 1000),
                 'des'        => $this->generateDescription(),
                 'size'       => '20 x 20 x 6 cm (Định mức 25 viên/m²)',
-                'size_image' => $this->generateSingleImage('gach-thong-gio', 'size-guide.jpg'),
+                'size_image' => $this->copySingleImage('gach-thong-gio', 'gtt-size.png'),
                 'is_delete'  => 0,
             ]);
         }

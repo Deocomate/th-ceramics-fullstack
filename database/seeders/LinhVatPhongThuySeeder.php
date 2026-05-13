@@ -23,45 +23,47 @@ class LinhVatPhongThuySeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $parent = LinhVatPhongThuy::create([
-            'thumbnail_main' => $this->generateSingleImage('linh-vat', 'main-banner.jpg'),
+            'thumbnail_main' => $this->copySingleImage('linh-vat', 'linh-vat-banner.png'),
             'video'          => $this->generateVideoLink(),
         ]);
 
         $linhVats = [
-            ['title' => 'Long (Rồng Uy Nghi)', 'desc' => 'Rồng là linh vật quyền lực nhất trong tứ linh, biểu tượng của sức mạnh, quyền uy và vượng khí.'],
-            ['title' => 'Lân (Nghê Chấn Thủy)', 'desc' => 'Lân (Nghê) là linh vật thuần Việt, mang ý nghĩa canh giữ bình an, bảo vệ gia chủ khỏi tà khí.'],
-            ['title' => 'Phượng (Tái Sinh)', 'desc' => 'Phượng hoàng biểu trưng cho sự thanh cao, trường tồn bất diệt và mang đến điềm lành.'],
+            ['title' => 'Long (Rồng Uy Nghi)', 'image' => 'dau-rong.png', 'desc' => 'Rồng là linh vật quyền lực nhất trong tứ linh.'],
+            ['title' => 'Lân (Nghê Chấn Thủy)', 'image' => 'nghe.png', 'desc' => 'Lân (Nghê) là linh vật thuần Việt, bảo vệ gia chủ.'],
+            ['title' => 'Phượng (Tái Sinh)', 'image' => 'phuong.png', 'desc' => 'Phượng hoàng biểu trưng cho sự thanh cao.'],
         ];
 
-        foreach ($linhVats as $index => $lv) {
+        foreach ($linhVats as $lv) {
             LinhVat::create([
                 'title'                  => $lv['title'],
-                'image'                  => $this->generateSingleImage('linh-vat', "item-{$index}.jpg"),
+                'image'                  => $this->copySingleImage('linh-vat', $lv['image']),
                 'description'            => $lv['desc'],
                 'linh_vat_phong_thuy_id' => $parent->linh_vat_phong_thuy_id,
             ]);
         }
 
-        for ($i = 1; $i <= 15; $i++) {
+        $lvFiles = ['dau-rong.png', 'nghe.png', 'phuong.png', 'dao-kim.png', 'dao-kim.jpg'];
+
+        foreach ($lvFiles as $file) {
             LinhVatPhongThuyAnh::create([
-                'image'                  => $this->generateSingleImage('linh-vat-gallery', "gallery-{$i}.jpg"),
+                'image'                  => $this->copySingleImage('linh-vat-gallery', $file),
                 'linh_vat_phong_thuy_id' => $parent->linh_vat_phong_thuy_id,
             ]);
         }
 
-        $names = ['Đầu Rồng Bờ Nóc', 'Tượng Nghê Chầu', 'Phượng Hoàng Lửa', 'Cá Chép Hóa Rồng', 'Thiềm Thừ Chiêu Tài'];
+        $names = ['Đầu Rồng Bờ Nóc', 'Tượng Nghê Chầu', 'Phượng Hoàng Lửa', 'Kim Thiềm', 'Tỳ Hưu'];
 
         for ($i = 1; $i <= 15; $i++) {
             $baseName = $names[$i % 5];
+            shuffle($lvFiles);
             LinhVatPhongThuyCt::create([
                 'code'       => 'LVPT-2026-' . str_pad($i, 3, '0', STR_PAD_LEFT),
-                'name'       => "{$baseName} Men Hỏa Biến - Tác Phẩm Nghệ Thuật Số {$i}",
-                // GỌI HÀM RANDOM Ở ĐÂY:
-                'images'     => $this->generateRandomGallery('linh-vat-chi-tiet', 30, 10),
+                'name'       => "{$baseName} Men Hỏa Biến Số {$i}",
+                'images'     => $this->copySpecificImages('linh-vat-chi-tiet', array_slice($lvFiles, 0, 3)),
                 'price'      => 800000 + ($i * 50000),
                 'des'        => $this->generateDescription(),
                 'size'       => 'Cao 45cm x Rộng 25cm',
-                'size_image' => $this->generateSingleImage('linh-vat', 'size-guide.jpg'),
+                'size_image' => $this->copySingleImage('linh-vat', 'gtt-size.png'),
                 'size_des'   => $this->generateSizeDescription(),
                 'is_delete'  => 0,
             ]);
