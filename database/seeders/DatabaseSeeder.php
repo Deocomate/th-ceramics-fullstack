@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DinhMucSeeder::class,
             PageConfigSeeder::class,
+
+            TacGiaSeeder::class,
+            GiaTriVuotTroiSeeder::class,
             
             // CÁC SEEDER THEO KẾ HOẠCH BÀI BẢN VÀ ĐẦY ĐỦ 100%:
             NgoiAmDuongSeeder::class,
