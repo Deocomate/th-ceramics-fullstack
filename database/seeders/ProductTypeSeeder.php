@@ -2,143 +2,23 @@
 
 namespace Database\Seeders;
 
-use App\Models\DenGomSu;
-use App\Models\DenGomSuAnh;
-use App\Models\GachCoBatTrang;
-use App\Models\GachCoBatTrangAnh;
-use App\Models\GachHoaThongGio;
-use App\Models\GachHoaThongGioAnh;
-use App\Models\GachTrangTri;
-use App\Models\GiaTriGachHoaThongGio;
 use App\Models\LanCanGomXu;
 use App\Models\LinhVat;
 use App\Models\LinhVatPhongThuy;
 use App\Models\LinhVatPhongThuyAnh;
-use App\Models\NgoiAmDuong;
-use App\Models\NgoiHaiVanMieu;
-use App\Models\PhuKienNgoi;
+use App\Models\DenGomSu;
+use App\Models\DenGomSuAnh;
 use Illuminate\Database\Seeder;
 
 class ProductTypeSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->seedNgoiAmDuong();
-        $this->seedNgoiHaiVanMieu();
-        $this->seedGachHoaThongGio();
-        $this->seedPhuKienNgoi();
-        $this->seedGachTrangTri();
+        // Các module đã chuyển sang Seeder riêng nên bị gỡ khỏi đây.
+        // Chỉ còn lại:
         $this->seedLanCanGomXu();
-        $this->seedGachCoBatTrang();
         $this->seedLinhVatPhongThuy();
         $this->seedDenGomSu();
-    }
-
-    private function seedNgoiAmDuong(): void
-    {
-        NgoiAmDuong::firstOrCreate(
-            ['ngoi_am_duong_id' => 1],
-            [
-                'thumbnail_main' => 'assets/images/ngoi-am-duong-banner.jpg',
-                'thumbnail1' => 'assets/images/ngoi-am-duong-01.jpg',
-                'thumbnail2' => 'assets/images/ngoi-am-duong-02.png',
-                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
-            ]
-        );
-    }
-
-    private function seedNgoiHaiVanMieu(): void
-    {
-        NgoiHaiVanMieu::firstOrCreate(
-            ['ngoi_hai_van_mieu_id' => 1],
-            [
-                'thumbnail_main' => 'assets/images/ngoi-hai-van-mieu-banner.jpg',
-                'title1' => 'Tinh hoa kiến trúc Việt',
-                'thumbnail1' => 'assets/images/ngoi-hai-01.png',
-                'title2' => 'Ngói Hài - Nét cong di sản',
-                'thumbnail2' => 'assets/images/ngoi-hai-02.png',
-                'title3' => 'Ngói Văn Miếu - Uy nghi cổ kính',
-                'thumbnail3' => 'assets/images/ngoi-hai-03.png',
-                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
-                'images' => [
-                    'assets/images/ngoi-hai-01.png',
-                    'assets/images/ngoi-hai-02.png',
-                    'assets/images/ngoi-hai-03.png',
-                ],
-            ]
-        );
-    }
-
-    private function seedGachHoaThongGio(): void
-    {
-        $parent = GachHoaThongGio::firstOrCreate(
-            ['gach_hoa_thong_gio_id' => 1],
-            [
-                'video_thumbnail' => 'assets/images/gach-hoa-01.jpg',
-                'video_url' => 'https://www.youtube.com/embed/Win12rIicBI',
-                'process_images' => [
-                    'assets/images/gach-hoa-01.jpg',
-                    'assets/images/gach-hoa-02.jpg',
-                ],
-            ]
-        );
-
-        $anhs = [
-            ['image' => 'assets/images/gach-hoa-01.jpg'],
-            ['image' => 'assets/images/gach-hoa-02.jpg'],
-        ];
-        foreach ($anhs as $anh) {
-            GachHoaThongGioAnh::firstOrCreate(
-                ['image' => $anh['image']],
-                ['gach_hoa_thong_gio_id' => $parent->gach_hoa_thong_gio_id]
-            );
-        }
-
-        $giaTris = [
-            ['title' => 'Thông gió tự nhiên', 'image' => 'assets/images/gia-tri-vuot-troi-01.jpg', 'background' => '#1D78AD', 'desscription' => 'Thiết kế gạch hoa rỗng giúp không khí lưu thông tự nhiên, giảm nhiệt độ công trình hiệu quả.'],
-            ['title' => 'Chống nóng hiệu quả', 'image' => 'assets/images/gia-tri-vuot-troi-03.jpg', 'background' => '#5A7E46', 'desscription' => 'Đất sét nung 1200°C kết hợp cấu trúc rỗng giúp cách nhiệt vượt trội, tiết kiệm năng lượng làm mát.'],
-            ['title' => 'Bền màu thủ công', 'image' => 'assets/images/value-01.png', 'background' => '#B28373', 'desscription' => 'Từng viên gạch được hoàn thiện thủ công, giữ sắc gốm tự nhiên và tạo điểm nhấn nghệ thuật cho không gian.'],
-        ];
-        foreach ($giaTris as $gt) {
-            GiaTriGachHoaThongGio::firstOrCreate(
-                ['title' => $gt['title']],
-                [
-                    'image' => $gt['image'],
-                    'background' => $gt['background'],
-                    'desscription' => $gt['desscription'],
-                    'gach_hoa_thong_gio_id' => $parent->gach_hoa_thong_gio_id,
-                ]
-            );
-        }
-    }
-
-    private function seedPhuKienNgoi(): void
-    {
-        PhuKienNgoi::firstOrCreate(
-            ['phu_kien_ngoi_id' => 1],
-            [
-                'thumbnail_main' => 'assets/images/pk-banner.png',
-                'images' => [],
-            ]
-        );
-    }
-
-    private function seedGachTrangTri(): void
-    {
-        GachTrangTri::firstOrCreate(
-            ['gach_trang_tri_id' => 1],
-            [
-                'thumbnail_main' => 'assets/images/gach-trang-tri-banner.png',
-                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
-                'ung_dung_da_dang' => [
-                    'main' => ['title' => 'Tường trang trí', 'image' => null],
-                    'sub_1' => ['title' => 'Lát nền', 'image' => null],
-                    'sub_2' => ['title' => 'Phòng khách', 'image' => null],
-                    'sub_3' => ['title' => 'Ngoài trời', 'image' => null],
-                    'sub_4' => ['title' => 'Phòng tắm', 'image' => null],
-                ],
-            ]
-        );
     }
 
     private function seedLanCanGomXu(): void
@@ -150,28 +30,6 @@ class ProductTypeSeeder extends Seeder
                 'video' => 'https://www.youtube.com/embed/Win12rIicBI',
             ]
         );
-    }
-
-    private function seedGachCoBatTrang(): void
-    {
-        $parent = GachCoBatTrang::firstOrCreate(
-            ['gach_co_bat_trang_id' => 1],
-            [
-                'thumbnail_main' => 'assets/images/gach-co-banner.png',
-                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
-            ]
-        );
-
-        $anhs = [
-            ['image' => 'assets/images/gach-co-work-1.jpg'],
-            ['image' => 'assets/images/gach-co-work-2.jpg'],
-        ];
-        foreach ($anhs as $anh) {
-            GachCoBatTrangAnh::firstOrCreate(
-                ['image' => $anh['image']],
-                ['gach_co_bat_trang_id' => $parent->gach_co_bat_trang_id]
-            );
-        }
     }
 
     private function seedLinhVatPhongThuy(): void
@@ -188,6 +46,7 @@ class ProductTypeSeeder extends Seeder
             ['title' => 'Long', 'image' => 'assets/images/dau-rong.png', 'description' => 'Rồng (Long) — linh vật quyền lực nhất trong tứ linh, biểu tượng của sức mạnh và sự uy nghi.'],
             ['title' => 'Lân', 'image' => 'assets/images/lan-can-01.png', 'description' => 'Lân — linh vật của sự may mắn, bình an, bảo vệ gia chủ khỏi tà khí.'],
         ];
+
         foreach ($linhVats as $lv) {
             LinhVat::firstOrCreate(
                 ['title' => $lv['title']],
@@ -203,6 +62,7 @@ class ProductTypeSeeder extends Seeder
             ['image' => 'assets/images/work-01.jpg'],
             ['image' => 'assets/images/work-02.jpg'],
         ];
+
         foreach ($anhs as $anh) {
             LinhVatPhongThuyAnh::firstOrCreate(
                 ['image' => $anh['image']],
@@ -214,8 +74,7 @@ class ProductTypeSeeder extends Seeder
     private function seedDenGomSu(): void
     {
         $parent = DenGomSu::firstOrCreate(
-            ['den_gom_su_id' => 1],
-            [
+            ['den_gom_su_id' => 1],[
                 'thumbnail_main' => 'assets/images/den-gom-banner.png',
                 'video' => 'https://www.youtube.com/embed/Win12rIicBI',
                 'title2' => 'Đèn gốm sứ cao cấp',
@@ -231,6 +90,7 @@ class ProductTypeSeeder extends Seeder
             ['image' => 'assets/images/den-gom-01.png'],
             ['image' => 'assets/images/den-gom-02.png'],
         ];
+
         foreach ($anhs as $anh) {
             DenGomSuAnh::firstOrCreate(
                 ['image' => $anh['image']],
