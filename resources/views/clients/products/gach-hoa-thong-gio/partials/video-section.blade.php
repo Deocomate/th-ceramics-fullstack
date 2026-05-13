@@ -11,26 +11,38 @@
     </h2>
   </div>
   <div class="flex">
+    @php
+      $videoThumbnail = $config->video_thumbnail ?? null;
+      $videoThumbnailUrl = !empty($videoThumbnail)
+        ? (\Illuminate\Support\Str::startsWith($videoThumbnail, 'assets/') ? asset($videoThumbnail) : asset('storage/' . $videoThumbnail))
+        : asset('assets/images/gach-hoa-value.png');
+      $videoUrl = $config->video_url ?? null;
+      $videoEmbedUrl = $videoUrl;
+
+      if (!empty($videoUrl) && preg_match('~(?:youtube\.com/(?:watch\?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_-]{6,})~', $videoUrl, $matches)) {
+        $videoEmbedUrl = 'https://www.youtube.com/embed/' . $matches[1];
+      }
+    @endphp
     <a
-      href="{{ !empty($config->images) && is_array($config->images) && isset($config->images[0]) ? asset('storage/' . $config->images[0]) : asset('assets/images/gach-hoa-value.png') }}"
+      href="{{ $videoThumbnailUrl }}"
       class="glightbox w-1/2 pl-[5%] py-[5%] pr-[5%] lg:pr-[5%]"
       data-aos="fade-right"
       data-gallery="hanh-trinh"
     >
       <img
-        src="{{ !empty($config->images) && is_array($config->images) && isset($config->images[0]) ? asset('storage/' . $config->images[0]) : asset('assets/images/gach-hoa-value.png') }}"
+        src="{{ $videoThumbnailUrl }}"
         alt="Hành trình chế tác 1"
         class="w-full h-full object-cover brightness-80 hover:brightness-100 transition-all duration-300"
       />
     </a>
-    @if(!empty($config->video))
+    @if(!empty($videoEmbedUrl))
     <div
       class="relative w-full aspect-[4/3] overflow-hidden"
       data-aos="fade-left"
       data-aos-delay="200"
     >
       <iframe
-        src="{{ $config->video }}"
+        src="{{ $videoEmbedUrl }}"
         class="w-full h-full"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

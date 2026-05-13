@@ -95,18 +95,22 @@
 
             <!-- Desktop Icons -->
             <div class="hidden xl:flex items-center gap-6">
-                <form action="{{ route('client.products.ngoi-am-duong.index') }}" method="GET" class="flex items-center gap-2">
+                <div class="relative flex items-center" data-expandable-search>
                     <input
                         type="search"
-                        name="search"
-                        value="{{ request('search') }}"
-                        placeholder="Tìm kiếm"
-                        class="w-32 rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white placeholder:text-white/60 outline-none focus:border-secondary"
+                        placeholder="Tìm kiếm sản phẩm"
+                        autocomplete="off"
+                        data-search-input
+                        data-open-classes="w-48 opacity-100 pointer-events-auto"
+                        class="w-0 opacity-0 pointer-events-none rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white placeholder:text-white/60 outline-none transition-all duration-300 focus:border-secondary"
                     />
-                    <button type="submit" class="hover:text-secondary transition-colors" aria-label="Search">
+                    <button type="button" data-search-toggle class="hover:text-secondary transition-colors" aria-label="Search">
                         <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
                     </button>
-                </form>
+                    <div data-search-dropdown
+                        class="hidden absolute right-0 top-full mt-3 w-[360px] max-h-[70vh] overflow-y-auto rounded-sm border border-neutral-1 bg-white text-primary shadow-2xl z-[70]">
+                    </div>
+                </div>
                 <a href="{{ route('client.cart.index') }}" class="hover:text-secondary transition-colors"
                     aria-label="Cart">
                     <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-5 h-5" />
@@ -139,9 +143,22 @@
             </a>
 
             <div class="absolute right-[23px] flex items-center gap-[14px]">
-                <a href="{{ route('client.products.ngoi-am-duong.index') }}" class="hover:text-secondary transition-colors" aria-label="Search">
-                    <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-[18px] h-[18px]" />
-                </a>
+                <div class="relative flex items-center" data-expandable-search>
+                    <input
+                        type="search"
+                        placeholder="Tìm kiếm"
+                        autocomplete="off"
+                        data-search-input
+                        data-open-classes="w-[calc(100vw-118px)] max-w-[260px] opacity-100 pointer-events-auto"
+                        class="absolute right-7 top-1/2 -translate-y-1/2 w-0 opacity-0 pointer-events-none rounded-sm border border-white/20 bg-primary px-3 py-2 text-sm text-white placeholder:text-white/60 outline-none transition-all duration-300 focus:border-secondary"
+                    />
+                    <button type="button" data-search-toggle class="hover:text-secondary transition-colors" aria-label="Search">
+                        <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-[18px] h-[18px]" />
+                    </button>
+                    <div data-search-dropdown
+                        class="hidden fixed right-[23px] top-[58px] w-[calc(100vw-46px)] max-h-[70vh] overflow-y-auto rounded-sm border border-neutral-1 bg-white text-primary shadow-2xl z-[70]">
+                    </div>
+                </div>
                 <a href="{{ route('client.cart.index') }}" class="hover:text-secondary transition-colors"
                     aria-label="Cart">
                     <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-[18px] h-[18px]" />
@@ -169,9 +186,9 @@
                     <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="h-[90px] w-[90px]" />
                 </a>
                 <div class="flex items-center gap-5">
-                    <a href="{{ route('client.products.ngoi-am-duong.index') }}" class="hover:text-secondary transition-colors" aria-label="Search">
+                    <button type="button" data-search-menu-focus class="hover:text-secondary transition-colors" aria-label="Search">
                         <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
-                    </a>
+                    </button>
                     <a href="{{ route('client.cart.index') }}" class="hover:text-secondary transition-colors"
                         aria-label="Cart">
                         <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-5 h-5" />
@@ -192,18 +209,22 @@
                     </button>
                 </div>
             </div>
-            <form action="{{ route('client.products.ngoi-am-duong.index') }}" method="GET" class="mb-6 flex items-center gap-2">
+            <div class="relative mb-6 flex items-center gap-2" data-expandable-search data-mobile-menu-search>
                 <input
                     type="search"
-                    name="search"
-                    value="{{ request('search') }}"
                     placeholder="Tìm kiếm sản phẩm"
-                    class="min-w-0 flex-1 rounded-sm border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/60 outline-none focus:border-secondary"
+                    autocomplete="off"
+                    data-search-input
+                    data-open-classes="w-full opacity-100 pointer-events-auto"
+                    class="w-0 min-w-0 opacity-0 pointer-events-none rounded-sm border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/60 outline-none transition-all duration-300 focus:border-secondary"
                 />
-                <button type="submit" class="w-11 h-11 flex items-center justify-center rounded-sm border border-white/20">
+                <button type="button" data-search-toggle class="w-11 h-11 shrink-0 flex items-center justify-center rounded-sm border border-white/20">
                     <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
                 </button>
-            </form>
+                <div data-search-dropdown
+                    class="hidden absolute left-0 right-0 top-full mt-2 max-h-[62vh] overflow-y-auto rounded-sm border border-neutral-1 bg-white text-primary shadow-2xl z-[70]">
+                </div>
+            </div>
             <div class="flex flex-col space-y-6 flex-grow z-10">
                 <a href="{{ route('client.home') }}"
                     class="mobile-nav-link text-white font-semibold text-lg uppercase hover:text-secondary"
@@ -326,6 +347,207 @@
                 });
                 onScroll();
             }
+
+            // Expandable header search
+            const searchEndpoint = @json(route('client.search.quick'));
+            const searchCategories = @json($categories ?? []);
+            const searchRoots = document.querySelectorAll("[data-expandable-search]");
+
+            const normalizeSearch = (value) => String(value || "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/đ/g, "d")
+                .replace(/Đ/g, "D")
+                .toLowerCase();
+
+            const escapeHtml = (value) => String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+            const swapClasses = (element, classes, enabled) => {
+                classes.split(" ").filter(Boolean).forEach((className) => {
+                    element.classList.toggle(className, enabled);
+                });
+            };
+
+            const filterCategories = (keyword) => {
+                const normalizedKeyword = normalizeSearch(keyword);
+
+                if (!normalizedKeyword) return [];
+
+                return searchCategories
+                    .filter((category) => {
+                        const haystack = normalizeSearch([
+                            category.name,
+                            ...(category.keywords || []),
+                        ].join(" "));
+
+                        return haystack.includes(normalizedKeyword);
+                    })
+                    .slice(0, 5);
+            };
+
+            const renderSearchDropdown = (dropdown, categories, products, state = "ready") => {
+                const hasCategories = categories.length > 0;
+                const hasProducts = products.length > 0;
+
+                if (!hasCategories && !hasProducts && state === "ready") {
+                    dropdown.innerHTML = `
+                        <div class="px-4 py-5 text-sm text-primary/70">Không tìm thấy kết quả phù hợp.</div>
+                    `;
+                    dropdown.classList.remove("hidden");
+                    return;
+                }
+
+                const categoryHtml = hasCategories ? `
+                    <div class="border-b border-neutral-1">
+                        <div class="px-4 pt-3 pb-2 text-[11px] font-bold uppercase tracking-[0.08em] text-primary/50">Danh mục</div>
+                        <div class="pb-2">
+                            ${categories.map((category) => `
+                                <a href="${escapeHtml(category.url)}" class="block px-4 py-2 text-sm font-semibold hover:bg-neutral-2 hover:text-secondary transition-colors">
+                                    ${escapeHtml(category.name)}
+                                </a>
+                            `).join("")}
+                        </div>
+                    </div>
+                ` : "";
+
+                const productHtml = hasProducts ? `
+                    <div>
+                        <div class="px-4 pt-3 pb-2 text-[11px] font-bold uppercase tracking-[0.08em] text-primary/50">Sản phẩm</div>
+                        <div class="pb-2">
+                            ${products.map((product) => `
+                                <a href="${escapeHtml(product.url)}" class="flex items-center gap-3 px-4 py-2 hover:bg-neutral-2 transition-colors">
+                                    <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" class="h-12 w-12 shrink-0 rounded-sm object-cover bg-neutral-1" loading="lazy" />
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block truncate text-sm font-semibold text-primary">${escapeHtml(product.name)}</span>
+                                        <span class="mt-1 flex items-center gap-2 text-xs text-primary/60">
+                                            <span class="truncate">${escapeHtml(product.code || product.category || "")}</span>
+                                            <span class="font-semibold text-secondary">${escapeHtml(product.price_formatted || "")}</span>
+                                        </span>
+                                    </span>
+                                </a>
+                            `).join("")}
+                        </div>
+                    </div>
+                ` : "";
+
+                const stateHtml = state === "loading" ? `
+                    <div class="px-4 py-3 text-sm text-primary/60">Đang tìm sản phẩm...</div>
+                ` : state === "error" ? `
+                    <div class="px-4 py-3 text-sm text-red-600">Không thể tải gợi ý sản phẩm.</div>
+                ` : "";
+
+                dropdown.innerHTML = `${categoryHtml}${productHtml}${stateHtml}`;
+                dropdown.classList.remove("hidden");
+            };
+
+            const openSearch = (root) => {
+                const input = root.querySelector("[data-search-input]");
+                if (!input) return;
+
+                const openClasses = input.dataset.openClasses || "w-48 opacity-100 pointer-events-auto";
+                root.dataset.searchOpen = "true";
+                input.classList.remove("w-0", "opacity-0", "pointer-events-none");
+                swapClasses(input, openClasses, true);
+                input.focus();
+            };
+
+            const closeSearch = (root) => {
+                const input = root.querySelector("[data-search-input]");
+                const dropdown = root.querySelector("[data-search-dropdown]");
+                if (!input) return;
+
+                const openClasses = input.dataset.openClasses || "w-48 opacity-100 pointer-events-auto";
+                root.dataset.searchOpen = "false";
+                swapClasses(input, openClasses, false);
+                input.classList.add("w-0", "opacity-0", "pointer-events-none");
+                input.value = "";
+                dropdown?.classList.add("hidden");
+            };
+
+            searchRoots.forEach((root) => {
+                const input = root.querySelector("[data-search-input]");
+                const toggle = root.querySelector("[data-search-toggle]");
+                const dropdown = root.querySelector("[data-search-dropdown]");
+                let searchTimer = null;
+                let searchToken = 0;
+
+                if (!input || !toggle || !dropdown) return;
+
+                toggle.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    openSearch(root);
+                });
+
+                input.addEventListener("keydown", (event) => {
+                    if (event.key === "Escape") {
+                        closeSearch(root);
+                    }
+                });
+
+                input.addEventListener("input", () => {
+                    const keyword = input.value.trim();
+                    const token = ++searchToken;
+                    window.clearTimeout(searchTimer);
+
+                    if (!keyword) {
+                        dropdown.classList.add("hidden");
+                        return;
+                    }
+
+                    const categories = filterCategories(keyword);
+
+                    if (keyword.length < 2) {
+                        if (categories.length > 0) {
+                            renderSearchDropdown(dropdown, categories, [], "ready");
+                        } else {
+                            dropdown.classList.add("hidden");
+                        }
+                        return;
+                    }
+
+                    renderSearchDropdown(dropdown, categories, [], "loading");
+
+                    searchTimer = window.setTimeout(async () => {
+                        try {
+                            const response = await fetch(`${searchEndpoint}?q=${encodeURIComponent(keyword)}`, {
+                                headers: { "Accept": "application/json" },
+                            });
+
+                            if (!response.ok) throw new Error("Search request failed");
+
+                            const payload = await response.json();
+                            if (token !== searchToken) return;
+
+                            renderSearchDropdown(dropdown, categories, payload.products || [], "ready");
+                        } catch (error) {
+                            if (token !== searchToken) return;
+                            renderSearchDropdown(dropdown, categories, [], "error");
+                        }
+                    }, 300);
+                });
+            });
+
+            document.querySelectorAll("[data-search-menu-focus]").forEach((button) => {
+                button.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const menuRoot = document.querySelector("[data-mobile-menu-search]");
+                    if (menuRoot) openSearch(menuRoot);
+                });
+            });
+
+            document.addEventListener("click", (event) => {
+                searchRoots.forEach((root) => {
+                    if (root.dataset.searchOpen === "true" && !root.contains(event.target)) {
+                        closeSearch(root);
+                    }
+                });
+            });
 
             // 1. Highlight Active Link
             const currentPath = window.location.pathname;

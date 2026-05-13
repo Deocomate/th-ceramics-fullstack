@@ -21,9 +21,15 @@ class PhuKienNgoiController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'thumbnail_main' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'thumbnail_main' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'banner_text_1'  => ['nullable', 'string', 'max:255'],
+            'banner_text_2'  => ['nullable', 'string', 'max:255'],
+            'sec1_title'     => ['nullable', 'string', 'max:255'],
+            'sec1_image'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'sec2_title'     => ['nullable', 'string', 'max:255'],
+            'sec2_image'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'new_images'     => ['nullable', 'array'],
-            'new_images.*'   =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'new_images.*'   => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         $this->service->update($data);

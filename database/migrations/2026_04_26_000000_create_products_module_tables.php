@@ -120,9 +120,9 @@ return new class extends Migration
         // ================== CATEGORY: GACH HOA THONG GIO ==================
         Schema::create('gach_hoa_thong_gio', function (Blueprint $table) {
             $table->id('gach_hoa_thong_gio_id');
-            $table->string('image');
-            $table->longText('video')->nullable();
-            $table->json('images')->nullable();
+            $table->string('video_thumbnail');
+            $table->longText('video_url')->nullable();
+            $table->json('process_images')->nullable();
             $table->timestamps();
         });
         Schema::create('gach_hoa_thong_gio_anh', function (Blueprint $table) {

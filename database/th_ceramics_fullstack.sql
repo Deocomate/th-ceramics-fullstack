@@ -373,9 +373,9 @@ INSERT INTO `gach_co_bat_trang_ct` (`gach_co_bat_trang_ct_id`, `code`, `name`, `
 
 CREATE TABLE `gach_hoa_thong_gio` (
   `gach_hoa_thong_gio_id` bigint(20) UNSIGNED NOT NULL,
-  `image` varchar(255) NOT NULL,
-  `video` varchar(255) DEFAULT NULL,
-  `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`images`)),
+  `video_thumbnail` varchar(255) NOT NULL,
+  `video_url` longtext DEFAULT NULL,
+  `process_images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`process_images`)),
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -384,7 +384,7 @@ CREATE TABLE `gach_hoa_thong_gio` (
 -- Dumping data for table `gach_hoa_thong_gio`
 --
 
-INSERT INTO `gach_hoa_thong_gio` (`gach_hoa_thong_gio_id`, `image`, `video`, `images`, `created_at`, `updated_at`) VALUES
+INSERT INTO `gach_hoa_thong_gio` (`gach_hoa_thong_gio_id`, `video_thumbnail`, `video_url`, `process_images`, `created_at`, `updated_at`) VALUES
 (1, 'defaults/placeholder.png', NULL, '[\"gach_hoa_thong_gio\\/cong_doan_che_tac\\/UL0h9zGM4v6OeLiM_1778040752.jpg\",\"gach_hoa_thong_gio\\/cong_doan_che_tac\\/38jz1DJSLzLoN4V8_1778040752.jpg\",\"gach_hoa_thong_gio\\/cong_doan_che_tac\\/s2IynuXG1vEi8tdG_1778040752.jpg\"]', '2026-05-06 03:47:07', '2026-05-06 04:12:32');
 
 -- --------------------------------------------------------
@@ -513,9 +513,9 @@ CREATE TABLE `gia_tri_gach_hoa_thong_gio` (
 --
 
 INSERT INTO `gia_tri_gach_hoa_thong_gio` (`gia_tri_gach_hoa_thong_gio_id`, `background`, `image`, `title`, `desscription`, `gach_hoa_thong_gio_id`, `created_at`, `updated_at`) VALUES
-(1, 'gach_hoa_thong_gio/gia_tri/PJY6w3FEAd8Q0wmY_1778040704.png', 'gach_hoa_thong_gio/gia_tri/Nvy73hCChyMYFRsr_1778040704.png', 'Tuyệt tác men hỏa biến kháng', 'Lớp men dày dặn đóng vai trò như màng chắn thủy tinh siêu cứng, ngăn chặn bụi bẩn và rêu mốc bám dính. Nhờ độ trơn bóng cao, mái nhà có khả năng \"tự làm sạch\"', 1, '2026-05-06 04:11:44', '2026-05-06 04:11:44'),
-(2, 'gach_hoa_thong_gio/gia_tri/qg0PcxN8DrRSMFnZ_1778040797.png', 'gach_hoa_thong_gio/gia_tri/UcQPhScDSaIeYw9c_1778040797.jpg', 'Tuyệt tác men hỏa biến kháng', 'Lớp men dày dặn đóng vai trò như màng chắn thủy tinh siêu cứng, ngăn chặn bụi bẩn và rêu mốc bám dính. Nhờ độ trơn bóng cao, mái nhà có khả năng \"tự làm sạch\"', 1, '2026-05-06 04:13:17', '2026-05-06 04:13:17'),
-(3, 'gach_hoa_thong_gio/gia_tri/jJBMwiatJz6ZiDsA_1778040834.png', 'gach_hoa_thong_gio/gia_tri/CAqHfqQJt9Y2mpuW_1778040834.png', 'Tuyệt tác men hỏa biến kháng', 'Lớp men dày dặn đóng vai trò như màng chắn thủy tinh siêu cứng, ngăn chặn bụi bẩn và rêu mốc bám dính. Nhờ độ trơn bóng cao, mái nhà có khả năng \"tự làm sạch\"', 1, '2026-05-06 04:13:54', '2026-05-06 04:13:54');
+(1, '#1D78AD', 'assets/images/gach-hoa-value.png', 'Tuyệt tác men hỏa biến kháng', 'Lớp men dày dặn đóng vai trò như màng chắn thủy tinh siêu cứng, ngăn chặn bụi bẩn và rêu mốc bám dính. Nhờ độ trơn bóng cao, mái nhà có khả năng \"tự làm sạch\"', 1, '2026-05-06 04:11:44', '2026-05-06 04:11:44'),
+(2, '#5A7E46', 'assets/images/work-03.jpg', 'Tuyệt tác men hỏa biến kháng', 'Lớp men dày dặn đóng vai trò như màng chắn thủy tinh siêu cứng, ngăn chặn bụi bẩn và rêu mốc bám dính. Nhờ độ trơn bóng cao, mái nhà có khả năng \"tự làm sạch\"', 1, '2026-05-06 04:13:17', '2026-05-06 04:13:17'),
+(3, '#B28373', 'assets/images/value-01.png', 'Tuyệt tác men hỏa biến kháng', 'Lớp men dày dặn đóng vai trò như màng chắn thủy tinh siêu cứng, ngăn chặn bụi bẩn và rêu mốc bám dính. Nhờ độ trơn bóng cao, mái nhà có khả năng \"tự làm sạch\"', 1, '2026-05-06 04:13:54', '2026-05-06 04:13:54');
 
 -- --------------------------------------------------------
 

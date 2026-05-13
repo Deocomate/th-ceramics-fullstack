@@ -159,7 +159,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('gia-tri', [\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'storeGiaTri'])->name('gia-tri.store');
             Route::put('gia-tri/{giaTri}', [\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'updateGiaTri'])->name('gia-tri.update');
             Route::delete('gia-tri/{giaTri}', [\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyGiaTri'])->name('gia-tri.destroy');
-            Route::delete('cong-doan-image', [\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyCongDoanImage'])->name('cong-doan-image.destroy');
+            Route::delete('process-image', [\App\Http\Controllers\Admin\GachHoaThongGioController::class, 'destroyProcessImage'])->name('process-image.destroy');
         });
 
         // 3.1 Chi tiết Gạch Hoa Thông Gió

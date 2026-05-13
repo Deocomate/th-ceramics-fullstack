@@ -14,6 +14,21 @@
 
   @php
     $bgColors = ['#1D78AD', '#5A7E46', '#B28373', '#C08B5C', '#7B6B8A', '#4A7C82'];
+    $mediaUrl = function (?string $path, string $fallback) {
+      if (empty($path)) {
+        return asset($fallback);
+      }
+
+      if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+        return $path;
+      }
+
+      if (\Illuminate\Support\Str::startsWith($path, 'assets/')) {
+        return asset($path);
+      }
+
+      return asset('storage/' . $path);
+    };
   @endphp
   <div
     class="gach-hoa-value-slider flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none touch-auto scrollbar-hide"
@@ -23,7 +38,10 @@
   >
     @foreach ($config->giaTri as $item)
     @php
-      $bgColor = $bgColors[$loop->index % count($bgColors)];
+      $bgColor = preg_match('/^#[0-9A-Fa-f]{6}$/', $item->background ?? '')
+        ? $item->background
+        : $bgColors[$loop->index % count($bgColors)];
+      $imageUrl = $mediaUrl($item->image ?? null, $loop->odd ? 'assets/images/gach-hoa-value.png' : 'assets/images/work-03.jpg');
       $isOdd = $loop->odd;
     @endphp
     <!-- Column {{ $loop->iteration }} -->
@@ -34,17 +52,17 @@
       @if($isOdd)
       <div class="w-full flex justify-center mb-10 lg:mb-36">
         <div class="relative w-full aspect-[10/9]">
-          <div class="absolute top-0 left-0 w-full h-[70%]" style="background: {{ $item->background ?: $bgColor }}"></div>
+          <div class="absolute top-0 left-0 w-full h-[70%]" style="background: {{ $bgColor }}"></div>
           <div
             class="absolute top-[20%] left-[18%] right-[18%] bottom-[-15%] shadow-lg bg-black/5 overflow-hidden"
           >
             <a
-              href="{{ !empty($item->image) ? asset('storage/' . $item->image) : asset('assets/images/gach-hoa-value.png') }}"
+              href="{{ $imageUrl }}"
               class="glightbox group block w-full h-full cursor-zoom-in"
               data-gallery="gia-tri-vuot-troi"
             >
               <img
-                src="{{ !empty($item->image) ? asset('storage/' . $item->image) : asset('assets/images/gach-hoa-value.png') }}"
+                src="{{ $imageUrl }}"
                 alt="{{ $item->title ?? '' }}"
                 class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.2]"
               />
@@ -81,17 +99,17 @@
       </div>
       <div class="w-full flex justify-center mt-12 md:mt-10">
         <div class="relative w-full aspect-[10/9]">
-          <div class="absolute bottom-0 left-0 w-full h-[70%]" style="background: {{ $item->background ?: $bgColor }}"></div>
+          <div class="absolute bottom-0 left-0 w-full h-[70%]" style="background: {{ $bgColor }}"></div>
           <div
             class="absolute bottom-[20%] left-[18%] right-[18%] top-[-15%] shadow-lg bg-black/5 overflow-hidden"
           >
             <a
-              href="{{ !empty($item->image) ? asset('storage/' . $item->image) : asset('assets/images/work-03.jpg') }}"
+              href="{{ $imageUrl }}"
               class="glightbox group block w-full h-full cursor-zoom-in"
               data-gallery="gia-tri-vuot-troi"
             >
               <img
-                src="{{ !empty($item->image) ? asset('storage/' . $item->image) : asset('assets/images/work-03.jpg') }}"
+                src="{{ $imageUrl }}"
                 alt="{{ $item->title ?? '' }}"
                 class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.2]"
               />

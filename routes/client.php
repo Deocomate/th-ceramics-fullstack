@@ -15,6 +15,7 @@ use App\Http\Controllers\Client\DichVuKhachHang\TaiKhoanCuaToiController;
 use App\Http\Controllers\Client\DichVuKhachHang\TrangThaiDonHangController;
 use App\Http\Controllers\Client\FactoryController;
 use App\Http\Controllers\Client\FaqController;
+use App\Http\Controllers\Client\GlobalSearchController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\NewsController;
 use App\Http\Controllers\Client\ProductPages\DenGomSuController;
@@ -55,6 +56,7 @@ Route::name('client.')->group(function () {
     Route::get('/lien-he', [ContactController::class, 'index'])->name('contact');
     Route::post('/lien-he', [ContactController::class, 'submit'])->middleware('throttle:3,1')->name('contact.submit');
     Route::get('/cau-hoi-thuong-gap', [FaqController::class, 'index'])->name('faq');
+    Route::get('/tim-kiem-nhanh', GlobalSearchController::class)->name('search.quick');
 
     // Showroom
     Route::get('/showroom', [ShowroomController::class, 'index'])->name('showroom');

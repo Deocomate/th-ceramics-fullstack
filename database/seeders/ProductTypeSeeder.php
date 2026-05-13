@@ -75,8 +75,12 @@ class ProductTypeSeeder extends Seeder
         $parent = GachHoaThongGio::firstOrCreate(
             ['gach_hoa_thong_gio_id' => 1],
             [
-                'image' => 'assets/images/gach-hoa-01.jpg',
-                'video' => 'https://www.youtube.com/embed/Win12rIicBI',
+                'video_thumbnail' => 'assets/images/gach-hoa-01.jpg',
+                'video_url' => 'https://www.youtube.com/embed/Win12rIicBI',
+                'process_images' => [
+                    'assets/images/gach-hoa-01.jpg',
+                    'assets/images/gach-hoa-02.jpg',
+                ],
             ]
         );
 
@@ -92,8 +96,9 @@ class ProductTypeSeeder extends Seeder
         }
 
         $giaTris = [
-            ['title' => 'Thông gió tự nhiên', 'image' => 'assets/images/gia-tri-vuot-troi-01.jpg', 'background' => 'assets/images/gia-tri-vuot-troi-02.jpg', 'desscription' => 'Thiết kế gạch hoa rỗng giúp không khí lưu thông tự nhiên, giảm nhiệt độ công trình hiệu quả.'],
-            ['title' => 'Chống nóng hiệu quả', 'image' => 'assets/images/gia-tri-vuot-troi-03.jpg', 'background' => 'assets/images/gia-tri-vuot-troi-04.jpg', 'desscription' => 'Đất sét nung 1200°C kết hợp cấu trúc rỗng giúp cách nhiệt vượt trội, tiết kiệm năng lượng làm mát.'],
+            ['title' => 'Thông gió tự nhiên', 'image' => 'assets/images/gia-tri-vuot-troi-01.jpg', 'background' => '#1D78AD', 'desscription' => 'Thiết kế gạch hoa rỗng giúp không khí lưu thông tự nhiên, giảm nhiệt độ công trình hiệu quả.'],
+            ['title' => 'Chống nóng hiệu quả', 'image' => 'assets/images/gia-tri-vuot-troi-03.jpg', 'background' => '#5A7E46', 'desscription' => 'Đất sét nung 1200°C kết hợp cấu trúc rỗng giúp cách nhiệt vượt trội, tiết kiệm năng lượng làm mát.'],
+            ['title' => 'Bền màu thủ công', 'image' => 'assets/images/value-01.png', 'background' => '#B28373', 'desscription' => 'Từng viên gạch được hoàn thiện thủ công, giữ sắc gốm tự nhiên và tạo điểm nhấn nghệ thuật cho không gian.'],
         ];
         foreach ($giaTris as $gt) {
             GiaTriGachHoaThongGio::firstOrCreate(

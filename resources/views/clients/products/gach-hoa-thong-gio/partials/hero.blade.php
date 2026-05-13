@@ -3,11 +3,6 @@
   class="relative w-full overflow-visible pt-[36px] md:pt-24 mb-[-80px] md:mb-12 gach-hoa-hero-section"
   data-aos="fade-up"
 >
-  @if(!empty($config->image))
-  <div class="absolute inset-0 z-0">
-    <img src="{{ $config->image ? asset('storage/' . $config->image) : '' }}" alt="" class="w-full h-full object-cover opacity-40" onerror="this.style.display='none'" />
-  </div>
-  @endif
   <div
     class="absolute inset-0 -top-40 md:top-36 lg:top-80 z-[1] flex flex-col items-center justify-center pointer-events-none overflow-hidden"
   >

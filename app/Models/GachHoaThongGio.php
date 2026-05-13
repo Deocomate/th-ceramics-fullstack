@@ -11,16 +11,16 @@ class GachHoaThongGio extends Model
 
     protected $primaryKey = 'gach_hoa_thong_gio_id';
 
-    protected $fillable =[
-        'image',
-        'video',
-        'images',
+    protected $fillable = [
+        'video_thumbnail',
+        'video_url',
+        'process_images',
     ];
-    
+
     protected function casts(): array
     {
         return [
-            'images' => 'array',
+            'process_images' => 'array',
         ];
     }
 

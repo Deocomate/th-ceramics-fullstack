@@ -21,19 +21,20 @@ class GachHoaThongGioService
         $model = $this->getFirstRecord();
 
         return DB::transaction(function () use ($model, $data) {
-            $fillable =[];
+            $fillable = [];
 
-            // 1. Cập nhật Background
-            if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
-                $fillable['image'] = FileUploadHelper::replace($data['image'], $model->image, 'gach_hoa_thong_gio/images');
+            if (isset($data['video_thumbnail']) && $data['video_thumbnail'] instanceof UploadedFile) {
+                $fillable['video_thumbnail'] = FileUploadHelper::replace(
+                    $data['video_thumbnail'],
+                    $model->video_thumbnail,
+                    'gach_hoa_thong_gio/video_thumbnail'
+                );
             }
 
-            // 2. Cập nhật Video
-            if (array_key_exists('video', $data)) {
-                $fillable['video'] = $data['video'];
+            if (array_key_exists('video_url', $data)) {
+                $fillable['video_url'] = $data['video_url'];
             }
 
-            // 3. Upload thêm Thư viện ảnh
             if (!empty($data['new_images']) && is_array($data['new_images'])) {
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
@@ -43,14 +44,14 @@ class GachHoaThongGioService
                 }
             }
 
-            if (!empty($data['cong_doan_images']) && is_array($data['cong_doan_images'])) {
-                $currentImages = is_array($model->images) ? $model->images : [];
-                foreach ($data['cong_doan_images'] as $file) {
-                    if ($file instanceof \Illuminate\Http\UploadedFile) {
-                        $currentImages[] = \App\Helpers\FileUploadHelper::upload($file, 'gach_hoa_thong_gio/cong_doan_che_tac');
+            if (!empty($data['process_images']) && is_array($data['process_images'])) {
+                $currentImages = is_array($model->process_images) ? $model->process_images : [];
+                foreach ($data['process_images'] as $file) {
+                    if ($file instanceof UploadedFile) {
+                        $currentImages[] = FileUploadHelper::upload($file, 'gach_hoa_thong_gio/cong_doan_che_tac');
                     }
                 }
-                $fillable['images'] = $currentImages;
+                $fillable['process_images'] = $currentImages;
             }
 
             if (!empty($fillable)) {
@@ -84,11 +85,10 @@ class GachHoaThongGioService
     {
         $model = $this->getFirstRecord();
         
-        $backgroundPath = FileUploadHelper::upload($data['background'], 'gach_hoa_thong_gio/gia_tri');
         $imagePath = FileUploadHelper::upload($data['image'], 'gach_hoa_thong_gio/gia_tri');
 
         return $model->giaTri()->create([
-            'background'   => $backgroundPath,
+            'background'   => $data['background'],
             'image'        => $imagePath,
             'title'        => $data['title'],
             'desscription' => $data['desscription'], // Theo đúng tên trong DB
@@ -99,14 +99,11 @@ class GachHoaThongGioService
     {
         $giaTri = GiaTriGachHoaThongGio::findOrFail($giaTriId);
         
-        $fillable =[
+        $fillable = [
             'title'        => $data['title'] ?? $giaTri->title,
             'desscription' => $data['desscription'] ?? $giaTri->desscription,
+            'background'   => $data['background'] ?? $giaTri->background,
         ];
-
-        if (isset($data['background']) && $data['background'] instanceof UploadedFile) {
-            $fillable['background'] = FileUploadHelper::replace($data['background'], $giaTri->background, 'gach_hoa_thong_gio/gia_tri');
-        }
 
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
             $fillable['image'] = FileUploadHelper::replace($data['image'], $giaTri->image, 'gach_hoa_thong_gio/gia_tri');
@@ -120,23 +117,22 @@ class GachHoaThongGioService
     public function deleteGiaTri(int $giaTriId): void
     {
         $giaTri = GiaTriGachHoaThongGio::findOrFail($giaTriId);
-        FileUploadHelper::delete($giaTri->background);
         FileUploadHelper::delete($giaTri->image);
         $giaTri->delete();
     }
 
-    public function removeImageFromJson(string $imagePathToRemove)
+    public function removeProcessImage(string $imagePathToRemove): GachHoaThongGio
     {
         $model = $this->getFirstRecord();
-        $currentImages = is_array($model->images) ? $model->images : [];
+        $currentImages = is_array($model->process_images) ? $model->process_images : [];
 
         $newImages = array_filter($currentImages, function ($path) use ($imagePathToRemove) {
             return $path !== $imagePathToRemove;
         });
         $newImages = array_values($newImages); // Reset index
 
-        $model->update(['images' => empty($newImages) ? null : $newImages]);
-        \App\Helpers\FileUploadHelper::delete($imagePathToRemove);
+        $model->update(['process_images' => empty($newImages) ? null : $newImages]);
+        FileUploadHelper::delete($imagePathToRemove);
 
         return $model->fresh();
     }
