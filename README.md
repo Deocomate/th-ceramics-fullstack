@@ -72,21 +72,21 @@ After seeding:
 
 ```
 app/
-├── Http/Controllers/Admin/   # 39 admin CRUD controllers
-├── Http/Controllers/Client/  # 12 public page controllers
+├── Http/Controllers/Admin/   # 49 admin CRUD controllers
+├── Http/Controllers/Client/  # 28 public page controllers
 ├── Http/Middleware/           # RoleMiddleware (RBAC)
-├── Http/Requests/             # 10 form request classes
-├── Models/                    # 38 Eloquent models
-├── Services/                  # 33 service classes (business logic)
+├── Http/Requests/             # 31 form request classes
+├── Models/                    # 55 Eloquent models
+├── Services/                  # 50 service classes (business logic)
 ├── Helpers/                   # FileUploadHelper
 ├── Providers/                 # AppServiceProvider
 database/
-├── migrations/                # 5 migration files → 38 tables
-├── seeders/                   # 3 seeders (User, ProductType)
+├── migrations/                # 7 migration files
+├── seeders/                   # 14 seeders
 resources/views/
-├── admin/                     # 58 admin view files
-├── clients/                   # 134 client view files
-├── components/                # 28 shared Blade components
+├── admin/                     # 78 admin view files
+├── clients/                   # 138 client view files
+├── components/                # 35 shared Blade components
 routes/
 ├── web.php                    # Admin routes (/admin/*)
 ├── client.php                 # Public routes (Vietnamese URLs)
