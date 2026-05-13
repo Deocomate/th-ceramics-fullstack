@@ -44,10 +44,12 @@
                 $routeParams = $routeName === 'client.products.phu-kien-ngoi.detail' && $accessoryType
                     ? ['id' => $productId, 'type' => $accessoryType]
                     : $productId;
-                $productUrl = ($routeName && $productId && \Illuminate\Support\Facades\Route::has($routeName))
-                    ? route($routeName, $routeParams)
-                    : '#';
-                $productImage = \App\Support\AssetPath::url(collect(data_get($product, 'images', []))->first(), 'assets/images/gach-co-work-2.jpg');
+                $productUrl = data_get($product, 'url')
+                    ?: (($routeName && $productId && \Illuminate\Support\Facades\Route::has($routeName))
+                        ? route($routeName, $routeParams)
+                        : '#');
+                $rawImage = data_get($product, 'image') ?: collect(data_get($product, 'images', []))->first();
+                $productImage = \App\Support\AssetPath::url($rawImage, 'assets/images/gach-co-work-2.jpg');
                 $productName = data_get($product, 'name', 'Sản phẩm');
                 $productPrice = (float) data_get($product, 'price', 0);
                 $productColor = data_get($product, 'color') ?? (collect(data_get($product, 'des', []))->first() ?: 'N/A');

@@ -1,9 +1,9 @@
-<x-admin.layout.app title="Thêm Gạch Trang Trí" breadcrumb="Admin › DS Sản phẩm chi tiết › Thêm mới">
+<x-admin.layout.app title="Thêm Gạch Cổ Bát Tràng" breadcrumb="Admin › DS Sản phẩm chi tiết › Thêm mới">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
             <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Thông tin sản phẩm mới</h2>
         </div>
-        <form method="POST" action="{{ route('admin.gach-trang-tri-ct.store') }}" enctype="multipart/form-data" class="p-6">
+        <form method="POST" action="{{ route('admin.gach-co-bat-trang-ct.store') }}" enctype="multipart/form-data" class="p-6">
             @csrf
 
             <!-- HIỂN THỊ LỖI CHUNG -->
@@ -36,6 +36,16 @@
                         </div>
                     </div>
 
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Phân loại <span class="text-red-500">*</span></label>
+                        <select name="category_type" required class="w-full px-4 py-2.5 text-sm border rounded-lg focus:ring-1 outline-none transition-all {{ $errors->has('category_type') ? 'border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-gray-300 focus:border-[#A31D1D] focus:ring-[#A31D1D]' }}">
+                            <option value="bat" @selected(old('category_type', 'bat') === 'bat')>Gạch Bát</option>
+                            <option value="that" @selected(old('category_type') === 'that')>Gạch Thất & Xây</option>
+                            <option value="the" @selected(old('category_type') === 'the')>Gạch Thẻ</option>
+                        </select>
+                        @error('category_type') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Giá (VNĐ) <span class="text-red-500">*</span></label>
@@ -47,6 +57,21 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Kích thước (Text)</label>
                             <input type="text" name="size" value="{{ old('size') }}" placeholder="VD: L200 x W200 x D20 mm"
                                 class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Định mức</label>
+                            <input type="text" name="dinh_muc" value="{{ old('dinh_muc') }}" placeholder="VD: 11 viên/m2"
+                                class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                            @error('dinh_muc') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Cân nặng</label>
+                            <input type="text" name="weight" value="{{ old('weight') }}" placeholder="VD: 1.5 kg/viên"
+                                class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                            @error('weight') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
@@ -99,7 +124,7 @@
             </div>
 
             <div class="pt-6 mt-8 flex justify-end gap-3 border-t border-gray-100">
-                <a href="{{ route('admin.gach-trang-tri-ct.index') }}" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy</a>
+                <a href="{{ route('admin.gach-co-bat-trang-ct.index') }}" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy</a>
                 <button type="submit" class="px-8 py-2.5 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;">Lưu Sản Phẩm</button>
             </div>
         </form>

@@ -11,16 +11,22 @@ class GachCoBatTrang extends Model
 
     protected $primaryKey = 'gach_co_bat_trang_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'thumbnail_main',
         'video',
         'images',
+        'section_bat',
+        'section_that',
+        'section_the',
     ];
 
     protected function casts(): array
     {
         return [
             'images' => 'array',
+            'section_bat' => 'array',
+            'section_that' => 'array',
+            'section_the' => 'array',
         ];
     }
 

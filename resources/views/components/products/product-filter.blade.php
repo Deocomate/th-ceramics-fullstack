@@ -1,3 +1,5 @@
+@props(['showTypeFilter' => false])
+
 <section class="w-[85%] max-w-[1320px] mx-auto">
   <hr class="border-t border-black/10 mb-3 w-full" />
 
@@ -5,7 +7,7 @@
     <button
       type="button"
       class="product-filter-trigger flex items-center gap-3 text-textPrimary hover:text-secondary transition-colors font-bold uppercase tracking-[0.05em] text-[13px]"
-      aria-expanded="{{ request()->hasAny(['search', 'sort']) ? 'true' : 'false' }}"
+      aria-expanded="{{ request()->hasAny(['search', 'sort', 'type']) ? 'true' : 'false' }}"
       aria-controls="product-filter-panel"
     >
       <div
@@ -22,7 +24,7 @@
       id="product-filter-panel"
       method="GET"
       action="{{ url()->current() }}"
-      class="{{ request()->hasAny(['search', 'sort']) ? 'grid' : 'hidden' }} mt-5 grid-cols-1 md:grid-cols-[1fr_220px_auto_auto] gap-3 md:gap-4"
+      class="{{ request()->hasAny(['search', 'sort', 'type']) ? 'grid' : 'hidden' }} mt-5 grid-cols-1 {{ $showTypeFilter ? 'md:grid-cols-[1fr_220px_220px_auto_auto]' : 'md:grid-cols-[1fr_220px_auto_auto]' }} gap-3 md:gap-4"
     >
       <input
         type="search"
@@ -40,6 +42,17 @@
         <option value="price_desc" @selected(request('sort') === 'price_desc')>Giá giảm dần</option>
         <option value="name_asc" @selected(request('sort') === 'name_asc')>Tên A-Z</option>
       </select>
+      @if($showTypeFilter)
+      <select
+        name="type"
+        class="w-full border border-black/20 bg-transparent px-4 py-3 text-sm text-primary outline-none focus:border-secondary"
+      >
+        <option value="">Tất cả phân khu</option>
+        <option value="bat" @selected(request('type') === 'bat')>Gạch Bát</option>
+        <option value="that" @selected(request('type') === 'that')>Gạch Thất & Xây</option>
+        <option value="the" @selected(request('type') === 'the')>Gạch Thẻ</option>
+      </select>
+      @endif
       <button type="submit" class="px-6 py-3 bg-secondary text-white text-sm font-bold uppercase">
         Lọc
       </button>

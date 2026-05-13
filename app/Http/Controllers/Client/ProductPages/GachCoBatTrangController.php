@@ -8,6 +8,8 @@ use App\Services\GachCoBatTrangCtService;
 use App\Services\GachCoBatTrangService;
 use App\Services\GiaTriVuotTroiService;
 use App\Services\ViewHistoryService;
+use App\Support\ProductCollectionFilter;
+use Illuminate\Http\Request;
 
 class GachCoBatTrangController extends Controller
 {
@@ -18,14 +20,33 @@ class GachCoBatTrangController extends Controller
         private readonly GiaTriVuotTroiService $giaTriVuotTroiService,
     ) {}
 
-    public function index()
+    public function index(Request $request, ViewHistoryService $historyService)
     {
         $config = $this->gachCoBatTrangService->getFirstRecord();
-        $products = $this->gachCoBatTrangCtService->getAll('active');
+        $products = ProductCollectionFilter::apply(
+            $this->gachCoBatTrangCtService->getAll('active'),
+            $request->query()
+        );
+
+        if (in_array($request->query('type'), ['bat', 'that', 'the'], true)) {
+            $products = $products->where('category_type', $request->query('type'))->values();
+        }
+
+        $batProducts = $products->where('category_type', 'bat')->values();
+        $thatXayProducts = $products->where('category_type', 'that')->values();
+        $theProducts = $products->where('category_type', 'the')->values();
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();
+        $recentProducts = $historyService->recentProducts(6);
+        $recommendationProducts = $recentProducts->isNotEmpty() ? $recentProducts : $products->take(4);
 
         return view('clients.products.gach-co-bat-trang.index', compact(
-            'config', 'products', 'giaTriVuotTroi'
+            'config',
+            'products',
+            'batProducts',
+            'thatXayProducts',
+            'theProducts',
+            'giaTriVuotTroi',
+            'recommendationProducts'
         ));
     }
 

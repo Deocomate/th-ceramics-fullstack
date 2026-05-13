@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\DauAnGachTrangTri;
 use App\Models\DenGomSu;
 use App\Models\DenGomSuAnh;
 use App\Models\GachCoBatTrang;
@@ -126,29 +125,20 @@ class ProductTypeSeeder extends Seeder
 
     private function seedGachTrangTri(): void
     {
-        $parent = GachTrangTri::firstOrCreate(
+        GachTrangTri::firstOrCreate(
             ['gach_trang_tri_id' => 1],
             [
                 'thumbnail_main' => 'assets/images/gach-trang-tri-banner.png',
                 'video' => 'https://www.youtube.com/embed/Win12rIicBI',
+                'ung_dung_da_dang' => [
+                    'main' => ['title' => 'Tường trang trí', 'image' => null],
+                    'sub_1' => ['title' => 'Lát nền', 'image' => null],
+                    'sub_2' => ['title' => 'Phòng khách', 'image' => null],
+                    'sub_3' => ['title' => 'Ngoài trời', 'image' => null],
+                    'sub_4' => ['title' => 'Phòng tắm', 'image' => null],
+                ],
             ]
         );
-
-        $dauAns = [
-            ['title' => 'Đậm nét Á Đông', 'background' => 'assets/images/trang-tri-01.png', 'location' => 'Mặt tiền', 'description' => 'Họa tiết gạch trang trí mang đậm dấu ấn văn hóa Á Đông, tái hiện tinh hoa kiến trúc cổ.'],
-            ['title' => 'Bền bỉ với thời gian', 'background' => 'assets/images/trang-tri-02.png', 'location' => 'Tường rào', 'description' => 'Sản phẩm nung 1200°C từ đất sét Bát Tràng, đảm bảo độ bền vượt thời gian.'],
-        ];
-        foreach ($dauAns as $da) {
-            DauAnGachTrangTri::firstOrCreate(
-                ['title' => $da['title']],
-                [
-                    'background' => $da['background'],
-                    'location' => $da['location'],
-                    'description' => $da['description'],
-                    'gach_trang_tri_id' => $parent->gach_trang_tri_id,
-                ]
-            );
-        }
     }
 
     private function seedLanCanGomXu(): void

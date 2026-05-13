@@ -52,6 +52,31 @@
                         </div>
                     </div>
 
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Phân loại <span class="text-red-500">*</span></label>
+                        <select name="category_type" required class="w-full px-4 py-2.5 text-sm border rounded-lg focus:ring-1 outline-none transition-all {{ $errors->has('category_type') ? 'border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-gray-300 focus:border-[#A31D1D] focus:ring-[#A31D1D]' }}">
+                            <option value="bat" @selected(old('category_type', $product->category_type ?? 'bat') === 'bat')>Gạch Bát</option>
+                            <option value="that" @selected(old('category_type', $product->category_type) === 'that')>Gạch Thất & Xây</option>
+                            <option value="the" @selected(old('category_type', $product->category_type) === 'the')>Gạch Thẻ</option>
+                        </select>
+                        @error('category_type') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Định mức</label>
+                            <input type="text" name="dinh_muc" value="{{ old('dinh_muc', $product->dinh_muc) }}" placeholder="VD: 11 viên/m2"
+                                class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                            @error('dinh_muc') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Cân nặng</label>
+                            <input type="text" name="weight" value="{{ old('weight', $product->weight) }}" placeholder="VD: 1.5 kg/viên"
+                                class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                            @error('weight') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
                     <!-- BLOCKS THÔNG SỐ -->
                     <div class="bg-gray-50/80 rounded-xl border border-gray-200 p-5">
                         <div class="flex items-center justify-between mb-4 border-b border-gray-200 pb-3">

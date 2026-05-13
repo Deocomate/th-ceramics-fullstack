@@ -1,5 +1,23 @@
 @props(['images' => []])
 
+@php
+  $mediaUrl = function (?string $path, string $fallback) {
+    if (empty($path)) {
+      return $fallback;
+    }
+
+    if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+      return $path;
+    }
+
+    if (\Illuminate\Support\Str::startsWith($path, 'assets/')) {
+      return asset($path);
+    }
+
+    return asset('storage/' . $path);
+  };
+@endphp
+
 <section
   class="w-[85%] max-w-[1320px] mx-auto pb-[20px] md:pb-16"
   data-aos="fade-up"
@@ -42,13 +60,13 @@
 <section class="w-full max-w-[1920px] mx-auto">
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-6">
     <img
-      src="{{ !empty($images) && is_array($images) && isset($images[0]) ? Storage::url($images[0]) : asset('assets/images/trang-tri-01.png') }}"
+      src="{{ $mediaUrl(!empty($images) && is_array($images) && isset($images[0]) ? $images[0] : null, asset('assets/images/trang-tri-01.png')) }}"
       alt="Gạch Trang Trí 1"
       class="w-full h-auto object-contain shadow-lg bg-white"
       data-aos="fade-up"
     />
     <img
-      src="{{ !empty($images) && is_array($images) && isset($images[1]) ? Storage::url($images[1]) : asset('assets/images/trang-tri-02.png') }}"
+      src="{{ $mediaUrl(!empty($images) && is_array($images) && isset($images[1]) ? $images[1] : null, asset('assets/images/trang-tri-02.png')) }}"
       alt="Gạch Trang Trí 2"
       class="hidden md:block w-full h-auto object-contain shadow-lg bg-white"
       data-aos="fade-up"
