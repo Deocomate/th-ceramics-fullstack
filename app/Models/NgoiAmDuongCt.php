@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class NgoiAmDuongCt extends Model
 {
     protected $table = 'ngoi_am_duong_ct';
+
     protected $primaryKey = 'ngoi_am_duong_ct_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'code',
         'name',
+        'color',
         'images',
         'price',
         'des',
@@ -20,11 +22,15 @@ class NgoiAmDuongCt extends Model
         'is_delete',
     ];
 
+    protected $attributes = [
+        'color' => 'Tự chọn',
+    ];
+
     protected function casts(): array
     {
-        return[
+        return [
             'images' => 'array',
-            'des'    => 'array',
+            'des' => 'array',
         ];
     }
 }

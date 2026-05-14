@@ -36,7 +36,7 @@ class NgoiAmDuongController extends Controller
             $this->ngoiAmDuongCtService->getAll('active'),
             $request->only(['search', 'sort'])
         );
-        $products = CollectionPaginator::paginate($products, 12);
+        $products = CollectionPaginator::paginate($products, 8);
 
         // 3. Lấy giá trị vượt trội chung
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();

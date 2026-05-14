@@ -1,5 +1,10 @@
 @props(['dinhMuc' => []])
 
+@php
+    $dinhMucItems = collect($dinhMuc)->filter()->values();
+    $roofTypes = $dinhMucItems->pluck('roof_type')->filter()->unique()->values();
+@endphp
+
 <!-- Ngoi Am Duong Calculator -->
 <section class="w-full pb-12 pt-8 lg:pt-16 lg:pb-16 bg-background-secondary" data-aos="fade-up" data-weight-calculator>
     <div class="w-[85%] max-w-[1320px] mx-auto">
@@ -21,8 +26,12 @@
                         <select id="roof-style"
                             class="w-full h-[26px] lg:h-[44px] px-2 lg:px-4 pr-6 lg:pr-10 border border-black/10 rounded-sm bg-transparent text-[10px] lg:text-[13px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
                             <option value="" disabled selected>KIỂU MÁI</option>
-                            <option value="mai-go">Mái gỗ</option>
-                            <option value="mai-be-tong">Mái bê tông</option>
+                            @forelse ($roofTypes as $roofType)
+                                <option value="{{ $roofType }}">{{ $roofType }}</option>
+                            @empty
+                                <option value="Mái gỗ">Mái gỗ</option>
+                                <option value="Mái bê tông">Mái bê tông</option>
+                            @endforelse
                         </select>
                         <div class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                             <svg class="w-3 h-3 lg:w-4 lg:h-4 text-secondary" fill="none" stroke="currentColor"
@@ -36,10 +45,20 @@
                         <select id="tile-type"
                             class="w-full h-[26px] lg:h-[44px] px-2 lg:px-4 pr-6 lg:pr-10 border border-black/10 rounded-sm bg-transparent text-[10px] lg:text-[13px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
                             <option value="" disabled selected>LOẠI NGÓI</option>
-                            <option value="15">15 cặp/m²</option>
-                            <option value="27">27 cặp/m²</option>
-                            <option value="43">43 cặp/m²</option>
-                            <option value="80">80 cặp/m²</option>
+                            @forelse ($dinhMucItems as $dm)
+                                <option value="{{ $dm->tile_type }}"
+                                    data-roof="{{ $dm->roof_type }}"
+                                    data-am="{{ $dm->ngoi_am }}"
+                                    data-duong="{{ $dm->ngoi_duong }}"
+                                    data-diem="{{ $dm->diem }}">
+                                    {{ $dm->tile_type }}
+                                </option>
+                            @empty
+                                <option value="15 cặp/m²" data-am="0" data-duong="0" data-diem="0">15 cặp/m²</option>
+                                <option value="27 cặp/m²" data-am="0" data-duong="0" data-diem="0">27 cặp/m²</option>
+                                <option value="43 cặp/m²" data-am="0" data-duong="0" data-diem="0">43 cặp/m²</option>
+                                <option value="80 cặp/m²" data-am="0" data-duong="0" data-diem="0">80 cặp/m²</option>
+                            @endforelse
                         </select>
                         <div class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                             <svg class="w-3 h-3 lg:w-4 lg:h-4 text-secondary" fill="none" stroke="currentColor"
@@ -267,6 +286,7 @@
 
             const roofStyleSelect = calculatorSection.querySelector("#roof-style");
             const tileTypeSelect = calculatorSection.querySelector("#tile-type");
+            const tileTypeOptions = Array.from(tileTypeSelect?.querySelectorAll("option[data-roof]") || []);
             const areasContainer = calculatorSection.querySelector(".space-y-4.col-span-1.lg\\:col-span-3");
 
             // Master Block Template (Clone logic)
@@ -443,19 +463,25 @@
                     if (checkedRadio) factor = Number.parseFloat(checkedRadio.value) || 1.0;
                 }
 
-                const roof = roofStyleSelect.options[roofStyleSelect.selectedIndex]?.text || '';
-                const rawTileText = tileTypeSelect.options[tileTypeSelect.selectedIndex]?.text || '';
-                const tile = rawTileText.replace('m²', 'm2');
+                const roof = roofStyleSelect.value || '';
+                const selectedTileOption = tileTypeSelect.options[tileTypeSelect.selectedIndex];
+                const tile = selectedTileOption?.value || '';
 
                 let amCoeff = 0,
                     duongCoeff = 0,
                     diemCoeff = 0;
 
-                const row = dinhMucData.find(r => r.roof_type === roof && r.tile_type === tile);
-                if (row) {
+                if (selectedTileOption?.dataset?.am) {
+                    amCoeff = Number.parseFloat(selectedTileOption.dataset.am) || 0;
+                    duongCoeff = Number.parseFloat(selectedTileOption.dataset.duong) || 0;
+                    diemCoeff = Number.parseFloat(selectedTileOption.dataset.diem) || 0;
+                } else {
+                    const row = dinhMucData.find(r => r.roof_type === roof && r.tile_type === tile);
+                    if (row) {
                     amCoeff = row.ngoi_am;
                     duongCoeff = row.ngoi_duong;
                     diemCoeff = row.diem;
+                    }
                 }
 
                 // Tính toán & làm tròn lên
@@ -547,6 +573,20 @@
                 }, 0);
             });
 
+            const syncTileOptions = () => {
+                const roof = roofStyleSelect?.value || "";
+                tileTypeOptions.forEach((option) => {
+                    const isVisible = !roof || option.dataset.roof === roof;
+                    option.hidden = !isVisible;
+                    option.disabled = !isVisible;
+                });
+
+                const selectedOption = tileTypeSelect?.options[tileTypeSelect.selectedIndex];
+                if (selectedOption?.disabled) {
+                    tileTypeSelect.value = "";
+                }
+            };
+
             const checkButtonState = () => {
                 if (!calculateBtn) return;
                 const isReady = roofStyleSelect.value !== "" && tileTypeSelect.value !== "";
@@ -555,10 +595,11 @@
                 calculateBtn.classList.toggle("cursor-not-allowed", !isReady);
             };
 
-            roofStyleSelect?.addEventListener("change", () => { checkButtonState(); scheduleUpdate(); });
+            roofStyleSelect?.addEventListener("change", () => { syncTileOptions(); checkButtonState(); scheduleUpdate(); });
             tileTypeSelect?.addEventListener("change", () => { checkButtonState(); scheduleUpdate(); });
 
             // Khởi tạo state của button (Disabled lúc mới vào web do Select đang rỗng)
+            syncTileOptions();
             checkButtonState();
         });
     </script>

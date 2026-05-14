@@ -24,6 +24,7 @@
             <thead class="bg-gray-50/80 text-gray-500 text-xs uppercase tracking-wider">
                 <tr>
                     <th class="px-6 py-4 font-semibold">Tên sản phẩm</th>
+                    <th class="px-6 py-4 font-semibold text-center">Nhóm</th>
                     <th class="px-6 py-4 font-semibold text-center">Kích thước</th>
                     <th class="px-6 py-4 font-semibold text-center">Biến thể phân loại</th>
                     <th class="px-6 py-4 font-semibold text-center">Trạng thái</th>
@@ -44,6 +45,9 @@
                                 </div>
                                 <div class="font-bold text-gray-800 text-sm mb-1 {{ $product->is_delete ? 'text-gray-400 line-through' : '' }}">{{ $product->name }}</div>
                             </div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100">{{ $product->category_label }}</span>
                         </td>
                         <td class="px-6 py-4 text-center font-medium text-gray-600">{{ $product->size ?? 'N/A' }}</td>
                         
@@ -82,7 +86,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="px-6 py-12 text-center text-gray-500">Chưa có sản phẩm nào.</td></tr>
+                    <tr><td colspan="6" class="px-6 py-12 text-center text-gray-500">Chưa có sản phẩm nào.</td></tr>
                 @endforelse
             </tbody>
         </table>

@@ -6,6 +6,14 @@
   @import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
   @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
   @import url("https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Italianno&display=swap");
+  
+  @keyframes fadeInSlider {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-slider {
+      animation: fadeInSlider 0.4s ease-out forwards;
+  }
 </style>
 @endpush
 
@@ -179,6 +187,54 @@
 <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+    // Logic cho Desktop Product Sliders
+    const desktopSliders = document.querySelectorAll('[data-desktop-slider]');
+    
+    desktopSliders.forEach(slider => {
+      const pages = slider.querySelectorAll('[data-slider-page]');
+      const btnPrev = slider.querySelector('[data-btn-prev]');
+      const btnNext = slider.querySelector('[data-btn-next]');
+      
+      // Bỏ qua nếu không có đủ số lượng trang hoặc không có nút
+      if (pages.length <= 1 || !btnPrev || !btnNext) return;
+
+      let currentPage = 0;
+      const totalPages = pages.length;
+
+      const updateSlider = () => {
+        pages.forEach((page, index) => {
+          if (index === currentPage) {
+            page.classList.remove('hidden');
+            page.classList.add('grid', 'animate-fade-in-slider');
+          } else {
+            page.classList.add('hidden');
+            page.classList.remove('grid', 'animate-fade-in-slider');
+          }
+        });
+
+        // Xử lý trạng thái Nút bấm (Disabled/Enabled)
+        btnPrev.disabled = (currentPage === 0);
+        btnNext.disabled = (currentPage === totalPages - 1);
+      };
+
+      btnPrev.addEventListener('click', () => {
+        if (currentPage > 0) {
+          currentPage--;
+          updateSlider();
+        }
+      });
+
+      btnNext.addEventListener('click', () => {
+        if (currentPage < totalPages - 1) {
+          currentPage++;
+          updateSlider();
+        }
+      });
+
+      // Initialize state
+      updateSlider();
+    });
+
     if (typeof GLightbox !== "undefined") {
       document.querySelectorAll(".glightbox").forEach((anchor) => {
         const image = anchor.querySelector("img");

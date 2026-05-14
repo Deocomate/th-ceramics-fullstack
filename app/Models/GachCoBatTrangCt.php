@@ -13,6 +13,7 @@ class GachCoBatTrangCt extends Model
     protected $fillable = [
         'code',
         'name',
+        'color',
         'category_type',
         'images',
         'price',
@@ -22,6 +23,10 @@ class GachCoBatTrangCt extends Model
         'weight',
         'size_image',
         'is_delete',
+    ];
+
+    protected $attributes = [
+        'color' => 'Tự chọn',
     ];
 
     protected function casts(): array

@@ -95,6 +95,27 @@ test('news category page paginates only articles in selected category', function
         ->assertDontSee('Bai category khac');
 });
 
+test('news category pagination uses custom pagination and preserves query string', function () {
+    $category = DanhMucTinTuc::query()->create([
+        'ten_danh_muc' => 'Tin phan trang',
+        'is_delete' => false,
+    ]);
+
+    for ($i = 1; $i <= 11; $i++) {
+        createNewsArticle($category, [
+            'tieu_de' => 'Bai phan trang '.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
+            'slug' => 'bai-phan-trang-'.$i,
+            'ngay_dang' => now()->subMinutes($i),
+        ]);
+    }
+
+    $this->get(route('client.news.index', ['category' => $category->danh_muc_tin_tuc_id]))
+        ->assertOk()
+        ->assertSee('aria-label="Pagination"', false)
+        ->assertSee('category='.$category->danh_muc_tin_tuc_id, false)
+        ->assertSee('page=2', false);
+});
+
 test('deleted news category returns 404', function () {
     $category = DanhMucTinTuc::query()->create([
         'ten_danh_muc' => 'Hidden category',

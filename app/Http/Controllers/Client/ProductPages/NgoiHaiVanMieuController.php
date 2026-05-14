@@ -34,7 +34,7 @@ class NgoiHaiVanMieuController extends Controller
             $this->ngoiHaiVanMieuCtService->getAll('active'),
             $request->only(['search', 'sort'])
         );
-        $products = CollectionPaginator::paginate($products, 12);
+        $products = CollectionPaginator::paginate($products, 8);
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();
 
         return view('clients.products.ngoi-hai-van-mieu.index', compact(
@@ -45,6 +45,7 @@ class NgoiHaiVanMieuController extends Controller
     public function detail($id, ViewHistoryService $historyService)
     {
         $product = $this->ngoiHaiVanMieuCtService->findById($id);
+        $parentConfig = $this->ngoiHaiVanMieuService->getFirstRecord();
 
         if ($product->is_delete == 1) {
             abort(404);
@@ -52,7 +53,7 @@ class NgoiHaiVanMieuController extends Controller
 
         $historyService->trackProduct('ngoi_hai_van_mieu_ct', (int) $product->ngoi_hai_van_mieu_ct_id);
 
-        $colors = $product->mauSacs;
+        $colors = $product->mauSacs()->where('is_delete', 0)->get();
 
         $dinhMuc = $this->dinhMucService->getAll();
 
@@ -60,14 +61,32 @@ class NgoiHaiVanMieuController extends Controller
             ->where('ngoi_hai_van_mieu_ct_id', '!=', $id)
             ->take(4);
 
+        $pageLabel = 'Ngói Hài Văn Miếu';
+        $indexRouteName = 'client.products.ngoi-hai-van-mieu.index';
+        $detailRouteName = 'client.products.ngoi-hai-van-mieu.detail';
+        $productType = 'ngoi_hai_van_mieu_ct';
+        $productPkField = 'ngoi_hai_van_mieu_ct_id';
+        $variantPkField = 'mau_sac_ngoi_hai_van_mieu_ct_id';
+
         return view('clients.products.ngoi-hai-van-mieu.detail', compact(
-            'product', 'colors', 'dinhMuc', 'relatedProducts'
+            'product',
+            'colors',
+            'dinhMuc',
+            'relatedProducts',
+            'parentConfig',
+            'pageLabel',
+            'indexRouteName',
+            'detailRouteName',
+            'productType',
+            'productPkField',
+            'variantPkField'
         ));
     }
 
     public function detailNgoiHaiCo($id, ViewHistoryService $historyService)
     {
         $product = $this->ngoiHaiCoCtService->findById($id);
+        $parentConfig = $this->ngoiHaiVanMieuService->getFirstRecord();
 
         if ($product->is_delete == 1) {
             abort(404);
@@ -82,6 +101,7 @@ class NgoiHaiVanMieuController extends Controller
             ->take(4);
 
         $pageLabel = 'Ngói Hài Cổ';
+        $indexRouteName = 'client.products.ngoi-hai-van-mieu.index';
         $detailRouteName = 'client.products.ngoi-hai-co.detail';
         $productType = 'ngoi_hai_co_ct';
         $productPkField = 'ngoi_hai_co_ct_id';
@@ -92,7 +112,9 @@ class NgoiHaiVanMieuController extends Controller
             'colors',
             'dinhMuc',
             'relatedProducts',
+            'parentConfig',
             'pageLabel',
+            'indexRouteName',
             'detailRouteName',
             'productType',
             'productPkField',

@@ -1,3 +1,23 @@
+@props(['images' => []])
+
+@php
+  $configuredImages = collect($images)->filter()->values();
+  $slides = $configuredImages->isNotEmpty()
+      ? $configuredImages->map(fn ($image) => ['image' => $image, 'aspect' => 'aspect-[4/6]'])
+      : collect([
+          ['image' => 'assets/images/cong-doan-01.jpg', 'aspect' => 'aspect-[4/6]'],
+          ['image' => 'assets/images/trang-tri-slide-01.jpg', 'aspect' => 'aspect-[11/10]'],
+          ['image' => null, 'aspect' => 'aspect-[4/6]'],
+          ['image' => null, 'aspect' => 'aspect-[4/6]'],
+          ['image' => null, 'aspect' => 'aspect-[4/6]'],
+          ['image' => null, 'aspect' => 'aspect-[4/6]'],
+          ['image' => null, 'aspect' => 'aspect-[4/6]'],
+          ['image' => null, 'aspect' => 'aspect-[4/6]'],
+          ['image' => null, 'aspect' => 'aspect-[4/6]'],
+          ['image' => 'assets/images/cong-doan-02.jpg', 'aspect' => 'aspect-[4/6]'],
+      ]);
+@endphp
+
 <section
   class="w-full py-8 md:py-16 bg-background-secondary overflow-hidden"
   data-aos="fade-up"
@@ -14,43 +34,15 @@
         class="swiper fabrication-slider overflow-visible h-[320px] md:h-[420px] lg:h-[509px]"
       >
         <div class="swiper-wrapper">
+          @foreach ($slides as $slide)
           <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[4/6] overflow-hidden rounded-sm bg-[#E5E5E5]">
-              <img src="{{ asset('assets/images/cong-doan-01.jpg') }}" alt="Công đoạn chế tác" class="w-full h-full object-cover" />
+            <div class="h-full {{ $slide['aspect'] }} overflow-hidden rounded-sm {{ $slide['image'] ? 'bg-gray-200' : 'bg-[#E5E5E5]' }}">
+              @if ($slide['image'])
+              <img src="{{ \App\Support\AssetPath::url($slide['image'], 'assets/images/cong-doan-01.jpg') }}" alt="Công đoạn chế tác" class="w-full h-full object-cover" />
+              @endif
             </div>
           </div>
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[11/10] overflow-hidden rounded-sm bg-gray-200">
-              <img src="{{ asset('assets/images/trang-tri-slide-01.jpg') }}" alt="Công đoạn chế tác" class="w-full h-full object-cover"
-                onerror="this.src='https://placehold.co/600x800/8c5a3c/fff?text=Cong+Doan+01'" />
-            </div>
-          </div>
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[4/6] overflow-hidden rounded-sm bg-[#E5E5E5]"></div>
-          </div>
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[4/6] overflow-hidden rounded-sm bg-[#E5E5E5]"></div>
-          </div>
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[4/6] overflow-hidden rounded-sm bg-[#E5E5E5]"></div>
-          </div>
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[4/6] overflow-hidden rounded-sm bg-[#E5E5E5]"></div>
-          </div>
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[4/6] overflow-hidden rounded-sm bg-[#E5E5E5]"></div>
-          </div>
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[4/6] overflow-hidden rounded-sm bg-[#E5E5E5]"></div>
-          </div>
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[4/6] overflow-hidden rounded-sm bg-[#E5E5E5]"></div>
-          </div>
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full aspect-[4/6] overflow-hidden rounded-sm bg-[#E5E5E5]">
-              <img src="{{ asset('assets/images/cong-doan-02.jpg') }}" alt="Công đoạn chế tác" class="w-full h-full object-cover" />
-            </div>
-          </div>
+          @endforeach
         </div>
       </div>
 
@@ -151,7 +143,7 @@
 
     const closeLightbox = () => {
       lightbox.classList.remove("opacity-100");
-      lightbox.classList.add("opacity-100");
+      lightbox.classList.add("opacity-0");
       closeButton.classList.add("opacity-0", "translate-y-2");
       lightboxImage.classList.remove("opacity-100", "scale-100");
       lightboxImage.classList.add("opacity-0", "scale-95");

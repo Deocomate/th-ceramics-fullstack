@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
@@ -10,7 +11,7 @@ class NgoiBoNocCtService
 {
     public function getAll(string $status = 'active')
     {
-        $query = NgoiBoNocCt::query()->withCount(['phanLoais' => function($q) {
+        $query = NgoiBoNocCt::query()->withCount(['phanLoais' => function ($q) {
             $q->where('is_delete', 0);
         }])->latest();
 
@@ -32,15 +33,16 @@ class NgoiBoNocCtService
     {
         return DB::transaction(function () use ($data) {
             $fillable = [
-                'name'      => $data['name'],
-                'size'      => $data['size'] ?? null,
-                'des'       => !empty($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
-                'size_des'  => !empty($data['size_des']) ? array_values(array_filter(array_map('trim', $data['size_des']))) : null,
+                'name' => $data['name'],
+                'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
+                'size' => $data['size'] ?? null,
+                'des' => ! empty($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
+                'size_des' => ! empty($data['size_des']) ? array_values(array_filter(array_map('trim', $data['size_des']))) : null,
                 'is_delete' => 0,
             ];
 
-            $images =[];
-            if (!empty($data['images']) && is_array($data['images'])) {
+            $images = [];
+            if (! empty($data['images']) && is_array($data['images'])) {
                 foreach ($data['images'] as $file) {
                     if ($file instanceof UploadedFile) {
                         $images[] = FileUploadHelper::upload($file, 'ngoi_bo_noc_ct/images');
@@ -63,10 +65,11 @@ class NgoiBoNocCtService
         $model = $this->findById($id);
 
         return DB::transaction(function () use ($model, $data) {
-            $fillable =[
-                'name'     => $data['name'],
-                'size'     => $data['size'] ?? $model->size,
-                'des'      => isset($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
+            $fillable = [
+                'name' => $data['name'],
+                'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
+                'size' => $data['size'] ?? $model->size,
+                'des' => isset($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
                 'size_des' => isset($data['size_des']) ? array_values(array_filter(array_map('trim', $data['size_des']))) : null,
             ];
 
@@ -74,7 +77,7 @@ class NgoiBoNocCtService
                 $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, 'ngoi_bo_noc_ct/sizes');
             }
 
-            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+            if (! empty($data['new_images']) && is_array($data['new_images'])) {
                 $currentImages = is_array($model->images) ? $model->images : [];
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
@@ -85,11 +88,12 @@ class NgoiBoNocCtService
             }
 
             $model->fill($fillable)->save();
+
             return $model->fresh();
         });
     }
 
-   public function toggleStatus(int $id, int $status): void
+    public function toggleStatus(int $id, int $status): void
     {
         /** @var NgoiBoNocCt $model */
         $model = $this->findById($id);
@@ -104,10 +108,10 @@ class NgoiBoNocCtService
     {
         /** @var NgoiBoNocCt $model */
         $model = $this->findById($id);
-        $currentImages = is_array($model->images) ? $model->images :[];
+        $currentImages = is_array($model->images) ? $model->images : [];
 
-        $newImages = array_filter($currentImages, fn($path) => $path !== $imagePathToRemove);
-        
+        $newImages = array_filter($currentImages, fn ($path) => $path !== $imagePathToRemove);
+
         $model->fill(['images' => empty($newImages) ? null : array_values($newImages)])->save();
         FileUploadHelper::delete($imagePathToRemove);
 

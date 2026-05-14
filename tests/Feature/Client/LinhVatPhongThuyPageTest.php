@@ -19,7 +19,7 @@ function createLinhVatPhongThuyPageConfig(): LinhVatPhongThuy
         LinhVat::query()->create([
             'title' => $item['title'],
             'image' => $item['image'],
-            'description' => $item['title'] . ' là linh vật phong thủy.',
+            'description' => $item['title'].' là linh vật phong thủy.',
             'linh_vat_phong_thuy_id' => $config->linh_vat_phong_thuy_id,
         ]);
     }
@@ -47,8 +47,8 @@ test('client linh vat phong thuy index renders dynamic static-design sections', 
 
     for ($i = 1; $i <= 9; $i++) {
         createLinhVatPhongThuyProduct([
-            'code' => 'LVPT-' . str_pad((string) $i, 3, '0', STR_PAD_LEFT),
-            'name' => 'Linh vật sản phẩm ' . $i,
+            'code' => 'LVPT-'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
+            'name' => 'Linh vật sản phẩm '.$i,
         ]);
     }
 
@@ -118,8 +118,8 @@ test('client linh vat phong thuy index paginates products and preserves filters'
 
     for ($i = 1; $i <= 9; $i++) {
         createLinhVatPhongThuyProduct([
-            'code' => 'PAGED-' . str_pad((string) $i, 3, '0', STR_PAD_LEFT),
-            'name' => 'Paged linh vật ' . str_pad((string) $i, 2, '0', STR_PAD_LEFT),
+            'code' => 'PAGED-'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
+            'name' => 'Paged linh vật '.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
         ]);
     }
 
@@ -129,7 +129,7 @@ test('client linh vat phong thuy index paginates products and preserves filters'
     ]))
         ->assertOk()
         ->assertSee('Paged linh vật 01')
-        ->assertSee('hidden lg:flex items-center justify-between gap-6 mt-16 text-textPrimary font-bold text-[17px]', false)
+        ->assertSee('aria-label="Pagination"', false)
         ->assertSee('border-b-[3px] border-black', false)
         ->assertSee('search=Paged', false)
         ->assertSee('sort=name_asc', false)

@@ -30,6 +30,7 @@ class GachCoBatTrangCtController extends Controller
         $data = $request->validate([
             'code' => ['required', 'string', 'max:50'],
             'name' => ['required', 'string', 'max:255'],
+            'color' => ['nullable', 'string', 'max:100'],
             'category_type' => ['required', Rule::in(['bat', 'that', 'the'])],
             'price' => ['required', 'integer', 'min:0'],
             'size' => ['nullable', 'string', 'max:255'],
@@ -64,6 +65,7 @@ class GachCoBatTrangCtController extends Controller
         $data = $request->validate([
             'code' => ['required', 'string', 'max:50'],
             'name' => ['required', 'string', 'max:255'],
+            'color' => ['nullable', 'string', 'max:100'],
             'category_type' => ['required', Rule::in(['bat', 'that', 'the'])],
             'price' => ['required', 'integer', 'min:0'],
             'size' => ['nullable', 'string', 'max:255'],

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
@@ -20,7 +21,7 @@ class LinhVatPhongThuyCtService
         } elseif ($status === 'deleted') {
             $query->where('is_delete', 1);
         }
-        
+
         return $query->get();
     }
 
@@ -31,23 +32,24 @@ class LinhVatPhongThuyCtService
 
     public function create(array $data): LinhVatPhongThuyCt
     {
-        if (!$this->globalCodeService->isUnique($data['code'])) {
+        if (! $this->globalCodeService->isUnique($data['code'])) {
             throw new InvalidArgumentException('Mã sản phẩm (Code) đã tồn tại trên hệ thống.');
         }
 
         return DB::transaction(function () use ($data) {
-            $fillable =[
-                'code'      => $data['code'],
-                'name'      => $data['name'],
-                'price'     => $data['price'],
-                'size'      => $data['size'] ?? null,
-                'des'       => !empty($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
-                'size_des'  => !empty($data['size_des']) ? array_values(array_filter(array_map('trim', $data['size_des']))) : null,
+            $fillable = [
+                'code' => $data['code'],
+                'name' => $data['name'],
+                'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
+                'price' => $data['price'],
+                'size' => $data['size'] ?? null,
+                'des' => ! empty($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
+                'size_des' => ! empty($data['size_des']) ? array_values(array_filter(array_map('trim', $data['size_des']))) : null,
                 'is_delete' => 0,
             ];
 
             $images = [];
-            if (!empty($data['images']) && is_array($data['images'])) {
+            if (! empty($data['images']) && is_array($data['images'])) {
                 foreach ($data['images'] as $file) {
                     if ($file instanceof UploadedFile) {
                         $images[] = FileUploadHelper::upload($file, 'linh_vat_phong_thuy_ct/images');
@@ -68,26 +70,27 @@ class LinhVatPhongThuyCtService
     {
         $model = $this->findById($id);
 
-        if (!$this->globalCodeService->isUnique($data['code'], 'linh_vat_phong_thuy_ct', $model->linh_vat_phong_thuy_ct_id)) {
+        if (! $this->globalCodeService->isUnique($data['code'], 'linh_vat_phong_thuy_ct', $model->linh_vat_phong_thuy_ct_id)) {
             throw new InvalidArgumentException('Mã sản phẩm (Code) này đã được sử dụng ở một sản phẩm khác.');
         }
 
         return DB::transaction(function () use ($model, $data) {
             $fillable = [
-                'code'      => $data['code'],
-                'name'      => $data['name'],
-                'price'     => $data['price'],
-                'size'      => $data['size'] ?? $model->size,
-                'des'       => isset($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
-                'size_des'  => isset($data['size_des']) ? array_values(array_filter(array_map('trim', $data['size_des']))) : null,
+                'code' => $data['code'],
+                'name' => $data['name'],
+                'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
+                'price' => $data['price'],
+                'size' => $data['size'] ?? $model->size,
+                'des' => isset($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
+                'size_des' => isset($data['size_des']) ? array_values(array_filter(array_map('trim', $data['size_des']))) : null,
             ];
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
                 $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, 'linh_vat_phong_thuy_ct/sizes');
             }
 
-            if (!empty($data['new_images']) && is_array($data['new_images'])) {
-                $currentImages = is_array($model->images) ? $model->images :[];
+            if (! empty($data['new_images']) && is_array($data['new_images'])) {
+                $currentImages = is_array($model->images) ? $model->images : [];
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
                         $currentImages[] = FileUploadHelper::upload($file, 'linh_vat_phong_thuy_ct/images');
@@ -97,6 +100,7 @@ class LinhVatPhongThuyCtService
             }
 
             $model->update($fillable);
+
             return $model->fresh();
         });
     }
@@ -110,9 +114,9 @@ class LinhVatPhongThuyCtService
     public function removeImageFromJson(int $id, string $imagePathToRemove): LinhVatPhongThuyCt
     {
         $model = $this->findById($id);
-        $currentImages = is_array($model->images) ? $model->images :[];
+        $currentImages = is_array($model->images) ? $model->images : [];
 
-        $newImages = array_filter($currentImages, fn($path) => $path !== $imagePathToRemove);
+        $newImages = array_filter($currentImages, fn ($path) => $path !== $imagePathToRemove);
         $model->update(['images' => empty($newImages) ? null : array_values($newImages)]);
         FileUploadHelper::delete($imagePathToRemove);
 

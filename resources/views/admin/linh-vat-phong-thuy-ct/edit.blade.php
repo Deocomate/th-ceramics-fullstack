@@ -15,6 +15,7 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Tên linh vật <span class="text-red-500">*</span></label>
                             <input type="text" name="name" value="{{ old('name', $product->name) }}" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none">
                         </div>
+                        @include('admin.partials.color-field', ['value' => $product->color ?? 'Tự chọn'])
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Mã sản phẩm <span class="text-red-500">*</span></label>
                             <input type="text" name="code" value="{{ old('code', $product->code) }}" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] bg-gray-50 outline-none">

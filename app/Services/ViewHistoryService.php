@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BoNocChuVanCt;
 use App\Models\DenGomSu;
+use App\Models\DenVuonGomSuCt;
 use App\Models\GachCoBatTrangCt;
 use App\Models\GachHoaThongGioCt;
 use App\Models\GachTrangTriCt;
@@ -109,9 +110,16 @@ class ViewHistoryService
         }
 
         $config = $map[$type];
-        $model = $config['model']::query()
-            ->when($config['has_delete'], fn ($query) => $query->where('is_delete', false))
-            ->find($id);
+        $query = $config['model']::query()
+            ->when($config['has_delete'], fn ($query) => $query->where('is_delete', false));
+
+        if ($type === 'den_vuon_gom_su_ct') {
+            $query
+                ->with(['phanLoais' => fn ($query) => $query->where('is_delete', 0)->orderBy('price')])
+                ->withMin(['phanLoais as min_price' => fn ($query) => $query->where('is_delete', 0)], 'price');
+        }
+
+        $model = $query->find($id);
 
         if (! $model instanceof Model) {
             return null;
@@ -121,7 +129,7 @@ class ViewHistoryService
             type: $type,
             id: $id,
             name: $this->productName($model, $config['fallback_name']),
-            price: (float) data_get($model, 'price', 0),
+            price: (float) data_get($model, 'min_price', data_get($model, 'price', 0)),
             image: $this->productImage($model, $config['image_field']),
             routeName: $config['route'],
         );
@@ -261,6 +269,13 @@ class ViewHistoryService
                 'image_field' => 'thumbnail_main',
                 'fallback_name' => 'Đèn gốm sứ',
                 'has_delete' => false,
+            ],
+            'den_vuon_gom_su_ct' => [
+                'model' => DenVuonGomSuCt::class,
+                'route' => 'client.products.den-gom-su.detail',
+                'image_field' => 'images',
+                'fallback_name' => 'Đèn gốm sứ',
+                'has_delete' => true,
             ],
         ];
     }

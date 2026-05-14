@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
@@ -10,7 +11,7 @@ class NgoiHaiVanMieuCtService
 {
     public function getAll(string $status = 'active')
     {
-        $query = NgoiHaiVanMieuCt::query()->withCount(['mauSacs' => function($q) {
+        $query = NgoiHaiVanMieuCt::query()->withCount(['mauSacs' => function ($q) {
             $q->where('is_delete', 0);
         }])->latest();
 
@@ -32,16 +33,17 @@ class NgoiHaiVanMieuCtService
     {
         return DB::transaction(function () use ($data) {
             $fillable = [
-                'name'       => $data['name'],
-                'size'       => $data['size'] ?? null,
-                'des'        => !empty($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
-                'is_delete'  => 0,
-                'price'      => 0, // Giá trị mặc định chống lỗi DB
+                'name' => $data['name'],
+                'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
+                'size' => $data['size'] ?? null,
+                'des' => ! empty($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
+                'is_delete' => 0,
+                'price' => 0, // Giá trị mặc định chống lỗi DB
                 'mau_sac_id' => 0, // Giá trị mặc định chống lỗi DB
             ];
 
-            $images =[];
-            if (!empty($data['images']) && is_array($data['images'])) {
+            $images = [];
+            if (! empty($data['images']) && is_array($data['images'])) {
                 foreach ($data['images'] as $file) {
                     if ($file instanceof UploadedFile) {
                         $images[] = FileUploadHelper::upload($file, 'ngoi_hai_van_mieu_ct/images');
@@ -66,15 +68,16 @@ class NgoiHaiVanMieuCtService
         return DB::transaction(function () use ($model, $data) {
             $fillable = [
                 'name' => $data['name'],
+                'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
                 'size' => $data['size'] ?? $model->size,
-                'des'  => isset($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
+                'des' => isset($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
             ];
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
                 $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, 'ngoi_hai_van_mieu_ct/sizes');
             }
 
-            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+            if (! empty($data['new_images']) && is_array($data['new_images'])) {
                 $currentImages = is_array($model->images) ? $model->images : [];
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
@@ -85,6 +88,7 @@ class NgoiHaiVanMieuCtService
             }
 
             $model->fill($fillable)->save();
+
             return $model->fresh();
         });
     }
@@ -105,10 +109,10 @@ class NgoiHaiVanMieuCtService
     {
         /** @var NgoiHaiVanMieuCt $model */
         $model = $this->findById($id);
-        $currentImages = is_array($model->images) ? $model->images :[];
+        $currentImages = is_array($model->images) ? $model->images : [];
 
-        $newImages = array_filter($currentImages, fn($path) => $path !== $imagePathToRemove);
-        
+        $newImages = array_filter($currentImages, fn ($path) => $path !== $imagePathToRemove);
+
         $model->fill(['images' => empty($newImages) ? null : array_values($newImages)])->save();
         FileUploadHelper::delete($imagePathToRemove);
 

@@ -12,21 +12,36 @@
 <x-catalog-button />
 
 @include('clients.products.den-gom-su.partials.banner')
-@include('clients.products.den-gom-su.partials.filter-section')
+
+<div class="w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
+  <x-products.breadcrumb current-label="Đèn Gốm Sứ" />
+</div>
+<x-products.product-filter />
 
 <!-- Danh mục Đèn Gốm -->
 @include('clients.products.den-gom-su.partials.category-den-gom')
-<x-products.product-grid />
+@include('clients.products.den-gom-su.partials.product-list', [
+  'products' => $denGomProducts,
+  'sectionId' => 'den-gom-products',
+])
 
 <!-- Danh mục Đèn Sứ -->
 @include('clients.products.den-gom-su.partials.category-den-su')
-<x-products.product-grid />
+@include('clients.products.den-gom-su.partials.product-list', [
+  'products' => $denSuProducts,
+  'sectionId' => 'den-su-products',
+])
 
 <!-- Các phần khác -->
 @include('clients.products.den-gom-su.partials.advantages-section')
 <x-products.fabrication-process />
 <x-products.journey-video :hide-title="true" />
-<x-products.recommendations :related-products="collect()" />
+<x-products.recommendations
+  :related-products="$relatedProducts"
+  route-name="client.products.den-gom-su.detail"
+  pk-field="den_vuon_gom_su_ct_id"
+  product-type="den_vuon_gom_su_ct"
+/>
 
 <!-- FAQ Section -->
 <section class="w-full relative pb-[70px] md:pb-32 bg-background-secondary overflow-visible" data-aos="fade-up">

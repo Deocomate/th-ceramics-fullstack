@@ -1,4 +1,4 @@
-@section('preview_url', route('client.products.phu-kien-ngoi.detail', ['id' => $product->den_vuon_gom_su_ct_id, 'type' => 'bo_noc']))
+@section('preview_url', route('client.products.den-gom-su.detail', $product->den_vuon_gom_su_ct_id))
 
 <x-admin.layout.app title="Cập nhật Đèn Vườn Gốm Sứ" breadcrumb="Admin › DS Sản phẩm chi tiết › Chỉnh sửa">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
@@ -10,11 +10,20 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- CỘT THÔNG TIN CHUNG -->
                 <div class="lg:col-span-2 space-y-5">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Tên dáng ngói <span class="text-red-500">*</span></label>
                             <input type="text" name="name" value="{{ old('name', $product->name) }}" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
                             @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        </div>
+                        @include('admin.partials.color-field', ['value' => $product->color ?? 'Tự chọn'])
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nhóm hiển thị <span class="text-red-500">*</span></label>
+                            <select name="category_type" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all bg-white">
+                                <option value="den_gom" @selected(old('category_type', $product->category_type) === 'den_gom')>Đèn Gốm</option>
+                                <option value="den_su" @selected(old('category_type', $product->category_type) === 'den_su')>Đèn Sứ</option>
+                            </select>
+                            @error('category_type') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Kích thước</label>

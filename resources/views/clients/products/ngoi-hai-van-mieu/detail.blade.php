@@ -6,7 +6,12 @@
     $productPkField = $productPkField ?? 'ngoi_hai_van_mieu_ct_id';
     $variantPkField = $variantPkField ?? 'mau_sac_ngoi_hai_van_mieu_ct_id';
     $productDetailId = data_get($product, $productPkField);
-    $productPrice = (float) data_get($product, 'price', 0);
+    $firstVariant = collect($colors ?? [])->first();
+    $productPrice = (float) (data_get($firstVariant, 'price') ?? data_get($product, 'price', 0));
+    $productSku = data_get($firstVariant, 'code') ?: data_get($product, 'code');
+    $priceLabel = $productPrice > 0 ? number_format($productPrice, 0, ',', '.') . ' đ/m²' : 'Liên hệ';
+    $bannerImage = \App\Support\AssetPath::url(data_get($parentConfig ?? null, 'thumbnail_main'), 'assets/images/detail-banner.png');
+    $sizeImage = \App\Support\AssetPath::url(data_get($product, 'size_image'), 'assets/images/gach-bat-size-1.png');
 @endphp
 
 <x-layouts.client title="{{ $pageLabel }}" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
@@ -21,7 +26,7 @@
 <!-- Top Banner for Detail -->
 <section class="hidden md:flex relative w-full h-[180px] md:h-[210px] items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <img src="{{ !empty($product->images) && is_array($product->images) && isset($product->images[0]) ? asset('storage/' . $product->images[0]) : asset('assets/images/detail-banner.png') }}" alt="{{ $product->name ?? $pageLabel }} Banner" class="w-full h-full object-cover" />
+        <img src="{{ $bannerImage }}" alt="{{ $product->name ?? $pageLabel }} Banner" class="w-full h-full object-cover" />
     </div>
     <div class="relative z-10 text-center text-white px-4 pt-4">
         <h1 class="text-2xl md:text-3xl font-bold mb-2.5 uppercase">{{ $pageLabel }}</h1>
@@ -47,22 +52,33 @@
 <!-- Product Detail Container -->
 <x-products.product-detail-container
     title="{{ $product->name ?? $pageLabel }}"
-    price="{{ $productPrice > 0 ? number_format($productPrice) . 'đ' : 'Liên hệ' }}"
+    sku="{{ $productSku ?: 'Đang cập nhật' }}"
+    price="{{ $priceLabel }}"
     rawPrice="{{ $productPrice }}"
-    :colors="$colors->map(fn($c) => ['name' => $c->name, 'colorCode' => '#D9D9D9', 'image' => $c->image ? asset('storage/' . $c->image) : null, 'variantId' => data_get($c, $variantPkField), 'sku' => $c->code, 'price' => $c->price])->toArray()"
+    :images="$product->images ?? []"
+    :features="$product->des ?? []"
+    :colors="$colors->map(fn($c) => [
+        'name' => $c->name,
+        'colorCode' => '#D9D9D9',
+        'image' => $c->image ? \App\Support\AssetPath::url($c->image) : null,
+        'variantId' => data_get($c, $variantPkField),
+        'sku' => $c->code,
+        'price' => $c->price,
+        'priceFormatted' => ((float) $c->price > 0 ? number_format((float) $c->price, 0, ',', '.') . ' đ/m²' : 'Liên hệ'),
+    ])->toArray()"
     productType="{{ $productType }}"
     productId="{{ $productDetailId }}"
 />
 
 <x-products.hai-vm-calculator
-    image="{{ $product->size_image ? asset('storage/' . $product->size_image) : asset('assets/images/gach-bat-size-1.png') }}"
+    image="{{ $sizeImage }}"
     label1="Ngói trên mái gỗ"
     rate1="{{ $dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_go ? $dinhMuc->first()->ngoi_tren_mai_go . ' viên/m²' : '125 viên/m²' }}"
     label2="Ngói trên mái bê tông"
     rate2="{{ $dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_be_tong ? $dinhMuc->first()->ngoi_tren_mai_be_tong . ' viên/m²' : '75 viên/m²' }}"
 />
 
-<x-products.fabrication-process />
+<x-products.fabrication-process :images="$parentConfig?->images ?? []" />
 <x-products.journey-video :hide-title="true" />
 <x-products.trang-tri-process />
 <hr class="md:mb-16 mb-8" />
@@ -72,6 +88,7 @@
     route-name="{{ $detailRouteName }}"
     pk-field="{{ $productPkField }}"
     product-type="{{ $productType }}"
+    :compare-table="true"
 />
 <x-products.faq2 />
 

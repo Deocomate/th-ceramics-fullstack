@@ -20,6 +20,7 @@
                                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+                        @include('admin.partials.color-field')
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Mã sản phẩm (Code) <span
                                     class="text-red-500">*</span></label>

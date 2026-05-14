@@ -14,10 +14,8 @@
           @endforelse
         </div>
 
-        @if ($news && method_exists($news, 'links') && $news->hasPages())
-          <div class="pt-8 flex justify-end">
-            {{ $news->links() }}
-          </div>
+        @if ($news && method_exists($news, 'lastPage'))
+          <x-products.custom-pagination :paginator="$news->withQueryString()" />
         @endif
       </div>
     @else

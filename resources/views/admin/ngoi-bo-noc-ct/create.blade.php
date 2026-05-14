@@ -14,6 +14,7 @@
                             <input type="text" name="name" value="{{ old('name') }}" required placeholder="VD: Ngói Bò Nóc Cỡ Nhỏ" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
                             @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
+                        @include('admin.partials.color-field')
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Kích thước (Text)</label>
                             <input type="text" name="size" value="{{ old('size') }}" placeholder="VD: L200 x W200 x D20 mm" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">

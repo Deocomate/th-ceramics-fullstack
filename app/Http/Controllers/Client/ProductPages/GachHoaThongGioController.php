@@ -26,7 +26,7 @@ class GachHoaThongGioController extends Controller
             $this->gachHoaThongGioCtService->getAll('active'),
             $request->only(['search', 'sort'])
         );
-        $products = CollectionPaginator::paginate($products, 12);
+        $products = CollectionPaginator::paginate($products, 8);
 
         return view('clients.products.gach-hoa-thong-gio.index', compact(
             'config', 'products'

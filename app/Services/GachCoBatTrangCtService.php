@@ -40,6 +40,7 @@ class GachCoBatTrangCtService
             $fillable = [
                 'code' => $data['code'],
                 'name' => $data['name'],
+                'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
                 'category_type' => $data['category_type'] ?? 'bat',
                 'price' => $data['price'],
                 'size' => $data['size'] ?? null,
@@ -79,6 +80,7 @@ class GachCoBatTrangCtService
             $fillable = [
                 'code' => $data['code'],
                 'name' => $data['name'],
+                'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
                 'category_type' => $data['category_type'] ?? $model->category_type ?? 'bat',
                 'price' => $data['price'],
                 'size' => $data['size'] ?? $model->size,

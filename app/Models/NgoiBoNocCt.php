@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,17 +8,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class NgoiBoNocCt extends Model
 {
     protected $table = 'ngoi_bo_noc_ct';
+
     protected $primaryKey = 'ngoi_bo_noc_ct_id';
 
-    protected $fillable =[
-        'name', 'images', 'des', 'size', 'size_image', 'size_des', 'is_delete',
+    protected $fillable = [
+        'name', 'color', 'images', 'des', 'size', 'size_image', 'size_des', 'is_delete',
+    ];
+
+    protected $attributes = [
+        'color' => 'Tự chọn',
     ];
 
     protected function casts(): array
     {
-        return[
-            'images'   => 'array',
-            'des'      => 'array',
+        return [
+            'images' => 'array',
+            'des' => 'array',
             'size_des' => 'array',
         ];
     }

@@ -74,9 +74,7 @@
     @endforelse
   </div>
 
-  @if (method_exists($products, 'links') && $products->hasPages())
-  <div class="mt-[40px] md:mt-16">
-    {{ $products->withQueryString()->links() }}
-  </div>
+  @if (method_exists($products, 'lastPage'))
+    <x-products.custom-pagination :paginator="$products" />
   @endif
 </section>

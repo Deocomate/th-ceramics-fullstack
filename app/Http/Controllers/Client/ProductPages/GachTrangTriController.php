@@ -28,7 +28,7 @@ class GachTrangTriController extends Controller
             $this->gachTrangTriCtService->getAll('active'),
             $request->only(['search', 'sort'])
         );
-        $products = CollectionPaginator::paginate($products, 12);
+        $products = CollectionPaginator::paginate($products, 8);
 
         return view('clients.products.gach-trang-tri.index', compact(
             'config', 'products', 'projects'

@@ -6,13 +6,6 @@
       && method_exists($products, 'currentPage')
       && method_exists($products, 'lastPage')
       && method_exists($products, 'url');
-  $currentPage = $hasPaginator ? $products->currentPage() : 1;
-  $lastPage = $hasPaginator ? $products->lastPage() : 1;
-  $paginationPages = collect([1, 2, 3, $currentPage - 1, $currentPage, $currentPage + 1, $lastPage])
-      ->filter(fn ($page) => $page >= 1 && $page <= $lastPage)
-      ->unique()
-      ->sort()
-      ->values();
 @endphp
 
 <section class="w-full md:pb-16 animate-fade-in-up" data-product-section>
@@ -86,72 +79,7 @@
   </div>
 
   @if ($hasPaginator)
-  <div
-    class="hidden lg:flex items-center justify-between gap-6 mt-16 text-textPrimary font-bold text-[17px]"
-  >
-    @if($products->onFirstPage())
-    <button
-      type="button"
-      disabled
-      class="w-10 h-10 border-2 border-black/20 rounded-full flex items-center justify-center text-black/40 transition-all cursor-default"
-      aria-label="Trang trước"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-      </svg>
-    </button>
-    @else
-    <a
-      href="{{ $products->previousPageUrl() }}"
-      class="w-10 h-10 border-2 border-black/20 rounded-full flex items-center justify-center text-black/40 hover:border-black hover:text-black transition-all cursor-pointer"
-      aria-label="Trang trước"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-      </svg>
-    </a>
-    @endif
-
-    <div class="flex items-center gap-5">
-      @php $previousPage = null; @endphp
-      @foreach($paginationPages as $page)
-        @if(! is_null($previousPage) && $page > $previousPage + 1)
-          <span class="text-black/40 tracking-widest px-1">...</span>
-        @endif
-
-        <a
-          href="{{ $products->url($page) }}"
-          class="{{ $page === $currentPage ? 'text-black border-b-[3px] border-black pb-[2px]' : 'text-black/40 hover:text-black transition-colors' }} px-1"
-          @if($page === $currentPage) aria-current="page" @endif
-        >{{ $page }}</a>
-
-        @php $previousPage = $page; @endphp
-      @endforeach
-    </div>
-
-    @if($products->hasMorePages())
-    <a
-      href="{{ $products->nextPageUrl() }}"
-      class="w-10 h-10 border-2 border-black/20 rounded-full flex items-center justify-center text-black/40 hover:border-black hover:text-black transition-all cursor-pointer"
-      aria-label="Trang sau"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-      </svg>
-    </a>
-    @else
-    <button
-      type="button"
-      disabled
-      class="w-10 h-10 border-2 border-black/20 rounded-full flex items-center justify-center text-black/40 transition-all cursor-default"
-      aria-label="Trang sau"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-      </svg>
-    </button>
-    @endif
-  </div>
+    <x-products.custom-pagination :paginator="$products" />
   @endif
   @endif
 </section>

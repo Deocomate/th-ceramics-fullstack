@@ -11,6 +11,10 @@
 </style>
 @endpush
 
+@php
+    $sizeImage = \App\Support\AssetPath::url($product->size_image, 'assets/images/ngoi-am-duong-size.png');
+@endphp
+
 <!-- Top Banner for Detail -->
 <section class="hidden md:flex relative w-full h-[180px] md:h-[210px] items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
@@ -42,7 +46,7 @@
 <!-- Product Detail Container -->
 <x-products.product-detail-container
     title="{{ $product->name }}"
-    price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
+    price="{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/m²' : 'Liên hệ' }}"
     rawPrice="{{ $product->price }}"
     sku="{{ $product->code ?? '' }}"
     :features="$product->des ?? null"
@@ -62,7 +66,7 @@
             Bảng kích thước
         </h2>
         <div class="size-options-scroll mobile-scroll-visible w-full pb-2 overflow-x-scroll md:overflow-x-hidden">
-            <img src="{{ asset('assets/images/ngoi-am-duong-size.png') }}" alt="Đa dạng kích thước ngói âm dương"
+            <img src="{{ $sizeImage }}" alt="Bảng kích thước {{ $product->name }}"
                 class="h-auto object-contain max-w-none w-[200%] md:w-full"
                 onload="window.dispatchEvent(new Event('resize'))" />
         </div>
@@ -84,7 +88,7 @@
                 </div>
             </button>
             <div class="accordion-content hidden md:block w-full pb-6 md:pb-0 pt-2 md:pt-0">
-                <x-products.color-palette />
+                <x-products.color-palette :colors="$colors" />
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden" />

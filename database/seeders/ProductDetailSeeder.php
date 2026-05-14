@@ -3,9 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\BoNocChuVanCt;
+use App\Models\DenVuonGomSuCt;
 use App\Models\GachCoBatTrangCt;
 use App\Models\GachHoaThongGioCt;
 use App\Models\GachTrangTriCt;
+use App\Models\LanCanGomSuCt;
 use App\Models\LinhVatPhongThuyCt;
 use App\Models\MauSacNgoiHaiCoCt;
 use App\Models\MauSacNgoiHaiVanMieuCt;
@@ -14,12 +16,9 @@ use App\Models\NgoiBoNocCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\PhanLoaiBoNocChuVanCt;
-use App\Models\LanCanGomSuCt;
-use App\Models\PhanLoaiNgoiBoNocCt;
-use App\Models\PhanLoaiLanCanGomSuCt;
 use App\Models\PhanLoaiDenVuonGomSuCt;
-use App\Models\DenVuonGomSuCt;
-
+use App\Models\PhanLoaiLanCanGomSuCt;
+use App\Models\PhanLoaiNgoiBoNocCt;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -153,6 +152,7 @@ class ProductDetailSeeder extends Seeder
         foreach ($products as $p) {
             NgoiAmDuongCt::create([
                 'code' => $p['code'], 'name' => $p['name'],
+                'color' => 'Tự chọn',
                 'images' => $p['images'], 'price' => $p['price'],
                 'des' => $p['des'], 'size' => $p['size'],
                 'size_image' => $p['size_image'], 'is_delete' => 0,
@@ -240,6 +240,7 @@ class ProductDetailSeeder extends Seeder
         foreach ($products as $p) {
             GachHoaThongGioCt::create([
                 'code' => $p['code'], 'name' => $p['name'],
+                'color' => 'Tự chọn',
                 'images' => $p['images'], 'price' => $p['price'],
                 'des' => $p['des'], 'size' => $p['size'],
                 'size_image' => $p['size_image'], 'is_delete' => 0,
@@ -316,6 +317,7 @@ class ProductDetailSeeder extends Seeder
         foreach ($products as $p) {
             GachTrangTriCt::create([
                 'code' => $p['code'], 'name' => $p['name'],
+                'color' => 'Tự chọn',
                 'images' => $p['images'], 'price' => $p['price'],
                 'des' => $p['des'], 'size' => $p['size'],
                 'size_image' => $p['size_image'], 'is_delete' => 0,
@@ -392,6 +394,7 @@ class ProductDetailSeeder extends Seeder
         foreach ($products as $p) {
             GachCoBatTrangCt::create([
                 'code' => $p['code'], 'name' => $p['name'],
+                'color' => 'Tự chọn',
                 'images' => $p['images'], 'price' => $p['price'],
                 'des' => $p['des'], 'size' => $p['size'],
                 'size_image' => $p['size_image'], 'is_delete' => 0,
@@ -493,6 +496,7 @@ class ProductDetailSeeder extends Seeder
         foreach ($products as $p) {
             LinhVatPhongThuyCt::create([
                 'code' => $p['code'], 'name' => $p['name'],
+                'color' => 'Tự chọn',
                 'images' => $p['images'], 'price' => $p['price'],
                 'des' => $p['des'], 'size' => $p['size'],
                 'size_des' => $p['size_des'],
@@ -524,6 +528,7 @@ class ProductDetailSeeder extends Seeder
         foreach ($tileDefs as $idx => $tile) {
             $product = NgoiHaiCoCt::create([
                 'name' => $tile['name'],
+                'color' => 'Tự chọn',
                 'images' => $tile['images'],
                 'des' => $tile['des'],
                 'size' => $tile['size'],
@@ -537,7 +542,7 @@ class ProductDetailSeeder extends Seeder
             }
 
             foreach ($selectedColors as $j => $color) {
-                $code = 'NHC-' . str_pad($product->ngoi_hai_co_ct_id, 3, '0', STR_PAD_LEFT) . '-C' . ($j + 1);
+                $code = 'NHC-'.str_pad($product->ngoi_hai_co_ct_id, 3, '0', STR_PAD_LEFT).'-C'.($j + 1);
                 MauSacNgoiHaiCoCt::create([
                     'name' => $color['name'],
                     'image' => $color['image'],
@@ -617,6 +622,7 @@ class ProductDetailSeeder extends Seeder
         foreach ($products as $idx => $p) {
             $product = NgoiHaiVanMieuCt::create([
                 'name' => $p['name'],
+                'color' => 'Tự chọn',
                 'images' => $p['images'],
                 'price' => 0,
                 'des' => $p['des'],
@@ -632,7 +638,7 @@ class ProductDetailSeeder extends Seeder
             }
 
             foreach ($selectedColors as $j => $color) {
-                $code = 'NHVM-' . str_pad($product->ngoi_hai_van_mieu_ct_id, 3, '0', STR_PAD_LEFT) . '-C' . ($j + 1);
+                $code = 'NHVM-'.str_pad($product->ngoi_hai_van_mieu_ct_id, 3, '0', STR_PAD_LEFT).'-C'.($j + 1);
                 MauSacNgoiHaiVanMieuCt::create([
                     'name' => $color['name'],
                     'image' => $color['image'],
@@ -713,6 +719,7 @@ class ProductDetailSeeder extends Seeder
         foreach ($products as $p) {
             $product = NgoiBoNocCt::create([
                 'name' => $p['name'],
+                'color' => 'Tự chọn',
                 'images' => $p['images'],
                 'des' => $p['des'],
                 'size' => $p['size'],
@@ -723,15 +730,15 @@ class ProductDetailSeeder extends Seeder
 
             $productName = $p['name'];
             PhanLoaiNgoiBoNocCt::create([
-                'name' => $productName . ' - Loại tiêu chuẩn',
-                'code' => 'NBN-' . str_pad($product->ngoi_bo_noc_ct_id, 3, '0', STR_PAD_LEFT) . '-STD',
+                'name' => $productName.' - Loại tiêu chuẩn',
+                'code' => 'NBN-'.str_pad($product->ngoi_bo_noc_ct_id, 3, '0', STR_PAD_LEFT).'-STD',
                 'price' => 45000,
                 'ngoi_bo_noc_ct_id' => $product->ngoi_bo_noc_ct_id,
                 'is_delete' => 0,
             ]);
             PhanLoaiNgoiBoNocCt::create([
-                'name' => $productName . ' - Loại cao cấp (men hỏa biến)',
-                'code' => 'NBN-' . str_pad($product->ngoi_bo_noc_ct_id, 3, '0', STR_PAD_LEFT) . '-PRE',
+                'name' => $productName.' - Loại cao cấp (men hỏa biến)',
+                'code' => 'NBN-'.str_pad($product->ngoi_bo_noc_ct_id, 3, '0', STR_PAD_LEFT).'-PRE',
                 'price' => 65000,
                 'ngoi_bo_noc_ct_id' => $product->ngoi_bo_noc_ct_id,
                 'is_delete' => 0,
@@ -814,6 +821,7 @@ class ProductDetailSeeder extends Seeder
         foreach ($products as $idx => $p) {
             $product = BoNocChuVanCt::create([
                 'name' => $p['name'],
+                'color' => 'Tự chọn',
                 'images' => $p['images'],
                 'des' => $p['des'],
                 'size' => $p['size'],
@@ -823,15 +831,15 @@ class ProductDetailSeeder extends Seeder
             ]);
 
             PhanLoaiBoNocChuVanCt::create([
-                'name' => $p['name'] . ' - Loại tiêu chuẩn',
-                'code' => 'BNC-' . str_pad($product->bo_noc_chu_van_ct_id, 3, '0', STR_PAD_LEFT) . '-STD',
+                'name' => $p['name'].' - Loại tiêu chuẩn',
+                'code' => 'BNC-'.str_pad($product->bo_noc_chu_van_ct_id, 3, '0', STR_PAD_LEFT).'-STD',
                 'price' => $phanLoais[$idx % count($phanLoais)]['price'],
                 'bo_noc_chu_van_ct_id' => $product->bo_noc_chu_van_ct_id,
                 'is_delete' => 0,
             ]);
             PhanLoaiBoNocChuVanCt::create([
-                'name' => $p['name'] . ' - Loại cao cấp (men hỏa biến)',
-                'code' => 'BNC-' . str_pad($product->bo_noc_chu_van_ct_id, 3, '0', STR_PAD_LEFT) . '-PRE',
+                'name' => $p['name'].' - Loại cao cấp (men hỏa biến)',
+                'code' => 'BNC-'.str_pad($product->bo_noc_chu_van_ct_id, 3, '0', STR_PAD_LEFT).'-PRE',
                 'price' => $phanLoais[$idx % count($phanLoais)]['price'] + 20000,
                 'bo_noc_chu_van_ct_id' => $product->bo_noc_chu_van_ct_id,
                 'is_delete' => 0,
@@ -845,7 +853,7 @@ class ProductDetailSeeder extends Seeder
             [
                 'name' => 'Lan Can Gốm Sứ Hoa Chanh',
                 'images' => ['assets/images/lan-can-01.jpg', 'assets/images/lan-can-02.png'],
-                'des' =>[
+                'des' => [
                     'Họa tiết hoa chanh truyền thống mang ý nghĩa thịnh vượng, tươi mới.',
                     'Gốm sứ Bát Tràng nung ở nhiệt độ 1200°C đảm bảo độ bền cơ học cao.',
                 ],
@@ -855,7 +863,7 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Men Xanh Lục', 'price' => 250000],
                     ['name' => 'Đất Nung Tự Nhiên', 'price' => 180000],
-                ]
+                ],
             ],
             [
                 'name' => 'Lan Can Gốm Sứ Lục Bình',
@@ -870,7 +878,7 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Men Trắng Sứ', 'price' => 280000],
                     ['name' => 'Men Vàng Đồng', 'price' => 290000],
-                ]
+                ],
             ],
             [
                 'name' => 'Lan Can Gốm Sứ Chữ Thọ',
@@ -885,7 +893,7 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Men Xanh Đồng', 'price' => 320000],
                     ['name' => 'Men Đỏ Nâu', 'price' => 300000],
-                ]
+                ],
             ],
             [
                 'name' => 'Lan Can Gốm Sứ Trúc Lâm',
@@ -900,7 +908,7 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Men Rêu Cổ', 'price' => 260000],
                     ['name' => 'Men Xanh Ngọc', 'price' => 275000],
-                ]
+                ],
             ],
             [
                 'name' => 'Lan Can Gốm Sứ Hoa Sen',
@@ -915,13 +923,14 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Men Hỏa Biến', 'price' => 350000],
                     ['name' => 'Đất Nung Mộc', 'price' => 200000],
-                ]
+                ],
             ],
         ];
 
         foreach ($products as $idx => $p) {
             $product = LanCanGomSuCt::create([
                 'name' => $p['name'],
+                'color' => 'Tự chọn',
                 'images' => $p['images'],
                 'des' => $p['des'],
                 'size' => $p['size'],
@@ -933,8 +942,8 @@ class ProductDetailSeeder extends Seeder
             foreach ($p['variants'] as $vIndex => $v) {
                 PhanLoaiLanCanGomSuCt::create([
                     // Tên biến thể phải Unique theo logic DB, nên nối với Tên SP cha
-                    'name' => $product->name . ' - ' . $v['name'],
-                    'code' => 'LCGS-' . str_pad($product->lan_can_gom_su_ct_id, 3, '0', STR_PAD_LEFT) . '-V' . ($vIndex + 1),
+                    'name' => $product->name.' - '.$v['name'],
+                    'code' => 'LCGS-'.str_pad($product->lan_can_gom_su_ct_id, 3, '0', STR_PAD_LEFT).'-V'.($vIndex + 1),
                     'price' => $v['price'],
                     'lan_can_gom_su_ct_id' => $product->lan_can_gom_su_ct_id,
                     'is_delete' => 0,
@@ -949,7 +958,7 @@ class ProductDetailSeeder extends Seeder
             [
                 'name' => 'Đèn Vườn Gốm Sứ Lục Giác',
                 'images' => ['assets/images/den-gom-01.png', 'assets/images/den-gom-02.png'],
-                'des' =>[
+                'des' => [
                     'Thiết kế mái lục giác cổ điển, ánh sáng tản đều qua các khung hoa văn.',
                     'Chịu mưa nắng tốt, chuyên dùng cho sân vườn ngoài trời.',
                 ],
@@ -959,7 +968,7 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Men Nâu Đất', 'price' => 450000],
                     ['name' => 'Men Trắng Sứ', 'price' => 480000],
-                ]
+                ],
             ],
             [
                 'name' => 'Đèn Vườn Hình Tháp Chùa',
@@ -974,12 +983,12 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Men Xanh Rêu', 'price' => 650000],
                     ['name' => 'Đất Nung Thô', 'price' => 550000],
-                ]
+                ],
             ],
             [
                 'name' => 'Đèn Nấm Gốm Sứ Kiểu Nhật',
                 'images' => ['assets/images/den-gom-01.png', 'assets/images/den-gom-02.png'],
-                'des' =>[
+                'des' => [
                     'Kiểu dáng thấp, tròn trịa, ánh sáng hắt nhẹ nhàng xuống lối đi.',
                     'Tạo không gian lung linh, lãng mạn cho khu vườn phong cách Wabi-sabi.',
                 ],
@@ -989,12 +998,12 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Men Đen Nhám', 'price' => 380000],
                     ['name' => 'Men Xanh Ngọc', 'price' => 420000],
-                ]
+                ],
             ],
             [
                 'name' => 'Đèn Vườn Quả Nhót Cổ Điển',
                 'images' => ['assets/images/den-gom-02.png', 'assets/images/den-gom-01.png'],
-                'des' =>[
+                'des' => [
                     'Họa tiết quả nhót truyền thống, thích hợp treo cột cổng hoặc đặt góc vườn.',
                     'Chống phai màu vĩnh viễn nhờ nung ở 1200°C.',
                 ],
@@ -1004,7 +1013,7 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Cỡ Vừa (H450)', 'price' => 350000],
                     ['name' => 'Cỡ Lớn (H600)', 'price' => 550000],
-                ]
+                ],
             ],
             [
                 'name' => 'Đèn Trang Trí Sân Vườn Lồng Chim',
@@ -1019,13 +1028,15 @@ class ProductDetailSeeder extends Seeder
                 'variants' => [
                     ['name' => 'Men Hỏa Biến', 'price' => 520000],
                     ['name' => 'Men Vàng Hoàng Gia', 'price' => 490000],
-                ]
+                ],
             ],
         ];
 
         foreach ($products as $idx => $p) {
             $product = DenVuonGomSuCt::create([
                 'name' => $p['name'],
+                'color' => 'Tự chọn',
+                'category_type' => $idx % 2 === 0 ? 'den_gom' : 'den_su',
                 'images' => $p['images'],
                 'des' => $p['des'],
                 'size' => $p['size'],
@@ -1037,8 +1048,8 @@ class ProductDetailSeeder extends Seeder
             foreach ($p['variants'] as $vIndex => $v) {
                 PhanLoaiDenVuonGomSuCt::create([
                     // Tên biến thể phải Unique theo logic DB, nên nối với Tên SP cha
-                    'name' => $product->name . ' - ' . $v['name'],
-                    'code' => 'DVGS-' . str_pad($product->den_vuon_gom_su_ct_id, 3, '0', STR_PAD_LEFT) . '-V' . ($vIndex + 1),
+                    'name' => $product->name.' - '.$v['name'],
+                    'code' => 'DVGS-'.str_pad($product->den_vuon_gom_su_ct_id, 3, '0', STR_PAD_LEFT).'-V'.($vIndex + 1),
                     'price' => $v['price'],
                     'den_vuon_gom_su_ct_id' => $product->den_vuon_gom_su_ct_id,
                     'is_delete' => 0,
