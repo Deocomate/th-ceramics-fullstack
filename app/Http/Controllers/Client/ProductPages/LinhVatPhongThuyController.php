@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Services\LinhVatPhongThuyCtService;
 use App\Services\LinhVatPhongThuyService;
 use App\Services\ViewHistoryService;
+use App\Support\CollectionPaginator;
+use App\Support\ProductCollectionFilter;
+use Illuminate\Http\Request;
 
 class LinhVatPhongThuyController extends Controller
 {
@@ -14,10 +17,14 @@ class LinhVatPhongThuyController extends Controller
         private readonly LinhVatPhongThuyCtService $linhVatPhongThuyCtService,
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         $config = $this->linhVatPhongThuyService->getFirstRecord();
-        $products = $this->linhVatPhongThuyCtService->getAll('active');
+        $products = ProductCollectionFilter::apply(
+            $this->linhVatPhongThuyCtService->getAll('active'),
+            $request->only(['search', 'sort'])
+        );
+        $products = CollectionPaginator::paginate($products, 8);
 
         return view('clients.products.linh-vat-phong-thuy.index', compact(
             'config', 'products'

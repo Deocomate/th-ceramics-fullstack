@@ -5,7 +5,7 @@
   <!-- Background Image -->
   <div class="absolute inset-0 z-0">
     <img
-      src="{{ $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/linh-vat-banner.png') }}"
+      src="{{ !empty($config->thumbnail_main) ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/linh-vat-banner.png') }}"
       alt="Linh Vật Phong Thủy Banner"
       class="w-full h-full object-cover"
     />
@@ -13,7 +13,7 @@
   </div>
 
   <div
-    class="container mx-auto px-6 lg:px-[100px] relative z-10 h-full flex flex-col justify-between items-start text-white"
+    class="container mx-auto px-6 lg:px-[100px] relative z-10 h-full flex flex-col"
   >
     <!-- Main Title - Positioned more towards top-right/center like the image -->
     <div
