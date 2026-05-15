@@ -20,9 +20,12 @@
 @php
   $assetUrl = fn (?string $path, ?string $fallback = null) => \App\Support\AssetPath::url($path, $fallback);
   $productImageUrl = fn ($product, string $fallback) => $assetUrl(data_get($product, 'images.0'), $fallback);
-  $productId = fn ($product) => data_get($product, 'ngoi_bo_noc_ct_id') ?? data_get($product, 'bo_noc_chu_van_ct_id');
-  $productType = fn ($product) => data_get($product, 'ngoi_bo_noc_ct_id') ? 'bo_noc' : 'chu_van';
+  $productId = fn ($product) => data_get($product, 'phu_kien_ngoi_ct_id');
+  $productType = fn ($product) => data_get($product, 'category_type') === \App\Models\PhuKienNgoiCt::TYPE_CHU_VAN ? 'chu_van' : 'bo_noc';
   $productCode = fn ($product) => $productType($product) === 'bo_noc' ? 'PKN-BN' . $productId($product) : 'PKN-CV' . $productId($product);
+  $productUrl = fn ($product) => $productType($product) === 'chu_van'
+      ? route('client.products.phu-kien-ngoi.bo-noc-chu-van.detail', $productId($product))
+      : route('client.products.phu-kien-ngoi.ngoi-bo-noc.detail', $productId($product));
 @endphp
 
 <x-catalog-button />
@@ -74,7 +77,7 @@
           $id = $productId($product);
           $type = $productType($product);
         @endphp
-        <div class="flex flex-col group cursor-pointer {{ $item['wrapper'] }}" data-aos="fade-up" data-aos-delay="{{ $item['delay'] }}" onclick="window.location.href = '{{ route('client.products.phu-kien-ngoi.detail', ['id' => $id, 'type' => $type]) }}'">
+        <div class="flex flex-col group cursor-pointer {{ $item['wrapper'] }}" data-aos="fade-up" data-aos-delay="{{ $item['delay'] }}" onclick="window.location.href = '{{ $productUrl($product) }}'">
           <div class="product-card relative w-full {{ $item['card'] }} shadow mb-4 lg:mb-6 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1">
             <img src="{{ $productImageUrl($product, 'assets/images/pk-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover mix-blend-multiply">
             <div class="product-overlay">

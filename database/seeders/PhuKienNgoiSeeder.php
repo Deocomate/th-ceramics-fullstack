@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\BoNocChuVanCt;
-use App\Models\NgoiBoNocCt;
-use App\Models\PhanLoaiBoNocChuVanCt;
-use App\Models\PhanLoaiNgoiBoNocCt;
+use App\Models\PhanLoaiPhuKienNgoiCt;
 use App\Models\PhuKienNgoi;
+use App\Models\PhuKienNgoiCt;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -18,10 +16,8 @@ class PhuKienNgoiSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         PhuKienNgoi::truncate();
-        NgoiBoNocCt::truncate();
-        PhanLoaiNgoiBoNocCt::truncate();
-        BoNocChuVanCt::truncate();
-        PhanLoaiBoNocChuVanCt::truncate();
+        PhanLoaiPhuKienNgoiCt::truncate();
+        PhuKienNgoiCt::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         PhuKienNgoi::create([
@@ -40,8 +36,9 @@ class PhuKienNgoiSeeder extends Seeder
 
         for ($i = 1; $i <= 15; $i++) {
             shuffle($bnFiles);
-            $productBN = NgoiBoNocCt::create([
+            $productBN = PhuKienNgoiCt::create([
                 'name' => "Ngói Bò Nóc Tráng Men {$boNocNames[$i - 1]}",
+                'category_type' => PhuKienNgoiCt::TYPE_BO_NOC,
                 'color' => 'Tự chọn',
                 'images' => $this->copySpecificImages('phu-kien-ngoi-chi-tiet', $bnFiles),
                 'des' => $this->generateDescription(),
@@ -51,9 +48,9 @@ class PhuKienNgoiSeeder extends Seeder
                 'is_delete' => 0,
             ]);
 
-            $pid = str_pad($productBN->ngoi_bo_noc_ct_id, 3, '0', STR_PAD_LEFT);
-            PhanLoaiNgoiBoNocCt::create(['name' => "Bò Nóc {$boNocNames[$i - 1]} - Tiêu Chuẩn", 'code' => "NBN-{$pid}-STD", 'price' => 45000 + ($i * 1000), 'ngoi_bo_noc_ct_id' => $productBN->ngoi_bo_noc_ct_id, 'is_delete' => 0]);
-            PhanLoaiNgoiBoNocCt::create(['name' => "Bò Nóc {$boNocNames[$i - 1]} - Cao Cấp", 'code' => "NBN-{$pid}-PRE", 'price' => 65000 + ($i * 1500), 'ngoi_bo_noc_ct_id' => $productBN->ngoi_bo_noc_ct_id, 'is_delete' => 0]);
+            $pid = str_pad($productBN->phu_kien_ngoi_ct_id, 3, '0', STR_PAD_LEFT);
+            PhanLoaiPhuKienNgoiCt::create(['name' => "Bò Nóc {$boNocNames[$i - 1]} - Tiêu Chuẩn", 'code' => "NBN-{$pid}-STD", 'price' => 45000 + ($i * 1000), 'phu_kien_ngoi_ct_id' => $productBN->phu_kien_ngoi_ct_id, 'is_delete' => 0]);
+            PhanLoaiPhuKienNgoiCt::create(['name' => "Bò Nóc {$boNocNames[$i - 1]} - Cao Cấp", 'code' => "NBN-{$pid}-PRE", 'price' => 65000 + ($i * 1500), 'phu_kien_ngoi_ct_id' => $productBN->phu_kien_ngoi_ct_id, 'is_delete' => 0]);
         }
 
         $chuVanNames = ['Men Vàng Đồng', 'Men Xanh Lục', 'Men Nâu Đất', 'Đất Nung Mộc', 'Men Hỏa Biến', 'Men Trắng Sứ', 'Men Xanh Ngọc', 'Men Đen Tuyền', 'Men Đỏ Gạch', 'Men Lam Huế', 'Men Xanh Rêu', 'Men Vàng Nghệ', 'Men Hồng Phấn', 'Men Ngọc Bích', 'Men Đồng Hun'];
@@ -61,8 +58,9 @@ class PhuKienNgoiSeeder extends Seeder
 
         for ($i = 1; $i <= 15; $i++) {
             shuffle($cvFiles);
-            $productCV = BoNocChuVanCt::create([
+            $productCV = PhuKienNgoiCt::create([
                 'name' => "Bộ Nóc Chữ Vạn {$chuVanNames[$i - 1]}",
+                'category_type' => PhuKienNgoiCt::TYPE_CHU_VAN,
                 'color' => 'Tự chọn',
                 'images' => $this->copySpecificImages('phu-kien-ngoi-chi-tiet', $cvFiles),
                 'des' => $this->generateDescription(),
@@ -72,9 +70,9 @@ class PhuKienNgoiSeeder extends Seeder
                 'is_delete' => 0,
             ]);
 
-            $pid = str_pad($productCV->bo_noc_chu_van_ct_id, 3, '0', STR_PAD_LEFT);
-            PhanLoaiBoNocChuVanCt::create(['name' => "Chữ Vạn {$chuVanNames[$i - 1]} - Tiêu Chuẩn", 'code' => "BNC-{$pid}-STD", 'price' => 45000 + ($i * 800), 'bo_noc_chu_van_ct_id' => $productCV->bo_noc_chu_van_ct_id, 'is_delete' => 0]);
-            PhanLoaiBoNocChuVanCt::create(['name' => "Chữ Vạn {$chuVanNames[$i - 1]} - Cao Cấp", 'code' => "BNC-{$pid}-PRE", 'price' => 65000 + ($i * 1200), 'bo_noc_chu_van_ct_id' => $productCV->bo_noc_chu_van_ct_id, 'is_delete' => 0]);
+            $pid = str_pad($productCV->phu_kien_ngoi_ct_id, 3, '0', STR_PAD_LEFT);
+            PhanLoaiPhuKienNgoiCt::create(['name' => "Chữ Vạn {$chuVanNames[$i - 1]} - Tiêu Chuẩn", 'code' => "BNC-{$pid}-STD", 'price' => 45000 + ($i * 800), 'phu_kien_ngoi_ct_id' => $productCV->phu_kien_ngoi_ct_id, 'is_delete' => 0]);
+            PhanLoaiPhuKienNgoiCt::create(['name' => "Chữ Vạn {$chuVanNames[$i - 1]} - Cao Cấp", 'code' => "BNC-{$pid}-PRE", 'price' => 65000 + ($i * 1200), 'phu_kien_ngoi_ct_id' => $productCV->phu_kien_ngoi_ct_id, 'is_delete' => 0]);
         }
     }
 }

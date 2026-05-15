@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Phân Loại Bò Nóc Chữ Vạn" breadcrumb="Admin › DS Sản phẩm chi tiết › Bò Nóc Chữ Vạn › Phân Loại">
+<x-admin.layout.app title="Phân Loại {{ $categoryLabel }}" breadcrumb="Admin › Phụ Kiện Ngói › {{ $categoryLabel }} › Phân Loại">
     @if ($errors->any())
         <div class="mb-6 flex items-start gap-3 px-4 py-3 rounded-lg text-sm text-red-800 bg-red-50 border border-red-200 shadow-sm">
             <div>
@@ -10,11 +10,10 @@
         </div>
     @endif
 
-    {{-- HEADER & BỘ LỌC --}}
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
             @if(isset($selectedProduct))
-                <a href="{{ route('admin.bo-noc-chu-van-ct.index') }}" class="p-2 bg-white border border-gray-200 rounded-lg text-gray-500 hover:text-[#A31D1D] hover:bg-red-50 transition-colors shadow-sm">
+                <a href="{{ route('admin.phu-kien-ngoi-ct.index', ['category_type' => $categoryType]) }}" class="p-2 bg-white border border-gray-200 rounded-lg text-gray-500 hover:text-[#A31D1D] hover:bg-red-50 transition-colors shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 </a>
                 <div>
@@ -23,52 +22,54 @@
                 </div>
             @else
                 <div>
-                    <h2 class="text-sm font-semibold text-gray-700">Tất cả Biến thể Phân loại</h2>
+                    <h2 class="text-sm font-semibold text-gray-700">Tất cả phân loại {{ $categoryLabel }}</h2>
                 </div>
             @endif
         </div>
-        <form method="GET" action="{{ route('admin.phan-loai-bo-noc-chu-van-ct.index') }}" class="flex items-center gap-2">
-            @if(isset($selectedProduct)) <input type="hidden" name="product_id" value="{{ $selectedProduct->bo_noc_chu_van_ct_id }}"> @endif
+        <form method="GET" action="{{ route('admin.phan-loai-phu-kien-ngoi-ct.index') }}" class="flex items-center gap-2">
+            <input type="hidden" name="category_type" value="{{ $categoryType }}">
+            @if(isset($selectedProduct)) <input type="hidden" name="product_id" value="{{ $selectedProduct->phu_kien_ngoi_ct_id }}"> @endif
             <select name="status" onchange="this.form.submit()" class="px-4 py-2.5 text-sm font-medium border border-gray-300 rounded-lg outline-none focus:border-[#A31D1D]">
                 <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Đang bán</option>
                 <option value="deleted" {{ $status === 'deleted' ? 'selected' : '' }}>Đã ẩn</option>
+                <option value="all" {{ $status === 'all' ? 'selected' : '' }}>Tất cả</option>
             </select>
         </form>
     </div>
 
-    {{-- FORM THÊM MỚI --}}
-    <div class="mb-8 p-6 bg-blue-50/40 rounded-xl border border-blue-100 shadow-sm relative overflow-hidden">
+    <div class="mb-8 p-6 bg-blue-50/40 rounded-xl border border-blue-100 shadow-sm">
         <h3 class="text-sm font-bold text-blue-800 mb-5">THÊM PHÂN LOẠI MỚI</h3>
-        <form action="{{ route('admin.phan-loai-bo-noc-chu-van-ct.store') }}" method="POST">
+        <form action="{{ route('admin.phan-loai-phu-kien-ngoi-ct.store') }}" method="POST">
             @csrf
+            <input type="hidden" name="category_type" value="{{ $categoryType }}">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-5 items-end">
-                <div class="md:col-span-1">
+                <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Sản phẩm cha <span class="text-red-500">*</span></label>
                     @if(isset($selectedProduct))
-                        <input type="hidden" name="bo_noc_chu_van_ct_id" value="{{ $selectedProduct->bo_noc_chu_van_ct_id }}">
+                        <input type="hidden" name="phu_kien_ngoi_ct_id" value="{{ $selectedProduct->phu_kien_ngoi_ct_id }}">
                         <select disabled class="w-full px-4 py-2.5 text-sm font-medium border rounded-lg border-gray-300 bg-gray-100 text-gray-500">
                             <option selected>{{ $selectedProduct->name }}</option>
                         </select>
                     @else
-                        <select name="bo_noc_chu_van_ct_id" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] bg-white">
+                        <select name="phu_kien_ngoi_ct_id" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] bg-white">
                             <option value="">-- Chọn sản phẩm --</option>
                             @foreach($products as $prod)
-                                <option value="{{ $prod->bo_noc_chu_van_ct_id }}" {{ old('bo_noc_chu_van_ct_id') == $prod->bo_noc_chu_van_ct_id ? 'selected' : '' }}>{{ $prod->name }}</option>
+                                <option value="{{ $prod->phu_kien_ngoi_ct_id }}" {{ old('phu_kien_ngoi_ct_id') == $prod->phu_kien_ngoi_ct_id ? 'selected' : '' }}>{{ $prod->name }}</option>
                             @endforeach
                         </select>
                     @endif
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Tên phân loại <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" value="{{ old('name') }}" required placeholder="VD: Tráng Men" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D]">
+                    <input type="text" name="name" value="{{ old('name') }}" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D]">
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Mã Code <span class="text-red-500">*</span></label>
-                    <input type="text" name="code" value="{{ old('code') }}" required placeholder="VD: NBN-TM-01" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] font-mono">
+                    <input type="text" name="code" value="{{ old('code') }}" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] font-mono">
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Giá tiền (VNĐ) <span class="text-red-500">*</span></label>
-                    <input type="number" name="price" value="{{ old('price') }}" required min="0" placeholder="VD: 5500" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D]">
+                    <input type="number" name="price" value="{{ old('price') }}" required min="0" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D]">
                 </div>
             </div>
             <div class="flex justify-end mt-6 pt-5 border-t border-blue-100/50">
@@ -77,7 +78,6 @@
         </form>
     </div>
 
-    {{-- BẢNG DANH SÁCH --}}
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <table class="w-full text-sm text-left">
             <thead class="bg-gray-50/80 text-gray-500 text-xs uppercase tracking-wider">
@@ -104,10 +104,21 @@
                         <td class="px-6 py-4 text-right">
                             <div class="flex justify-end gap-2">
                                 @if(!$item->is_delete)
-                                    <button type="button" data-id="{{ $item->phan_loai_bo_noc_chu_van_ct_id }}" data-pid="{{ $item->bo_noc_chu_van_ct_id }}" data-name="{{ $item->name }}" data-code="{{ $item->code }}" data-price="{{ $item->price }}" onclick="openEditModal(this, '{{ route('admin.phan-loai-bo-noc-chu-van-ct.update', $item->phan_loai_bo_noc_chu_van_ct_id) }}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-                                    <button type="button" onclick="openDeleteModal('{{ route('admin.phan-loai-bo-noc-chu-van-ct.destroy', $item->phan_loai_bo_noc_chu_van_ct_id) }}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                                    <button type="button"
+                                        data-id="{{ $item->phan_loai_phu_kien_ngoi_ct_id }}"
+                                        data-pid="{{ $item->phu_kien_ngoi_ct_id }}"
+                                        data-name="{{ $item->name }}"
+                                        data-code="{{ $item->code }}"
+                                        data-price="{{ $item->price }}"
+                                        onclick="openEditModal(this, '{{ route('admin.phan-loai-phu-kien-ngoi-ct.update', $item->phan_loai_phu_kien_ngoi_ct_id) }}')"
+                                        class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    </button>
+                                    <button type="button" onclick="openDeleteModal('{{ route('admin.phan-loai-phu-kien-ngoi-ct.destroy', $item->phan_loai_phu_kien_ngoi_ct_id) }}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
                                 @else
-                                    <form method="POST" action="{{ route('admin.phan-loai-bo-noc-chu-van-ct.restore', $item->phan_loai_bo_noc_chu_van_ct_id) }}" class="inline">
+                                    <form method="POST" action="{{ route('admin.phan-loai-phu-kien-ngoi-ct.restore', $item->phan_loai_phu_kien_ngoi_ct_id) }}" class="inline">
                                         @csrf @method('PUT')
                                         <button class="px-3 py-1.5 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 rounded-lg">Khôi phục</button>
                                     </form>
@@ -122,7 +133,6 @@
         </table>
     </div>
 
-    {{-- MODAL EDIT --}}
     <div id="editModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden transform scale-95 transition-transform duration-300">
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
@@ -131,12 +141,13 @@
             </div>
             <form id="editForm" method="POST" class="p-6">
                 @csrf @method('PUT')
+                <input type="hidden" name="category_type" value="{{ $categoryType }}">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sản phẩm cha</label>
-                        <input type="hidden" name="bo_noc_chu_van_ct_id" id="edit_pid_hidden">
+                        <input type="hidden" name="phu_kien_ngoi_ct_id" id="edit_pid_hidden">
                         <select id="edit_pid" disabled class="w-full px-4 py-2.5 text-sm bg-gray-100 text-gray-500 rounded-lg">
-                            @foreach($products as $prod) <option value="{{ $prod->bo_noc_chu_van_ct_id }}">{{ $prod->name }}</option> @endforeach
+                            @foreach($products as $prod) <option value="{{ $prod->phu_kien_ngoi_ct_id }}">{{ $prod->name }}</option> @endforeach
                         </select>
                     </div>
                     <div class="md:col-span-2">
@@ -160,17 +171,13 @@
         </div>
     </div>
 
-    {{-- MODAL DELETE --}}
     <div id="deleteModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center transform scale-95 transition-transform duration-300">
             <h3 class="text-xl font-bold text-gray-800 mb-2">Tạm ẩn phân loại?</h3>
             <p class="text-sm text-gray-500 mb-6">Bạn có thể khôi phục lại bất cứ lúc nào.</p>
             <div class="flex justify-center gap-3">
                 <button type="button" onclick="closeDeleteModal()" class="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 rounded-lg">Hủy</button>
-                <form id="deleteForm" method="POST" class="flex-1">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="w-full px-4 py-2.5 text-sm font-bold text-white bg-red-600 rounded-lg">Đồng ý</button>
-                </form>
+                <form id="deleteForm" method="POST" class="flex-1">@csrf @method('DELETE')<button type="submit" class="w-full px-4 py-2.5 text-sm font-bold text-white bg-red-600 rounded-lg">Đồng ý</button></form>
             </div>
         </div>
     </div>

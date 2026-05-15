@@ -3,17 +3,21 @@
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
-use App\Models\NgoiBoNocCt;
+use App\Models\PhuKienNgoiCt;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
-class NgoiBoNocCtService
+class PhuKienNgoiCtService
 {
-    public function getAll(string $status = 'active')
+    public function getAll(string $status = 'active', ?string $categoryType = null)
     {
-        $query = NgoiBoNocCt::query()->withCount(['phanLoais' => function ($q) {
-            $q->where('is_delete', 0);
-        }])->latest();
+        $query = PhuKienNgoiCt::query()
+            ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
+            ->latest();
+
+        if ($categoryType) {
+            $query->where('category_type', $categoryType);
+        }
 
         if ($status === 'active') {
             $query->where('is_delete', 0);
@@ -24,16 +28,17 @@ class NgoiBoNocCtService
         return $query->get();
     }
 
-    public function findById(int $id): NgoiBoNocCt
+    public function findById(int $id): PhuKienNgoiCt
     {
-        return NgoiBoNocCt::query()->findOrFail($id);
+        return PhuKienNgoiCt::query()->findOrFail($id);
     }
 
-    public function create(array $data): NgoiBoNocCt
+    public function create(array $data): PhuKienNgoiCt
     {
         return DB::transaction(function () use ($data) {
             $fillable = [
                 'name' => $data['name'],
+                'category_type' => $data['category_type'],
                 'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
                 'size' => $data['size'] ?? null,
                 'des' => ! empty($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
@@ -45,28 +50,28 @@ class NgoiBoNocCtService
             if (! empty($data['images']) && is_array($data['images'])) {
                 foreach ($data['images'] as $file) {
                     if ($file instanceof UploadedFile) {
-                        $images[] = FileUploadHelper::upload($file, 'ngoi_bo_noc_ct/images');
+                        $images[] = FileUploadHelper::upload($file, 'phu_kien_ngoi_ct/images');
                     }
                 }
             }
             $fillable['images'] = $images;
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], 'ngoi_bo_noc_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], 'phu_kien_ngoi_ct/sizes');
             }
 
-            return NgoiBoNocCt::query()->create($fillable);
+            return PhuKienNgoiCt::query()->create($fillable);
         });
     }
 
-    public function update(int $id, array $data): NgoiBoNocCt
+    public function update(int $id, array $data): PhuKienNgoiCt
     {
-        /** @var NgoiBoNocCt $model */
         $model = $this->findById($id);
 
         return DB::transaction(function () use ($model, $data) {
             $fillable = [
                 'name' => $data['name'],
+                'category_type' => $data['category_type'] ?? $model->category_type,
                 'color' => trim((string) ($data['color'] ?? '')) ?: 'Tự chọn',
                 'size' => $data['size'] ?? $model->size,
                 'des' => isset($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
@@ -74,14 +79,14 @@ class NgoiBoNocCtService
             ];
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, 'ngoi_bo_noc_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, 'phu_kien_ngoi_ct/sizes');
             }
 
             if (! empty($data['new_images']) && is_array($data['new_images'])) {
                 $currentImages = is_array($model->images) ? $model->images : [];
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
-                        $currentImages[] = FileUploadHelper::upload($file, 'ngoi_bo_noc_ct/images');
+                        $currentImages[] = FileUploadHelper::upload($file, 'phu_kien_ngoi_ct/images');
                     }
                 }
                 $fillable['images'] = $currentImages;
@@ -95,7 +100,6 @@ class NgoiBoNocCtService
 
     public function toggleStatus(int $id, int $status): void
     {
-        /** @var NgoiBoNocCt $model */
         $model = $this->findById($id);
         $model->fill(['is_delete' => $status])->save();
 
@@ -104,9 +108,8 @@ class NgoiBoNocCtService
         }
     }
 
-    public function removeImageFromJson(int $id, string $imagePathToRemove): NgoiBoNocCt
+    public function removeImageFromJson(int $id, string $imagePathToRemove): PhuKienNgoiCt
     {
-        /** @var NgoiBoNocCt $model */
         $model = $this->findById($id);
         $currentImages = is_array($model->images) ? $model->images : [];
 

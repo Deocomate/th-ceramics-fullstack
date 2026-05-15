@@ -1,5 +1,19 @@
 # Project Changelog
 
+## 0.5.6 (2026-05-15)
+
+### Added
+- **Lan Can Gom Su Detail Page**: Rebuilt product detail with variant selection (dynamic SKU/price swap via JS), image gallery (thumbnail click to swap main image), quantity control + add-to-cart form (session cart, `lan_can_gom_su_ct` product type), specs list from `des` JSON, contact block (phone + Zalo), and technical drawing section (`size_image` + `size_des` fields)
+- **JSON-LD Structured Data**: Product schema with `@type: Product`, brand, offers, price, availability on each Lan Can Gom Su detail page
+- **Desktop Product Card Component** (`components/products/desktop-product-card.blade.php`): Reusable card with customizable `aspectClass` and `class` props, hover overlay with "Xem chi tiet" CTA, displays title/code/price
+- **LanCanGomSuCt Accessors**: `display_code` (returns first active variant code or "Dang cap nhat") and `display_price` (returns min active variant price formatted as "Gia: X d/m2" or "Lien he")
+
+### Changed
+- **Lan Can Gom Su Index Page**: Now fully dynamic -- queries `LanCanGomSuCt` model via `LanCanGomSuCtService::getAll('active')`, passes `$products` collection to view, section 1/2 product grids use `<x-products.desktop-product-card>` with dynamic `display_code`/`display_price`
+- **Lan Can Gom Xu Admin Config**: Extended with 6 new section fields (`section_1_image`, `section_1_title`, `section_1_products`, `section_2_image`, `section_2_title`, `section_2_products`) via migration, all JSON-cast in model
+- **CartService**: Now supports `lan_can_gom_su_ct` product type via `getLanCanGomSuDetails()` method (queries `LanCanGomSuCt` + `PhanLoaiLanCanGomSuCt`)
+- **Header Padding**: Updated to `pt-[58px] xl:pt-[108px]` on both index and detail Lan Can Gom Su pages
+
 ## 0.5.5 (2026-05-11)
 
 ### Added

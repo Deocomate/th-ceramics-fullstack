@@ -142,7 +142,12 @@
         </div>
 
         {{-- 6. Phụ Kiện Ngói --}}
-        @php $isPKN = request()->routeIs(['admin.phu-kien-ngoi.*', 'admin.ngoi-bo-noc-ct.*', 'admin.phan-loai-ngoi-bo-noc-ct.*', 'admin.bo-noc-chu-van-ct.*', 'admin.phan-loai-bo-noc-chu-van-ct.*']); @endphp
+        @php
+            $pknCategory = request()->query('category_type');
+            $isPKN = request()->routeIs(['admin.phu-kien-ngoi.*', 'admin.phu-kien-ngoi-ct.*', 'admin.phan-loai-phu-kien-ngoi-ct.*']);
+            $isPKNBoNoc = $isPKN && $pknCategory === 'bo_noc' && ! request()->routeIs('admin.phu-kien-ngoi.index');
+            $isPKNChuVan = $isPKN && $pknCategory === 'chu_van' && ! request()->routeIs('admin.phu-kien-ngoi.index');
+        @endphp
         <div>
             <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-pkn', this)">
                 <div class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-orange-500"></span>Phụ Kiện Ngói</div>
@@ -152,9 +157,9 @@
                 <div class="overflow-hidden pl-7 pr-3 space-y-1 pb-1">
                     <a href="{{ route('admin.phu-kien-ngoi.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.phu-kien-ngoi.index') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang chính</a>
                     <div class="px-3 py-1 mt-2 text-[10px] font-bold text-gray-600 uppercase">Ngói Bò Nóc</div>
-                    <a href="{{ route('admin.ngoi-bo-noc-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs(['admin.ngoi-bo-noc-ct.*', 'admin.phan-loai-ngoi-bo-noc-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh sách SP & Phân loại</a>
+                    <a href="{{ route('admin.phu-kien-ngoi-ct.index', ['category_type' => 'bo_noc']) }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ $isPKNBoNoc ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh sách SP & Phân loại</a>
                     <div class="px-3 py-1 mt-2 text-[10px] font-bold text-gray-600 uppercase">Bò Nóc Chữ Vạn</div>
-                    <a href="{{ route('admin.bo-noc-chu-van-ct.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs(['admin.bo-noc-chu-van-ct.*', 'admin.phan-loai-bo-noc-chu-van-ct.*']) ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh sách SP & Phân loại</a>
+                    <a href="{{ route('admin.phu-kien-ngoi-ct.index', ['category_type' => 'chu_van']) }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ $isPKNChuVan ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh sách SP & Phân loại</a>
                 </div>
             </div>
         </div>

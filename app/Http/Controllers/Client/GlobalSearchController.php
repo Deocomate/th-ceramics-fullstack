@@ -10,8 +10,8 @@ use App\Models\LinhVatPhongThuyCt;
 use App\Models\MauSacNgoiHaiCoCt;
 use App\Models\MauSacNgoiHaiVanMieuCt;
 use App\Models\NgoiAmDuongCt;
-use App\Models\PhanLoaiBoNocChuVanCt;
-use App\Models\PhanLoaiNgoiBoNocCt;
+use App\Models\PhanLoaiPhuKienNgoiCt;
+use App\Models\PhuKienNgoiCt;
 use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -57,18 +57,14 @@ class GlobalSearchController extends Controller
                 $limit
             ))
             ->concat($this->searchAccessoryVariants(
-                PhanLoaiNgoiBoNocCt::class,
-                'ngoi_bo_noc_ct_id',
                 'Ngói Bờ Nóc',
-                'bo_noc',
+                PhuKienNgoiCt::TYPE_BO_NOC,
                 $keyword,
                 $limit
             ))
             ->concat($this->searchAccessoryVariants(
-                PhanLoaiBoNocChuVanCt::class,
-                'bo_noc_chu_van_ct_id',
                 'Bờ Nóc Chữ Vạn',
-                'chu_van',
+                PhuKienNgoiCt::TYPE_CHU_VAN,
                 $keyword,
                 $limit
             ))
@@ -143,25 +139,25 @@ class GlobalSearchController extends Controller
             ->map(fn ($variant) => $this->formatVariantProduct($variant, $foreignKey, $category, $routeName));
     }
 
-    /**
-     * @param  class-string  $variantClass
-     */
     private function searchAccessoryVariants(
-        string $variantClass,
-        string $foreignKey,
         string $category,
-        string $type,
+        string $categoryType,
         string $keyword,
         int $limit
     ): Collection {
         $like = $this->likeKeyword($keyword);
+        $foreignKey = 'phu_kien_ngoi_ct_id';
+        $routeName = $categoryType === PhuKienNgoiCt::TYPE_CHU_VAN
+            ? 'client.products.phu-kien-ngoi.bo-noc-chu-van.detail'
+            : 'client.products.phu-kien-ngoi.ngoi-bo-noc.detail';
 
-        return $variantClass::query()
-            ->select([$variantClass::query()->getModel()->getKeyName(), 'name', 'code', 'price', $foreignKey])
+        return PhanLoaiPhuKienNgoiCt::query()
+            ->select(['phan_loai_phu_kien_ngoi_ct_id', 'name', 'code', 'price', $foreignKey])
             ->with(['product' => function ($query) use ($foreignKey) {
-                $query->select([$foreignKey, 'name', 'images', 'is_delete']);
+                $query->select([$foreignKey, 'name', 'images', 'category_type', 'is_delete']);
             }])
             ->where('is_delete', 0)
+            ->whereHas('product', fn (Builder $productQuery) => $productQuery->where('category_type', $categoryType))
             ->where(function (Builder $query) use ($like) {
                 $query->where('name', 'like', $like)
                     ->orWhere('code', 'like', $like)
@@ -177,7 +173,7 @@ class GlobalSearchController extends Controller
                 (string) $variant->code,
                 $category,
                 $this->firstImage($variant->product->images),
-                route('client.products.phu-kien-ngoi.detail', ['id' => $variant->{$foreignKey}, 'type' => $type]),
+                route($routeName, $variant->{$foreignKey}),
                 (int) $variant->price
             ));
     }

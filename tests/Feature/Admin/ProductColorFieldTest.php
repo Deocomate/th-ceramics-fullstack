@@ -25,8 +25,7 @@ test('ct tables expose color column', function () {
         'gach_trang_tri_ct',
         'gach_co_bat_trang_ct',
         'linh_vat_phong_thuy_ct',
-        'ngoi_bo_noc_ct',
-        'bo_noc_chu_van_ct',
+        'phu_kien_ngoi_ct',
         'lan_can_gom_su_ct',
         'den_vuon_gom_su_ct',
     ] as $table) {

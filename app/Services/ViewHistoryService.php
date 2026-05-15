@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\BoNocChuVanCt;
 use App\Models\DenGomSu;
 use App\Models\DenVuonGomSuCt;
 use App\Models\GachCoBatTrangCt;
@@ -11,9 +10,9 @@ use App\Models\GachTrangTriCt;
 use App\Models\LanCanGomXu;
 use App\Models\LinhVatPhongThuyCt;
 use App\Models\NgoiAmDuongCt;
-use App\Models\NgoiBoNocCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
+use App\Models\PhuKienNgoiCt;
 use App\Models\TinTuc;
 use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\Model;
@@ -99,7 +98,7 @@ class ViewHistoryService
             return null;
         }
 
-        if ($type === 'phu_kien_ngoi') {
+        if (in_array($type, ['phu_kien_ngoi', 'phu_kien_ngoi_ct'], true)) {
             return $this->resolveAccessoryProduct($id, $item);
         }
 
@@ -139,27 +138,27 @@ class ViewHistoryService
     {
         $accessoryType = $item['accessory_type'] ?? null;
 
-        if ($accessoryType === 'bo_noc') {
-            $product = NgoiBoNocCt::query()->where('is_delete', false)->find($id);
-        } elseif ($accessoryType === 'chu_van') {
-            $product = BoNocChuVanCt::query()->where('is_delete', false)->find($id);
-        } else {
-            $product = NgoiBoNocCt::query()->where('is_delete', false)->find($id)
-                ?: BoNocChuVanCt::query()->where('is_delete', false)->find($id);
-        }
+        $product = PhuKienNgoiCt::query()
+            ->where('is_delete', false)
+            ->when($accessoryType, fn ($query) => $query->where('category_type', $accessoryType))
+            ->find($id);
 
         if (! $product instanceof Model) {
             return null;
         }
 
+        $categoryType = (string) data_get($product, 'category_type');
+        $routeName = $categoryType === PhuKienNgoiCt::TYPE_CHU_VAN
+            ? 'client.products.phu-kien-ngoi.bo-noc-chu-van.detail'
+            : 'client.products.phu-kien-ngoi.ngoi-bo-noc.detail';
+
         return $this->makeProductDto(
-            type: 'phu_kien_ngoi',
+            type: 'phu_kien_ngoi_ct',
             id: $id,
             name: $this->productName($product, $item['name'] ?? 'Phụ kiện ngói'),
             price: (float) ($item['price'] ?? 0),
             image: $this->productImage($product, 'images'),
-            routeName: 'client.products.phu-kien-ngoi.detail',
-            routeParams: $accessoryType ? ['id' => $id, 'type' => $accessoryType] : null,
+            routeName: $routeName,
         );
     }
 

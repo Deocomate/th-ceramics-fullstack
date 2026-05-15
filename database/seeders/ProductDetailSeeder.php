@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\BoNocChuVanCt;
 use App\Models\DenVuonGomSuCt;
 use App\Models\GachCoBatTrangCt;
 use App\Models\GachHoaThongGioCt;
@@ -12,13 +11,12 @@ use App\Models\LinhVatPhongThuyCt;
 use App\Models\MauSacNgoiHaiCoCt;
 use App\Models\MauSacNgoiHaiVanMieuCt;
 use App\Models\NgoiAmDuongCt;
-use App\Models\NgoiBoNocCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
-use App\Models\PhanLoaiBoNocChuVanCt;
 use App\Models\PhanLoaiDenVuonGomSuCt;
 use App\Models\PhanLoaiLanCanGomSuCt;
-use App\Models\PhanLoaiNgoiBoNocCt;
+use App\Models\PhanLoaiPhuKienNgoiCt;
+use App\Models\PhuKienNgoiCt;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -35,12 +33,10 @@ class ProductDetailSeeder extends Seeder
         LinhVatPhongThuyCt::truncate();
         NgoiHaiCoCt::truncate();
         NgoiHaiVanMieuCt::truncate();
-        NgoiBoNocCt::truncate();
-        BoNocChuVanCt::truncate();
+        PhuKienNgoiCt::truncate();
         MauSacNgoiHaiCoCt::truncate();
         MauSacNgoiHaiVanMieuCt::truncate();
-        PhanLoaiNgoiBoNocCt::truncate();
-        PhanLoaiBoNocChuVanCt::truncate();
+        PhanLoaiPhuKienNgoiCt::truncate();
         LanCanGomSuCt::truncate();
         PhanLoaiLanCanGomSuCt::truncate();
         DenVuonGomSuCt::truncate();
@@ -55,8 +51,8 @@ class ProductDetailSeeder extends Seeder
         $this->seedLinhVatPhongThuyCt();
         $this->seedNgoiHaiCoCt();
         $this->seedNgoiHaiVanMieuCt();
-        $this->seedNgoiBoNocCt();
-        $this->seedBoNocChuVanCt();
+        $this->seedPhuKienNgoiBoNoc();
+        $this->seedPhuKienBoNocChuVan();
         $this->seedLanCanGomSuCt();
         $this->seedDenVuonGomSuCt();
     }
@@ -651,7 +647,7 @@ class ProductDetailSeeder extends Seeder
         }
     }
 
-    private function seedNgoiBoNocCt(): void
+    private function seedPhuKienNgoiBoNoc(): void
     {
         $products = [
             [
@@ -717,8 +713,9 @@ class ProductDetailSeeder extends Seeder
         ];
 
         foreach ($products as $p) {
-            $product = NgoiBoNocCt::create([
+            $product = PhuKienNgoiCt::create([
                 'name' => $p['name'],
+                'category_type' => PhuKienNgoiCt::TYPE_BO_NOC,
                 'color' => 'Tự chọn',
                 'images' => $p['images'],
                 'des' => $p['des'],
@@ -729,24 +726,24 @@ class ProductDetailSeeder extends Seeder
             ]);
 
             $productName = $p['name'];
-            PhanLoaiNgoiBoNocCt::create([
+            PhanLoaiPhuKienNgoiCt::create([
                 'name' => $productName.' - Loại tiêu chuẩn',
-                'code' => 'NBN-'.str_pad($product->ngoi_bo_noc_ct_id, 3, '0', STR_PAD_LEFT).'-STD',
+                'code' => 'NBN-'.str_pad($product->phu_kien_ngoi_ct_id, 3, '0', STR_PAD_LEFT).'-STD',
                 'price' => 45000,
-                'ngoi_bo_noc_ct_id' => $product->ngoi_bo_noc_ct_id,
+                'phu_kien_ngoi_ct_id' => $product->phu_kien_ngoi_ct_id,
                 'is_delete' => 0,
             ]);
-            PhanLoaiNgoiBoNocCt::create([
+            PhanLoaiPhuKienNgoiCt::create([
                 'name' => $productName.' - Loại cao cấp (men hỏa biến)',
-                'code' => 'NBN-'.str_pad($product->ngoi_bo_noc_ct_id, 3, '0', STR_PAD_LEFT).'-PRE',
+                'code' => 'NBN-'.str_pad($product->phu_kien_ngoi_ct_id, 3, '0', STR_PAD_LEFT).'-PRE',
                 'price' => 65000,
-                'ngoi_bo_noc_ct_id' => $product->ngoi_bo_noc_ct_id,
+                'phu_kien_ngoi_ct_id' => $product->phu_kien_ngoi_ct_id,
                 'is_delete' => 0,
             ]);
         }
     }
 
-    private function seedBoNocChuVanCt(): void
+    private function seedPhuKienBoNocChuVan(): void
     {
         $phanLoais = [
             ['name' => 'Men Vàng Đồng', 'price' => 55000],
@@ -819,8 +816,9 @@ class ProductDetailSeeder extends Seeder
         ];
 
         foreach ($products as $idx => $p) {
-            $product = BoNocChuVanCt::create([
+            $product = PhuKienNgoiCt::create([
                 'name' => $p['name'],
+                'category_type' => PhuKienNgoiCt::TYPE_CHU_VAN,
                 'color' => 'Tự chọn',
                 'images' => $p['images'],
                 'des' => $p['des'],
@@ -830,18 +828,18 @@ class ProductDetailSeeder extends Seeder
                 'is_delete' => 0,
             ]);
 
-            PhanLoaiBoNocChuVanCt::create([
+            PhanLoaiPhuKienNgoiCt::create([
                 'name' => $p['name'].' - Loại tiêu chuẩn',
-                'code' => 'BNC-'.str_pad($product->bo_noc_chu_van_ct_id, 3, '0', STR_PAD_LEFT).'-STD',
+                'code' => 'BNC-'.str_pad($product->phu_kien_ngoi_ct_id, 3, '0', STR_PAD_LEFT).'-STD',
                 'price' => $phanLoais[$idx % count($phanLoais)]['price'],
-                'bo_noc_chu_van_ct_id' => $product->bo_noc_chu_van_ct_id,
+                'phu_kien_ngoi_ct_id' => $product->phu_kien_ngoi_ct_id,
                 'is_delete' => 0,
             ]);
-            PhanLoaiBoNocChuVanCt::create([
+            PhanLoaiPhuKienNgoiCt::create([
                 'name' => $p['name'].' - Loại cao cấp (men hỏa biến)',
-                'code' => 'BNC-'.str_pad($product->bo_noc_chu_van_ct_id, 3, '0', STR_PAD_LEFT).'-PRE',
+                'code' => 'BNC-'.str_pad($product->phu_kien_ngoi_ct_id, 3, '0', STR_PAD_LEFT).'-PRE',
                 'price' => $phanLoais[$idx % count($phanLoais)]['price'] + 20000,
-                'bo_noc_chu_van_ct_id' => $product->bo_noc_chu_van_ct_id,
+                'phu_kien_ngoi_ct_id' => $product->phu_kien_ngoi_ct_id,
                 'is_delete' => 0,
             ]);
         }

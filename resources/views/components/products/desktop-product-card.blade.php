@@ -1,6 +1,16 @@
-<div class="flex flex-col group cursor-pointer" onclick="window.location.href='{{ $href }}'">
-  <div class="product-card relative w-full aspect-square shadow mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1">
-    <img src="{{ $image }}" alt="{{ $title }}" class="w-full h-full object-cover" />
+@props([
+    'href',
+    'image',
+    'title',
+    'code',
+    'price',
+    'aspectClass' => 'aspect-square',
+    'class' => '',
+])
+
+<div class="flex flex-col group cursor-pointer {{ $class }}" onclick="window.location.href='{{ $href }}'">
+  <div class="product-card relative w-full {{ $aspectClass }} shadow mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1">
+    <img src="{{ $image }}" alt="{{ $title }}" class="w-full h-full object-cover" loading="lazy" />
     <div class="product-overlay">
       <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
       <span>Xem chi tiết</span>

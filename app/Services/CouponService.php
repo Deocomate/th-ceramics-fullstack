@@ -19,7 +19,7 @@ class CouponService
         'lan_can_gom_xu' => 'Lan Can Gốm Sứ',
         'den_gom_su' => 'Đèn Gốm Sứ',
         'den_vuon_gom_su_ct' => 'Đèn Gốm Sứ Chi Tiết',
-        'phu_kien_ngoi' => 'Phụ Kiện Ngói',
+        'phu_kien_ngoi_ct' => 'Phụ Kiện Ngói',
     ];
 
     public static function productTypes(): array

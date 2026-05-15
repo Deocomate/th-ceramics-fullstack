@@ -22,14 +22,14 @@
               <article class="flex-shrink-0 w-full snap-start pb-1" data-product-slide>
                 <div class="grid grid-cols-2 gap-4">
                   @foreach($chunk as $product)
-                    <a href="{{ route('client.products.phu-kien-ngoi.detail', ['id' => $product->ngoi_bo_noc_ct_id, 'type' => 'bo_noc']) }}" class="flex flex-col group cursor-pointer">
+                    <a href="{{ route('client.products.phu-kien-ngoi.ngoi-bo-noc.detail', $product->phu_kien_ngoi_ct_id) }}" class="flex flex-col group cursor-pointer">
                       <div class="bg-white shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1)] overflow-hidden aspect-square">
                         <img src="{{ $productImageUrl($product, 'assets/images/bo-noc.png') }}" alt="{{ $product->name }}" class="w-full h-full object-cover mix-blend-multiply">
                       </div>
                       <h3 class="mt-3 text-black font-semibold text-[14px] leading-[20px] lowercase first-letter:uppercase">
                         <span class="block">{{ $product->name }}</span>
                       </h3>
-                      <p class="text-gray-500 text-[12px] leading-[20px]">MSP: PKN-BN{{ $product->ngoi_bo_noc_ct_id }}</p>
+                      <p class="text-gray-500 text-[12px] leading-[20px]">MSP: PKN-BN{{ $product->phu_kien_ngoi_ct_id }}</p>
                       <p class="text-secondary font-bold text-[14px] leading-[20px]">Liên hệ</p>
                     </a>
                   @endforeach
@@ -52,7 +52,7 @@
             @foreach($ngoiBoNocProducts->chunk(4) as $index => $chunk)
               <div class="grid grid-cols-2 gap-x-8 lg:gap-x-16 gap-y-10 lg:gap-y-12 mb-10 {{ $index === 0 ? '' : 'hidden' }}" data-slider-page="{{ $index }}">
                 @foreach($chunk as $product)
-                  <div class="flex flex-col group cursor-pointer" onclick="window.location.href = '{{ route('client.products.phu-kien-ngoi.detail', ['id' => $product->ngoi_bo_noc_ct_id, 'type' => 'bo_noc']) }}'">
+                  <div class="flex flex-col group cursor-pointer" onclick="window.location.href = '{{ route('client.products.phu-kien-ngoi.ngoi-bo-noc.detail', $product->phu_kien_ngoi_ct_id) }}'">
                     <div class="product-card relative w-full aspect-square shadow mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1">
                       <img src="{{ $productImageUrl($product, 'assets/images/bo-noc.png') }}" alt="{{ $product->name }}" class="w-full h-full object-cover mix-blend-multiply">
                       <div class="product-overlay">
@@ -63,7 +63,7 @@
                     <h3 class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary">
                       {{ $product->name }}
                     </h3>
-                    <p class="text-gray-500 text-[12px] lg:text-[13px] mb-1">MSP: PKN-BN{{ $product->ngoi_bo_noc_ct_id }}</p>
+                    <p class="text-gray-500 text-[12px] lg:text-[13px] mb-1">MSP: PKN-BN{{ $product->phu_kien_ngoi_ct_id }}</p>
                     <p class="font-bold text-[#C47526] text-[13px] lg:text-[14px]">Giá: Liên hệ</p>
                   </div>
                 @endforeach

@@ -3,81 +3,86 @@
 namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
-use App\Services\BoNocChuVanCtService;
-use App\Services\NgoiBoNocCtService;
+use App\Models\PhuKienNgoi;
+use App\Models\PhuKienNgoiCt;
+use App\Services\PhuKienNgoiCtService;
 use App\Services\PhuKienNgoiService;
 use App\Services\ViewHistoryService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class PhuKienNgoiController extends Controller
 {
     public function __construct(
         private readonly PhuKienNgoiService $phuKienNgoiService,
-        private readonly NgoiBoNocCtService $ngoiBoNocCtService,
-        private readonly BoNocChuVanCtService $boNocChuVanCtService,
+        private readonly PhuKienNgoiCtService $phuKienNgoiCtService,
     ) {}
 
     public function index()
     {
         $config = $this->phuKienNgoiService->getFirstRecord();
-        $ngoiBoNocProducts = $this->ngoiBoNocCtService->getAll('active');
-        $boNocChuVanProducts = $this->boNocChuVanCtService->getAll('active');
+        $ngoiBoNocProducts = $this->phuKienNgoiCtService->getAll('active', PhuKienNgoiCt::TYPE_BO_NOC);
+        $boNocChuVanProducts = $this->phuKienNgoiCtService->getAll('active', PhuKienNgoiCt::TYPE_CHU_VAN);
 
         return view('clients.products.phu-kien-ngoi.index', compact(
             'config', 'ngoiBoNocProducts', 'boNocChuVanProducts'
         ));
     }
 
-    public function detail($id, Request $request, ViewHistoryService $historyService)
+    public function detailNgoiBoNoc($id, ViewHistoryService $historyService)
     {
-        $requestedType = $request->query('type');
+        return $this->detailByType((int) $id, PhuKienNgoiCt::TYPE_BO_NOC, 'clients.products.phu-kien-ngoi.ngoi-bo-noc-detail', $historyService);
+    }
 
-        try {
-            if ($requestedType === 'bo_noc') {
-                $product = $this->ngoiBoNocCtService->findById($id);
-                $type = 'bo_noc';
-            } elseif ($requestedType === 'chu_van') {
-                $product = $this->boNocChuVanCtService->findById($id);
-                $type = 'chu_van';
-            } else {
-                $product = $this->ngoiBoNocCtService->findById($id);
-                $type = 'bo_noc';
-            }
-        } catch (ModelNotFoundException $e) {
-            if ($requestedType === 'bo_noc' || $requestedType === 'chu_van') {
-                abort(404);
-            }
+    public function detailBoNocChuVan($id, ViewHistoryService $historyService)
+    {
+        return $this->detailByType((int) $id, PhuKienNgoiCt::TYPE_CHU_VAN, 'clients.products.phu-kien-ngoi.bo-noc-chu-van-detail', $historyService);
+    }
 
-            try {
-                $product = $this->boNocChuVanCtService->findById($id);
-                $type = 'chu_van';
-            } catch (ModelNotFoundException $e2) {
-                abort(404);
-            }
+    public function legacyDetailRedirect($id, Request $request)
+    {
+        $type = $request->query('type') === 'chu_van' ? PhuKienNgoiCt::TYPE_CHU_VAN : PhuKienNgoiCt::TYPE_BO_NOC;
+
+        $product = PhuKienNgoiCt::query()
+            ->where('category_type', $type)
+            ->where('legacy_type', $type)
+            ->where('legacy_id', $id)
+            ->first();
+
+        if (! $product) {
+            $product = PhuKienNgoiCt::query()
+                ->where('category_type', $type)
+                ->where('phu_kien_ngoi_ct_id', $id)
+                ->firstOrFail();
         }
 
-        if ($product->is_delete == 1) {
-            abort(404);
-        }
+        $routeName = $type === PhuKienNgoiCt::TYPE_CHU_VAN
+            ? 'client.products.phu-kien-ngoi.bo-noc-chu-van.detail'
+            : 'client.products.phu-kien-ngoi.ngoi-bo-noc.detail';
 
-        $productId = $product->ngoi_bo_noc_ct_id ?? $product->bo_noc_chu_van_ct_id ?? (int) $id;
-        $historyService->trackProduct('phu_kien_ngoi', (int) $productId, ['accessory_type' => $type]);
+        return redirect()->route($routeName, $product->phu_kien_ngoi_ct_id, 301);
+    }
+
+    private function detailByType(int $id, string $type, string $view, ViewHistoryService $historyService)
+    {
+        $product = PhuKienNgoiCt::query()
+            ->with(['phanLoais' => fn ($query) => $query->where('is_delete', 0)->orderBy('price')])
+            ->where('category_type', $type)
+            ->where('is_delete', 0)
+            ->findOrFail($id);
+
+        $historyService->trackProduct('phu_kien_ngoi_ct', (int) $product->phu_kien_ngoi_ct_id, ['accessory_type' => $type]);
 
         $phanLoais = $product->phanLoais;
+        $pageConfig = PhuKienNgoi::query()->first();
+        $relatedProducts = PhuKienNgoiCt::query()
+            ->where('is_delete', 0)
+            ->where('phu_kien_ngoi_ct_id', '!=', $product->phu_kien_ngoi_ct_id)
+            ->latest()
+            ->take(4)
+            ->get();
 
-        $relatedBoNoc = $this->ngoiBoNocCtService->getAll('active')
-            ->where('ngoi_bo_noc_ct_id', '!=', $type === 'bo_noc' ? $id : 0)
-            ->take(2);
-
-        $relatedChuVan = $this->boNocChuVanCtService->getAll('active')
-            ->where('bo_noc_chu_van_ct_id', '!=', $type === 'chu_van' ? $id : 0)
-            ->take(2);
-
-        $relatedProducts = $relatedBoNoc->concat($relatedChuVan);
-
-        return view('clients.products.phu-kien-ngoi.detail', compact(
-            'product', 'type', 'phanLoais', 'relatedProducts'
+        return view($view, compact(
+            'product', 'type', 'phanLoais', 'relatedProducts', 'pageConfig'
         ));
     }
 }

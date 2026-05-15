@@ -97,10 +97,10 @@ th-ceramics-fullstack/
 Single-row config per product category: `NgoiAmDuong`, `NgoiHaiVanMieu`, `GachHoaThongGio`, `PhuKienNgoi`, `GachTrangTri`, `LanCanGomXu`, `GachCoBatTrang`, `LinhVatPhongThuy`, `DenGomSu`, `GiaTriVuotTroi`
 
 ### Child Detail Models (14)
-Multi-row product items: `NgoiAmDuongCt`, `NgoiHaiCoCt`, `NgoiHaiVanMieuCt`, `GachHoaThongGioCt`, `GachTrangTriCt`, `GachCoBatTrangCt`, `LinhVatPhongThuyCt`, `NgoiBoNocCt`, `BoNocChuVanCt`
+Multi-row product items: `NgoiAmDuongCt`, `NgoiHaiCoCt`, `NgoiHaiVanMieuCt`, `GachHoaThongGioCt`, `GachTrangTriCt`, `GachCoBatTrangCt`, `LinhVatPhongThuyCt`, `NgoiBoNocCt`, `BoNocChuVanCt`, `DenVuonGomSuCt`, `PhuKienNgoiCt`, `LanCanGomSuCt`
 
-### Sub-Resource Models (10)
-`MauSacNgoiAmDuongCt`, `MauSacNgoiHaiCoCt`, `MauSacNgoiHaiVanMieuCt`, `PhanLoaiNgoiBoNocCt`, `PhanLoaiBoNocChuVanCt`, `DauAnGachTrangTri`, `GiaTriGachHoaThongGio`, `LinhVat`, `DenGomSuAnh`, `GachCoBatTrangAnh`, `GachHoaThongGioAnh`, `LinhVatPhongThuyAnh`
+### Sub-Resource Models (12)
+`MauSacNgoiAmDuongCt`, `MauSacNgoiHaiCoCt`, `MauSacNgoiHaiVanMieuCt`, `PhanLoaiNgoiBoNocCt`, `PhanLoaiBoNocChuVanCt`, `DauAnGachTrangTri`, `GiaTriGachHoaThongGio`, `LinhVat`, `DenGomSuAnh`, `GachCoBatTrangAnh`, `GachHoaThongGioAnh`, `LinhVatPhongThuyAnh`, `PhanLoaiDenVuonGomSuCt`, `PhanLoaiLanCanGomSuCt`, `PhanLoaiPhuKienNgoiCt`
 
 ### Dinh Muc Models (6)
 Rating/estimation tables: `DinhMucNgoiAmDuong`, `DinhMucNgoiHaiCo`, `DinhMucNgoiHaiVanMieu`, `DinhMucGachHoaThongGio`, `DinhMucGachTrangTri`, `DinhMucGachCoBatTrang`

@@ -1,4 +1,4 @@
-@section('preview_url', route('client.products.phu-kien-ngoi.detail', ['id' => $product->lan_can_gom_su_ct_id, 'type' => 'bo_noc']))
+@section('preview_url', route('client.products.lan-can-gom-su.detail', $product->lan_can_gom_su_ct_id))
 
 <x-admin.layout.app title="Cập nhật Lan Can Gốm Sứ" breadcrumb="Admin › DS Sản phẩm chi tiết › Chỉnh sửa">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">

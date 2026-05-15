@@ -136,7 +136,9 @@ Route::name('client.')->group(function () {
 
         // Phụ Kiện Ngói
         Route::get('/phu-kien-ngoi', [PhuKienNgoiController::class, 'index'])->name('phu-kien-ngoi.index');
-        Route::get('/phu-kien-ngoi/{id}', [PhuKienNgoiController::class, 'detail'])->name('phu-kien-ngoi.detail');
+        Route::get('/phu-kien-ngoi/ngoi-bo-noc/{id}', [PhuKienNgoiController::class, 'detailNgoiBoNoc'])->name('phu-kien-ngoi.ngoi-bo-noc.detail');
+        Route::get('/phu-kien-ngoi/bo-noc-chu-van/{id}', [PhuKienNgoiController::class, 'detailBoNocChuVan'])->name('phu-kien-ngoi.bo-noc-chu-van.detail');
+        Route::get('/phu-kien-ngoi/{id}', [PhuKienNgoiController::class, 'legacyDetailRedirect'])->name('phu-kien-ngoi.detail');
     });
 
     /*

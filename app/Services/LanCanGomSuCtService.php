@@ -11,7 +11,10 @@ class LanCanGomSuCtService
 {
     public function getAll(string $status = 'active')
     {
-        $query = LanCanGomSuCt::query()->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])->latest();
+        $query = LanCanGomSuCt::query()
+            ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
+            ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
+            ->latest();
         if ($status === 'active') {
             $query->where('is_delete', 0);
         } elseif ($status === 'deleted') {
@@ -23,7 +26,9 @@ class LanCanGomSuCtService
 
     public function findById(int $id): LanCanGomSuCt
     {
-        return LanCanGomSuCt::findOrFail($id);
+        return LanCanGomSuCt::query()
+            ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
+            ->findOrFail($id);
     }
 
     public function create(array $data): LanCanGomSuCt

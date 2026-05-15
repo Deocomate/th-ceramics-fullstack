@@ -39,21 +39,20 @@
                                         $productId =
                                             data_get($product, $pkField) ??
                                             (data_get($product, 'id') ?? (is_object($product) ? $product->getKey() : null));
-                                        $accessoryType = data_get($product, 'ngoi_bo_noc_ct_id')
-                                            ? 'bo_noc'
-                                            : (data_get($product, 'bo_noc_chu_van_ct_id')
-                                                ? 'chu_van'
-                                                : null);
-                                        $routeParams =
-                                            $routeName === 'client.products.phu-kien-ngoi.detail' && $accessoryType
-                                                ? ['id' => $productId, 'type' => $accessoryType]
-                                                : $productId;
+                                        $accessoryType = data_get($product, 'category_type') ?: data_get($product, 'accessory_type');
+                                        $targetRouteName = $routeName;
+                                        if ($routeName === 'client.products.phu-kien-ngoi.detail' && $accessoryType) {
+                                            $targetRouteName = $accessoryType === 'chu_van'
+                                                ? 'client.products.phu-kien-ngoi.bo-noc-chu-van.detail'
+                                                : 'client.products.phu-kien-ngoi.ngoi-bo-noc.detail';
+                                        }
+                                        $routeParams = $productId;
                                         $productUrl =
                                             data_get($product, 'url') ?:
-                                            ($routeName &&
+                                            ($targetRouteName &&
                                             $productId &&
-                                            \Illuminate\Support\Facades\Route::has($routeName)
-                                                ? route($routeName, $routeParams)
+                                            \Illuminate\Support\Facades\Route::has($targetRouteName)
+                                                ? route($targetRouteName, $routeParams)
                                                 : '#');
                                         $rawImage =
                                             data_get($product, 'image') ?:

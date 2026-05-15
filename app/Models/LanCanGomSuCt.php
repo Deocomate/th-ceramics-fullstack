@@ -24,4 +24,26 @@ class LanCanGomSuCt extends Model
     {
         return $this->hasMany(PhanLoaiLanCanGomSuCt::class, 'lan_can_gom_su_ct_id', 'lan_can_gom_su_ct_id');
     }
+
+    public function getDisplayCodeAttribute(): string
+    {
+        $code = $this->phanLoais
+            ?->firstWhere('is_delete', 0)
+            ?->code;
+
+        return $code ?: 'Đang cập nhật';
+    }
+
+    public function getDisplayPriceAttribute(): string
+    {
+        $price = $this->phanLoais
+            ?->where('is_delete', 0)
+            ->min('price');
+
+        if (! $price) {
+            return 'Liên hệ';
+        }
+
+        return 'Giá: '.number_format($price, 0, ',', '.').' đ/m²';
+    }
 }

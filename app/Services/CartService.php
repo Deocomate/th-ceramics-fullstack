@@ -7,6 +7,7 @@ use App\Models\DenVuonGomSuCt;
 use App\Models\GachCoBatTrangCt;
 use App\Models\GachHoaThongGioCt;
 use App\Models\GachTrangTriCt;
+use App\Models\LanCanGomSuCt;
 use App\Models\LanCanGomXu;
 use App\Models\LinhVatPhongThuyCt;
 use App\Models\MauSacNgoiAmDuongCt;
@@ -16,7 +17,9 @@ use App\Models\NgoiAmDuongCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\PhanLoaiDenVuonGomSuCt;
-use App\Models\PhuKienNgoi;
+use App\Models\PhanLoaiLanCanGomSuCt;
+use App\Models\PhanLoaiPhuKienNgoiCt;
+use App\Models\PhuKienNgoiCt;
 use Exception;
 
 class CartService
@@ -41,7 +44,8 @@ class CartService
             'lan_can_gom_xu' => $this->getNoPriceDetails(LanCanGomXu::class, $productId, 'lan_can_gom_xu_id', 'thumbnail_main'),
             'den_gom_su' => $this->getNoPriceDetails(DenGomSu::class, $productId, 'den_gom_su_id', 'thumbnail_main'),
             'den_vuon_gom_su_ct' => $this->getDenVuonGomSuDetails($productId, $variantId),
-            'phu_kien_ngoi' => $this->getNoPriceDetails(PhuKienNgoi::class, $productId, 'phu_kien_ngoi_id', 'thumbnail_main'),
+            'phu_kien_ngoi_ct' => $this->getPhuKienNgoiDetails($productId, $variantId),
+            'lan_can_gom_su_ct' => $this->getLanCanGomSuDetails($productId, $variantId),
             default => throw new Exception('Loại sản phẩm không hợp lệ.'),
         };
     }
@@ -278,6 +282,62 @@ class CartService
 
         $variant = PhanLoaiDenVuonGomSuCt::query()
             ->where('den_vuon_gom_su_ct_id', $productId)
+            ->where('is_delete', 0)
+            ->find($variantId);
+
+        if (! $variant) {
+            throw new Exception('Biến thể không tồn tại.');
+        }
+
+        return [
+            'name' => $product->name,
+            'variant_name' => $variant->name,
+            'sku' => $variant->code,
+            'price' => $variant->price,
+            'image' => $this->firstImage($product->images),
+        ];
+    }
+
+    private function getPhuKienNgoiDetails(int $productId, ?int $variantId): array
+    {
+        $product = PhuKienNgoiCt::query()
+            ->where('is_delete', 0)
+            ->findOrFail($productId);
+
+        if (! $variantId) {
+            throw new Exception('Vui lòng chọn phân loại sản phẩm.');
+        }
+
+        $variant = PhanLoaiPhuKienNgoiCt::query()
+            ->where('phu_kien_ngoi_ct_id', $productId)
+            ->where('is_delete', 0)
+            ->find($variantId);
+
+        if (! $variant) {
+            throw new Exception('Biến thể không tồn tại.');
+        }
+
+        return [
+            'name' => $product->name,
+            'variant_name' => $variant->name,
+            'sku' => $variant->code,
+            'price' => $variant->price,
+            'image' => $this->firstImage($product->images),
+        ];
+    }
+
+    private function getLanCanGomSuDetails(int $productId, ?int $variantId): array
+    {
+        $product = LanCanGomSuCt::query()
+            ->where('is_delete', 0)
+            ->findOrFail($productId);
+
+        if (! $variantId) {
+            throw new Exception('Vui lòng chọn phân loại sản phẩm.');
+        }
+
+        $variant = PhanLoaiLanCanGomSuCt::query()
+            ->where('lan_can_gom_su_ct_id', $productId)
             ->where('is_delete', 0)
             ->find($variantId);
 
