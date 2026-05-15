@@ -1,6 +1,5 @@
-@props(['dinhMuc' => []])
-
 @php
+    $dinhMuc = $dinhMuc ?? [];
     $dinhMucItems = collect($dinhMuc)->filter()->values();
     $roofTypes = $dinhMucItems->pluck('roof_type')->filter()->unique()->values();
 @endphp

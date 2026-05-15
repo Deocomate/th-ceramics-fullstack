@@ -70,13 +70,13 @@
     productId="{{ $productDetailId }}"
 />
 
-<x-products.hai-vm-calculator
-    image="{{ $sizeImage }}"
-    label1="Ngói trên mái gỗ"
-    rate1="{{ $dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_go ? $dinhMuc->first()->ngoi_tren_mai_go . ' viên/m²' : '125 viên/m²' }}"
-    label2="Ngói trên mái bê tông"
-    rate2="{{ $dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_be_tong ? $dinhMuc->first()->ngoi_tren_mai_be_tong . ' viên/m²' : '75 viên/m²' }}"
-/>
+@include('clients.products.ngoi-hai-van-mieu.partials.calculator', [
+    'image' => $sizeImage,
+    'label1' => 'Ngói trên mái gỗ',
+    'rate1' => $dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_go ? $dinhMuc->first()->ngoi_tren_mai_go . ' viên/m²' : '125 viên/m²',
+    'label2' => 'Ngói trên mái bê tông',
+    'rate2' => $dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_be_tong ? $dinhMuc->first()->ngoi_tren_mai_be_tong . ' viên/m²' : '75 viên/m²',
+])
 
 <x-products.fabrication-process :images="$parentConfig?->images ?? []" />
 <x-products.journey-video :hide-title="true" />

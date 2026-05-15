@@ -1,6 +1,6 @@
-@props(['applicationCards' => [], 'applicationIcons' => []])
-
 @php
+  $applicationCards = $applicationCards ?? [];
+  $applicationIcons = $applicationIcons ?? [];
   $cards = collect($applicationCards);
   if ($cards->isEmpty()) {
       $cards = collect([

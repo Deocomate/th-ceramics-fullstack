@@ -107,7 +107,7 @@
                 </div>
             </button>
             <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                <x-products.weight-calculator :dinhMuc="$dinhMuc" />
+                @include('clients.products.ngoi-am-duong.partials.weight-calculator', ['dinhMuc' => $dinhMuc])
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden" />
@@ -126,7 +126,7 @@
                 </div>
             </button>
             <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                <x-products.applications />
+                @include('clients.products.ngoi-am-duong.partials.applications')
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden" />
@@ -145,7 +145,7 @@
                 </div>
             </button>
             <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                <x-products.installation-guide />
+                @include('clients.products.ngoi-am-duong.partials.installation-guide')
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden mb-8 md:mb-0" />
