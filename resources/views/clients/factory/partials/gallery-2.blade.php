@@ -1,6 +1,8 @@
 @php
-    $gallery1 = is_string($factory->gallery_1) ? json_decode($factory->gallery_1, true) : $factory->gallery_1;
-    $gallery1 = is_array($gallery1) ? $gallery1 : [];
+    use App\Support\AssetPath;
+
+    $gallery2 = is_string($factory->gallery_2) ? json_decode($factory->gallery_2, true) : $factory->gallery_2;
+    $gallery2 = is_array($gallery2) ? $gallery2 : [];
 @endphp
 <section class="bg-background-secondary pb-8 md:pb-24 lg:pb-36 overflow-hidden">
   <!-- Header row -->
@@ -48,12 +50,12 @@
   >
     <div class="swiper slider-final-swiper overflow-visible">
       <div class="swiper-wrapper">
-        @if(!empty($gallery1))
-          @foreach($gallery1 as $image)
+        @if(!empty($gallery2))
+          @foreach($gallery2 as $image)
             <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
               <div class="aspect-[2/1] overflow-hidden shadow-lg bg-neutral-1">
                 <img
-                  src="{{ asset('storage/' . $image) }}"
+                  src="{{ AssetPath::url($image) }}"
                   alt="Gallery image"
                   class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
                 />

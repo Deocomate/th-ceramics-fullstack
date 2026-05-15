@@ -1,4 +1,6 @@
 @php
+    use App\Support\AssetPath;
+
     $materialSlider = is_string($factory->material_slider) ? json_decode($factory->material_slider, true) : $factory->material_slider;
     $materialSlider = is_array($materialSlider) ? $materialSlider : [];
 
@@ -19,7 +21,7 @@
               <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
                 <div class="aspect-[12/5] overflow-hidden shadow-lg bg-neutral-1">
                   <img
-                    src="{{ asset('storage/' . $image) }}"
+                    src="{{ AssetPath::url($image) }}"
                     alt="Phân xưởng"
                     class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
                   />

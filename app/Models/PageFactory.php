@@ -18,6 +18,7 @@ class PageFactory extends Model
         'intro_subtitle',
         'intro_description',
         'gallery_1',
+        'gallery_2',
         'process_title',
         'process_description',
         'process_slider',
@@ -54,6 +55,38 @@ class PageFactory extends Model
         );
     }
 
+    protected function gallery2(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->decodeJsonSafe($value),
+            set: fn ($value) => is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
+        );
+    }
+
+    protected function introDescription(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->decodeBlocksSafe($value),
+            set: fn ($value) => is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
+        );
+    }
+
+    protected function processDescription(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->decodeBlocksSafe($value),
+            set: fn ($value) => is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
+        );
+    }
+
+    protected function processBottomDesc(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->decodeBlocksSafe($value),
+            set: fn ($value) => is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
+        );
+    }
+
     protected function processSlider(): Attribute
     {
         return Attribute::make(
@@ -76,5 +109,48 @@ class PageFactory extends Model
             get: fn ($value) => $this->decodeJsonSafe($value),
             set: fn ($value) => is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
         );
+    }
+
+    private function decodeBlocksSafe($value): array
+    {
+        if (empty($value)) {
+            return [];
+        }
+
+        if (is_array($value)) {
+            return $this->looksLikeBlockArray($value) ? $value : [];
+        }
+
+        $decoded = json_decode((string) $value, true);
+
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+        }
+
+        if (is_array($decoded)) {
+            return $this->looksLikeBlockArray($decoded) ? $decoded : [];
+        }
+
+        return [
+            [
+                'type' => 'paragraph',
+                'content' => (string) $value,
+            ],
+        ];
+    }
+
+    private function looksLikeBlockArray(array $blocks): bool
+    {
+        if ($blocks === []) {
+            return true;
+        }
+
+        foreach ($blocks as $block) {
+            if (! is_array($block) || ! isset($block['type'])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

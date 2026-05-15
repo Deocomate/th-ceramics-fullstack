@@ -1,4 +1,6 @@
 @php
+    use App\Support\AssetPath;
+
     $gallery1 = is_string($factory->gallery_1) ? json_decode($factory->gallery_1, true) : $factory->gallery_1;
     $gallery1 = is_array($gallery1) ? $gallery1 : [];
 @endphp
@@ -53,7 +55,7 @@
             <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
               <div class="aspect-[2/1] overflow-hidden shadow-lg">
                 <img
-                  src="{{ asset('storage/' . $image) }}"
+                  src="{{ AssetPath::url($image) }}"
                   alt="Gallery image"
                   class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
                 />

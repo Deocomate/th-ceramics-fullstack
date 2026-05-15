@@ -29,7 +29,7 @@ class FactoryPageService
                 }
             }
 
-            $galleries = ['gallery_1', 'process_slider', 'material_slider'];
+            $galleries = ['gallery_1', 'gallery_2', 'process_slider', 'material_slider'];
 
             foreach ($galleries as $gallery) {
                 $existing = $model->{$gallery} ?? [];
@@ -57,10 +57,79 @@ class FactoryPageService
                 $data[$gallery] = array_values($existing);
             }
 
+            foreach (['intro_description', 'process_description', 'process_bottom_desc'] as $field) {
+                if (array_key_exists($field, $data)) {
+                    $data[$field] = $this->cleanBlocks($data[$field]);
+                }
+            }
+
             $fillable = array_intersect_key($data, array_flip($model->getFillable()));
             $model->update($fillable);
 
             return $model->fresh();
         });
+    }
+
+    private function cleanBlocks(mixed $blocks): array
+    {
+        if (! is_array($blocks)) {
+            return [];
+        }
+
+        $cleaned = [];
+
+        foreach ($blocks as $block) {
+            if (! is_array($block)) {
+                continue;
+            }
+
+            $type = $block['type'] ?? null;
+
+            if ($type === 'paragraph') {
+                $content = trim((string) ($block['content'] ?? ''));
+
+                if ($content !== '') {
+                    $cleaned[] = [
+                        'type' => 'paragraph',
+                        'content' => $content,
+                    ];
+                }
+
+                continue;
+            }
+
+            if ($type !== 'list') {
+                continue;
+            }
+
+            $items = [];
+
+            foreach (($block['items'] ?? []) as $item) {
+                if (! is_array($item)) {
+                    continue;
+                }
+
+                $title = trim((string) ($item['title'] ?? ''));
+                $content = trim((string) ($item['content'] ?? ''));
+
+                if ($title === '' && $content === '') {
+                    continue;
+                }
+
+                $items[] = [
+                    'title' => $title,
+                    'content' => $content,
+                ];
+            }
+
+            if ($items !== []) {
+                $cleaned[] = [
+                    'type' => 'list',
+                    'items' => $items,
+                ];
+            }
+        }
+
+        return $cleaned;
     }
 }

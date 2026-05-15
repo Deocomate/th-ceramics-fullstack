@@ -1,6 +1,15 @@
 @php
+    use App\Support\AssetPath;
+
     $processSlider = is_string($factory->process_slider) ? json_decode($factory->process_slider, true) : $factory->process_slider;
     $processSlider = is_array($processSlider) ? $processSlider : [];
+    $processBlocks = is_array($factory->process_description ?? null) ? $factory->process_description : [];
+    $processBottomBlocks = is_array($factory->process_bottom_desc ?? null) ? $factory->process_bottom_desc : [];
+    $formatFactoryTitle = fn (?string $title, string $fallback = '') => str_replace(
+        ["\r\n", "\r", "\n"],
+        '<br class="md:hidden" />',
+        e($title ?: $fallback)
+    );
 @endphp
 <section class="bg-background-secondary relative overflow-hidden text-primary">
   <!-- Grid Overlay Blueprint Lines -->
@@ -42,10 +51,27 @@
         data-aos="fade-up"
       >
         <h3 class="text-lg md:text-[20px] font-bold uppercase mb-6">
-          {!! $factory->process_title ?? 'QUY TRÌNH <br class="md:hidden">"KHOA HỌC - NGĂN NẮP - TÁCH BIỆT"' !!}
+          {!! $formatFactoryTitle($factory->process_title, 'QUY TRÌNH "KHOA HỌC - NGĂN NẮP - TÁCH BIỆT"') !!}
         </h3>
-        <div class="rich-text-content text-justify">
-          {!! $factory->process_description !!}
+        <div class="text-[15px]/[1.6] md:text-base/9 text-primary space-y-6 md:space-y-2 text-justify">
+          @foreach($processBlocks as $block)
+            @if(($block['type'] ?? null) === 'paragraph' && !empty($block['content']))
+              <p>{!! nl2br(e($block['content'])) !!}</p>
+            @elseif(($block['type'] ?? null) === 'list' && !empty($block['items']) && is_array($block['items']))
+              <ul class="space-y-1 list-decimal marker:font-bold marker:text-primary marker:mr-1 ml-5">
+                @foreach($block['items'] as $item)
+                  @if(!empty($item['title']) || !empty($item['content']))
+                    <li>
+                      @if(!empty($item['title']))
+                        <strong class="text-primary font-bold">{{ $item['title'] }}</strong>
+                      @endif
+                      {!! nl2br(e($item['content'] ?? '')) !!}
+                    </li>
+                  @endif
+                @endforeach
+              </ul>
+            @endif
+          @endforeach
         </div>
       </div>
 
@@ -101,7 +127,7 @@
                     class="aspect-[3/4] md:aspect-[4/5] object-cover bg-neutral-1"
                   >
                     <img
-                      src="{{ asset('storage/' . $image) }}"
+                      src="{{ AssetPath::url($image) }}"
                       alt="Khu vực nhà xưởng"
                       class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
                     />
@@ -125,10 +151,27 @@
         data-aos-delay="200"
       >
         <h3 class="text-[15px] md:text-base font-bold uppercase mb-8 md:mb-4">
-          {!! $factory->process_bottom_title ?? 'SỨC MẠNH CỦA SỰ KẾT HỢP: <br class="md:hidden" />MÁY MÓC HIỆN ĐẠI & BÀN TAY NGHỆ NHÂN' !!}
+          {!! $formatFactoryTitle($factory->process_bottom_title, 'SỨC MẠNH CỦA SỰ KẾT HỢP: MÁY MÓC HIỆN ĐẠI & BÀN TAY NGHỆ NHÂN') !!}
         </h3>
-        <div class="rich-text-content">
-          {!! $factory->process_bottom_desc !!}
+        <div class="text-[15px]/[1.6] md:text-base/9 text-primary text-justify">
+          @foreach($processBottomBlocks as $block)
+            @if(($block['type'] ?? null) === 'paragraph' && !empty($block['content']))
+              <p class="mb-6 last:mb-0">{!! nl2br(e($block['content'])) !!}</p>
+            @elseif(($block['type'] ?? null) === 'list' && !empty($block['items']) && is_array($block['items']))
+              <ul class="space-y-1 list-decimal marker:font-bold marker:text-primary marker:mr-1 ml-5 mb-6 last:mb-0">
+                @foreach($block['items'] as $item)
+                  @if(!empty($item['title']) || !empty($item['content']))
+                    <li>
+                      @if(!empty($item['title']))
+                        <strong class="text-primary font-bold">{{ $item['title'] }}</strong>
+                      @endif
+                      {!! nl2br(e($item['content'] ?? '')) !!}
+                    </li>
+                  @endif
+                @endforeach
+              </ul>
+            @endif
+          @endforeach
         </div>
       </div>
     </div>
@@ -142,7 +185,7 @@
       @if(!empty($factory->process_bottom_image))
         <div class="aspect-[2/1] object-cover bg-neutral-1">
           <img
-            src="{{ asset('storage/' . $factory->process_bottom_image) }}"
+            src="{{ AssetPath::url($factory->process_bottom_image) }}"
             alt="Gốm sứ Thanh Hải"
             class="w-full h-full object-cover"
           />

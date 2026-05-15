@@ -30,21 +30,59 @@ class PageConfigSeeder extends Seeder
                 'hero_banner_mobile' => 'assets/images/factory-banner-02.png',
                 'intro_title' => 'Nhà xưởng',
                 'intro_subtitle' => 'QUY MÔ ẤN TƯỢNG: 5000M² - 3 TẦNG VẬN HÀNH CHUYÊN BIỆT',
-                'intro_description' => 'Để đáp ứng những đơn hàng lớn cho các công trình trọng điểm như đình chùa, biệt thự hay khu nghỉ dưỡng, Thanh Hải đã đầu tư hệ thống nhà xưởng với tổng diện tích lên đến 5.000m², được thiết kế tối ưu với 3 tầng sản xuất. Việc mở rộng không gian không chỉ khẳng định năng lực cung ứng mạnh mẽ mà còn giúp chúng tôi kiểm soát chất lượng sản phẩm một cách khắt khe nhất. Mỗi tầng đều được quy hoạch bài bản, đảm bảo diện tích lưu kho và khu vực chế tác luôn thông thoáng, đáp ứng mọi tiến độ gấp gáp từ khách hàng.',
+                'intro_description' => [
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'Để đáp ứng những đơn hàng lớn cho các công trình trọng điểm như đình chùa, biệt thự hay khu nghỉ dưỡng, Thanh Hải đã đầu tư hệ thống nhà xưởng với tổng diện tích lên đến 5.000m², được thiết kế tối ưu với 3 tầng sản xuất. Việc mở rộng không gian không chỉ khẳng định năng lực cung ứng mạnh mẽ mà còn giúp chúng tôi kiểm soát chất lượng sản phẩm một cách khắt khe nhất. Mỗi tầng đều được quy hoạch bài bản, đảm bảo diện tích lưu kho và khu vực chế tác luôn thông thoáng, đáp ứng mọi tiến độ gấp gáp từ khách hàng.',
+                    ],
+                ],
                 'gallery_1' => [
                     'assets/images/trang-tri-slide-01.jpg',
                     'assets/images/factory-01.jpg',
+                ],
+                'gallery_2' => [
                     'assets/images/factory-04.jpg',
                     'assets/images/trang-tri-slide-02.jpg',
                 ],
-                'process_title' => 'QUY TRÌNH "KHOA HỌC - NGĂN NẮP - TÁCH BIỆT"',
-                'process_description' => 'Điểm khác biệt lớn nhất giúp khách hàng luôn an tâm khi đặt hàng tại Thanh Hải chính là sự chuyên nghiệp trong cách bố trí nhà xưởng. Chúng tôi hiểu rằng, một sản phẩm gốm sứ hoàn hảo phải được ra đời từ một môi trường làm việc kỷ luật:',
+                'process_title' => "QUY TRÌNH\n\"KHOA HỌC - NGĂN NẮP - TÁCH BIỆT\"",
+                'process_description' => [
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'Điểm khác biệt lớn nhất giúp khách hàng luôn an tâm khi đặt hàng tại Thanh Hải chính là sự chuyên nghiệp trong cách bố trí nhà xưởng. Chúng tôi hiểu rằng, một sản phẩm gốm sứ hoàn hảo phải được ra đời từ một môi trường làm việc kỷ luật:',
+                    ],
+                    [
+                        'type' => 'list',
+                        'items' => [
+                            [
+                                'title' => 'Khu vực tạo cốt và pha men:',
+                                'content' => 'Được tách biệt hoàn toàn để tránh bụi bẩn ảnh hưởng đến các khâu sau.',
+                            ],
+                            [
+                                'title' => 'Khu vực chế tác & tạo hình:',
+                                'content' => 'Nơi những nghệ nhân tập trung cao độ để thổi hồn vào đất.',
+                            ],
+                            [
+                                'title' => 'Khu vực nung & kiểm định:',
+                                'content' => 'Được bố trí lối đi rộng rãi, giúp quy trình vận chuyển bán thành phẩm diễn ra trơn tru, hạn chế tối đa nứt vỡ.',
+                            ],
+                        ],
+                    ],
+                ],
                 'process_slider' => [
                     'assets/images/factory-02.png',
                     'assets/images/den-gom-01.png',
                 ],
-                'process_bottom_title' => 'SỨC MẠNH CỦA SỰ KẾT HỢP: MÁY MÓC HIỆN ĐẠI & BÀN TAY NGHỆ NHÂN',
-                'process_bottom_desc' => 'Dù sở hữu hệ thống máy móc hỗ trợ vừa phải và hiện đại để đảm bảo độ chuẩn xác về thông số kỹ thuật (như độ nén, độ bền uốn theo tiêu chuẩn ISO), nhưng tại Thanh Hải, giá trị cốt lõi vẫn nằm ở đôi bàn tay con người. Chúng tôi kiên trì giữ vững phương thức thủ công truyền thống trong các khâu quan trọng. Mỗi sản phẩm đều mang dấu ấn riêng biệt, có chiều sâu và sự ấm áp mà những dây chuyền công nghiệp đại trà không bao giờ có được.',
+                'process_bottom_title' => "SỨC MẠNH CỦA SỰ KẾT HỢP:\nMÁY MÓC HIỆN ĐẠI & BÀN TAY NGHỆ NHÂN",
+                'process_bottom_desc' => [
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'Dù sở hữu hệ thống máy móc hỗ trợ vừa phải và hiện đại để đảm bảo độ chuẩn xác về thông số kỹ thuật (như độ nén, độ bền uốn theo tiêu chuẩn ISO), nhưng tại Thanh Hải, giá trị cốt lõi vẫn nằm ở đôi bàn tay con người.',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'Chúng tôi kiên trì giữ vững phương thức thủ công truyền thống trong các khâu quan trọng. Mỗi sản phẩm đều mang dấu ấn riêng biệt, có chiều sâu và sự ấm áp mà những dây chuyền công nghiệp đại trà không bao giờ có được.',
+                    ],
+                ],
                 'process_bottom_image' => 'assets/images/gach-co-work-2.jpg',
                 'material_slider' => [
                     'assets/images/factory-03.png',

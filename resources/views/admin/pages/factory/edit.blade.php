@@ -2,6 +2,7 @@
 
     @php
         $g1 = is_string($factory->gallery_1) ? json_decode($factory->gallery_1, true) : $factory->gallery_1;
+        $g2 = is_string($factory->gallery_2) ? json_decode($factory->gallery_2, true) : $factory->gallery_2;
         $ps = is_string($factory->process_slider)
             ? json_decode($factory->process_slider, true)
             : $factory->process_slider;
@@ -14,9 +15,13 @@
 
         $factoryJson = [
             'gallery_1' => is_array($g1) ? $g1 : [],
+            'gallery_2' => is_array($g2) ? $g2 : [],
             'process_slider' => is_array($ps) ? $ps : [],
             'material_slider' => is_array($ms) ? $ms : [],
             'material_steps' => is_array($mst) ? $mst : [],
+            'intro_description' => old('intro_description', $factory->intro_description),
+            'process_description' => old('process_description', $factory->process_description),
+            'process_bottom_desc' => old('process_bottom_desc', $factory->process_bottom_desc),
         ];
 
         // Helper xử lý URL cho các ảnh đơn (xử lý chung logic seeder 'assets/...' và upload 'storage/...')
@@ -178,72 +183,30 @@
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="intro_description" class="block text-sm font-semibold text-gray-700 mb-2">Mô tả (Hỗ
-                            trợ HTML)</label>
-                        <textarea id="intro_description" name="intro_description" x-data x-init="$el.style.height = $el.scrollHeight + 'px'"
-                            @input="$el.style.height = 'auto'; $el.style.height = $el.scrollHeight + 'px'"
-                            placeholder="Nhập mô tả giới thiệu..."
-                            class="w-full px-4 py-2.5 text-sm border rounded-lg outline-none transition-all
-                               border-gray-300 focus:border-brand-red focus:ring-1 focus:ring-brand-red
-                               resize-none overflow-hidden min-h-[120px] leading-relaxed">{{ old('intro_description', $factory->intro_description) }}</textarea>
-                        <p class="text-xs text-gray-400 mt-1">Hỗ trợ HTML: &lt;b&gt;in đậm&lt;/b&gt;, &lt;br&gt; xuống
-                            dòng</p>
-                        @error('intro_description')
-                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    @include('admin.pages.factory.partials.block-builder', [
+                        'field' => 'intro_description',
+                        'label' => 'Mô tả',
+                        'blocks' => $factoryJson['intro_description'],
+                    ])
                 </div>
 
-                {{-- ==================== TAB 3: GALLERY 1 ==================== --}}
-                <div x-cloak x-show="activeTab === 'gallery'" class="space-y-8" x-data="galleryManager({{ Js::from($factoryJson['gallery_1']) }}, 'gallery_1')">
+                {{-- ==================== TAB 3: GALLERIES ==================== --}}
+                <div x-cloak x-show="activeTab === 'gallery'" class="space-y-10">
                     <h3 class="text-lg font-bold text-gray-800">Thư Viện Ảnh</h3>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh hiện tại</label>
-                        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
-                            <template x-for="(img, index) in images" :key="index">
-                                <div class="relative group aspect-square rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-100"
-                                    x-transition>
-                                    <img :src="getImageUrl(img)" class="w-full h-full object-cover">
-                                    <div
-                                        class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-200
-                                            flex items-center justify-center">
-                                        <button type="button" @click="deleteImage(index)"
-                                            class="opacity-0 group-hover:opacity-100 transition-all duration-200
-                                               w-9 h-9 bg-red-500 hover:bg-red-600 text-white rounded-full
-                                               flex items-center justify-center shadow-lg hover:scale-110
-                                               transform transition-transform"
-                                            title="Xóa ảnh">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                        <p x-show="images.length === 0"
-                            class="text-sm text-gray-400 text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                            Chưa có ảnh nào trong thư viện.
-                        </p>
+                    @include('admin.pages.factory.partials.gallery-manager', [
+                        'field' => 'gallery_1',
+                        'label' => 'Gallery 1',
+                        'images' => $factoryJson['gallery_1'],
+                    ])
 
-                        <template x-for="idx in deletedIndices" :key="'del-g1-' + idx">
-                            <input type="hidden" :name="'delete_' + fieldName + '[]'" :value="idx">
-                        </template>
-                    </div>
+                    <hr class="border-gray-100">
 
-                    <div class="border-t border-gray-100 pt-6">
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">Thêm ảnh mới</label>
-                        <input type="file" name="new_gallery_1[]" multiple accept="image/*"
-                            class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white">
-                        <p class="text-xs text-gray-400 mt-2">Có thể chọn nhiều ảnh cùng lúc.</p>
-                        @error('new_gallery_1.*')
-                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    @include('admin.pages.factory.partials.gallery-manager', [
+                        'field' => 'gallery_2',
+                        'label' => 'Gallery 2',
+                        'images' => $factoryJson['gallery_2'],
+                    ])
                 </div>
 
                 {{-- ==================== TAB 4: PROCESS SECTION ==================== --}}
@@ -253,29 +216,19 @@
                     <div>
                         <label for="process_title" class="block text-sm font-semibold text-gray-700 mb-2">Tiêu
                             đề</label>
-                        <input type="text" id="process_title" name="process_title"
-                            value="{{ old('process_title', $factory->process_title) }}"
+                        <textarea id="process_title" name="process_title" rows="2"
                             placeholder="Nhập tiêu đề quy trình..."
-                            class="w-full px-4 py-2.5 text-sm border rounded-lg outline-none transition-all border-gray-300 focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                            class="w-full px-4 py-2.5 text-sm border rounded-lg outline-none transition-all border-gray-300 focus:border-brand-red focus:ring-1 focus:ring-brand-red resize-y">{{ old('process_title', $factory->process_title) }}</textarea>
                         @error('process_title')
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="process_description" class="block text-sm font-semibold text-gray-700 mb-2">Mô tả
-                            (Hỗ trợ HTML)</label>
-                        <textarea id="process_description" name="process_description" x-data x-init="$el.style.height = $el.scrollHeight + 'px'"
-                            @input="$el.style.height = 'auto'; $el.style.height = $el.scrollHeight + 'px'"
-                            class="w-full px-4 py-2.5 text-sm border rounded-lg outline-none transition-all
-                               border-gray-300 focus:border-brand-red focus:ring-1 focus:ring-brand-red
-                               resize-none overflow-hidden min-h-[120px] leading-relaxed">{{ old('process_description', $factory->process_description) }}</textarea>
-                        <p class="text-xs text-gray-400 mt-1">Hỗ trợ HTML: &lt;b&gt;in đậm&lt;/b&gt;, &lt;br&gt; xuống
-                            dòng, &lt;ul&gt;&lt;li&gt;danh sách&lt;/li&gt;&lt;/ul&gt;</p>
-                        @error('process_description')
-                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    @include('admin.pages.factory.partials.block-builder', [
+                        'field' => 'process_description',
+                        'label' => 'Mô tả',
+                        'blocks' => $factoryJson['process_description'],
+                    ])
 
                     <hr class="border-gray-100">
 
@@ -283,10 +236,10 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Slider Quy Trình</label>
                         <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
-                            <template x-for="(img, index) in images" :key="index">
+                            <template x-for="(img, index) in images" :key="img.original_index">
                                 <div class="relative group aspect-square rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-100"
                                     x-transition>
-                                    <img :src="getImageUrl(img)" class="w-full h-full object-cover">
+                                    <img :src="getImageUrl(img.url)" class="w-full h-full object-cover">
                                     <div
                                         class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-200
                                             flex items-center justify-center">
@@ -333,29 +286,19 @@
                     <div>
                         <label for="process_bottom_title" class="block text-sm font-semibold text-gray-700 mb-2">Tiêu
                             đề ảnh cuối</label>
-                        <input type="text" id="process_bottom_title" name="process_bottom_title"
-                            value="{{ old('process_bottom_title', $factory->process_bottom_title) }}"
+                        <textarea id="process_bottom_title" name="process_bottom_title" rows="2"
                             placeholder="Nhập tiêu đề..."
-                            class="w-full px-4 py-2.5 text-sm border rounded-lg outline-none transition-all border-gray-300 focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                            class="w-full px-4 py-2.5 text-sm border rounded-lg outline-none transition-all border-gray-300 focus:border-brand-red focus:ring-1 focus:ring-brand-red resize-y">{{ old('process_bottom_title', $factory->process_bottom_title) }}</textarea>
                         @error('process_bottom_title')
                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="process_bottom_desc" class="block text-sm font-semibold text-gray-700 mb-2">Mô tả
-                            ảnh cuối (Trình soạn thảo)</label>
-                        <textarea id="process_bottom_desc" name="process_bottom_desc" x-data x-init="$el.style.height = $el.scrollHeight + 'px'"
-                            @input="$el.style.height = 'auto'; $el.style.height = $el.scrollHeight + 'px'"
-                            class="w-full px-4 py-2.5 text-sm border rounded-lg outline-none transition-all
-                               border-gray-300 focus:border-brand-red focus:ring-1 focus:ring-brand-red
-                               resize-none overflow-hidden min-h-[120px] leading-relaxed">{{ old('process_bottom_desc', $factory->process_bottom_desc) }}</textarea>
-                        <p class="text-xs text-gray-400 mt-1">Hỗ trợ HTML: &lt;b&gt;in đậm&lt;/b&gt;, &lt;br&gt; xuống
-                            dòng</p>
-                        @error('process_bottom_desc')
-                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    @include('admin.pages.factory.partials.block-builder', [
+                        'field' => 'process_bottom_desc',
+                        'label' => 'Mô tả ảnh cuối',
+                        'blocks' => $factoryJson['process_bottom_desc'],
+                    ])
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh cuối quy trình</label>
@@ -398,10 +341,10 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Slider Nguyên Liệu</label>
                         <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
-                            <template x-for="(img, index) in images" :key="index">
+                            <template x-for="(img, index) in images" :key="img.original_index">
                                 <div class="relative group aspect-square rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-100"
                                     x-transition>
-                                    <img :src="getImageUrl(img)" class="w-full h-full object-cover">
+                                    <img :src="getImageUrl(img.url)" class="w-full h-full object-cover">
                                     <div
                                         class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-200
                                             flex items-center justify-center">
@@ -548,6 +491,14 @@
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <script>
             document.addEventListener('alpine:init', () => {
+                const makeUid = () => {
+                    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+                        return window.crypto.randomUUID();
+                    }
+
+                    return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+                };
+
                 // Main Tab Manager
                 Alpine.data('factoryPage', () => ({
                     activeTab: 'hero',
@@ -561,30 +512,97 @@
                     }
                 }));
 
-                // Gallery Manager (For Gallery 1 & Process Slider)
+                Alpine.data('blockManager', (initialBlocks, fieldName) => ({
+                    blocks: Array.isArray(initialBlocks) ? initialBlocks.map((block) => ({
+                        uid: makeUid(),
+                        type: block.type === 'list' ? 'list' : 'paragraph',
+                        content: block.content || '',
+                        items: Array.isArray(block.items) ? block.items.map((item) => ({
+                            uid: makeUid(),
+                            title: item.title || '',
+                            content: item.content || ''
+                        })) : []
+                    })) : [],
+                    name: fieldName,
+                    addParagraph() {
+                        this.blocks.push({
+                            uid: makeUid(),
+                            type: 'paragraph',
+                            content: '',
+                            items: []
+                        });
+                    },
+                    addList() {
+                        this.blocks.push({
+                            uid: makeUid(),
+                            type: 'list',
+                            content: '',
+                            items: [{
+                                uid: makeUid(),
+                                title: '',
+                                content: ''
+                            }]
+                        });
+                    },
+                    addListItem(blockIndex) {
+                        this.blocks[blockIndex].items.push({
+                            uid: makeUid(),
+                            title: '',
+                            content: ''
+                        });
+                    },
+                    removeBlock(index) {
+                        this.blocks.splice(index, 1);
+                    },
+                    removeListItem(blockIndex, itemIndex) {
+                        this.blocks[blockIndex].items.splice(itemIndex, 1);
+                    },
+                    moveUp(index) {
+                        if (index <= 0) return;
+
+                        const current = this.blocks[index];
+                        this.blocks[index] = this.blocks[index - 1];
+                        this.blocks[index - 1] = current;
+                    },
+                    moveDown(index) {
+                        if (index >= this.blocks.length - 1) return;
+
+                        const current = this.blocks[index];
+                        this.blocks[index] = this.blocks[index + 1];
+                        this.blocks[index + 1] = current;
+                    }
+                }));
+
+                // Gallery Manager (For Gallery 1, Gallery 2 & Process Slider)
                 Alpine.data('galleryManager', (initialImages, fieldName) => ({
-                    images: initialImages,
+                    images: Array.isArray(initialImages) ? initialImages.map((url, index) => ({
+                        url,
+                        original_index: index
+                    })) : [],
                     deletedIndices: [],
                     fieldName: fieldName,
                     getImageUrl(img) {
-                        return img.startsWith('assets/') ? '/' + img : '/storage/' + img;
+                        return img && img.startsWith('assets/') ? '/' + img : '/storage/' + img;
                     },
                     deleteImage(index) {
-                        this.deletedIndices.push(index);
+                        this.deletedIndices.push(this.images[index].original_index);
                         this.images.splice(index, 1);
                     }
                 }));
 
                 // Material Section Manager
                 Alpine.data('materialManager', (initialImages, initialSteps) => ({
-                    images: initialImages,
+                    images: Array.isArray(initialImages) ? initialImages.map((url, index) => ({
+                        url,
+                        original_index: index
+                    })) : [],
                     deletedIndices: [],
-                    steps: initialSteps,
+                    steps: Array.isArray(initialSteps) ? initialSteps : [],
                     getImageUrl(img) {
-                        return img.startsWith('assets/') ? '/' + img : '/storage/' + img;
+                        return img && img.startsWith('assets/') ? '/' + img : '/storage/' + img;
                     },
                     deleteImage(index) {
-                        this.deletedIndices.push(index);
+                        this.deletedIndices.push(this.images[index].original_index);
                         this.images.splice(index, 1);
                     },
                     addStep() {

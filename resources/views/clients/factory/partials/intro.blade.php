@@ -1,3 +1,6 @@
+@php
+    $introBlocks = is_array($factory->intro_description ?? null) ? $factory->intro_description : [];
+@endphp
 <section class="bg-background-secondary relative overflow-hidden text-primary">
   <!-- 1. Grid Overlay (Behind Content) -->
   <div class="grid-overlay absolute inset-0 z-0 pointer-events-none">
@@ -56,13 +59,33 @@
         >
           {{ $factory->intro_subtitle ?? 'QUY MÔ ẤN TƯỢNG: 5000M² - 3 TẦNG VẬN HÀNH CHUYÊN BIỆT' }}
         </h3>
-        <p
-          class="text-base md:text-base/9 font-extralight text-primary text-left md:text-justify leading-[24px]"
-          data-aos="fade-up"
-          data-aos-delay="100"
-        >
-          {{ $factory->intro_description ?? '' }}
-        </p>
+        @foreach($introBlocks as $block)
+          @if(($block['type'] ?? null) === 'paragraph' && !empty($block['content']))
+            <p
+              class="text-base md:text-base/9 font-extralight text-primary text-left md:text-justify leading-[24px] mb-4 last:mb-0"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              {!! nl2br(e($block['content'])) !!}
+            </p>
+          @elseif(($block['type'] ?? null) === 'list' && !empty($block['items']) && is_array($block['items']))
+            <ul class="space-y-1 list-decimal marker:font-bold marker:text-primary marker:mr-1 ml-5 text-base md:text-base/9 font-extralight text-primary text-left md:text-justify leading-[24px] mb-4 last:mb-0"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              @foreach($block['items'] as $item)
+                @if(!empty($item['title']) || !empty($item['content']))
+                  <li>
+                    @if(!empty($item['title']))
+                      <strong class="text-primary font-bold">{{ $item['title'] }}</strong>
+                    @endif
+                    {!! nl2br(e($item['content'] ?? '')) !!}
+                  </li>
+                @endif
+              @endforeach
+            </ul>
+          @endif
+        @endforeach
 
         <!-- Mobile Divider -->
         <div class="h-px w-full bg-black/10 mt-16 md:hidden"></div>
