@@ -1,37 +1,26 @@
 <section class="w-full pb-0 md:pb-8 lg:pb-10 md:pt-14 overflow-hidden">
-  <div
-    class="w-[85%] max-w-[1320px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-12 lg:gap-16 items-center"
-  >
-    <div class="w-full aspect-square" data-aos="fade-right">
-      <img
-        src="{{ asset('assets/images/faq2.png') }}"
-        alt="FAQ Image"
-        class="w-full h-full object-cover"
-      />
-    </div>
+    <div class="w-[85%] max-w-[1320px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-12 lg:gap-16 items-center">
+        <div class="w-full aspect-square" data-aos="fade-right">
+            <img src="{{ asset('assets/images/faq2.png') }}" alt="FAQ Image" class="w-full h-full object-cover" />
+        </div>
 
-    <div class="flex flex-col items-start" data-aos="fade-left">
-      <p
-        class="text-[#262626] text-[14px] md:text-base font-extrabold uppercase tracking-[0.1em] leading-[20px] md:leading-normal mb-2.5 md:mb-8"
-      >
-        Bạn có thắc mắc?
-      </p>
-      <h2
-        class="text-[#2E2F2A] md:text-primary text-[24px] md:text-3xl lg:text-4xl font-normal md:font-semibold leading-[37.5px] md:leading-tight mb-5 md:mb-0"
-      >
-        Xem các câu hỏi thường gặp
-      </h2>
-      <p
-        class="text-[#262626]/70 text-[14px] md:text-base font-normal leading-[22.75px] md:leading-relaxed mb-5 md:mb-10"
-      >
-        Khám phá danh sách các câu hỏi thường gặp và câu trả lời của chúng tôi.
-      </p>
-      <a
-        href="/faq/"
-        class="inline-block border-0 md:border md:border-black/40 px-0 md:px-5 py-0 md:py-2 text-[#262626] text-[16px] md:text-xs lg:text-sm font-semibold md:font-normal leading-none md:leading-normal hover:text-secondary md:hover:bg-secondary md:hover:text-white md:hover:border-secondary transition-all"
-      >
-        (FAQ) Câu hỏi thường gặp
-      </a>
+        <div class="flex flex-col items-start" data-aos="fade-left">
+            <p
+                class="text-[#262626] text-[14px] md:text-base font-extrabold uppercase tracking-[0.1em] leading-[20px] md:leading-normal mb-2.5 md:mb-8">
+                Bạn có thắc mắc?
+            </p>
+            <h2
+                class="text-[#2E2F2A] md:text-primary text-[24px] md:text-3xl lg:text-4xl font-normal md:font-semibold leading-[37.5px] md:leading-tight mb-5 md:mb-0">
+                Xem các câu hỏi thường gặp
+            </h2>
+            <p
+                class="text-[#262626]/70 text-[14px] md:text-base font-normal leading-[22.75px] md:leading-relaxed mb-5 md:mb-10">
+                Khám phá danh sách các câu hỏi thường gặp và câu trả lời của chúng tôi.
+            </p>
+            <a href="{{ route('client.faq') }}"
+                class="inline-block border-0 md:border md:border-black/40 px-0 md:px-5 py-0 md:py-2 text-[#262626] text-[16px] md:text-xs lg:text-sm font-semibold md:font-normal leading-none md:leading-normal hover:text-secondary md:hover:bg-secondary md:hover:text-white md:hover:border-secondary transition-all">
+                (FAQ) Câu hỏi thường gặp
+            </a>
+        </div>
     </div>
-  </div>
 </section>

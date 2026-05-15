@@ -1,273 +1,186 @@
-<div
-  class="relative z-10 w-[90%] md:w-[75%] lg:w-[800px] min-h-[670px] mx-auto"
-  data-faq-component
->
-  <div
-    class="w-[85%] max-w-[1320px] mx-auto text-center mb-[22px] md:mb-16"
-    data-aos="fade-up"
-  >
-    <h2
-      class="font-archivo text-[20px] leading-[36px] md:text-[32px] md:leading-[45px] font-semibold text-secondary uppercase"
-    >
-      Câu hỏi thường gặp
-    </h2>
-  </div>
-
-  <div
-    class="bg-white px-6 md:px-10 py-8 shadow-lg relative"
-    data-aos="fade-up"
-    data-aos-delay="200"
-  >
-    <div class="faq-item border-b border-gray-200 pb-10 mb-2">
-      <button
-        class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none"
-      >
-        <span
-          class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4"
-          >Showroom của Gốm sứ Thanh Hải ở đâu?</span
-        >
-        <span
-          class="faq-icon w-6 h-6 flex-shrink-0 bg-textPrimary rounded-full flex items-center justify-center text-white transition-all duration-300"
-        >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 15l7-7 7 7"
-            ></path>
-          </svg>
-        </span>
-      </button>
-      <div
-        class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed block overflow-hidden transition-all duration-300"
-      >
-        <p class="mb-2">
-          <span class="font-bold text-textPrimary">Trả lời:</span> Chúng tôi chỉ
-          có duy nhất 1 showroom tại địa chỉ: Số 18 Phố Gốm - Giang Cao - Bát
-          Tràng, Gia Lâm, Hà Nội. Ngoài địa chỉ này, chúng tôi không có bất kỳ
-          đại lý đại diện nào khác tại các tỉnh thành trên cả nước.
-        </p>
-        <a
-          href="#"
-          class="font-bold text-textPrimary border-b-[1.5px] border-textPrimary inline-block pb-0.5 hover:text-secondary hover:border-secondary transition-colors text-[14px] leading-[22.75px] md:text-[18px] md:leading-normal"
-          >Xem map tại đây</a
-        >
-      </div>
+<div class="relative z-10 w-[90%] md:w-[75%] lg:w-[800px] min-h-[670px] mx-auto" data-faq-component>
+    <div class="w-[85%] max-w-[1320px] mx-auto text-center mb-[22px] md:mb-16" data-aos="fade-up">
+        <h2
+            class="font-archivo text-[20px] leading-[36px] md:text-[32px] md:leading-[45px] font-semibold text-secondary uppercase">
+            Câu hỏi thường gặp
+        </h2>
     </div>
 
-    <div class="faq-item border-b border-gray-200 pb-10 mb-2">
-      <button
-        class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none"
-      >
-        <span
-          class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4"
-          >Tôi có thể đặt màu sắc và mẫu mã theo yêu cầu riêng không?</span
-        >
-        <span
-          class="faq-icon w-6 h-6 flex-shrink-0 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all duration-300 transform rotate-180"
-        >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 15l7-7 7 7"
-            ></path>
-          </svg>
-        </span>
-      </button>
-      <div
-        class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300"
-      >
-        <p>
-          <span class="font-bold text-textPrimary">Trả lời:</span> Vui lòng liên
-          hệ với chúng tôi để biết thêm chi tiết về việc đặt màu sắc và mẫu mã
-          theo yêu cầu riêng.
-        </p>
-      </div>
-    </div>
+    <div class="bg-white px-6 md:px-10 py-8 shadow-lg relative" data-aos="fade-up" data-aos-delay="200">
+        <div class="faq-item border-b border-gray-200 pb-10 mb-2">
+            <button
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Showroom của Gốm sứ Thanh
+                    Hải ở đâu?</span>
+                <span
+                    class="faq-icon w-6 h-6 flex-shrink-0 bg-textPrimary rounded-full flex items-center justify-center text-white transition-all duration-300">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                    </svg>
+                </span>
+            </button>
+            <div
+                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed block overflow-hidden transition-all duration-300">
+                <p class="mb-2">
+                    <span class="font-bold text-textPrimary">Trả lời:</span> Chúng tôi chỉ
+                    có duy nhất 1 showroom tại địa chỉ: Số 18 Phố Gốm - Giang Cao - Bát
+                    Tràng, Gia Lâm, Hà Nội. Ngoài địa chỉ này, chúng tôi không có bất kỳ
+                    đại lý đại diện nào khác tại các tỉnh thành trên cả nước.
+                </p>
+                <a href="{{ route('client.contact') }}"
+                    class="font-bold text-textPrimary border-b-[1.5px] border-textPrimary inline-block pb-0.5 hover:text-secondary hover:border-secondary transition-colors text-[14px] leading-[22.75px] md:text-[18px] md:leading-normal">Xem
+                    map tại đây</a>
+            </div>
+        </div>
 
-    <div class="faq-item border-b border-gray-200 pb-10 mb-2">
-      <button
-        class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none"
-      >
-        <span
-          class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4"
-          >Tôi có thể tham quan xưởng sản xuất hay không?</span
-        >
-        <span
-          class="faq-icon w-6 h-6 flex-shrink-0 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all duration-300 transform rotate-180"
-        >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 15l7-7 7 7"
-            ></path>
-          </svg>
-        </span>
-      </button>
-      <div
-        class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300"
-      >
-        <p>
-          <span class="font-bold text-textPrimary">Trả lời:</span> Quý khách
-          hoàn toàn có thể tham quan xưởng sản xuất của chúng tôi. Vui lòng liên
-          hệ trước để được sắp xếp đón tiếp chu đáo nhất.
-        </p>
-      </div>
-    </div>
+        <div class="faq-item border-b border-gray-200 pb-10 mb-2">
+            <button
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Tôi có thể đặt màu sắc và
+                    mẫu mã theo yêu cầu riêng không?</span>
+                <span
+                    class="faq-icon w-6 h-6 flex-shrink-0 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all duration-300 transform rotate-180">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                    </svg>
+                </span>
+            </button>
+            <div
+                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300">
+                <p>
+                    <span class="font-bold text-textPrimary">Trả lời:</span> Vui lòng liên
+                    hệ với chúng tôi để biết thêm chi tiết về việc đặt màu sắc và mẫu mã
+                    theo yêu cầu riêng.
+                </p>
+            </div>
+        </div>
 
-    <div class="faq-item border-b border-gray-200 pb-10 mb-2">
-      <button
-        class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none"
-      >
-        <span
-          class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4"
-          >Chi phí vận chuyển và phạm vi giao hàng như thế nào?</span
-        >
-        <span
-          class="faq-icon w-6 h-6 flex-shrink-0 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all duration-300 transform rotate-180"
-        >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 15l7-7 7 7"
-            ></path>
-          </svg>
-        </span>
-      </button>
-      <div
-        class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300"
-      >
-        <p>
-          <span class="font-bold text-textPrimary">Trả lời:</span> Chúng tôi
-          giao hàng toàn quốc. Chi phí vận chuyển sẽ phụ thuộc vào khối lượng
-          đơn hàng và khoảng cách địa lý.
-        </p>
-      </div>
-    </div>
+        <div class="faq-item border-b border-gray-200 pb-10 mb-2">
+            <button
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Tôi có thể tham quan
+                    xưởng sản xuất hay không?</span>
+                <span
+                    class="faq-icon w-6 h-6 flex-shrink-0 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all duration-300 transform rotate-180">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                    </svg>
+                </span>
+            </button>
+            <div
+                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300">
+                <p>
+                    <span class="font-bold text-textPrimary">Trả lời:</span> Quý khách
+                    hoàn toàn có thể tham quan xưởng sản xuất của chúng tôi. Vui lòng liên
+                    hệ trước để được sắp xếp đón tiếp chu đáo nhất.
+                </p>
+            </div>
+        </div>
 
-    <div class="faq-item mb-8">
-      <button
-        class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none"
-      >
-        <span
-          class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4"
-          >Đặc tính thủ công của ngói âm dương cần lưu ý gì?</span
-        >
-        <span
-          class="faq-icon w-6 h-6 flex-shrink-0 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all duration-300 transform rotate-180"
-        >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 15l7-7 7 7"
-            ></path>
-          </svg>
-        </span>
-      </button>
-      <div
-        class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300"
-      >
-        <p>
-          <span class="font-bold text-textPrimary">Trả lời:</span> Ngói thủ công
-          mang vẻ đẹp độc bản, màu sắc có độ chuyển tự nhiên do nhiệt độ lò,
-          không viên nào giống viên nào 100%.
-        </p>
-      </div>
-    </div>
+        <div class="faq-item border-b border-gray-200 pb-10 mb-2">
+            <button
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Chi phí vận chuyển và
+                    phạm vi giao hàng như thế nào?</span>
+                <span
+                    class="faq-icon w-6 h-6 flex-shrink-0 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all duration-300 transform rotate-180">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                    </svg>
+                </span>
+            </button>
+            <div
+                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300">
+                <p>
+                    <span class="font-bold text-textPrimary">Trả lời:</span> Chúng tôi
+                    giao hàng toàn quốc. Chi phí vận chuyển sẽ phụ thuộc vào khối lượng
+                    đơn hàng và khoảng cách địa lý.
+                </p>
+            </div>
+        </div>
 
-    <div class="mt-8 text-right">
-      <a
-        href="/faq/index.html"
-        class="font-bold text-textPrimary border-b-[1.5px] border-textPrimary inline-block pb-0.5 hover:text-secondary hover:border-secondary transition-colors text-[14px] leading-[21px] md:text-[18px] md:leading-normal"
-        >Xem thêm</a
-      >
+        <div class="faq-item mb-8">
+            <button
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Đặc tính thủ công của
+                    ngói âm dương cần lưu ý gì?</span>
+                <span
+                    class="faq-icon w-6 h-6 flex-shrink-0 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all duration-300 transform rotate-180">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                    </svg>
+                </span>
+            </button>
+            <div
+                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300">
+                <p>
+                    <span class="font-bold text-textPrimary">Trả lời:</span> Ngói thủ công
+                    mang vẻ đẹp độc bản, màu sắc có độ chuyển tự nhiên do nhiệt độ lò,
+                    không viên nào giống viên nào 100%.
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-8 text-right">
+            <a href="{{ route('client.faq') }}"
+                class="font-bold text-textPrimary border-b-[1.5px] border-textPrimary inline-block pb-0.5 hover:text-secondary hover:border-secondary transition-colors text-[14px] leading-[21px] md:text-[18px] md:leading-normal">Xem
+                thêm</a>
+        </div>
     </div>
-  </div>
 </div>
 
 @push('scripts')
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const faqComponents = document.querySelectorAll("[data-faq-component]");
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const faqComponents = document.querySelectorAll("[data-faq-component]");
 
-    faqComponents.forEach((component) => {
-      const faqItems = component.querySelectorAll(".faq-item");
+            faqComponents.forEach((component) => {
+                const faqItems = component.querySelectorAll(".faq-item");
 
-      faqItems.forEach((item) => {
-        const button = item.querySelector(".faq-button");
-        const content = item.querySelector(".faq-content");
-        const icon = item.querySelector(".faq-icon");
+                faqItems.forEach((item) => {
+                    const button = item.querySelector(".faq-button");
+                    const content = item.querySelector(".faq-content");
+                    const icon = item.querySelector(".faq-icon");
 
-        if (!button || !content || !icon) return;
+                    if (!button || !content || !icon) return;
 
-        button.addEventListener("click", () => {
-          const isOpen = !content.classList.contains("hidden");
+                    button.addEventListener("click", () => {
+                        const isOpen = !content.classList.contains("hidden");
 
-          faqItems.forEach((otherItem) => {
-            if (otherItem === item) return;
+                        faqItems.forEach((otherItem) => {
+                            if (otherItem === item) return;
 
-            const otherContent = otherItem.querySelector(".faq-content");
-            const otherIcon = otherItem.querySelector(".faq-icon");
+                            const otherContent = otherItem.querySelector(
+                                ".faq-content");
+                            const otherIcon = otherItem.querySelector(".faq-icon");
 
-            if (otherContent) {
-              otherContent.classList.add("hidden");
-            }
+                            if (otherContent) {
+                                otherContent.classList.add("hidden");
+                            }
 
-            if (otherIcon) {
-              otherIcon.classList.add("rotate-180");
-              otherIcon.classList.replace("bg-textPrimary", "bg-gray-200");
-              otherIcon.classList.replace("text-white", "text-gray-500");
-            }
-          });
+                            if (otherIcon) {
+                                otherIcon.classList.add("rotate-180");
+                                otherIcon.classList.replace("bg-textPrimary",
+                                    "bg-gray-200");
+                                otherIcon.classList.replace("text-white",
+                                    "text-gray-500");
+                            }
+                        });
 
-          if (isOpen) {
-            content.classList.add("hidden");
-            icon.classList.add("rotate-180");
-            icon.classList.replace("bg-textPrimary", "bg-gray-200");
-            icon.classList.replace("text-white", "text-gray-500");
-          } else {
-            content.classList.remove("hidden");
-            icon.classList.remove("rotate-180");
-            icon.classList.replace("bg-gray-200", "bg-textPrimary");
-            icon.classList.replace("text-gray-500", "text-white");
-          }
+                        if (isOpen) {
+                            content.classList.add("hidden");
+                            icon.classList.add("rotate-180");
+                            icon.classList.replace("bg-textPrimary", "bg-gray-200");
+                            icon.classList.replace("text-white", "text-gray-500");
+                        } else {
+                            content.classList.remove("hidden");
+                            icon.classList.remove("rotate-180");
+                            icon.classList.replace("bg-gray-200", "bg-textPrimary");
+                            icon.classList.replace("text-gray-500", "text-white");
+                        }
+                    });
+                });
+            });
         });
-      });
-    });
-  });
-</script>
+    </script>
 @endpush
