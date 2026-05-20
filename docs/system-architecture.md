@@ -54,7 +54,7 @@
 │              Database Layer                       │
 │  ┌─────────────────────────────────────────────┐ │
 │  │ MariaDB (th_ceramics_fullstack)              │ │
-│  │ 42 tables across 9 migrations               │ │
+│  │ 44 tables across 15 migrations              │ │
 │  │ Session, Cache, Queue: database driver      │ │
 │  └─────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────┘
@@ -72,15 +72,16 @@ Two route files loaded under a single `web` middleware group in `bootstrap/app.p
 - **Default web middleware**: CSRF, sessions, etc. (Laravel defaults)
 - **`auth` middleware**: Guest routes (login) redirect authenticated users to dashboard; protected routes redirect unauthenticated users to admin login
 - **`role:superadmin`**: Restricts user management routes to superadmin only
+- **`throttle` middleware**: Applied to client login (6 req/min) and contact form submission (3 req/min) to prevent brute-force and spam
 - Guest/Auth redirects configured in `bootstrap/app.php`
 
 ### 3. Controller Layer
-- **Admin controllers** (48 files): Thin controllers that validate requests, delegate to services, and return redirect responses with flash messages. OrderController handles list/detail/status-update with email notification.
-- **Client controllers** (27 total): 10 page controllers + 8 DichVuKhachHang controllers + 9 product page controllers. Query services, return view responses with data. HuongDanThiCongController and CatalogController provide dynamic customer service pages. TrangThaiDonHangController provides dynamic order status tracking with tab filtering.
+- **Admin controllers** (51 files): Thin controllers that validate requests, delegate to services, and return redirect responses with flash messages. OrderController handles list/detail/status-update with email notification. CouponController handles discount code CRUD.
+- **Client controllers** (29 total): 12 page/auth controllers (Home, About, Factory, Contact, Faq, Showroom, News, Project, Cart, Auth, GlobalSearch, CustomerService) + 8 DichVuKhachHang controllers + 9 product page controllers. Query services, return view responses with data. HuongDanThiCongController and CatalogController provide dynamic customer service pages. TrangThaiDonHangController provides dynamic order status tracking with tab filtering. AuthController handles login, register, password reset, and Google OAuth.
 - All use constructor DI with `private readonly` service properties
 
 ### 4. Service Layer
-- **36 service classes**: One per major model
+- **53 service classes**: One per major model + utility services (CartService, CouponService, GlobalProductCodeService, AuthService, etc.)
 - Contains business logic including file upload handling, transaction management, and code uniqueness checks
 - No repository pattern — services interact directly with Eloquent models
 - `GlobalProductCodeService`: Cross-table uniqueness validation for product codes
@@ -95,7 +96,7 @@ Two route files loaded under a single `web` middleware group in `bootstrap/app.p
 
 ### 6. Database Layer
 - **MariaDB** via `DB_CONNECTION=mariadb` in `.env`
-- **44 tables** from 7 migration files + 8 seeders
+- **44 tables** from 15 migration files + 26 seeders
 - All session/cache/queue storage uses `database` driver (queue actively used for email dispatch)
 - Soft delete via boolean `is_delete` column
 
@@ -158,7 +159,6 @@ Product Categories (10 single-row "section" tables)
 │                             └── DinhMucGachHoaThongGio
 │
 ├── GachTrangTri ─────────────┬── GachTrangTriCt
-│                             ├── DauAnGachTrangTri (hallmarks)
 │                             └── DinhMucGachTrangTri
 │
 ├── GachCoBatTrang ───────────┬── GachCoBatTrangCt
@@ -169,17 +169,17 @@ Product Categories (10 single-row "section" tables)
 │                             ├── LinhVat (items)
 │                             ├── LinhVatPhongThuyAnh (gallery)
 │
-├── DenGomSu ─────────────────┬── DenGomSuAnh (gallery)
+├── DenGomSu ─────────────────┬── DenVuonGomSuCt (garden light items)
+│                             ├── PhanLoaiDenVuonGomSuCt (classifications)
+│                             └── DenGomSuAnh (gallery)
 │
-├── PhuKienNgoi
+├── PhuKienNgoi ──────────────┬── PhuKienNgoiCt
+│                             └── PhanLoaiPhuKienNgoiCt (classifications)
 │
-├── LanCanGomXu
+├── LanCanGomXu ──────────────┬── LanCanGomSuCt
+│                             └── PhanLoaiLanCanGomSuCt (classifications)
 │
 └── GiaTriVuotTroi (values, shared section)
-
-Sub-items with hierarchy:
-   NgoiBoNocCt ─── PhanLoaiNgoiBoNocCt (classifications)
-   BoNocChuVanCt ─ PhanLoaiBoNocChuVanCt (classifications)
 ```
 
 Page Configuration Tables (static pages, single-record sections)
@@ -251,6 +251,14 @@ Mail & Queue
 /dich-vu/tai-catalog          → Catalog list (dynamic from Catalog model, featured + grid)
 /dich-vu/tai-catalog/doc/{id} → PDF flipbook reader (standalone, PDF.js + StPageFlip)
 /trang-thai-don-hang       → Client order status tracking (auth required, tab filters)
+
+/tai-khoan/dang-nhap           → Client login (throttled: 6/min)
+/tai-khoan/dang-ky             → Client register
+/tai-khoan/quen-mat-khau       → Forgot password
+/tai-khoan/dat-lai-mat-khau/{token} → Reset password (role-routed)
+/tai-khoan/google              → Google OAuth redirect
+/tai-khoan/google/callback     → Google OAuth callback
+/tai-khoan/dang-xuat           → Client logout
 ```
 
 ## Email Notification Flow
@@ -330,6 +338,7 @@ Mail & Queue
 
 ## Authentication Flow
 
+### Admin Authentication
 ```
 Guest accesses /admin/login
   → POST login with email + password
@@ -345,9 +354,28 @@ Unauthenticated user visits /admin/*
 Role check on superadmin routes:
   → RoleMiddleware checks user->role === 'superadmin'
   → 403 if unauthorized
-
-> **RBAC design**: The system uses a simple string `role` column on the `users` table (`superadmin`, `admin`, `customer`) rather than a database-driven permission package (e.g., Spatie). This keeps the auth layer lightweight and performant. RoleMiddleware accepts variadic role names (e.g., `role:superadmin,admin`) for flexible route protection.
 ```
+
+### Client Authentication
+```
+/tai-khoan/dang-nhap       → Login (email + password)
+/tai-khoan/dang-ky         → Register (name, email, password, confirmation)
+/tai-khoan/quen-mat-khau   → Forgot password (email exists check)
+/tai-khoan/dat-lai-mat-khau → Reset password (token-based, role-routed URLs)
+/tai-khoan/google          → Google OAuth redirect (Socialite 5.27)
+/tai-khoan/google/callback → Google OAuth callback (find or create user)
+
+Password Reset Flow:
+  1. User submits email → ForgotPasswordRequest validates
+  2. Laravel Password facade dispatches reset token
+  3. User::sendPasswordResetNotification() sends custom ResetPasswordNotification
+  4. Notification checks $notifiable->isAdmin() for role-based routing:
+     - Admin → /admin/reset-password/{token}
+     - Client → /tai-khoan/dat-lai-mat-khau/{token}
+  5. ResetPasswordNotification implements ShouldQueue → queued to jobs table
+```
+
+> **RBAC design**: The system uses a simple string `role` column on the `users` table (`superadmin`, `admin`, `customer`) rather than a database-driven permission package (e.g., Spatie). This keeps the auth layer lightweight and performant. RoleMiddleware accepts variadic role names (e.g., `role:superadmin,admin`) for flexible route protection. Client routes use `auth` middleware for protected pages (cart, checkout, order tracking) and `guest` middleware for login/register pages.
 
 ## Cache / Session / Queue Architecture
 

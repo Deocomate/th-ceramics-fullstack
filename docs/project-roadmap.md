@@ -44,14 +44,14 @@
 |--------|------|---------|
 | 100% | Client routing | Vietnamese SEO URLs with 301 redirects from English paths |
 | 100% | Client layout | Tailwind CDN, Swiper.js, AOS, Google Fonts, responsive design |
-| 100% | Home page | Fully dynamic: all sections query DB via HomeController (TrangChu, DuAn, product detail models) |
+| 100% | Home page | Fully dynamic: all sections query DB via HomeController |
 | 100% | About / Factory / Contact / FAQ | Dynamic content pages bound to DB via page config admin panels |
-| 100% | Product listing pages | 9 category index views |
-| 100% | Product detail pages | 9 category detail views with images, specs, pricing |
-| ~80% | Data binding | Client controllers wired to services; some views pending |
+| 100% | Product listing pages | 9 category index views (all bound to DB) |
+| 100% | Product detail pages | 9 category detail views (Lan Can Gom Su v0.5.6: variant selection, JSON-LD, desktop product card) |
+| ~95% | Data binding | Controllers wired to services; most views complete; minor edge cases remain |
 | 100% | Page config admin panels | Factory (5-tab Alpine.js, auto-resize textareas), Contact (form), FAQ (banner + FAQ items CRUD with modal) |
-| 0% | SEO meta tags | Per-page title/description via `@props` |
-| 0% | News pages | Controller + routes exist, views need implementation |
+| ~10% | SEO structured data | JSON-LD Product schema added for Lan Can Gom Su (0.5.6); per-page meta tags still pending |
+| ~30% | News pages | Controller + routes exist, category + detail views partially implemented |
 | 100% | Projects pages | Dynamic index with category filters + pagination, detail with GLightbox/Swiper gallery + related projects |
 | 100% | Customer service pages | Dynamic installation guide (ThiCong model), catalog list + PDF flipbook reader (Catalog model) |
 
@@ -79,15 +79,14 @@
 
 | Status | Task | Details |
 |--------|------|---------|
-| 0% | News CMS | Admin CRUD for news articles, client display |
-| 100% | Projects CMS | Admin CRUD for projects, client display (completed 0.5.4) |
+| ~30% | News CMS | Admin CRUD for news articles, client display — controller + routes exist, views partially implemented |
 | 0% | Customer request form | Contact form with email notification |
 | 0% | Product search | Full-text search across product catalog |
 | 0% | Product filtering | Filter by category, price, size, color |
 | 0% | Multi-language | English version alongside Vietnamese |
 | 0% | Performance optimization | Cache warming, query optimization, image optimization |
-| 0% | Comprehensive testing | Pest feature tests for admin and client flows |
-| 0% | Vite integration | Configure proper asset building pipeline |
+| 10% | Comprehensive testing | 25 Pest test files covering admin pages, auth, client product pages |
+| 50% | Vite integration | Vite active for auth layout; client still uses CDN |
 
 **Deliverables**: Complete e-commerce platform with content management, search, and multi-language support.
 
@@ -98,11 +97,11 @@
 ```
 Phase 1: Core Setup & Admin CRUD     ████████████████████ 100%
 Phase 2: Product Seeding              ████████████████████ 100%
-Phase 3: Client Product Pages         ███████████░░░░░░░░░  55%
+Phase 3: Client Product Pages         ██████████████████░░  90%
 Phase 4: Cart & Checkout              ████████████████████ 100%
-Phase 5: Advanced Features            ░░░░░░░░░░░░░░░░░░░░   0%
+Phase 5: Advanced Features            ██░░░░░░░░░░░░░░░░░░  11%
                                     ─────────────────────
-Total:                                ███████████░░░░░░░░░  58%
+Total:                                ████████████████░░░░  80%
 ```
 
 ## Key Milestones
@@ -116,6 +115,11 @@ Total:                                ███████████░░░
 | TBD | Client product pages complete |
 | 2026-05-09 | Cart/checkout MVP (session cart, AJAX controls, order processing) |
 | 2026-05-09 | Customer service pages: dynamic installation guide, catalog list + PDF flipbook reader |
+| 2026-05-10 | Seeder system rewrite: 6 seeders idempotent with firstOrCreate, real Vietnamese content |
+| 2026-05-10 | Project module: dynamic client pages with category filters, pagination, detail gallery |
+| 2026-05-10 | Client authentication: login, register, forgot/reset password, Google OAuth |
+| 2026-05-11 | Home page fully dynamic: 5 models, 13 view files bound to DB |
+| 2026-05-15 | Lan Can Gom Su detail page with JSON-LD, Desktop Product Card component, CartService extension |
 | TBD | Public launch |
 
 ## Dependencies

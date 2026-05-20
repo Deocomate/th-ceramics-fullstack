@@ -115,7 +115,6 @@ components/admin/layout/app.blade.php
 | `product-detail-container.blade.php` | Detail page wrapper |
 | `product-image-swiper.blade.php` | Image carousel with Swiper |
 | `breadcrumb.blade.php` | Breadcrumb navigation |
-| `breadcrumb.blade.php` | Breadcrumb trail |
 | `color-palette.blade.php` | Color selection UI |
 | `quantity-calculator.blade.php` | Quantity estimation tool |
 | `weight-calculator.blade.php` | Weight estimation tool |
@@ -162,11 +161,15 @@ clients/products/{category}/
 
 | Library | Version | Purpose |
 |---------|---------|---------|
-| Swiper | 12.x | Image carousels, product galleries |
-| AOS | 2.3.1 | Scroll-triggered animations |
+| Alpine.js | 3.x | Admin interactive UI: tab navigation, auto-resize textareas, image galleries, repeater fields |
+| Swiper | 12.x | Image carousels, product galleries (client) |
+| AOS | 2.3.1 | Scroll-triggered animations (client) |
+| PDF.js | 2.16.105 | PDF rendering in catalog flipbook reader |
+| StPageFlip | 2.0.7 | 3D page-flip animation for catalog reader |
+| GLightbox | Latest | Image lightbox gallery (project detail pages) |
 | Tailwind CSS | Latest (CDN) | Utility CSS framework |
 
-All loaded via CDN. No bundler or build step for production assets currently.
+All loaded via CDN. No bundler or build step for production assets (main client layout uses Tailwind CDN; Vite used for auth layout only).
 
 ### Styling Approach
 
@@ -174,3 +177,14 @@ All loaded via CDN. No bundler or build step for production assets currently.
 2. **Custom CSS** in `public/assets/css/main.css` for complex animations and overrides
 3. **Inline Tailwind config** in layout files for theme customization (no tailwind.config.js file)
 4. **No CSS preprocessors** (SASS/LESS) — Tailwind CDN provides all needed utilities
+
+### Accessibility (a11y) Guidelines
+
+- **Semantic HTML**: Use `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>` for document structure
+- **Image alt text**: All `<img>` elements must have `alt` attributes (descriptive Vietnamese text)
+- **Focus states**: Interactive elements use Tailwind `focus:ring` or `focus:outline` for keyboard navigation
+- **Form labels**: Every form input has a corresponding `<label>` with `for` attribute
+- **Color contrast**: Text on background follows primary (#2E2F2A on #FFF) for sufficient contrast
+- **Skip navigation**: Not yet implemented (future enhancement)
+- **ARIA labels**: Used sparingly on non-semantic interactive elements (e.g., `aria-label` on icon buttons)
+- **Screen reader testing**: Not yet conducted (future enhancement)

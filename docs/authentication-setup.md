@@ -26,8 +26,12 @@ laravel/socialite  v5.27.0
 2. Tạo hoặc chọn một dự án
 3. Vào **APIs & Services** → **Credentials**
 4. Tạo **OAuth 2.0 Client ID** (Application type: Web application)
-5. Đặt **Authorized redirect URIs**: `http://localhost:8000/tai-khoan/google/callback`
+5. Đặt **Authorized redirect URIs**:
+   - Local dev: `http://localhost:8000/tai-khoan/google/callback`
+   - Production: `https://th-ceramics.com/tai-khoan/google/callback` (thay domain thực tế)
 6. Copy `Client ID` và `Client Secret`
+
+> **Quan trọng**: URI redirect phải khớp chính xác với `GOOGLE_REDIRECT_URI` trong `.env`. Thêm cả local và production URIs vào Google Cloud Console.
 
 #### Bước 2: Cập Nhật `.env`
 
@@ -212,11 +216,14 @@ MAIL_FROM_NAME="${APP_NAME}"
 ## 🚀 Deployment Checklist
 
 - [ ] Cập nhật `.env` với Google OAuth credentials
-- [ ] Cập nhật `GOOGLE_REDIRECT_URI` để khớp với production domain
+- [ ] Cập nhật `GOOGLE_REDIRECT_URI` để khớp với production domain (e.g., `https://th-ceramics.com/tai-khoan/google/callback`)
 - [ ] Chạy `php artisan migrate` trên production
-- [ ] Kiểm tra MAIL_MAILER cấu hình cho reset password
+- [ ] Cấu hình MAIL_MAILER production (SES/SendGrid/SMTP) -- không dùng Mailtrap
+- [ ] Chạy queue worker (`php artisan queue:work`) -- bắt buộc vì ResetPasswordNotification implements ShouldQueue
+- [ ] Build frontend assets: `npm install && npm run build`
 - [ ] Test tất cả auth flows trên staging environment
 - [ ] Thêm Google OAuth domain vào whitelist nếu cần
+- [ ] Kiểm tra throttle middleware hoạt động (6 requests/minute cho login)
 
 ---
 

@@ -156,7 +156,7 @@ The initial schema was batched into grouped migration files for rapid setup (38 
 - Use **one migration file per table** (or per feature modification).
 - Do **not** modify the initial batched migration files if the app is already in production — create new migrations instead.
 
-### 3.6 Global Product Code Uniqueness
+### 3.8 Global Product Code Uniqueness
 
 Product codes are unique across 9 detail tables. Use `GlobalProductCodeService`:
 
@@ -166,6 +166,28 @@ if (!$service->isUnique($code, $table, $id)) {
     // Code already exists in another table
 }
 ```
+
+### 3.9 is_delete Filtering (Soft Delete)
+
+All queries against soft-deletable tables must filter `WHERE is_delete = 0`:
+
+```php
+public function getAllActive(): Collection
+{
+    return $this->model::query()->where('is_delete', 0)->get();
+}
+```
+
+For models where the filter is universal, consider a global scope in `booted()`:
+
+```php
+protected static function booted(): void
+{
+    static::addGlobalScope('active', fn (Builder $builder) => $builder->where('is_delete', 0));
+}
+```
+
+Restore routes/actions bypass active filters to perform restoration.
 
 ## 4. Architecture Conventions
 
@@ -311,14 +333,19 @@ Key classes: `resize-none overflow-hidden min-h-[120px]` — prevents manual res
 - Custom config in layout `<script>` block (client and admin have separate configs)
 - Additional styles in `public/assets/css/main.css`
 
-> **Note on Vite & NPM**: The project currently uses Tailwind via CDN with no build step. A `vite.config.js` and `composer.json` setup script referencing `npm install && npm run build` exist only for future scalability (see Roadmap Phase 5) but are strictly ignored in the current phase. Frontend assets are served directly from `public/assets/`.
+> **Note on Vite & NPM**: The client main layout uses Tailwind CDN with no build step. Vite is used for the auth layout (`resources/views/layouts/app.blade.php` via `@vite`). The `vite.config.js` and `npm run build` pipeline are active for the auth-related entry points. Legacy frontend assets are served from `public/assets/`.
 
 ## 8. Testing Standards
 
-- Use Pest 3 for testing
+- Use Pest 3 for testing (25 test files covering admin pages, auth flows, client product pages)
 - Feature tests preferred over unit tests
-- Use model factories for test data
+- Use model factories for test data where available
+- Test coverage areas:
+  - Admin: page configuration CRUD (Factory, Contact, FAQ), coupon management, order preview, product color fields, customer management
+  - Auth: admin login/reset, client authentication/registration, password reset (role-based routing), Google OAuth
+  - Client: product detail views (Ngoi Am Duong, Ngoi Hai, Gach Trang Tri, Gach Co Bat Trang, Den Gom Su, Linh Vat Phong Thuy, Phu Kien Ngoi), project pages, news pages, contact form submission, global search
 - Run with: `php artisan test --compact`
+- Filter specific test: `php artisan test --filter=test_name`
 
 ## 9. Single-Record Pattern
 

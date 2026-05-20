@@ -8,8 +8,8 @@ A Laravel 12 e-commerce website for Thanh Hai Ceramics, a traditional Vietnamese
 |-------|-----------|
 | Backend | Laravel 12, PHP 8.2+ |
 | Database | MariaDB (`th_ceramics_fullstack`) |
-| Frontend | Blade templates, Tailwind CSS (CDN), vanilla JS |
-| Libraries | Swiper.js, AOS (Animate on Scroll) |
+| Frontend | Blade templates, Tailwind CSS (CDN), Alpine.js, vanilla JS |
+| Libraries | Swiper.js, AOS (Animate on Scroll), PDF.js, StPageFlip |
 | Testing | Pest 3 |
 | Cache/Session/Queue | Database driver |
 | Code Style | Laravel Pint |
@@ -19,7 +19,7 @@ A Laravel 12 e-commerce website for Thanh Hai Ceramics, a traditional Vietnamese
 - PHP 8.2+
 - Composer
 - MariaDB / MySQL
-- Node.js (for Vite, currently unused for asset builds)
+- Node.js (for Vite asset builds, required for production deployment)
 
 ## Setup
 
@@ -37,13 +37,16 @@ cp .env.example .env
 # 4. Generate application key
 php artisan key:generate
 
-# 5. Run migrations (creates 38 tables)
+# 5. Run migrations (creates 44 tables)
 php artisan migrate
 
 # 6. Seed initial data (admin user + product data)
 php artisan db:seed
 
-# 7. (Optional) Create storage symlink for file uploads
+# 7. Build frontend assets (required for production)
+npm install && npm run build
+
+# 8. (Optional) Create storage symlink for file uploads
 php artisan storage:link
 ```
 
@@ -72,21 +75,24 @@ After seeding:
 
 ```
 app/
-├── Http/Controllers/Admin/   # 49 admin CRUD controllers
-├── Http/Controllers/Client/  # 28 public page controllers
+├── Http/Controllers/Admin/   # 51 admin CRUD controllers
+├── Http/Controllers/Client/  # 29 public page controllers
 ├── Http/Middleware/           # RoleMiddleware (RBAC)
 ├── Http/Requests/             # 31 form request classes
 ├── Models/                    # 55 Eloquent models
-├── Services/                  # 50 service classes (business logic)
+├── Services/                  # 53 service classes (business logic)
 ├── Helpers/                   # FileUploadHelper
+├── Mail/                      # 2 ShouldQueue mailables (order + status)
+├── Notifications/             # 1 ResetPasswordNotification (ShouldQueue)
 ├── Providers/                 # AppServiceProvider
 database/
-├── migrations/                # 7 migration files
-├── seeders/                   # 14 seeders
+├── migrations/                # 15 migration files
+├── seeders/                   # 26 seeders
 resources/views/
-├── admin/                     # 78 admin view files
-├── clients/                   # 138 client view files
-├── components/                # 35 shared Blade components
+├── admin/                     # 86 admin view files
+├── clients/                   # 142 client view files
+├── components/                # 32 shared Blade components
+├── emails/                    # 4 email templates
 routes/
 ├── web.php                    # Admin routes (/admin/*)
 ├── client.php                 # Public routes (Vietnamese URLs)
@@ -99,8 +105,14 @@ routes/
 - **Admin CRUD**: Full content management per category with image upload, soft-delete, and restore
 - **SEO URLs**: Vietnamese-language public URLs with 301 redirects from old English paths
 - **RBAC**: `superadmin` and `admin` roles via `RoleMiddleware`
-- **Single-record sections**: Several product section tables hold exactly one row per category
-- **Global product code uniqueness**: Product codes are enforced unique across 9 detail tables
+- **Single-record sections**: Product section tables hold exactly one row per category
+- **Global product code uniqueness**: Enforced across 9 detail tables via GlobalProductCodeService
+- **JSON-LD structured data**: Product schema markup on detail pages for search engines
+- **Dynamic pages**: Home, About, Factory, Contact, FAQ, Projects, Customer Service all pull from DB
+- **Session-based cart**: AJAX controls, COD checkout, coupon/discount system
+- **Order management**: Admin order lifecycle + client order tracking with email notifications
+- **Client authentication**: Login, register, forgot/reset password, Google OAuth (Socialite)
+- **Database queue**: Email dispatch (ShouldQueue mailables) via `jobs` table, no Redis needed
 
 ## Testing
 

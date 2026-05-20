@@ -56,6 +56,13 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 - **FR19**: Vietnamese-language SEO URLs (`/san-pham/ngoi-am-duong/{id}`)
 - **FR20**: 301 redirects from old English URLs to preserve search rankings
 - **FR21**: Meta title/description support per page
+- **FR25**: JSON-LD structured data (Product schema with `@type: Product`, brand, offers, price, availability on detail pages)
+
+### Client Authentication
+- **FR26**: Email/password login with form validation (LoginRequest)
+- **FR27**: Client registration (RegisterRequest, role: `customer`)
+- **FR28**: Password reset flow with custom Vietnamese-branded email (ResetPasswordNotification, ShouldQueue)
+- **FR29**: Google OAuth via Laravel Socialite (google_id, avatar columns)
 
 ## Non-Functional Requirements
 
@@ -93,7 +100,7 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 
 - **C1**: No JavaScript framework — vanilla JS only with Swiper.js and AOS libraries
 - **C2**: Tailwind CSS loaded via CDN (no build step for frontend assets)
-- **C3**: Vite configured but unused; assets served from `public/assets/` directly
+- **C3**: Vite used for auth layout (`layouts/app.blade.php`); client main layout uses Tailwind CDN; assets served from `public/assets/` for legacy content
 - **C4**: All session/cache/queue storage uses database driver (no Redis available in current setup)
 - **C5**: No Livewire, no events/listeners, no observers, no repository pattern
 - **C6**: PHP 8.2+ required for constructor property promotion syntax
@@ -103,18 +110,19 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 
 | Area | Status |
 |------|--------|
-| Database schema | Complete (44 tables, 7 migrations) |
-| Admin CRUD | Complete (all 9 categories + 3 page config panels + order management) |
-| Product seeding | Complete (8 seeders: User, DinhMuc, PageConfig, HomeAndAboutUs, ProductType, ProductDetail, DuAn, DatabaseSeeder) |
+| Database schema | Complete (44 tables, 15 migrations) |
+| Admin CRUD | Complete (all 9 categories + 3 page config panels + order management + coupon management) |
+| Product seeding | Complete (6 core seeders + 12 product detail seeders, 26 total, firstOrCreate idempotent) |
 | Page configuration | Complete (Factory, Contact, FAQ admin panels with Alpine.js auto-resize textareas) |
-| Client product pages | In progress (9 categories) |
+| Client product pages | In progress (9/9 categories with listing + detail views; Lan Can Gom Su detail with JSON-LD completed in v0.5.6) |
 | Cart/Checkout | Complete: session-based cart, AJAX controls, COD-only checkout, coupon discount system |
 | Order management | Complete: admin list/detail/status-update, client order tracking with tab filters |
 | Email notification | Complete: order confirmation + status update emails via database queue (ShouldQueue) |
 | Projects client pages | Complete: dynamic index with category filters + pagination, dynamic detail with GLightbox/Swiper gallery |
-| News | Views pending |
+| News | In progress (controllers + routes exist, views partially implemented) |
 | Customer Service | Complete: dynamic installation guide (ThiCong), catalog list + PDF flipbook reader (Catalog) |
-| Tests | 8 Pest files (29 tests, all passing) |
+| Client authentication | Complete: login, register, forgot/reset password, Google OAuth (Socialite 5.27) |
+| Tests | 25 Pest files (all passing, covering admin pages, auth flows, client product pages) |
 
 ## Version History
 
@@ -131,3 +139,4 @@ Build a bilingual (Vietnamese) corporate e-commerce website that showcases 9 pro
 | 0.5.3 | 2026-05-10 | Seeder system rewrite: 6 seeders refactored with firstOrCreate idempotency, Eloquent instead of raw SQL/DB::table, real Vietnamese content, string-path images, GiaTriVuotTroi seeded, DatabaseSeeder reordered |
 | 0.5.4 | 2026-05-10 | Project module client dynamic: DuAnSeeder (5 categories + 20 real projects), dynamic project index with category filters + pagination, dynamic project detail with hero banner + GLightbox/Swiper gallery + related projects |
 | 0.5.5 | 2026-05-11 | Home page fully dynamic: HomeController queries 5 models (TrangChu, DuAn, NgoiAmDuongCt, NgoiHaiVanMieuCt, GachHoaThongGioCt), 13 view files bound to DB data |
+| 0.5.6 | 2026-05-15 | Lan Can Gom Su detail page with variant selection, image gallery, add-to-cart; JSON-LD structured data (Product schema); Desktop Product Card component; LanCanGomSuCt accessors (`display_code`, `display_price`); CartService extended for `lan_can_gom_su_ct` product type |

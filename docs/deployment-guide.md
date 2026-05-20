@@ -46,6 +46,21 @@ SESSION_LIFETIME=120
 CACHE_STORE=database
 
 QUEUE_CONNECTION=database
+
+# Google OAuth (required for client Google login)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URI="${APP_URL}/tai-khoan/google/callback"
+
+# Mail (production: use SES, SendGrid, or SMTP -- NOT Mailtrap)
+MAIL_MAILER=smtp
+MAIL_HOST=email-smtp.region.amazonaws.com
+MAIL_PORT=587
+MAIL_USERNAME=your-smtp-username
+MAIL_PASSWORD=your-smtp-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@th-ceramics.com
+MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 ### 4. Database Setup
@@ -58,6 +73,10 @@ mysql -u root -p -e "CREATE DATABASE th_ceramics_fullstack CHARACTER SET utf8mb4
 mysql -u root -p -e "CREATE USER 'th_ceramics_user'@'localhost' IDENTIFIED BY '<strong-password>';"
 mysql -u root -p -e "GRANT ALL PRIVILEGES ON th_ceramics_fullstack.* TO 'th_ceramics_user'@'localhost';"
 mysql -u root -p -e "FLUSH PRIVILEGES;"
+
+# Build frontend assets
+npm install --production
+npm run build
 
 # Run migrations and seeders
 php artisan migrate --force
@@ -210,6 +229,30 @@ sudo chmod -R 775 /var/www/th-ceramics/bootstrap/cache
 ## Health Check
 
 The application has a health check route at `/up` (configured in `bootstrap/app.php`). Monitor this endpoint for uptime checks.
+
+## Backup Strategy
+
+```bash
+# 1. Database backup (schedule via cron)
+mysqldump -u th_ceramics_user -p th_ceramics_fullstack > /backups/th-ceramics-$(date +%Y%m%d).sql
+
+# 2. Storage files backup
+rsync -av /var/www/th-ceramics/storage/app/public/ /backups/storage/
+
+# 3. Environment file backup (keep a secure copy)
+cp /var/www/th-ceramics/.env /backups/.env.production
+
+# Recommended: rotate backups older than 30 days
+find /backups -name "*.sql" -mtime +30 -delete
+```
+
+## Authentication Deployment
+
+See `docs/authentication-setup.md` for:
+- Google OAuth production redirect URI configuration
+- Mail driver setup for password reset emails
+- Queue worker requirement (ShouldQueue notifications)
+- Full deployment checklist
 
 ## Troubleshooting
 
