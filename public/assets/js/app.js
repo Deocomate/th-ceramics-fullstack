@@ -1,3 +1,7 @@
+import { initProductCalculators } from "./product-calculators.js";
+import { initProductDetail } from "./product-detail.js";
+import { initProductValues } from "./product-values.js";
+
 const initProductSectionCarousels = () => {
     document.querySelectorAll("[data-product-section]").forEach((section) => {
         if (section.dataset.productCarouselInitialized === "true") {
@@ -482,6 +486,9 @@ const initSharedScripts = () => {
     initMobileFloatingActions();
     initMobileScrollIndicators();
     initAddToCartButtons();
+    initProductDetail();
+    initProductCalculators();
+    initProductValues();
 };
 
 document.addEventListener("DOMContentLoaded", initSharedScripts);

@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Gạch Cổ Bát Tràng" breadcrumb="Admin › Sản Phẩm › Gạch Cổ Bát Tràng">
+<x-admin.layouts.app title="Gạch Cổ Bát Tràng" breadcrumb="Admin › Sản Phẩm › Gạch Cổ Bát Tràng">
     @php
         $mediaUrl = function (?string $path, string $fallback = 'https://placehold.co/600x400?text=Chua+co+anh') {
             if (empty($path)) {
@@ -378,4 +378,4 @@
             }
         </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

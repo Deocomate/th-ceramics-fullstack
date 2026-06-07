@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Linh Vật Phong Thủy" breadcrumb="Admin › Sản Phẩm › Linh Vật Phong Thủy">
+<x-admin.layouts.app title="Linh Vật Phong Thủy" breadcrumb="Admin › Sản Phẩm › Linh Vật Phong Thủy">
     
     {{-- CẤU HÌNH HÌNH ẢNH & THƯ VIỆN --}}
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
@@ -305,4 +305,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

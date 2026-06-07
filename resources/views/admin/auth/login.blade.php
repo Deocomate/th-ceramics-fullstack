@@ -1,4 +1,4 @@
-<x-admin.layout.auth title="Đăng nhập">
+<x-admin.layouts.auth title="Đăng nhập">
 
     <h2 class="text-lg font-semibold text-gray-800 mb-5">Đăng nhập</h2>
 
@@ -96,4 +96,4 @@
         </button>
     </form>
 
-</x-admin.layout.auth>
+</x-admin.layouts.auth>

@@ -1,4 +1,4 @@
-<x-layouts.client title="Xác thực email" main-class="bg-[#F8F5F0] min-h-screen flex flex-col">
+<x-client.layouts.main title="Xác thực email" main-class="bg-[#F8F5F0] min-h-screen flex flex-col">
     <section class="relative flex-grow flex items-center justify-center py-12 lg:py-20 overflow-hidden">
         <div class="absolute inset-0 pointer-events-none z-0">
             <img src="{{ asset('assets/images/background-decorate.svg') }}" alt=""
@@ -49,4 +49,4 @@
             </div>
         </div>
     </section>
-</x-layouts.client>
+</x-client.layouts.main>

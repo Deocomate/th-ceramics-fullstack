@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Chi tiết đơn hàng #{{ $order->order_code }}">
+<x-admin.layouts.app title="Chi tiết đơn hàng #{{ $order->order_code }}">
 
     <div class="flex items-center justify-between mb-5">
         <div>
@@ -170,4 +170,4 @@
         </div>
     </div>
 
-</x-admin.layout.app>
+</x-admin.layouts.app>

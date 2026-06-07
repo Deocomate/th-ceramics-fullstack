@@ -1,4 +1,4 @@
-<x-layouts.client title="Quên mật khẩu" main-class="bg-[#F8F5F0] min-h-screen flex flex-col">
+<x-client.layouts.main title="Quên mật khẩu" main-class="bg-[#F8F5F0] min-h-screen flex flex-col">
     <!-- Phần Main Content Quên Mật Khẩu -->
     <section class="relative flex-grow flex items-center justify-center py-12 lg:py-20 overflow-hidden">
         <!-- Họa tiết trang trí Background -->
@@ -135,4 +135,4 @@
             </div>
         </div>
     </section>
-</x-layouts.client>
+</x-client.layouts.main>

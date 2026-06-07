@@ -34,7 +34,7 @@ test('preview button respects section override', function () {
     try {
         View::startSection('preview_url', '/custom-preview-url');
 
-        $html = Blade::render('<x-admin.preview-button />');
+        $html = Blade::render('<x-admin.shared.preview-button />');
 
         expect($html)->toContain('href="/custom-preview-url"');
     } finally {

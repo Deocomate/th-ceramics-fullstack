@@ -25,7 +25,7 @@ class ContactFormMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.contact.form',
+            markdown: 'components.emails.contact.form',
             with: ['data' => $this->data],
         );
     }

@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Dự Án" breadcrumb="Admin › Cấu hình trang đơn › Dự Án">
+<x-admin.layouts.app title="Dự Án" breadcrumb="Admin › Cấu hình trang đơn › Dự Án">
 
     <div class="flex items-center justify-between mb-5">
         <div>
@@ -92,4 +92,4 @@
             </div>
         @endif
     </div>
-</x-admin.layout.app>
+</x-admin.layouts.app>

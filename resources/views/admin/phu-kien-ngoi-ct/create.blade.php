@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Thêm {{ $categoryLabel }}" breadcrumb="Admin › Phụ Kiện Ngói › Thêm mới">
+<x-admin.layouts.app title="Thêm {{ $categoryLabel }}" breadcrumb="Admin › Phụ Kiện Ngói › Thêm mới">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
             <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Thông tin {{ $categoryLabel }} mới</h2>
@@ -15,4 +15,4 @@
             </div>
         </form>
     </div>
-</x-admin.layout.app>
+</x-admin.layouts.app>

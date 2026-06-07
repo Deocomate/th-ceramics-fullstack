@@ -1,4 +1,4 @@
-<x-layouts.client title="Gạch Cổ Bát Tràng" data-page="products" main-class="bg-background-secondary" :hide-newsletter="true">
+<x-client.layouts.main title="Gạch Cổ Bát Tràng" data-page="products" main-class="bg-background-secondary" :hide-newsletter="true">
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -84,7 +84,7 @@
   ];
 @endphp
 
-<x-catalog-button />
+<x-client.shared.catalog-sticky-btn />
 
 <section class="relative w-full h-[530px] md:h-[720px] lg:h-[840px] overflow-hidden flex items-start">
   <div class="absolute inset-0 z-0">
@@ -113,11 +113,11 @@
 
 <div class="w-[85%] max-w-[1320px] mx-auto">
   <div class="pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
-    <x-products.breadcrumb current-label="Gạch Cổ Bát Tràng" />
+    <x-client.shared.breadcrumb current-label="Gạch Cổ Bát Tràng" />
   </div>
 </div>
 
-<x-products.product-filter :show-type-filter="true" />
+<x-client.shared.product-filter :show-type-filter="true" />
 
 <div class="w-[85%] max-w-[1320px] mx-auto">
   <section class="md:pb-16">
@@ -136,15 +136,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 {{ $section['reverse'] ? 'gap-x-12 lg:gap-x-24' : 'gap-x-24 lg:gap-x-36' }} gap-y-[30px] md:gap-y-12 items-start mb-[40px] md:mb-32" data-aos="fade-up">
           @if($section['reverse'])
-            @include('clients.products.gach-co-bat-trang.partials.product-info', [
-              'title' => $payload['title'],
-              'subtitle' => $payload['subtitle'],
-              'description' => $payload['description'],
-              'colors' => $payload['colors'],
-              'wrapperClass' => 'order-2 lg:order-1',
-              'titleClass' => 'uppercase',
-              'products' => $section['products'],
-            ])
+            <x-client.products.gach-co-bat-trang.product-info-grid :title="$payload['title']" :subtitle="$payload['subtitle']" :description="$payload['description']" :colors="$payload['colors']" wrapper-class="order-2 lg:order-1" title-class="uppercase" :products="$section['products']" />
           @endif
 
           <div class="relative {{ $section['reverse'] ? 'order-1 lg:order-2' : '' }}">
@@ -162,13 +154,7 @@
           </div>
 
           @unless($section['reverse'])
-            @include('clients.products.gach-co-bat-trang.partials.product-info', [
-              'title' => $payload['title'],
-              'subtitle' => $payload['subtitle'],
-              'description' => $payload['description'],
-              'colors' => $payload['colors'],
-              'products' => $section['products'],
-            ])
+            <x-client.products.gach-co-bat-trang.product-info-grid :title="$payload['title']" :subtitle="$payload['subtitle']" :description="$payload['description']" :colors="$payload['colors']" :products="$section['products']" />
           @endunless
 
           <div class="lg:col-span-2 order-3" data-aos="fade-up">
@@ -194,9 +180,9 @@
                     $productImage = is_array($product->images) ? ($product->images[0] ?? null) : null;
                   @endphp
                   <div class="swiper-slide !h-auto">
-                    <x-products.product-card href="{{ route('client.products.gach-co-bat-trang.detail', $product->gach_co_bat_trang_ct_id) }}"
-                      image="{{ $assetUrl($productImage, $section['fallbacks'][0]) }}" title="{{ $product->name }}" alt="{{ $product->name }}" code="MSP: {{ $product->code }}"
-                      price="{{ $product->price > 0 ? number_format($product->price) . ' đ/viên' : 'Liên hệ' }}" price-prefix="Giá" :show-overlay="true" image-class="w-full h-full object-cover mix-blend-multiply" />
+                    <x-client.shared.product-card href="{{ route('client.products.gach-co-bat-trang.detail', $product->gach_co_bat_trang_ct_id) }}"
+                      image="{{ $assetUrl($productImage, $section['fallbacks'][0]) }}" title="{{ $product->name }}" code="MSP: {{ $product->code }}"
+                      price="Giá: {{ $product->price > 0 ? number_format($product->price) . ' đ/viên' : 'Liên hệ' }}" :show-overlay="true" />
                   </div>
                 @endforeach
               </div>
@@ -215,12 +201,12 @@
   </section>
 </div>
 
-<x-products.fabrication-process />
-<x-products.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" />
-<x-products.journey-video :hide-title="true" />
-<x-products.works-simple :show-nav="true" />
+<x-client.shared.fabrication-process />
+<x-client.shared.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" />
+<x-client.shared.journey-video :hide-title="true" />
+<x-client.shared.works-simple :show-nav="true" />
 
-<x-products.recommendations
+<x-client.shared.recommendations
     :related-products="$recommendationProducts"
     route-name="client.products.gach-co-bat-trang.detail"
     pk-field="gach_co_bat_trang_ct_id"
@@ -228,7 +214,7 @@
 />
 
 <section class="w-full relative pb-[70px] md:pb-32 bg-background-secondary overflow-visible" data-aos="fade-up">
-  <x-products.faq-content />
+  <x-client.shared.faq-accordion />
 </section>
 
 @push('scripts')
@@ -274,4 +260,4 @@
 </script>
 @endpush
 
-</x-layouts.client>
+</x-client.layouts.main>

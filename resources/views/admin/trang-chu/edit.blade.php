@@ -1,6 +1,22 @@
-<x-admin.layout.app title="Trang chủ" breadcrumb="Admin › Cấu hình trang đơn › Trang chủ">
+<x-admin.layouts.app title="Trang chủ" breadcrumb="Admin › Cấu hình trang đơn › Trang chủ">
     <form method="POST" action="{{ route('admin.trang_chu.update') }}" enctype="multipart/form-data" class="space-y-8 pb-10">
         @csrf @method('PUT')
+
+        @if ($errors->any())
+            <div class="bg-red-50 border border-red-200 text-red-800 px-6 py-4 rounded-xl text-sm font-sans mb-6">
+                <div class="flex items-center gap-2 font-bold text-red-800 mb-2">
+                    <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Có lỗi xảy ra, vui lòng kiểm tra lại:</span>
+                </div>
+                <ul class="list-disc pl-7 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <!-- 1. Banner Trang Chủ -->
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -198,9 +214,30 @@
 
     @push('scripts')
     <script>
+        // Validate file size helper (client-side)
+        function validateFileSizes(input, maxSizeMB = 5) {
+            const maxSizeBytes = maxSizeMB * 1024 * 1024;
+            const files = Array.from(input.files);
+            const oversizedFiles = files.filter(file => file.size > maxSizeBytes);
+            
+            if (oversizedFiles.length > 0) {
+                const fileNames = oversizedFiles.map(file => `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`).join('\n');
+                alert(`Lỗi: Các ảnh sau đây vượt quá dung lượng tối đa cho phép (${maxSizeMB}MB):\n\n${fileNames}\n\nVui lòng chọn ảnh khác có dung lượng nhỏ hơn.`);
+                
+                // Clear the input
+                input.value = "";
+                return false;
+            }
+            return true;
+        }
+
         // Preview ảnh đơn lẻ (Lời Tri Ân)
         function previewImage(event, targetId) {
-            const file = event.target.files[0];
+            const input = event.target;
+            if (!validateFileSizes(input, 5)) {
+                return;
+            }
+            const file = input.files[0];
             if (file) {
                 const objectUrl = URL.createObjectURL(file);
                 document.getElementById(targetId).src = objectUrl;
@@ -213,6 +250,11 @@
         // --- BỘ QUẢN LÝ ẢNH PREVIEW CÓ THỂ XOÁ ĐƯỢC ---
         function previewMultipleImages(event, containerId, objectFit = 'cover') {
             const input = event.target;
+            if (!validateFileSizes(input, 5)) {
+                document.getElementById(containerId).innerHTML = '';
+                document.getElementById(containerId).className = '';
+                return;
+            }
             const container = document.getElementById(containerId);
             renderPreviews(input, container, objectFit);
         }
@@ -324,4 +366,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

@@ -4,7 +4,7 @@
 
 ### Tailwind CSS Configuration
 
-Tailwind is loaded via CDN with inline configuration in the client layout (`resources/views/components/layouts/client.blade.php`).
+Tailwind is loaded via CDN with inline configuration in the client layout (`resources/views/components/client/layouts/main.blade.php`).
 
 #### Color Palette (Client)
 
@@ -36,7 +36,7 @@ Fonts are loaded from Google Fonts. The base font is `font-archivo` applied to `
 ### Client Layout Structure
 
 ```
-components/layouts/client.blade.php
+components/client/layouts/main.blade.php
 ├── <head>
 │   ├── Tailwind CDN (cdn.tailwindcss.com)
 │   ├── Swiper.js CSS (cdn.jsdelivr.net)

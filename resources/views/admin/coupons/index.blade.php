@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Quản lý mã giảm giá">
+<x-admin.layouts.app title="Quản lý mã giảm giá">
 
     <div class="flex items-center justify-between mb-5">
         <div>
@@ -180,4 +180,4 @@
         @endif
     </div>
 
-</x-admin.layout.app>
+</x-admin.layouts.app>

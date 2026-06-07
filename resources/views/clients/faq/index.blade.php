@@ -1,4 +1,4 @@
-<x-layouts.client title="FAQ - Câu hỏi thường gặp" main-class="bg-background-secondary" :hide-newsletter="true">
+<x-client.layouts.main title="FAQ - Câu hỏi thường gặp" main-class="bg-background-secondary" :hide-newsletter="true">
     @push('styles')
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Arima:wght@400;600;700&display=swap");
@@ -106,7 +106,7 @@
 
     </section>
 
-    <x-faq-faq-contact />
+    <x-client.shared.faq-contact />
 
     @push('scripts')
     <script>
@@ -186,4 +186,4 @@
       });
     </script>
     @endpush
-</x-layouts.client>
+</x-client.layouts.main>

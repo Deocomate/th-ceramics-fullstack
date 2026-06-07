@@ -55,7 +55,7 @@ test('recommendations render product color summary with fallback', function () {
     ]);
 
     $html = Blade::render(
-        '<x-products.recommendations :related-products="$products" route-name="client.products.gach-hoa-thong-gio.detail" pk-field="gach_hoa_thong_gio_ct_id" />',
+        '<x-client.shared.recommendations :related-products="$products" route-name="client.products.gach-hoa-thong-gio.detail" pk-field="gach_hoa_thong_gio_ct_id" />',
         ['products' => collect([$custom, $fallback])]
     );
 

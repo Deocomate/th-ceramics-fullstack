@@ -1,4 +1,4 @@
-<x-admin.layout.auth title="Quên mật khẩu">
+<x-admin.layouts.auth title="Quên mật khẩu">
 
     <h2 class="text-lg font-semibold text-gray-800 mb-1">Quên mật khẩu</h2>
     <p class="text-xs text-gray-500 mb-5">
@@ -57,4 +57,4 @@
         </a>
     </div>
 
-</x-admin.layout.auth>
+</x-admin.layouts.auth>

@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Định Mức Ngói Âm Dương" breadcrumb="Admin › DS Sản phẩm chi tiết › Ngói Âm Dương › Định Mức">
+<x-admin.layouts.app title="Định Mức Ngói Âm Dương" breadcrumb="Admin › DS Sản phẩm chi tiết › Ngói Âm Dương › Định Mức">
     
     @if ($errors->any())
         <div class="mb-6 flex items-start gap-3 px-4 py-3 rounded text-sm text-red-800 bg-red-50 border border-red-200 shadow-sm">
@@ -190,4 +190,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

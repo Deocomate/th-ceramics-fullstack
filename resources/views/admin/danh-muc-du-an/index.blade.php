@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Danh Mục Dự Án" breadcrumb="Admin › Cấu hình trang đơn › Danh Mục Dự Án">
+<x-admin.layouts.app title="Danh Mục Dự Án" breadcrumb="Admin › Cấu hình trang đơn › Danh Mục Dự Án">
     @if ($errors->any())
         <div class="mb-6 flex items-start gap-3 px-4 py-3 rounded-lg text-sm text-red-800 bg-red-50 border border-red-200 shadow-sm">
             <div>
@@ -144,4 +144,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

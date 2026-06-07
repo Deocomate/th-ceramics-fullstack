@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Quản lý Tác Giả" breadcrumb="Admin › Cấu Hình Chung › Tác Giả">
+<x-admin.layouts.app title="Quản lý Tác Giả" breadcrumb="Admin › Cấu Hình Chung › Tác Giả">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
             <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Danh Sách Tác Giả</h2>
@@ -278,4 +278,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

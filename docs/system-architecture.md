@@ -130,7 +130,7 @@ Two route files loaded under a single `web` middleware group in `bootstrap/app.p
    b. Call NgoiAmDuongCtService::getAllActive()
    c. Return view('clients.products.ngoi-am-duong.index', compact(...))
 4. Blade template renders:
-   - Layout: components/layouts/client.blade.php
+   - Layout: components/client/layouts/main.blade.php
    - Product components: product-card, breadcrumb, etc.
    - Swiper.js for image galleries
    - AOS for scroll animations

@@ -14,7 +14,7 @@
     $sizeImage = \App\Support\AssetPath::url(data_get($product, 'size_image'), 'assets/images/gach-bat-size-1.png');
 @endphp
 
-<x-layouts.client title="{{ $pageLabel }}" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+<x-client.layouts.main title="{{ $pageLabel }}" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
 
 @push('styles')
 <style>
@@ -45,12 +45,12 @@
 
 <!-- Sub Breadcrumb -->
 <div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
-    <x-products.breadcrumb current-label="{{ $pageLabel }}" parent-label="Sản phẩm" parent-href="{{ route($indexRouteName) }}" />
+    <x-client.shared.breadcrumb current-label="{{ $pageLabel }}" parent-label="Sản phẩm" parent-href="{{ route($indexRouteName) }}" />
     <hr class="border-t border-black/10 mt-4 w-full" />
 </div>
 
 <!-- Product Detail Container -->
-<x-products.product-detail-container
+<x-client.shared.product-detail-container
     title="{{ $product->name ?? $pageLabel }}"
     sku="{{ $productSku ?: 'Đang cập nhật' }}"
     price="{{ $priceLabel }}"
@@ -70,26 +70,20 @@
     productId="{{ $productDetailId }}"
 />
 
-@include('clients.products.ngoi-hai-van-mieu.partials.calculator', [
-    'image' => $sizeImage,
-    'label1' => 'Ngói trên mái gỗ',
-    'rate1' => $dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_go ? $dinhMuc->first()->ngoi_tren_mai_go . ' viên/m²' : '125 viên/m²',
-    'label2' => 'Ngói trên mái bê tông',
-    'rate2' => $dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_be_tong ? $dinhMuc->first()->ngoi_tren_mai_be_tong . ' viên/m²' : '75 viên/m²',
-])
+<x-client.products.ngoi-hai-van-mieu.calculator :image="$sizeImage" :label1="'Ngói trên mái gỗ'" :rate1="$dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_go ? $dinhMuc->first()->ngoi_tren_mai_go . ' viên/m²' : '125 viên/m²'" :label2="'Ngói trên mái bê tông'" :rate2="$dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_be_tong ? $dinhMuc->first()->ngoi_tren_mai_be_tong . ' viên/m²' : '75 viên/m²'" />
 
-<x-products.fabrication-process :images="$parentConfig?->images ?? []" />
-<x-products.journey-video :hide-title="true" />
-<x-products.trang-tri-process />
+<x-client.shared.fabrication-process :images="$parentConfig?->images ?? []" />
+<x-client.shared.journey-video :hide-title="true" />
+<x-client.shared.custom-design-process />
 <hr class="md:mb-16 mb-8" />
-<x-products.works-simple :show-nav="true" />
-<x-products.recommendations
+<x-client.shared.works-simple :show-nav="true" />
+<x-client.shared.recommendations
     :related-products="$relatedProducts"
     route-name="{{ $detailRouteName }}"
     pk-field="{{ $productPkField }}"
     product-type="{{ $productType }}"
     :compare-table="true"
 />
-<x-products.faq2 />
+<x-client.shared.faq-cta-banner />
 
-</x-layouts.client>
+</x-client.layouts.main>

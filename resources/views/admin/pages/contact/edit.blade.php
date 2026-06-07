@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Trang Liên Hệ" breadcrumb="Admin › Cấu Hình Trang Đơn › Trang Liên Hệ">
+<x-admin.layouts.app title="Trang Liên Hệ" breadcrumb="Admin › Cấu Hình Trang Đơn › Trang Liên Hệ">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
             <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Cấu Hình Trang Liên Hệ</h2>
@@ -127,4 +127,4 @@
             }
         </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

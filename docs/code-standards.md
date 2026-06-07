@@ -303,8 +303,8 @@ Unauthorized access returns 403 with Vietnamese message.
 - Use Blade components for reusable UI: `<x-product-card />`
 - Use `@props` directive for component parameters
 - Use `@stack('scripts')` and `@stack('styles')` for page-specific assets
-- Client layout in `components/layouts/client.blade.php`
-- Admin layout in `components/admin/layout/app.blade.php`
+- Client layout in `components/client/layouts/main.blade.php`
+- Admin layout in `components/admin/layouts/app.blade.php`
 
 ### 7.2 JavaScript
 

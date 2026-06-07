@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Quản lý khách hàng" breadcrumb="Admin › Khách hàng">
+<x-admin.layouts.app title="Quản lý khách hàng" breadcrumb="Admin › Khách hàng">
 
     <div class="flex items-center justify-between mb-5">
         <div>
@@ -80,4 +80,4 @@
         @endif
     </div>
 
-</x-admin.layout.app>
+</x-admin.layouts.app>

@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Sản phẩm: Ngói Hài Cổ" breadcrumb="Admin › DS Sản phẩm chi tiết › Ngói Hài Cổ">
+<x-admin.layouts.app title="Sản phẩm: Ngói Hài Cổ" breadcrumb="Admin › DS Sản phẩm chi tiết › Ngói Hài Cổ">
     <div class="flex items-center justify-between mb-5">
         <div>
             <h2 class="text-sm font-semibold text-gray-700">Danh sách Ngói Hài Cổ</h2>
@@ -156,4 +156,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

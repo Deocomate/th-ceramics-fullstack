@@ -1,4 +1,4 @@
-<x-layouts.client title="Lan Can Gốm Sứ" data-page="products"
+<x-client.layouts.main title="Lan Can Gốm Sứ" data-page="products"
     main-class="flex-grow page-lan-can-gom-su bg-background-secondary">
 
     @push('styles')
@@ -60,7 +60,7 @@
         </style>
     @endpush
 
-    <x-catalog-button />
+    <x-client.shared.catalog-sticky-btn />
 
     <!-- Banner Section -->
     <section
@@ -129,26 +129,15 @@
                                 <div
                                     class="sec1-page {{ $index === 0 ? 'grid' : 'hidden' }} grid-cols-2 gap-x-8 lg:gap-x-16 gap-y-8 lg:gap-y-12 mb-10 fade-grid">
                                     @foreach ($chunk as $item)
-                                        <div class="flex flex-col group cursor-pointer"
-                                            onclick="window.location.href = '{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}'">
-                                            <div
-                                                class="product-card relative w-full aspect-square mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1 shadow-md">
-                                                <img src="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-01.jpg') }}"
-                                                    alt="{{ $item->name }}" class="w-full h-full object-cover">
-                                                <div class="product-overlay">
-                                                    <img src="{{ asset('assets/images/eye.svg') }}" alt="Search">
-                                                    <span>Xem chi tiết</span>
-                                                </div>
-                                            </div>
-                                            <h3
-                                                class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary">
-                                                {{ $item->name }}
-                                            </h3>
-                                            <p class="text-gray-500 text-[12px] lg:text-[13px] mb-1">MSP:
-                                                {{ $item->display_code }}</p>
-                                            <p class="font-bold text-[#C47526] text-[13px] lg:text-[14px]">
-                                                {{ $item->display_price }}</p>
-                                        </div>
+                                        <x-client.shared.product-card
+                                            href="{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}"
+                                            image="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-01.jpg') }}"
+                                            title="{{ $item->name }}"
+                                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
+                                            code="MSP: {{ $item->display_code }}"
+                                            price="{{ $item->display_price }}"
+                                            :show-overlay="true"
+                                        />
                                     @endforeach
                                 </div>
                             @endforeach
@@ -235,26 +224,15 @@
                                 <div
                                     class="sec2-page {{ $index === 0 ? 'grid' : 'hidden' }} grid-cols-2 gap-x-4 md:gap-x-8 lg:gap-x-16 gap-y-6 md:gap-y-10 lg:gap-y-12 mb-6 md:mb-10 fade-grid">
                                     @foreach ($chunk as $item)
-                                        <div class="flex flex-col group cursor-pointer"
-                                            onclick="window.location.href = '{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}'">
-                                            <div
-                                                class="product-card relative w-full aspect-square mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1 shadow-md">
-                                                <img src="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-02.jpg') }}"
-                                                    alt="{{ $item->name }}" class="w-full h-full object-cover">
-                                                <div class="product-overlay">
-                                                    <img src="{{ asset('assets/images/eye.svg') }}" alt="Search">
-                                                    <span>Xem chi tiết</span>
-                                                </div>
-                                            </div>
-                                            <h3
-                                                class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary">
-                                                {{ $item->name }}
-                                            </h3>
-                                            <p class="text-gray-500 text-[12px] lg:text-[13px] mb-1">MSP:
-                                                {{ $item->display_code }}</p>
-                                            <p class="font-bold text-[#C47526] text-[13px] lg:text-[14px]">
-                                                {{ $item->display_price }}</p>
-                                        </div>
+                                        <x-client.shared.product-card
+                                            href="{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}"
+                                            image="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-02.jpg') }}"
+                                            title="{{ $item->name }}"
+                                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
+                                            code="MSP: {{ $item->display_code }}"
+                                            price="{{ $item->display_price }}"
+                                            :show-overlay="true"
+                                        />
                                     @endforeach
                                 </div>
                             @endforeach
@@ -301,65 +279,46 @@
                     <!-- Khối ảnh lớn đầu tiên (Chiếm 2 cột) -->
                     @php $firstProduct = $productListProducts->first(); @endphp
                     @if ($firstProduct)
-                        <div class="flex flex-col col-span-2 lg:col-span-2 group cursor-pointer"
-                            onclick="window.location.href = '{{ route('client.products.lan-can-gom-su.detail', $firstProduct->lan_can_gom_su_ct_id) }}'">
-                            <div
-                                class="product-card relative w-full aspect-[2/1] md:aspect-[19/10] mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1 shadow-md">
-                                <img src="{{ $firstProduct->images ? asset('storage/' . $firstProduct->images[0]) : asset('assets/images/lan-can-giot-le.jpg') }}"
-                                    alt="{{ $firstProduct->name }}" class="w-full h-full object-cover">
-                                <div class="product-overlay">
-                                    <img src="{{ asset('assets/images/eye.svg') }}" alt="Search">
-                                    <span>Xem chi tiết</span>
-                                </div>
-                            </div>
-                            <h3
-                                class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary">
-                                {{ $firstProduct->name }}
-                            </h3>
-                            <p class="text-gray-500 text-[12px] lg:text-[13px] mb-1">MSP:
-                                {{ $firstProduct->display_code }}</p>
-                            <p class="font-bold text-[#C47526] text-[13px] lg:text-[14px]">
-                                {{ $firstProduct->display_price }}</p>
-                        </div>
+                        <x-client.shared.product-card
+                            href="{{ route('client.products.lan-can-gom-su.detail', $firstProduct->lan_can_gom_su_ct_id) }}"
+                            class="col-span-2 lg:col-span-2"
+                            image="{{ $firstProduct->images ? asset('storage/' . $firstProduct->images[0]) : asset('assets/images/lan-can-giot-le.jpg') }}"
+                            title="{{ $firstProduct->name }}"
+                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
+                            code="MSP: {{ $firstProduct->display_code }}"
+                            price="{{ $firstProduct->display_price }}"
+                            :show-overlay="true"
+                            aspect="aspect-[2/1] md:aspect-[19/10]"
+                        />
                     @endif
 
                     <!-- Khối ảnh nhỏ tiếp theo -->
                     @foreach ($productListProducts->skip(1)->take(2) as $item)
-                        <div class="flex flex-col group cursor-pointer"
-                            onclick="window.location.href = '{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}'">
-                            <div
-                                class="product-card relative w-full aspect-[1.1/1] md:aspect-[9/10] mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1 shadow-md">
-                                <img src="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-07.jpg') }}"
-                                    alt="{{ $item->name }}" class="w-full h-full object-cover">
-                                <div class="product-overlay">
-                                    <img src="{{ asset('assets/images/eye.svg') }}" alt="Search">
-                                    <span>Xem chi tiết</span>
-                                </div>
-                            </div>
-                            <h3
-                                class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary">
-                                {{ $item->name }}
-                            </h3>
-                            <p class="text-gray-500 text-[12px] lg:text-[13px] mb-1">MSP: {{ $item->display_code }}
-                            </p>
-                            <p class="font-bold text-[#C47526] text-[13px] lg:text-[14px]">{{ $item->display_price }}
-                            </p>
-                        </div>
+                        <x-client.shared.product-card
+                            href="{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}"
+                            image="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-07.jpg') }}"
+                            title="{{ $item->name }}"
+                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
+                            code="MSP: {{ $item->display_code }}"
+                            price="{{ $item->display_price }}"
+                            :show-overlay="true"
+                            aspect="aspect-[1.1/1] md:aspect-[9/10]"
+                        />
                     @endforeach
                 </div>
             </div>
         </section>
     @endif
 
-    <x-products.outstanding-value />
+    <x-client.shared.outstanding-value />
 
-    <x-products.journey-video :video="$config->video" />
+    <x-client.shared.journey-video :video="$config->video" />
 
-    <x-products.works />
+    <x-client.shared.works />
 
     <!-- FAQ Section -->
     <section class="w-full relative pb-16 bg-background-secondary overflow-visible" data-aos="fade-up">
-        <x-products.faq-content />
+        <x-client.shared.faq-accordion />
     </section>
 
     @push('scripts')
@@ -405,4 +364,4 @@
         </script>
     @endpush
 
-</x-layouts.client>
+</x-client.layouts.main>

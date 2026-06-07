@@ -1,4 +1,4 @@
-<x-layouts.client title="Ngói Âm Dương" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+<x-client.layouts.main title="Ngói Âm Dương" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
 
 @push('styles')
 <style>
@@ -39,12 +39,12 @@
 
 <!-- Sub Breadcrumb -->
 <div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
-    <x-products.breadcrumb current-label="NGÓI ÂM DƯƠNG" parent-label="Sản phẩm" parent-href="{{ route('client.products.ngoi-am-duong.index') }}" />
+    <x-client.shared.breadcrumb current-label="NGÓI ÂM DƯƠNG" parent-label="Sản phẩm" parent-href="{{ route('client.products.ngoi-am-duong.index') }}" />
     <hr class="border-t border-black/10 mt-4 w-full" />
 </div>
 
 <!-- Product Detail Container -->
-<x-products.product-detail-container
+<x-client.shared.product-detail-container
     title="{{ $product->name }}"
     price="{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/m²' : 'Liên hệ' }}"
     rawPrice="{{ $product->price }}"
@@ -55,7 +55,7 @@
     productId="{{ $product->ngoi_am_duong_ct_id }}"
 />
 
-<x-products.journey-video :hide-title="true" />
+<x-client.shared.journey-video :hide-title="true" />
 
 <!-- Flex Container for Mobile Reordering -->
 <div class="flex flex-col w-full">
@@ -88,7 +88,7 @@
                 </div>
             </button>
             <div class="accordion-content hidden md:block w-full pb-6 md:pb-0 pt-2 md:pt-0">
-                <x-products.color-palette :colors="$colors" />
+                <x-client.shared.color-palette :colors="$colors" />
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden" />
@@ -107,7 +107,7 @@
                 </div>
             </button>
             <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                @include('clients.products.ngoi-am-duong.partials.weight-calculator', ['dinhMuc' => $dinhMuc])
+                <x-client.products.ngoi-am-duong.weight-calculator :dinh-muc="$dinhMuc" />
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden" />
@@ -126,7 +126,7 @@
                 </div>
             </button>
             <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                @include('clients.products.ngoi-am-duong.partials.applications')
+                <x-client.products.ngoi-am-duong.applications :trang-chu="$trangChu ?? null" :ngoi-am-duongs="$ngoiAmDuongs ?? null" :ngoi-hais="$ngoiHais ?? null" :gach-hoas="$gachHoas ?? null" :about="$about ?? null" :factory="$factory ?? null" :showroom-images="$showroomImages ?? null" :showroom-content="$showroomContent ?? null" :news="$news ?? null" :article="$article ?? null" :articles="$articles ?? null" :related-articles="$relatedArticles ?? null" :history-articles="$historyArticles ?? null" :projects="$projects ?? null" :project="$project ?? null" :related-projects="$relatedProjects ?? null" :categories="$categories ?? null" :selected-category="$selectedCategory ?? null" :current-category="$currentCategory ?? null" :config="$config ?? null" :products="$products ?? null" :related-products="$relatedProducts ?? null" :product="$product ?? null" :colors="$colors ?? null" :dinh-muc="$dinhMuc ?? null" :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" :parent-config="$parentConfig ?? null" :page-label="$pageLabel ?? null" :index-route-name="$indexRouteName ?? null" :category-type="$categoryType ?? null" :category-label="$categoryLabel ?? null" :den-gom-products="$denGomProducts ?? null" :den-su-products="$denSuProducts ?? null" :featured-products="$featuredProducts ?? null" :collection-products="$collectionProducts ?? null" :nghe-products="$ngheProducts ?? null" :linh-vat-products="$linhVatProducts ?? null" />
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden" />
@@ -145,21 +145,21 @@
                 </div>
             </button>
             <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                @include('clients.products.ngoi-am-duong.partials.installation-guide')
+                <x-client.products.ngoi-am-duong.installation-guide :trang-chu="$trangChu ?? null" :ngoi-am-duongs="$ngoiAmDuongs ?? null" :ngoi-hais="$ngoiHais ?? null" :gach-hoas="$gachHoas ?? null" :about="$about ?? null" :factory="$factory ?? null" :showroom-images="$showroomImages ?? null" :showroom-content="$showroomContent ?? null" :news="$news ?? null" :article="$article ?? null" :articles="$articles ?? null" :related-articles="$relatedArticles ?? null" :history-articles="$historyArticles ?? null" :projects="$projects ?? null" :project="$project ?? null" :related-projects="$relatedProjects ?? null" :categories="$categories ?? null" :selected-category="$selectedCategory ?? null" :current-category="$currentCategory ?? null" :config="$config ?? null" :products="$products ?? null" :related-products="$relatedProducts ?? null" :product="$product ?? null" :colors="$colors ?? null" :dinh-muc="$dinhMuc ?? null" :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" :parent-config="$parentConfig ?? null" :page-label="$pageLabel ?? null" :index-route-name="$indexRouteName ?? null" :category-type="$categoryType ?? null" :category-label="$categoryLabel ?? null" :den-gom-products="$denGomProducts ?? null" :den-su-products="$denSuProducts ?? null" :featured-products="$featuredProducts ?? null" :collection-products="$collectionProducts ?? null" :nghe-products="$ngheProducts ?? null" :linh-vat-products="$linhVatProducts ?? null" />
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden mb-8 md:mb-0" />
     </div>
 </div>
 
-<x-products.works />
-<x-products.recommendations
+<x-client.shared.works />
+<x-client.shared.recommendations
     :related-products="$relatedProducts"
     route-name="client.products.ngoi-am-duong.detail"
     pk-field="ngoi_am_duong_ct_id"
     product-type="ngoi_am_duong_ct"
 />
-<x-products.faq2 />
+<x-client.shared.faq-cta-banner />
 
 @push('scripts')
 <script>
@@ -176,4 +176,4 @@
     }
 </script>
 @endpush
-</x-layouts.client>
+</x-client.layouts.main>

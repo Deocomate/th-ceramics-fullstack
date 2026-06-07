@@ -24,7 +24,7 @@ class ResetPasswordNotification extends ResetPassword implements ShouldQueue
 
         return (new MailMessage)
             ->subject('Yêu cầu đặt lại mật khẩu - '.config('app.name'))
-            ->markdown('emails.auth.reset_password', ['url' => $url])
+            ->markdown('components.emails.auth.reset_password', ['url' => $url])
             ->action('Đặt lại mật khẩu', $url);
     }
 }

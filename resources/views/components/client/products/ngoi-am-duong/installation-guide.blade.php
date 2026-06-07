@@ -1,0 +1,216 @@
+@props([
+    'trangChu' => null,
+    'ngoiAmDuongs' => null,
+    'ngoiHais' => null,
+    'gachHoas' => null,
+    'about' => null,
+    'factory' => null,
+    'showroomImages' => null,
+    'showroomContent' => null,
+    'news' => null,
+    'article' => null,
+    'articles' => null,
+    'relatedArticles' => null,
+    'historyArticles' => null,
+    'projects' => null,
+    'project' => null,
+    'relatedProjects' => null,
+    'categories' => null,
+    'selectedCategory' => null,
+    'currentCategory' => null,
+    'config' => null,
+    'products' => null,
+    'relatedProducts' => null,
+    'product' => null,
+    'colors' => null,
+    'dinhMuc' => null,
+    'giaTriVuotTroi' => null,
+    'parentConfig' => null,
+    'pageLabel' => null,
+    'indexRouteName' => null,
+    'categoryType' => null,
+    'categoryLabel' => null,
+    'denGomProducts' => null,
+    'denSuProducts' => null,
+    'featuredProducts' => null,
+    'collectionProducts' => null,
+    'ngheProducts' => null,
+    'linhVatProducts' => null,
+    'bgImage' => null,
+    'activeOrder' => false,
+    'activeAccount' => false,
+    'activeCatalog' => false,
+    'activeGuide' => false,
+    'activeProcess' => false,
+    'activePrivacy' => false,
+    'activeReturn' => false,
+    'activeShipping' => false,
+    'image' => null,
+    'label1' => null,
+    'rate1' => null,
+    'label2' => null,
+    'rate2' => null,
+    'sectionId' => null,
+    'sectionClass' => null,
+    'sectionTitle' => null,
+    'desktopLinkHref' => null,
+    'detailRouteName' => null,
+    'wrapperClass' => null,
+    'titleClass' => null,
+    'title' => null,
+    'subtitle' => null,
+    'description' => null,
+    'items' => null,])
+<section
+  class="w-full pb-4 pt-8 lg:pb-20 lg:pt-20 bg-background-secondary"
+  data-aos="fade-up"
+>
+  <div class="w-[85%] max-w-[1320px] mx-auto">
+    <h2
+      class="text-[20px] md:text-3xl font-semibold text-center text-secondary mb-8 md:mb-12 uppercase"
+    >
+      HƯỚNG DẪN LẮP ĐẶT
+    </h2>
+
+    <div class="flex justify-center mb-8 md:mb-16">
+      <div class="flex flex-row-reverse md:flex-row border-b border-black/10 w-full max-w-[600px]">
+        <button
+          class="flex-1 pb-2 md:pb-4 text-[14px] md:text-2xl font-bold md:font-semibold uppercase text-secondary border-b-2 md:border-b-4 border-transparent md:border-secondary transition-all text-right md:text-center font-archivo"
+        >
+          MÁI BÊ TÔNG
+        </button>
+        <button
+          class="flex-1 pb-2 md:pb-4 text-[14px] md:text-2xl font-bold md:font-semibold uppercase text-secondary border-b-2 md:border-b-4 border-secondary md:border-transparent hover:border-secondary transition-all text-left md:text-center font-archivo"
+        >
+          MÁI GỖ
+        </button>
+      </div>
+    </div>
+
+    <div class="space-y-8 md:space-y-20 relative w-full">
+      <div class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-4 pb-6 md:pb-0 w-full md:overflow-visible items-stretch md:items-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:flex-row">
+        <div class="w-full shrink-0 snap-center md:flex-1 md:w-auto bg-[#f8f8f8] border border-secondary shadow-sm overflow-hidden">
+          <div class="flex h-[56px] md:h-24">
+            <div class="w-[48px] md:w-16 lg:w-12 shrink-0 flex items-center justify-center bg-white text-secondary font-bold font-advent text-[36px] leading-[40px] md:text-4xl lg:text-[40px] border-b border-r border-secondary">
+              1
+            </div>
+            <div class="flex-1 flex items-center px-4 lg:px-8 bg-secondary text-white text-[16px] leading-[25px] md:text-[20px] font-semibold md:leading-tight">
+              Chống thấm mái, tóc khô cắt
+            </div>
+          </div>
+          <div class="aspect-[6/5] w-full bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
+            <img src="{{ asset('assets/images/installation.png') }}" alt="Installation Step 1" class="w-full h-full object-cover border-t border-secondary" />
+          </div>
+        </div>
+
+        <div class="hidden md:flex shrink-0 items-center justify-center px-1 lg:px-2">
+          <div class="flex items-center -space-x-1.5 lg:-space-x-2">
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-4 lg:w-7 h-auto opacity-20" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-40" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-70" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-100" />
+          </div>
+        </div>
+
+        <div class="w-full shrink-0 snap-center md:flex-1 md:w-auto bg-[#f8f8f8] border border-secondary shadow-sm overflow-hidden">
+          <div class="flex h-[56px] md:h-24">
+            <div class="w-[48px] md:w-16 lg:w-12 shrink-0 flex items-center justify-center bg-white text-secondary font-bold font-advent text-[36px] leading-[40px] md:text-4xl lg:text-[40px] border-b border-r border-secondary">
+              2
+            </div>
+            <div class="flex-1 flex items-center px-4 lg:px-8 bg-secondary text-white text-[16px] leading-[25px] md:text-[20px] font-semibold md:leading-tight">
+              Chống thấm mái, tóc khô cắt
+            </div>
+          </div>
+          <div class="aspect-[6/5] w-full bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
+            <img src="{{ asset('assets/images/installation.png') }}" alt="Installation Step 1" class="w-full h-full object-cover border-t border-secondary" />
+          </div>
+        </div>
+
+        <div class="hidden md:flex shrink-0 items-center justify-center px-1 lg:px-2">
+          <div class="flex items-center -space-x-1.5 lg:-space-x-2">
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-20" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-40" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-70" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-100" />
+          </div>
+        </div>
+
+        <div class="w-full shrink-0 snap-center md:flex-1 md:w-auto bg-[#f8f8f8] border border-secondary shadow-sm overflow-hidden">
+          <div class="flex h-[56px] md:h-24">
+            <div class="w-[48px] md:w-16 lg:w-12 shrink-0 flex items-center justify-center bg-white text-secondary font-bold font-advent text-[36px] leading-[40px] md:text-4xl lg:text-[40px] border-b border-r border-secondary">
+              3
+            </div>
+            <div class="flex-1 flex items-center px-4 lg:px-8 bg-secondary text-white text-[16px] leading-[25px] md:text-[20px] font-semibold md:leading-tight">
+              Chống thấm mái, tóc khô cắt
+            </div>
+          </div>
+          <div class="aspect-[6/5] w-full bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
+            <img src="{{ asset('assets/images/installation.png') }}" alt="Installation Step 1" class="w-full h-full object-cover border-t border-secondary" />
+          </div>
+        </div>
+      </div>
+
+      <div class="hidden md:flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-4 pb-6 md:pb-0 w-full md:overflow-visible items-stretch md:items-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:flex-row">
+        <div class="w-full shrink-0 snap-center md:flex-1 md:w-auto bg-[#f8f8f8] border border-secondary shadow-sm overflow-hidden">
+          <div class="flex h-[56px] md:h-24">
+            <div class="w-[48px] md:w-16 lg:w-12 shrink-0 flex items-center justify-center bg-white text-secondary font-bold font-advent text-[36px] leading-[40px] md:text-4xl lg:text-[40px] border-b border-r border-secondary">
+              1
+            </div>
+            <div class="flex-1 flex items-center px-4 lg:px-8 bg-secondary text-white text-[16px] leading-[25px] md:text-[20px] font-semibold md:leading-tight">
+              Chống thấm mái, tóc khô cắt
+            </div>
+          </div>
+          <div class="aspect-[6/5] w-full bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
+            <img src="{{ asset('assets/images/installation.png') }}" alt="Installation Step 1" class="w-full h-full object-cover border-t border-secondary" />
+          </div>
+        </div>
+
+        <div class="hidden md:flex shrink-0 items-center justify-center px-1 lg:px-2">
+          <div class="flex items-center -space-x-1.5 lg:-space-x-2">
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-20" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-40" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-70" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-100" />
+          </div>
+        </div>
+
+        <div class="w-full shrink-0 snap-center md:flex-1 md:w-auto bg-[#f8f8f8] border border-secondary shadow-sm overflow-hidden">
+          <div class="flex h-[56px] md:h-24">
+            <div class="w-[48px] md:w-16 lg:w-12 shrink-0 flex items-center justify-center bg-white text-secondary font-bold font-advent text-[36px] leading-[40px] md:text-4xl lg:text-[40px] border-b border-r border-secondary">
+              2
+            </div>
+            <div class="flex-1 flex items-center px-4 lg:px-8 bg-secondary text-white text-[16px] leading-[25px] md:text-[20px] font-semibold md:leading-tight">
+              Chống thấm mái, tóc khô cắt
+            </div>
+          </div>
+          <div class="aspect-[6/5] w-full bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
+            <img src="{{ asset('assets/images/installation.png') }}" alt="Installation Step 1" class="w-full h-full object-cover border-t border-secondary" />
+          </div>
+        </div>
+
+        <div class="hidden md:flex shrink-0 items-center justify-center px-1 lg:px-2">
+          <div class="flex items-center -space-x-1.5 lg:-space-x-2">
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-20" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-40" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-70" />
+            <img src="{{ asset('assets/images/chevron-right.svg') }}" alt="Arrow" class="w-5 lg:w-7 h-auto opacity-100" />
+          </div>
+        </div>
+
+        <div class="w-full shrink-0 snap-center md:flex-1 md:w-auto bg-[#f8f8f8] border border-secondary shadow-sm overflow-hidden">
+          <div class="flex h-[56px] md:h-24">
+            <div class="w-[48px] md:w-16 lg:w-12 shrink-0 flex items-center justify-center bg-white text-secondary font-bold font-advent text-[36px] leading-[40px] md:text-4xl lg:text-[40px] border-b border-r border-secondary">
+              3
+            </div>
+            <div class="flex-1 flex items-center px-4 lg:px-8 bg-secondary text-white text-[16px] leading-[25px] md:text-[20px] font-semibold md:leading-tight">
+              Chống thấm mái, tóc khô cắt
+            </div>
+          </div>
+          <div class="aspect-[6/5] w-full bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
+            <img src="{{ asset('assets/images/installation.png') }}" alt="Installation Step 1" class="w-full h-full object-cover border-t border-secondary" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

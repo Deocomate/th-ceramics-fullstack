@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Phân Loại Đèn Vườn Gốm Sứ" breadcrumb="Admin › DS Sản phẩm chi tiết › Đèn Vườn Gốm Sứ › Phân Loại">
+<x-admin.layouts.app title="Phân Loại Đèn Vườn Gốm Sứ" breadcrumb="Admin › DS Sản phẩm chi tiết › Đèn Vườn Gốm Sứ › Phân Loại">
     @if ($errors->any())
         <div class="mb-6 flex items-start gap-3 px-4 py-3 rounded-lg text-sm text-red-800 bg-red-50 border border-red-200 shadow-sm">
             <div>
@@ -207,4 +207,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

@@ -1,4 +1,4 @@
-<x-layouts.client title="Liên hệ" data-page="contact" main-class="relative overflow-hidden">
+<x-client.layouts.main title="Liên hệ" data-page="contact" main-class="relative overflow-hidden">
     @push('styles')
     <style>
       /* Custom scrollbar for some browsers if needed, but not required here */
@@ -126,4 +126,4 @@
         </div>
       </div>
     </div>
-</x-layouts.client>
+</x-client.layouts.main>

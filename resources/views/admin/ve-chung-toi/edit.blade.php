@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Về Chúng Tôi" breadcrumb="Admin › Cấu hình trang đơn › Về Chúng Tôi">
+<x-admin.layouts.app title="Về Chúng Tôi" breadcrumb="Admin › Cấu hình trang đơn › Về Chúng Tôi">
     <div class="space-y-6 pb-10">
         
         <!-- ==================== TAB NAVIGATION (Đã bỏ sticky) ==================== -->
@@ -480,4 +480,4 @@
         populateJsonBlocks('nt_luyen_dat_item', 'nt-luyen-dat-container', 3);
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

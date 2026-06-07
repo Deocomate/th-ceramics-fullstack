@@ -1,4 +1,4 @@
-<x-layouts.client title="Thanh toán" data-page="checkout" main-class="bg-background-secondary min-h-screen pt-12 pb-4 md:pt-10 md:pb-10">
+<x-client.layouts.main title="Thanh toán" data-page="checkout" main-class="bg-background-secondary min-h-screen pt-12 pb-4 md:pt-10 md:pb-10">
 
 <div class="w-[85%] max-w-[1320px] mx-auto pb-8 md:pb-16">
     <!-- Breadcrumb -->
@@ -156,7 +156,7 @@
     </form>
 </div>
 
-<x-faq-faq-contact />
+<x-client.shared.faq-contact />
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -266,4 +266,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-</x-layouts.client>
+</x-client.layouts.main>

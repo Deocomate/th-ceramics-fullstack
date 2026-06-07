@@ -1,4 +1,4 @@
-<x-admin.layout.auth title="Đặt lại mật khẩu">
+<x-admin.layouts.auth title="Đặt lại mật khẩu">
 
     <h2 class="text-lg font-semibold text-gray-800 mb-1">Đặt lại mật khẩu</h2>
     <p class="text-xs text-gray-500 mb-5">Nhập mật khẩu mới cho tài khoản của bạn.</p>
@@ -76,4 +76,4 @@
         </button>
     </form>
 
-</x-admin.layout.auth>
+</x-admin.layouts.auth>

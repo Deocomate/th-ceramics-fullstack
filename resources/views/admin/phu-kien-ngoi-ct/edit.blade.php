@@ -2,7 +2,7 @@
     ? route('client.products.phu-kien-ngoi.bo-noc-chu-van.detail', $product->phu_kien_ngoi_ct_id)
     : route('client.products.phu-kien-ngoi.ngoi-bo-noc.detail', $product->phu_kien_ngoi_ct_id))
 
-<x-admin.layout.app title="Cập nhật {{ $categoryLabel }}" breadcrumb="Admin › Phụ Kiện Ngói › Chỉnh sửa">
+<x-admin.layouts.app title="Cập nhật {{ $categoryLabel }}" breadcrumb="Admin › Phụ Kiện Ngói › Chỉnh sửa">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
             <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Cập nhật Sản Phẩm: {{ $product->name }}</h2>
@@ -77,4 +77,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

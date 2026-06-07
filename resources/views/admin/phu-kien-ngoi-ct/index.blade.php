@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Sản phẩm: {{ $categoryLabel }}" breadcrumb="Admin › Phụ Kiện Ngói › {{ $categoryLabel }}">
+<x-admin.layouts.app title="Sản phẩm: {{ $categoryLabel }}" breadcrumb="Admin › Phụ Kiện Ngói › {{ $categoryLabel }}">
     <div class="flex items-center justify-between mb-5">
         <div>
             <h2 class="text-sm font-semibold text-gray-700">Danh sách {{ $categoryLabel }}</h2>
@@ -137,4 +137,4 @@
         function closeRestoreModal() { closeModal('restoreModal'); }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

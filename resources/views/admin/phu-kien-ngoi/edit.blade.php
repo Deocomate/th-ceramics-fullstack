@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Phụ Kiện Ngói" breadcrumb="Admin › Sản Phẩm › Phụ Kiện Ngói">
+<x-admin.layouts.app title="Phụ Kiện Ngói" breadcrumb="Admin › Sản Phẩm › Phụ Kiện Ngói">
     @php
         $assetUrl = fn (?string $path, ?string $fallback = null) => \App\Support\AssetPath::url($path, $fallback);
     @endphp
@@ -259,4 +259,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

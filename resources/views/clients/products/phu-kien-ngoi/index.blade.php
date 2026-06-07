@@ -1,4 +1,4 @@
-<x-layouts.client title="Phụ Kiện Ngói" data-page="products" main-class="bg-background-secondary overflow-hidden page-phu-kien-ngoi" :hide-newsletter="true">
+<x-client.layouts.main title="Phụ Kiện Ngói" data-page="products" main-class="bg-background-secondary overflow-hidden page-phu-kien-ngoi" :hide-newsletter="true">
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -28,7 +28,7 @@
       : route('client.products.phu-kien-ngoi.ngoi-bo-noc.detail', $productId($product));
 @endphp
 
-<x-catalog-button />
+<x-client.shared.catalog-sticky-btn />
 
 <section class="relative w-full">
   <div class="relative w-full aspect-[4/3] md:aspect-[8/6] lg:aspect-auto h-full lg:[clip-path:inset(40px_0_0_0)] lg:-mt-[40px]">
@@ -49,8 +49,8 @@
   </div>
 </section>
 
-@include('clients.products.phu-kien-ngoi.partials.category-section-1')
-@include('clients.products.phu-kien-ngoi.partials.category-section-2')
+<x-client.products.phu-kien-ngoi.category-showcase-bo-noc :trang-chu="$trangChu ?? null" :ngoi-am-duongs="$ngoiAmDuongs ?? null" :ngoi-hais="$ngoiHais ?? null" :gach-hoas="$gachHoas ?? null" :about="$about ?? null" :factory="$factory ?? null" :showroom-images="$showroomImages ?? null" :showroom-content="$showroomContent ?? null" :news="$news ?? null" :article="$article ?? null" :articles="$articles ?? null" :related-articles="$relatedArticles ?? null" :history-articles="$historyArticles ?? null" :projects="$projects ?? null" :project="$project ?? null" :related-projects="$relatedProjects ?? null" :categories="$categories ?? null" :selected-category="$selectedCategory ?? null" :current-category="$currentCategory ?? null" :config="$config ?? null" :products="$products ?? null" :related-products="$relatedProducts ?? null" :product="$product ?? null" :colors="$colors ?? null" :dinh-muc="$dinhMuc ?? null" :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" :parent-config="$parentConfig ?? null" :page-label="$pageLabel ?? null" :index-route-name="$indexRouteName ?? null" :category-type="$categoryType ?? null" :category-label="$categoryLabel ?? null" :den-gom-products="$denGomProducts ?? null" :den-su-products="$denSuProducts ?? null" :featured-products="$featuredProducts ?? null" :collection-products="$collectionProducts ?? null" :nghe-products="$ngheProducts ?? null" :linh-vat-products="$linhVatProducts ?? null" />
+<x-client.products.phu-kien-ngoi.category-showcase-chu-van :trang-chu="$trangChu ?? null" :ngoi-am-duongs="$ngoiAmDuongs ?? null" :ngoi-hais="$ngoiHais ?? null" :gach-hoas="$gachHoas ?? null" :about="$about ?? null" :factory="$factory ?? null" :showroom-images="$showroomImages ?? null" :showroom-content="$showroomContent ?? null" :news="$news ?? null" :article="$article ?? null" :articles="$articles ?? null" :related-articles="$relatedArticles ?? null" :history-articles="$historyArticles ?? null" :projects="$projects ?? null" :project="$project ?? null" :related-projects="$relatedProjects ?? null" :categories="$categories ?? null" :selected-category="$selectedCategory ?? null" :current-category="$currentCategory ?? null" :config="$config ?? null" :products="$products ?? null" :related-products="$relatedProducts ?? null" :product="$product ?? null" :colors="$colors ?? null" :dinh-muc="$dinhMuc ?? null" :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" :parent-config="$parentConfig ?? null" :page-label="$pageLabel ?? null" :index-route-name="$indexRouteName ?? null" :category-type="$categoryType ?? null" :category-label="$categoryLabel ?? null" :den-gom-products="$denGomProducts ?? null" :den-su-products="$denSuProducts ?? null" :featured-products="$featuredProducts ?? null" :collection-products="$collectionProducts ?? null" :nghe-products="$ngheProducts ?? null" :linh-vat-products="$linhVatProducts ?? null" />
 
 @php
   $masonryProducts = $ngoiBoNocProducts->concat($boNocChuVanProducts)->take(6)->values();
@@ -77,20 +77,19 @@
           $id = $productId($product);
           $type = $productType($product);
         @endphp
-        <div class="flex flex-col group cursor-pointer {{ $item['wrapper'] }}" data-aos="fade-up" data-aos-delay="{{ $item['delay'] }}" onclick="window.location.href = '{{ $productUrl($product) }}'">
-          <div class="product-card relative w-full {{ $item['card'] }} shadow mb-4 lg:mb-6 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1">
-            <img src="{{ $productImageUrl($product, 'assets/images/pk-01.jpg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover mix-blend-multiply">
-            <div class="product-overlay">
-              <img src="{{ asset('assets/images/eye.svg') }}" alt="Search">
-              <span>Xem chi tiết</span>
-            </div>
-          </div>
-          <h3 class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary">
-            {{ $product->name }}
-          </h3>
-          <p class="text-gray-500 text-[12px] lg:text-[13px] mb-1">MSP: {{ $productCode($product) }}</p>
-          <p class="font-bold text-[#C47526] text-[13px] lg:text-[14px]">Giá: Liên hệ</p>
-        </div>
+        <x-client.shared.product-card
+          href="{{ $productUrl($product) }}"
+          class="{{ $item['wrapper'] }}"
+          image="{{ $productImageUrl($product, 'assets/images/pk-01.jpg') }}"
+          title="{{ $product->name }}"
+          title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
+          code="MSP: {{ $productCode($product) }}"
+          price="Giá: Liên hệ"
+          :show-overlay="true"
+          aspect="{{ $item['card'] }} bg-white shadow mb-4 lg:mb-6"
+          data-aos="fade-up"
+          data-aos-delay="{{ $item['delay'] }}"
+        />
       @endforeach
     </div>
   </div>
@@ -183,7 +182,7 @@
   <div class="absolute z-[2] lg:-top-[23%] lg:left-[11.5%] -left-[10%] w-[120%] lg:w-[77%] pointer-events-none" data-aos="fade-up-right">
     <img src="{{ asset('assets/images/pk-decorate.svg') }}" alt="" class="w-full origin-center md:opacity-80 opacity-60 drop-shadow-sm">
   </div>
-  <x-products.faq-content />
+  <x-client.shared.faq-accordion />
 </section>
 
 @push('scripts')
@@ -255,4 +254,4 @@
 </script>
 @endpush
 
-</x-layouts.client>
+</x-client.layouts.main>

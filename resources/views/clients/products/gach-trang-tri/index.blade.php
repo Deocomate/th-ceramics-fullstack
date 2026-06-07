@@ -1,4 +1,4 @@
-<x-layouts.client title="Gạch Trang Trí" data-page="products" main-class="bg-background-secondary" :hide-newsletter="true">
+<x-client.layouts.main title="Gạch Trang Trí" data-page="products" main-class="bg-background-secondary" :hide-newsletter="true">
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -162,7 +162,7 @@
   });
 @endphp
 
-<x-catalog-button />
+<x-client.shared.catalog-sticky-btn />
 
 <!-- Top Banner -->
 <section
@@ -246,12 +246,12 @@
 
 <!-- Breadcrumb -->
 <div class="w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
-  <x-products.breadcrumb current-label="Gạch Trang Trí" />
+  <x-client.shared.breadcrumb current-label="Gạch Trang Trí" />
 </div>
 
-<x-products.product-filter />
-<x-products.product-grid category="gach-trang-tri" :products="$products" routeName="client.products.gach-trang-tri.detail" />
-<x-products.trang-tri-process :images="$config && is_array($config->images) ? $config->images : []" />
+<x-client.shared.product-filter />
+<x-client.shared.product-grid category="gach-trang-tri" :products="$products" routeName="client.products.gach-trang-tri.detail" />
+<x-client.shared.custom-design-process :images="$config && is_array($config->images) ? $config->images : []" />
 
 <!-- Công đoạn chế tác -->
 <section class="relative w-full overflow-hidden py-12 md:py-20" data-aos="fade-up">
@@ -274,7 +274,7 @@
   </div>
 </section>
 
-<x-products.journey-video :hide-title="true" />
+<x-client.shared.journey-video :hide-title="true" />
 
 <!-- Nâng tầm giá trị nghệ thuật Section -->
 <section class="max-w-[1320px] w-[85%] mx-auto md:pb-20" data-aos="fade-up">
@@ -388,7 +388,7 @@
   <img src="{{ asset('assets/images/gtt-decorate-right.svg') }}"
     class="absolute top-[38%] -translate-y-1/3 md:right-12 -right-1/2 w-[42%] object-contain opacity-80 pointer-events-none z-0"
     alt="" />
-  <x-products.faq-content />
+  <x-client.shared.faq-accordion />
 </section>
 
 @push('scripts')
@@ -517,4 +517,4 @@
 </script>
 @endpush
 
-</x-layouts.client>
+</x-client.layouts.main>

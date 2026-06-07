@@ -1,4 +1,4 @@
-<x-layouts.client title="Đặt lại mật khẩu" main-class="bg-[#F8F5F0] min-h-screen flex flex-col">
+<x-client.layouts.main title="Đặt lại mật khẩu" main-class="bg-[#F8F5F0] min-h-screen flex flex-col">
     <!-- Phần Main Content Đặt Lại Mật Khẩu -->
     <section class="relative flex-grow flex items-center justify-center py-12 lg:py-20 overflow-hidden">
         <!-- Họa tiết trang trí Background -->
@@ -186,4 +186,4 @@
         </script>
     @endpush
 
-</x-layouts.client>
+</x-client.layouts.main>

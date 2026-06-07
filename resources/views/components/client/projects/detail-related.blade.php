@@ -1,0 +1,211 @@
+@props([
+    'trangChu' => null,
+    'ngoiAmDuongs' => null,
+    'ngoiHais' => null,
+    'gachHoas' => null,
+    'about' => null,
+    'factory' => null,
+    'showroomImages' => null,
+    'showroomContent' => null,
+    'news' => null,
+    'article' => null,
+    'articles' => null,
+    'relatedArticles' => null,
+    'historyArticles' => null,
+    'projects' => null,
+    'project' => null,
+    'relatedProjects' => null,
+    'categories' => null,
+    'selectedCategory' => null,
+    'currentCategory' => null,
+    'config' => null,
+    'products' => null,
+    'relatedProducts' => null,
+    'product' => null,
+    'colors' => null,
+    'dinhMuc' => null,
+    'giaTriVuotTroi' => null,
+    'parentConfig' => null,
+    'pageLabel' => null,
+    'indexRouteName' => null,
+    'categoryType' => null,
+    'categoryLabel' => null,
+    'denGomProducts' => null,
+    'denSuProducts' => null,
+    'featuredProducts' => null,
+    'collectionProducts' => null,
+    'ngheProducts' => null,
+    'linhVatProducts' => null,
+    'bgImage' => null,
+    'activeOrder' => false,
+    'activeAccount' => false,
+    'activeCatalog' => false,
+    'activeGuide' => false,
+    'activeProcess' => false,
+    'activePrivacy' => false,
+    'activeReturn' => false,
+    'activeShipping' => false,
+    'image' => null,
+    'label1' => null,
+    'rate1' => null,
+    'label2' => null,
+    'rate2' => null,
+    'sectionId' => null,
+    'sectionClass' => null,
+    'sectionTitle' => null,
+    'desktopLinkHref' => null,
+    'detailRouteName' => null,
+    'wrapperClass' => null,
+    'titleClass' => null,
+    'title' => null,
+    'subtitle' => null,
+    'description' => null,
+    'items' => null,])
+<section class="py-16 lg:py-24 bg-white">
+  <div class="w-[85%] max-w-[1320px] mx-auto">
+    <!-- Section Header -->
+    <div class="mb-10 lg:mb-16" data-aos="fade-up">
+      <p
+        class="text-[12px] font-bold text-primary opacity-60 uppercase tracking-widest mb-4"
+      >
+        Khám Phá Thêm
+      </p>
+      <h2
+        class="text-[30px] lg:text-[40px] font-arima font-medium text-primary mb-6"
+      >
+        Dự án liên quan
+      </h2>
+      <p
+        class="max-w-2xl text-[15px] text-primary/80 leading-relaxed font-light"
+      >
+        Những công trình khác sử dụng các sản phẩm gốm sứ Thanh Hải, mang lại
+        cảm hứng thiết kế độc đáo.
+      </p>
+    </div>
+
+    <!-- Related Projects Grid -->
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+      data-aos="fade-up"
+    >
+      <!-- Project Card 1 -->
+      <div class="group cursor-pointer">
+        <div
+          class="h-[300px] md:h-[350px] overflow-hidden rounded-lg shadow-md mb-6 relative"
+        >
+          <img
+            src="{{ asset('assets/images/factory-01.jpg') }}"
+            alt="Related Project 1"
+            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+          />
+          <div
+            class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+          >
+            <a
+              href="/projects/detail-2.html"
+              class="bg-white text-primary px-8 py-3 rounded-full font-medium text-sm hover:bg-[#C76E00] hover:text-white transition-all"
+            >
+              Xem Chi Tiết
+            </a>
+          </div>
+        </div>
+        <a href="/projects/detail-2.html" class="block">
+          <p
+            class="text-[12px] font-bold text-primary opacity-60 uppercase tracking-widest mb-2"
+          >
+            Dự Án Thương Mại
+          </p>
+          <h3
+            class="text-xl font-arima text-primary mb-3 group-hover:text-[#C76E00] transition-colors"
+          >
+            The Emerald Center
+          </h3>
+          <p class="text-sm text-primary/70 leading-relaxed font-light">
+            Trung tâm thương mại cao cấp sử dụng gạch trang trí độc đáo, tạo nên
+            một không gian mua sắm sang trọng.
+          </p>
+        </a>
+      </div>
+
+      <!-- Project Card 2 -->
+      <div class="group cursor-pointer">
+        <div
+          class="h-[300px] md:h-[350px] overflow-hidden rounded-lg shadow-md mb-6 relative"
+        >
+          <img
+            src="{{ asset('assets/images/factory-03.png') }}"
+            alt="Related Project 2"
+            onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+          />
+          <div
+            class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+          >
+            <a
+              href="/projects/detail-3.html"
+              class="bg-white text-primary px-8 py-3 rounded-full font-medium text-sm hover:bg-[#C76E00] hover:text-white transition-all"
+            >
+              Xem Chi Tiết
+            </a>
+          </div>
+        </div>
+        <a href="/projects/detail-3.html" class="block">
+          <p
+            class="text-[12px] font-bold text-primary opacity-60 uppercase tracking-widest mb-2"
+          >
+            Dự Án Nhà Ở
+          </p>
+          <h3
+            class="text-xl font-arima text-primary mb-3 group-hover:text-[#C76E00] transition-colors"
+          >
+            Harmony Residential
+          </h3>
+          <p class="text-sm text-primary/70 leading-relaxed font-light">
+            Khu căn hộ cao cấp với thiết kế nội thất sử dụng ngói thơm và gạch
+            thông gió truyền thống.
+          </p>
+        </a>
+      </div>
+
+      <!-- Project Card 3 -->
+      <div class="group cursor-pointer">
+        <div
+          class="h-[300px] md:h-[350px] overflow-hidden rounded-lg shadow-md mb-6 relative"
+        >
+          <img
+            src="{{ asset('assets/images/factory-03.png') }}"
+            alt="Related Project 3"
+            onerror="this.src = '{{ asset('assets/images/factory-01.jpg') }}'"
+            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+          />
+          <div
+            class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+          >
+            <a
+              href="/projects/detail-4.html"
+              class="bg-white text-primary px-8 py-3 rounded-full font-medium text-sm hover:bg-[#C76E00] hover:text-white transition-all"
+            >
+              Xem Chi Tiết
+            </a>
+          </div>
+        </div>
+        <a href="/projects/detail-4.html" class="block">
+          <p
+            class="text-[12px] font-bold text-primary opacity-60 uppercase tracking-widest mb-2"
+          >
+            Dự Án Văn Hóa
+          </p>
+          <h3
+            class="text-xl font-arima text-primary mb-3 group-hover:text-[#C76E00] transition-colors"
+          >
+            Heritage Museum
+          </h3>
+          <p class="text-sm text-primary/70 leading-relaxed font-light">
+            Bảo tàng kết hợp kiến trúc truyền thống với các sản phẩm gốm sứ thủ
+            công độc đáo.
+          </p>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

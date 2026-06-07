@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Thêm Bài Viết Mới" breadcrumb="Admin › Tin Tức › Viết Bài">
+<x-admin.layouts.app title="Thêm Bài Viết Mới" breadcrumb="Admin › Tin Tức › Viết Bài">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8" x-data="articleBuilder()">
@@ -375,4 +375,4 @@
             }))
         })
     </script>
-</x-admin.layout.app>
+</x-admin.layouts.app>

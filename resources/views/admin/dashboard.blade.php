@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Dashboard" breadcrumb="Tổng quan hệ thống">
+<x-admin.layouts.app title="Dashboard" breadcrumb="Tổng quan hệ thống">
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
@@ -50,4 +50,4 @@
 
     </div>
 
-</x-admin.layout.app>
+</x-admin.layouts.app>

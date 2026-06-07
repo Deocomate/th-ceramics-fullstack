@@ -1,0 +1,77 @@
+@props([
+    'trangChu' => null,
+    'ngoiAmDuongs' => null,
+    'ngoiHais' => null,
+    'gachHoas' => null,
+    'about' => null,
+    'factory' => null,
+    'showroomImages' => null,
+    'showroomContent' => null,
+    'news' => null,
+    'article' => null,
+    'articles' => null,
+    'relatedArticles' => null,
+    'historyArticles' => null,
+    'projects' => null,
+    'project' => null,
+    'relatedProjects' => null,
+    'categories' => null,
+    'selectedCategory' => null,
+    'currentCategory' => null,
+    'config' => null,
+    'products' => null,
+    'relatedProducts' => null,
+    'product' => null,
+    'colors' => null,
+    'dinhMuc' => null,
+    'giaTriVuotTroi' => null,
+    'parentConfig' => null,
+    'pageLabel' => null,
+    'indexRouteName' => null,
+    'categoryType' => null,
+    'categoryLabel' => null,
+    'denGomProducts' => null,
+    'denSuProducts' => null,
+    'featuredProducts' => null,
+    'collectionProducts' => null,
+    'ngheProducts' => null,
+    'linhVatProducts' => null,
+    'bgImage' => null,
+    'activeOrder' => false,
+    'activeAccount' => false,
+    'activeCatalog' => false,
+    'activeGuide' => false,
+    'activeProcess' => false,
+    'activePrivacy' => false,
+    'activeReturn' => false,
+    'activeShipping' => false,
+    'image' => null,
+    'label1' => null,
+    'rate1' => null,
+    'label2' => null,
+    'rate2' => null,
+    'sectionId' => null,
+    'sectionClass' => null,
+    'sectionTitle' => null,
+    'desktopLinkHref' => null,
+    'detailRouteName' => null,
+    'wrapperClass' => null,
+    'titleClass' => null,
+    'title' => null,
+    'subtitle' => null,
+    'description' => null,
+    'items' => null,])
+<!-- Về gốm sứ Thanh Hải -->
+<div
+  id="tab-introduction"
+  class="tab-content block animate-fade-in-up w-full"
+>
+  <div class="w-[85%] lg:w-[85%] max-w-[1320px] mx-auto md:px-4">
+  <x-client.about.intro-story :about="$about ?? null" />
+  <x-client.about.core-values :about="$about ?? null" />
+  <x-client.about.timeline :about="$about ?? null" />
+  <x-client.about.founders :about="$about ?? null" />
+  </div>
+  <x-client.about.awards-section :about="$about ?? null" />
+  <x-client.about.certificates-slider :about="$about ?? null" />
+</div>

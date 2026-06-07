@@ -13,7 +13,7 @@
       ->values();
 @endphp
 
-<x-layouts.client title="Chi tiết Đèn Gốm Sứ" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+<x-client.layouts.main title="Chi tiết Đèn Gốm Sứ" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
   <section class="hidden md:flex relative w-full h-[180px] md:h-[210px] items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
       <img src="{{ $detailBanner }}" alt="{{ $product->name }} Banner" class="w-full h-full object-cover" />
@@ -33,11 +33,11 @@
   </section>
 
   <div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
-    <x-products.breadcrumb current-label="{{ $product->name }}" parent-label="Đèn Gốm Sứ" parent-href="{{ route('client.products.den-gom-su.index') }}" />
+    <x-client.shared.breadcrumb current-label="{{ $product->name }}" parent-label="Đèn Gốm Sứ" parent-href="{{ route('client.products.den-gom-su.index') }}" />
     <hr class="border-t border-black/10 mt-4 w-full" />
   </div>
 
-  <x-products.product-detail-container
+  <x-client.shared.product-detail-container
     title="{{ $product->name }}"
     price="{{ $product->display_price }}"
     rawPrice="{{ $product->min_price ?? 0 }}"
@@ -69,13 +69,13 @@
   </section>
   @endif
 
-  <x-products.journey-video :hide-title="true" />
-  <x-products.works />
-  <x-products.recommendations
+  <x-client.shared.journey-video :hide-title="true" />
+  <x-client.shared.works />
+  <x-client.shared.recommendations
     :related-products="$relatedProducts"
     route-name="client.products.den-gom-su.detail"
     pk-field="den_vuon_gom_su_ct_id"
     product-type="den_vuon_gom_su_ct"
   />
-  <x-products.faq2 />
-</x-layouts.client>
+  <x-client.shared.faq-cta-banner />
+</x-client.layouts.main>

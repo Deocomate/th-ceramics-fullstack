@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Trang Xưởng Sản Xuất" breadcrumb="Admin › Cấu Hình Trang Đơn › Xưởng Sản Xuất">
+<x-admin.layouts.app title="Trang Xưởng Sản Xuất" breadcrumb="Admin › Cấu Hình Trang Đơn › Xưởng Sản Xuất">
 
     @php
         $g1 = is_string($factory->gallery_1) ? json_decode($factory->gallery_1, true) : $factory->gallery_1;
@@ -645,4 +645,4 @@
         </script>
     @endpush
 
-</x-admin.layout.app>
+</x-admin.layouts.app>

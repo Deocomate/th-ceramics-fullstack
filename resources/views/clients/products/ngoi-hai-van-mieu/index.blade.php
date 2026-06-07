@@ -1,4 +1,4 @@
-<x-layouts.client title="Ngói Hài Văn Miếu" data-page="products" main-class="bg-background-secondary page-ngoi-hai-van-mieu" :hide-newsletter="true">
+<x-client.layouts.main title="Ngói Hài Văn Miếu" data-page="products" main-class="bg-background-secondary page-ngoi-hai-van-mieu" :hide-newsletter="true">
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -323,7 +323,7 @@
 </style>
 @endpush
 
-<x-catalog-button />
+<x-client.shared.catalog-sticky-btn />
 
 <!-- Top Banner -->
 <section class="relative w-full pt-0 md:pt-20 pb-0 md:pb-8 lg:pb-10">
@@ -477,12 +477,12 @@
 
 <!-- Breadcrumb -->
 <div class="ngoi-hai-breadcrumb-scope w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
-  <x-products.breadcrumb current-label="Ngói Hài Văn Miếu" />
+  <x-client.shared.breadcrumb current-label="Ngói Hài Văn Miếu" />
 </div>
 
 <div class="ngoi-hai-product-grid-scope">
-  <x-products.product-filter />
-  <x-products.product-grid category="ngoi-hai-van-mieu" :products="$products" routeName="client.products.ngoi-hai-van-mieu.detail" />
+  <x-client.shared.product-filter />
+  <x-client.shared.product-grid category="ngoi-hai-van-mieu" :products="$products" routeName="client.products.ngoi-hai-van-mieu.detail" />
 </div>
 
 <!-- Difference Section -->
@@ -561,14 +561,14 @@
   </div>
 </section>
 
-<x-products.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" />
+<x-client.shared.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" />
 
 <div class="ngoi-hai-journey-scope">
-  <x-products.journey-video :video="$config->video ?? null" />
+  <x-client.shared.journey-video :video="$config->video ?? null" />
 </div>
 
 <div class="ngoi-hai-works-scope">
-  <x-products.works />
+  <x-client.shared.works />
 </div>
 
 <!-- FAQ Section -->
@@ -582,7 +582,7 @@
     alt="" />
 
   <div class="ngoi-hai-faq-scope">
-    <x-products.faq-content />
+    <x-client.shared.faq-accordion />
   </div>
 </section>
 
@@ -606,4 +606,4 @@
   }
 </script>
 @endpush
-</x-layouts.client>
+</x-client.layouts.main>

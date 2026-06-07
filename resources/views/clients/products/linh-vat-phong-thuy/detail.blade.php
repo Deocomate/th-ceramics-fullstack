@@ -1,4 +1,4 @@
-<x-layouts.client title="Chi tiết {{ $product->name }}" data-page="products"
+<x-client.layouts.main title="Chi tiết {{ $product->name }}" data-page="products"
     main-class="flex-grow bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
     @push('styles')
         <style>
@@ -358,7 +358,7 @@
 
     <!-- HÀNH TRÌNH CHẾ TÁC VIDEO -->
     <div class="hidden md:block">
-        <x-products.journey-video :hide-title="false" />
+        <x-client.shared.journey-video :hide-title="false" />
     </div>
 
     <!-- BẢNG SO SÁNH / CÓ THỂ BẠN QUAN TÂM -->
@@ -385,42 +385,30 @@
                                                     ? $related->images[0]
                                                     : null;
                                         @endphp
-                                        <div class="w-[175px] md:w-[220px] shrink-0 flex flex-col items-start">
-                                            <a href="{{ route('client.products.linh-vat-phong-thuy.detail', $related->linh_vat_phong_thuy_ct_id) }}"
-                                                class="w-full group">
-                                                <div
-                                                    class="product-card relative aspect-square w-full mb-2 md:mb-4 bg-white shadow-sm rounded-sm overflow-hidden">
-                                                    <img src="{{ $relatedImg ? asset('storage/' . $relatedImg) : asset('assets/images/ngoi-01.jpg') }}"
-                                                        alt="{{ $related->name }}"
-                                                        class="object-cover w-full h-full mix-blend-multiply">
-                                                    <div class="product-overlay">
-                                                        <img src="{{ asset('assets/images/eye.svg') }}"
-                                                            alt="Xem">
-                                                        <span>Xem chi tiết</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="{{ route('client.products.linh-vat-phong-thuy.detail', $related->linh_vat_phong_thuy_ct_id) }}"
-                                                class="text-[#004B8D] hover:text-secondary transition-colors">
-                                                <h3
-                                                    class="font-bold text-[12px] md:text-base leading-snug h-6 md:h-12 overflow-hidden mb-0 md:mb-2 uppercase">
-                                                    {{ $related->name }}
-                                                </h3>
-                                            </a>
-                                            <form action="{{ route('client.cart.add') }}" method="POST"
-                                                class="mt-2">
+                                        <x-client.shared.product-card
+                                            href="{{ route('client.products.linh-vat-phong-thuy.detail', $related->linh_vat_phong_thuy_ct_id) }}"
+                                            class="w-[175px] md:w-[220px] shrink-0"
+                                            image="{{ $relatedImg ? asset('storage/' . $relatedImg) : asset('assets/images/ngoi-01.jpg') }}"
+                                            title="{{ $related->name }}"
+                                            title-class="font-bold text-[12px] md:text-base leading-snug h-6 md:h-12 overflow-hidden mb-0 md:mb-2 uppercase text-[#004B8D] hover:text-secondary transition-colors"
+                                            code=""
+                                            price=""
+                                            :show-overlay="true"
+                                            aspect="aspect-square bg-white shadow-sm mb-2 md:mb-4"
+                                        >
+                                            <form action="{{ route('client.cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
                                                 @csrf
-                                                <input type="hidden" name="product_id"
-                                                    value="{{ $related->linh_vat_phong_thuy_ct_id }}">
-                                                <input type="hidden" name="product_type"
-                                                    value="linh_vat_phong_thuy_ct">
+                                                <input type="hidden" name="product_id" value="{{ $related->linh_vat_phong_thuy_ct_id }}">
+                                                <input type="hidden" name="product_type" value="linh_vat_phong_thuy_ct">
                                                 <input type="hidden" name="quantity" value="1">
-                                                <button type="submit"
-                                                    class="border border-secondary text-secondary text-[9px] md:text-[13px] font-bold py-1 md:py-2 px-4 md:px-6 rounded-full hover:bg-secondary hover:text-white transition-all whitespace-nowrap">
-                                                    Thêm vào giỏ
+                                                <button
+                                                  type="submit"
+                                                  class="border border-secondary text-secondary text-[9px] md:text-[13px] font-bold py-1 md:py-2 px-4 md:px-6 rounded-full hover:bg-secondary hover:text-white transition-all whitespace-nowrap"
+                                                >
+                                                  Thêm vào giỏ
                                                 </button>
                                             </form>
-                                        </div>
+                                        </x-client.shared.product-card>
                                     @endforeach
                                 </div>
                             </div>
@@ -490,7 +478,7 @@
         </section>
     @endif
 
-    <x-products.faq2 />
+    <x-client.shared.faq-cta-banner />
 
     @push('scripts')
         <script>
@@ -555,4 +543,4 @@
             });
         </script>
     @endpush
-</x-layouts.client>
+</x-client.layouts.main>

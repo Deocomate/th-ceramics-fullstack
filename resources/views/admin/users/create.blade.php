@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Thêm tài khoản Admin" breadcrumb="Admin › Tài khoản › Thêm mới">
+<x-admin.layouts.app title="Thêm tài khoản Admin" breadcrumb="Admin › Tài khoản › Thêm mới">
 
     <div class=" w-full">
 
@@ -120,4 +120,4 @@
         </div>
     </div>
 
-</x-admin.layout.app>
+</x-admin.layouts.app>

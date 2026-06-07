@@ -13,7 +13,7 @@
   $firstVariant = $variants->first();
 @endphp
 
-<x-layouts.client :title="$product->name" :description="implode(', ', $product->des ?? [])" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+<x-client.layouts.main :title="$product->name" :description="implode(', ', $product->des ?? [])" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
   <section class="relative w-full hidden md:block">
     <div class="relative w-full aspect-[4/3] md:aspect-[8/6] lg:aspect-auto h-full lg:[clip-path:inset(40px_0_0_0)] lg:-mt-[40px]">
       <img src="{{ $assetUrl($pageConfig->thumbnail_main ?? null, 'assets/images/pk-banner.png') }}" alt="Phụ Kiện Ngói" class="w-full h-full object-cover" />
@@ -34,14 +34,14 @@
   </section>
 
   <div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
-    <x-products.breadcrumb
+    <x-client.shared.breadcrumb
       parent-href="{{ route('client.products.phu-kien-ngoi.index') }}"
       parent-label="Sản phẩm"
       current-label="PHỤ KIỆN NGÓI" />
     <hr class="border-t border-black/10 mt-4 w-full" />
   </div>
 
-  <x-products.product-detail-container
+  <x-client.shared.product-detail-container
     title="{{ $product->name }}"
     price="{{ $firstVariant ? $firstVariant['priceFormatted'] : 'Liên hệ' }}"
     rawPrice="{{ $firstVariant['price'] ?? 0 }}"
@@ -73,14 +73,14 @@
     </div>
   </section>
 
-  <x-products.outstanding-value />
-  <x-products.journey-video />
-  <x-products.works />
-  <x-products.recommendations
+  <x-client.shared.outstanding-value />
+  <x-client.shared.journey-video />
+  <x-client.shared.works />
+  <x-client.shared.recommendations
     :related-products="$relatedProducts"
     route-name="client.products.phu-kien-ngoi.detail"
     pk-field="phu_kien_ngoi_ct_id"
     product-type="phu_kien_ngoi_ct"
   />
-  <x-products.faq2 />
-</x-layouts.client>
+  <x-client.shared.faq-cta-banner />
+</x-client.layouts.main>

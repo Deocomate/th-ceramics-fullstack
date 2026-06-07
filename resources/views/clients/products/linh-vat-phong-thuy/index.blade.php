@@ -1,4 +1,4 @@
-<x-layouts.client title="Linh Vật Phong Thủy" data-page="products" main-class="bg-background-secondary">
+<x-client.layouts.main title="Linh Vật Phong Thủy" data-page="products" main-class="bg-background-secondary">
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -10,9 +10,9 @@
 </style>
 @endpush
 
-<x-catalog-button />
+<x-client.shared.catalog-sticky-btn />
 
-@include('clients.products.linh-vat-phong-thuy.partials.banner-section')
+<x-client.products.linh-vat-phong-thuy.hero-banner :trang-chu="$trangChu ?? null" :ngoi-am-duongs="$ngoiAmDuongs ?? null" :ngoi-hais="$ngoiHais ?? null" :gach-hoas="$gachHoas ?? null" :about="$about ?? null" :factory="$factory ?? null" :showroom-images="$showroomImages ?? null" :showroom-content="$showroomContent ?? null" :news="$news ?? null" :article="$article ?? null" :articles="$articles ?? null" :related-articles="$relatedArticles ?? null" :history-articles="$historyArticles ?? null" :projects="$projects ?? null" :project="$project ?? null" :related-projects="$relatedProjects ?? null" :categories="$categories ?? null" :selected-category="$selectedCategory ?? null" :current-category="$currentCategory ?? null" :config="$config ?? null" :products="$products ?? null" :related-products="$relatedProducts ?? null" :product="$product ?? null" :colors="$colors ?? null" :dinh-muc="$dinhMuc ?? null" :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" :parent-config="$parentConfig ?? null" :page-label="$pageLabel ?? null" :index-route-name="$indexRouteName ?? null" :category-type="$categoryType ?? null" :category-label="$categoryLabel ?? null" :den-gom-products="$denGomProducts ?? null" :den-su-products="$denSuProducts ?? null" :featured-products="$featuredProducts ?? null" :collection-products="$collectionProducts ?? null" :nghe-products="$ngheProducts ?? null" :linh-vat-products="$linhVatProducts ?? null" />
 
 @php
   $currentProducts = $products instanceof \Illuminate\Contracts\Pagination\Paginator
@@ -23,11 +23,11 @@
 <div class="w-[85%] max-w-[1320px] mx-auto">
   <!-- Breadcrumb -->
   <div class="pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
-    <x-products.breadcrumb current-label="Linh Vật Phong Thủy" />
+    <x-client.shared.breadcrumb current-label="Linh Vật Phong Thủy" />
   </div>
 </div>
 
-<x-products.product-filter />
+<x-client.shared.product-filter />
 
 <div class="w-[85%] max-w-[1320px] mx-auto">
   <!-- Product Grid Section -->
@@ -96,9 +96,7 @@
         </div>
       </section>
 
-      @include('clients.products.linh-vat-phong-thuy.partials.nghe-featured-products', [
-        'products' => $products,
-      ])
+      <x-client.products.linh-vat-phong-thuy.nghe-featured-products :products="$products" />
     @endforeach
   </section>
 </div>
@@ -115,31 +113,28 @@
           $delay = 100 + ($loop->index * 100);
           $isFirst = $loop->first;
         @endphp
-        <div class="flex flex-col {{ $isFirst ? 'col-span-2 lg:col-span-2' : '' }} group cursor-pointer" data-aos="fade-up" data-aos-delay="{{ $delay }}"
-          onclick="window.location.href = '{{ route('client.products.linh-vat-phong-thuy.detail', $product->linh_vat_phong_thuy_ct_id) }}'">
-          <div
-            class="product-card relative w-full {{ $isFirst ? 'aspect-[2/1] md:aspect-[18.8/10]' : 'aspect-[1.1/1] md:aspect-[9/10]' }} shadow mb-4 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1">
-            <img src="{{ $productImage }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
-            <div class="product-overlay">
-              <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
-              <span>Xem chi tiết</span>
-            </div>
-          </div>
-          <h3
-            class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary">
-            {{ $product->name }}</h3>
-          <p class="text-gray-500 text-[12px] lg:text-[13px] mb-1">MSP: {{ $product->code }}</p>
-          <p class="font-bold text-[#C47526] text-[13px] lg:text-[14px]">{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}</p>
-        </div>
+        <x-client.shared.product-card
+          href="{{ route('client.products.linh-vat-phong-thuy.detail', $product->linh_vat_phong_thuy_ct_id) }}"
+          class="{{ $isFirst ? 'col-span-2 lg:col-span-2' : '' }}"
+          image="{{ $productImage }}"
+          title="{{ $product->name }}"
+          title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
+          code="MSP: {{ $product->code }}"
+          price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
+          :show-overlay="true"
+          aspect="{{ $isFirst ? 'aspect-[2/1] md:aspect-[18.8/10]' : 'aspect-[1.1/1] md:aspect-[9/10]' }}"
+          data-aos="fade-up"
+          data-aos-delay="{{ $delay }}"
+        />
       @endforeach
     </div>
   </div>
 </section>
 @endif
 
-<x-products.fabrication-process />
-<x-products.journey-video :video="$config->video" :hide-title="true" />
-<x-products.recommendations
+<x-client.shared.fabrication-process />
+<x-client.shared.journey-video :video="$config->video" :hide-title="true" />
+<x-client.shared.recommendations
     :related-products="$currentProducts->take(4)"
     route-name="client.products.linh-vat-phong-thuy.detail"
     pk-field="linh_vat_phong_thuy_ct_id"
@@ -148,7 +143,7 @@
 
 <!-- FAQ Section -->
 <section class="w-full relative pb-[70px] md:pb-32 bg-background-secondary overflow-visible" data-aos="fade-up">
-  <x-products.faq-content />
+  <x-client.shared.faq-accordion />
 </section>
 
 @push('scripts')
@@ -172,4 +167,4 @@
 </script>
 @endpush
 
-</x-layouts.client>
+</x-client.layouts.main>

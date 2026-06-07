@@ -1,4 +1,4 @@
-<x-layouts.client title="Về chúng tôi" data-page="about" main-class="about-content">
+<x-client.layouts.main title="Về chúng tôi" data-page="about" main-class="about-content">
     @push('styles')
     <link
       rel="stylesheet"
@@ -25,11 +25,11 @@
     </style>
     @endpush
 
-    <x-catalog-button />
+    <x-client.shared.catalog-sticky-btn />
 
-    @include('clients.about.partials.banner', ['about' => $about ?? null])
-    @include('clients.about.partials.tabs', ['about' => $about ?? null])
-    <x-newsletter />
+    <x-client.about.hero-banner :about="$about ?? null" />
+    <x-client.about.tab-navigation :about="$about ?? null" />
+    <x-client.shared.newsletter />
 
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
@@ -49,4 +49,4 @@
       });
     </script>
     @endpush
-</x-layouts.client>
+</x-client.layouts.main>

@@ -1,7 +1,7 @@
 /* ===== resources/views/admin/du-an/edit.blade.php ===== */
 @section('preview_url', route('client.projects.detail', $duAn->slug))
 
-<x-admin.layout.app title="Cập nhật Dự Án" breadcrumb="Admin › Dự Án › Chỉnh sửa">
+<x-admin.layouts.app title="Cập nhật Dự Án" breadcrumb="Admin › Dự Án › Chỉnh sửa">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
             <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Cập nhật Dự Án: {{ $duAn->ten_du_an }}</h2>
@@ -185,4 +185,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

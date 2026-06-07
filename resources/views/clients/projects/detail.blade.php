@@ -1,4 +1,4 @@
-<x-layouts.client title="Chi tiết dự án" data-page="project-detail-2" main-class="bg-background-secondary overflow-x-hidden">
+<x-client.layouts.main title="Chi tiết dự án" data-page="project-detail-2" main-class="bg-background-secondary overflow-x-hidden">
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -262,4 +262,4 @@
 </script>
 @endpush
 
-</x-layouts.client>
+</x-client.layouts.main>

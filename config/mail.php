@@ -117,4 +117,12 @@ return [
 
     'contact_email' => env('MAIL_CONTACT_ADDRESS', 'gshaithanh@gmail.com'),
 
+    'markdown' => [
+        'theme' => 'default',
+
+        'paths' => [
+            resource_path('views/components/vendor/mail'),
+        ],
+    ],
+
 ];

@@ -1,8 +1,0 @@
-<!-- Section: Fullscreen image -->
-<section class="max-w-[1920px] h-auto mx-auto lg:pt-8">
-  <img
-    src="{{ asset('assets/images/showroom-map.png') }}"
-    alt="Showroom Full Image"
-    class="w-full h-auto object-cover"
-  />
-</section>

@@ -1,0 +1,164 @@
+@props([
+    'trangChu' => null,
+    'ngoiAmDuongs' => null,
+    'ngoiHais' => null,
+    'gachHoas' => null,
+    'about' => null,
+    'factory' => null,
+    'showroomImages' => null,
+    'showroomContent' => null,
+    'news' => null,
+    'article' => null,
+    'articles' => null,
+    'relatedArticles' => null,
+    'historyArticles' => null,
+    'projects' => null,
+    'project' => null,
+    'relatedProjects' => null,
+    'categories' => null,
+    'selectedCategory' => null,
+    'currentCategory' => null,
+    'config' => null,
+    'products' => null,
+    'relatedProducts' => null,
+    'product' => null,
+    'colors' => null,
+    'dinhMuc' => null,
+    'giaTriVuotTroi' => null,
+    'parentConfig' => null,
+    'pageLabel' => null,
+    'indexRouteName' => null,
+    'categoryType' => null,
+    'categoryLabel' => null,
+    'denGomProducts' => null,
+    'denSuProducts' => null,
+    'featuredProducts' => null,
+    'collectionProducts' => null,
+    'ngheProducts' => null,
+    'linhVatProducts' => null,
+    'bgImage' => null,
+    'activeOrder' => false,
+    'activeAccount' => false,
+    'activeCatalog' => false,
+    'activeGuide' => false,
+    'activeProcess' => false,
+    'activePrivacy' => false,
+    'activeReturn' => false,
+    'activeShipping' => false,
+    'image' => null,
+    'label1' => null,
+    'rate1' => null,
+    'label2' => null,
+    'rate2' => null,
+    'sectionId' => null,
+    'sectionClass' => null,
+    'sectionTitle' => null,
+    'desktopLinkHref' => null,
+    'detailRouteName' => null,
+    'wrapperClass' => null,
+    'titleClass' => null,
+    'title' => null,
+    'subtitle' => null,
+    'description' => null,
+    'items' => null,])
+<div class="flex-1 lg:pl-12">
+  <h1 class="text-[28px] lg:text-[36px] font-arima font-medium text-primary mb-8 lg:mb-10 lg:mt-[-6px] leading-[36px]">
+    Chính sách bảo mật thông tin
+  </h1>
+
+  <div class="text-primary space-y-8 text-base font-archivo leading-[28px]">
+    <p>
+      Gốm sứ Thanh Hải cam kết tôn trọng và bảo vệ quyền riêng tư của khách hàng. Chính sách này mô tả cách chúng tôi thu thập, sử
+      dụng và bảo vệ thông tin cá nhân mà bạn cung cấp khi truy cập website hoặc sử dụng dịch vụ của chúng tôi.
+    </p>
+
+    <section class="space-y-5 md:space-y-4">
+      <h2 class="text-[18px] lg:text-lg font-bold text-primary leading-[28px]">Mục đích thu thập thông tin cá nhân</h2>
+      <p>Chúng tôi thu thập thông tin cá nhân của khách hàng nhằm các mục đích sau:</p>
+      <ul class="list-disc pl-7 space-y-5 md:space-y-2">
+        <li><span class="font-bold">Xử lý đơn hàng:</span> Giao hàng, thông báo về tiến độ sản xuất gốm sứ theo yêu cầu và thanh toán.</li>
+        <li><span class="font-bold">Tư vấn chuyên sâu:</span> Hỗ trợ giải đáp các thắc mắc về sản phẩm, kỹ thuật thi công hoặc thiết kế sản phẩm mới.</li>
+        <li><span class="font-bold">Cải thiện dịch vụ:</span> Phân tích hành vi người dùng trên website để tối ưu hóa trải nghiệm mua sắm.</li>
+        <li><span class="font-bold">Tiếp thị & Truyền thông:</span> Gửi thông tin về các sản phẩm gốm mới, chương trình ưu đãi (chỉ khi có sự đồng ý của bạn).</li>
+      </ul>
+    </section>
+
+    <section class="space-y-5 md:space-y-4">
+      <h2 class="text-[18px] lg:text-lg font-bold text-primary leading-[28px]">Phạm vi sử dụng thông tin</h2>
+      <p>Các thông tin chúng tôi có thể thu thập bao gồm:</p>
+      <ul class="list-disc pl-7 space-y-5 md:space-y-2">
+        <li>Họ và tên, số điện thoại, email.</li>
+        <li>Địa chỉ giao hàng (công trình hoặc nhà riêng).</li>
+        <li>Nội dung tư vấn/Yêu cầu thiết kế riêng.</li>
+        <li>Thông tin thanh toán (không bao gồm thông tin thẻ tín dụng trực tiếp trên hệ thống của chúng tôi).</li>
+      </ul>
+    </section>
+
+    <section class="space-y-5 md:space-y-4">
+      <h2 class="text-[18px] lg:text-lg font-bold text-primary leading-[28px]">Thời gian lưu trữ thông tin</h2>
+      <p>
+        Thông tin cá nhân của khách hàng sẽ được lưu trữ cho đến khi có yêu cầu hủy bỏ từ phía khách hàng hoặc khi thông tin đó
+        không còn cần thiết cho các mục đích nêu trên. Trong mọi trường hợp, thông tin khách hàng sẽ được bảo mật trên máy chủ của
+        Gốm sứ Thanh Hải.
+      </p>
+    </section>
+
+    <section class="space-y-5 md:space-y-4">
+      <h2 class="text-[18px] lg:text-lg font-bold text-primary leading-[28px]">Chia sẻ thông tin với bên thứ ba</h2>
+      <p>
+        Chúng tôi cam kết không bán, cho thuê hoặc chia sẻ thông tin cá nhân của bạn cho bất kỳ bên thứ ba nào, ngoại trừ các
+        trường hợp cần thiết sau:
+      </p>
+      <ul class="list-disc pl-7 space-y-5 md:space-y-2">
+        <li>Đơn vị vận chuyển: Cung cấp tên, số điện thoại và địa chỉ để giao hàng đến tận công trình.</li>
+        <li>
+          Theo yêu cầu pháp luật: Khi có yêu cầu từ các cơ quan chức năng có thẩm quyền theo quy định của pháp luật Việt Nam.
+        </li>
+      </ul>
+    </section>
+
+    <section class="space-y-5 md:space-y-4">
+      <h2 class="text-[18px] lg:text-lg font-bold text-primary leading-[28px]">Cam kết bảo mật thông tin</h2>
+      <p>Chúng tôi áp dụng các biện pháp an ninh kỹ thuật cao để bảo vệ thông tin cá nhân của bạn:</p>
+      <ul class="list-disc pl-7 space-y-5 md:space-y-2">
+        <li>Sử dụng giao thức mã hóa SSL (Secure Sockets Layer) để đảm bảo an toàn dữ liệu truyền tải qua internet.</li>
+        <li>Hệ thống tường lửa và kiểm soát truy cập nghiêm ngặt đối với nhân viên nội bộ.</li>
+        <li>
+          Trong trường hợp máy chủ lưu trữ thông tin bị hacker tấn công dẫn đến mất mát dữ liệu cá nhân, chúng tôi sẽ có trách
+          nhiệm thông báo vụ việc cho cơ quan chức năng điều tra xử lý và thông báo kịp thời cho khách hàng.
+        </li>
+      </ul>
+    </section>
+
+    <section class="space-y-5 md:space-y-4">
+      <h2 class="text-[18px] lg:text-lg font-bold text-primary leading-[28px]">Quyền của khách hàng đối với thông tin cá nhân</h2>
+      <p>Khách hàng có quyền:</p>
+      <ul class="list-disc pl-7 space-y-5 md:space-y-2">
+        <li>Yêu cầu kiểm tra, cập nhật hoặc điều chỉnh thông tin cá nhân của mình.</li>
+        <li>Yêu cầu dừng việc sử dụng thông tin cho mục đích quảng cáo/tiếp thị.</li>
+        <li>Yêu cầu xóa bỏ hoàn toàn dữ liệu cá nhân trên hệ thống của chúng tôi.</li>
+      </ul>
+    </section>
+
+    <section class="space-y-5 md:space-y-4">
+      <h2 class="text-[18px] lg:text-lg font-bold text-primary leading-[28px]">Thông tin liên hệ đơn vị thu thập và quản lý</h2>
+      <div class="space-y-4">
+        <p>Nếu bạn có bất kỳ câu hỏi hoặc khiếu nại nào liên quan đến chính sách bảo mật, vui lòng liên hệ:</p>
+        <p class="text-[18px] font-bold">Công ty TNHH Sản xuất và Thương mại Gốm sứ Thanh Hải</p>
+        <ul class="space-y-1 list-disc pl-7 lg:list-none lg:pl-0">
+          <li><span class="font-bold">Địa chỉ:</span> Số 18 Phố Gốm - Giang Cao - Bát Tràng - Hà Nội</li>
+          <li><span class="font-bold">Hotline:</span> 0966.55.8808</li>
+          <li><span class="font-bold">Email:</span> gshaithanh@gmail.com</li>
+          <li>
+            <span class="font-bold">Website:</span>
+            <a
+              href="https://gomsuxaydung.vn"
+              class="underline underline-offset-4 hover:text-secondary transition-colors font-normal"
+              >https://gomsuxaydung.vn</a
+            >
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>

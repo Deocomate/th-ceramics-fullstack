@@ -6,7 +6,7 @@
     ];
 @endphp
 
-<x-admin.layout.app title="Sản phẩm: Gạch Cổ Bát Tràng" breadcrumb="Admin › DS Sản phẩm chi tiết › Gạch Cổ Bát Tràng">
+<x-admin.layouts.app title="Sản phẩm: Gạch Cổ Bát Tràng" breadcrumb="Admin › DS Sản phẩm chi tiết › Gạch Cổ Bát Tràng">
 
     <div class="flex items-center justify-between mb-5">
         <div>
@@ -178,4 +178,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>

@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Sửa mã giảm giá" breadcrumb="Admin › Mã giảm giá › Chỉnh sửa">
+<x-admin.layouts.app title="Sửa mã giảm giá" breadcrumb="Admin › Mã giảm giá › Chỉnh sửa">
 
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
@@ -232,4 +232,4 @@
     </script>
     @endpush
 
-</x-admin.layout.app>
+</x-admin.layouts.app>

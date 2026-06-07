@@ -1,0 +1,332 @@
+@props([
+    'trangChu' => null,
+    'ngoiAmDuongs' => null,
+    'ngoiHais' => null,
+    'gachHoas' => null,
+    'about' => null,
+    'factory' => null,
+    'showroomImages' => null,
+    'showroomContent' => null,
+    'news' => null,
+    'article' => null,
+    'articles' => null,
+    'relatedArticles' => null,
+    'historyArticles' => null,
+    'projects' => null,
+    'project' => null,
+    'relatedProjects' => null,
+    'categories' => null,
+    'selectedCategory' => null,
+    'currentCategory' => null,
+    'config' => null,
+    'products' => null,
+    'relatedProducts' => null,
+    'product' => null,
+    'colors' => null,
+    'dinhMuc' => null,
+    'giaTriVuotTroi' => null,
+    'parentConfig' => null,
+    'pageLabel' => null,
+    'indexRouteName' => null,
+    'categoryType' => null,
+    'categoryLabel' => null,
+    'denGomProducts' => null,
+    'denSuProducts' => null,
+    'featuredProducts' => null,
+    'collectionProducts' => null,
+    'ngheProducts' => null,
+    'linhVatProducts' => null,
+    'bgImage' => null,
+    'activeOrder' => false,
+    'activeAccount' => false,
+    'activeCatalog' => false,
+    'activeGuide' => false,
+    'activeProcess' => false,
+    'activePrivacy' => false,
+    'activeReturn' => false,
+    'activeShipping' => false,
+    'image' => null,
+    'label1' => null,
+    'rate1' => null,
+    'label2' => null,
+    'rate2' => null,
+    'sectionId' => null,
+    'sectionClass' => null,
+    'sectionTitle' => null,
+    'desktopLinkHref' => null,
+    'detailRouteName' => null,
+    'wrapperClass' => null,
+    'titleClass' => null,
+    'title' => null,
+    'subtitle' => null,
+    'description' => null,
+    'items' => null,])
+@php
+    use App\Support\AssetPath;
+
+    $materialSlider = is_string($factory->material_slider) ? json_decode($factory->material_slider, true) : $factory->material_slider;
+    $materialSlider = is_array($materialSlider) ? $materialSlider : [];
+
+    $materialSteps = is_string($factory->material_steps) ? json_decode($factory->material_steps, true) : $factory->material_steps;
+    $materialSteps = is_array($materialSteps) ? $materialSteps : [];
+@endphp
+<section class="bg-background-secondary relative overflow-hidden text-primary">
+  <!-- 1. Slider Segment -->
+  <div class="relative z-10 pt-16 md:pt-24 lg:pt-32">
+    <!-- Carousel -->
+    <div
+      class="ml-[32px] md:ml-[7.5%] min-[1553px]:ml-[calc((100vw-1320px)/2)] lg:max-w-[1920px] overflow-hidden"
+    >
+      <div class="swiper section4-swiper overflow-visible">
+        <div class="swiper-wrapper">
+          @if(!empty($materialSlider))
+            @foreach($materialSlider as $image)
+              <div class="swiper-slide w-full md:w-[70%] lg:w-[80%]">
+                <div class="aspect-[12/5] overflow-hidden shadow-lg bg-neutral-1">
+                  <img
+                    src="{{ AssetPath::url($image) }}"
+                    alt="Phân xưởng"
+                    class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
+                  />
+                </div>
+              </div>
+            @endforeach
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Text and Blueprint Layer -->
+  <div class="relative z-0 mt-12 md:mt-16 pb-8 md:pb-12">
+    <!-- Background lines overlay -->
+    <div class="grid-overlay absolute inset-0 z-0 pointer-events-none">
+      <div class="w-full md:w-[85%] max-w-[1320px] mx-auto h-full relative">
+        <!-- Horizontal line between Slider and Info -->
+        <div
+          class="absolute top-[26%] left-[28px] right-0 h-px bg-black/10 md:hidden"
+        ></div>
+
+        <!-- Vertical line separating Number "1" and Text -->
+        <div
+          class="line line-v absolute bg-black/10 w-px h-[31vh] md:h-[100vh] md:top-[-64vh] left-[78px] md:left-[12%]"
+        ></div>
+
+        <!-- Horizontal intersecting line matching bottom of text -->
+        <div
+          class="line line-h hidden md:block absolute bg-black/10 h-px w-[50vw]"
+          style="bottom: 10vh; left: 4vw"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Text wrapper -->
+    <div
+      class="relative z-10 w-full md:w-[85%] max-w-[1320px] mx-auto flex flex-row pb-12 md:pb-24"
+      data-aos="fade-up"
+    >
+      <!-- Numeral Col -->
+      <div
+        class="w-[78px] md:w-[10%] pt-6 md:pt-2 md:ml-12 flex justify-center"
+      >
+        <span
+          id="section4-step-number"
+          class="text-[48px] md:text-[80px] lg:text-[96px] leading-none text-[#909090] font-arbutus select-none"
+          >{{ !empty($materialSteps) ? ($materialSteps[0]['number'] ?? '1') : '1' }}</span
+        >
+      </div>
+
+      <!-- Content Col -->
+      <div
+        class="flex-1 md:w-[90%] pl-4 md:pl-12 lg:pl-16 pt-8 md:pt-4 pr-6"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
+        <div class="flex items-start justify-between gap-6">
+          <h3
+            id="section4-step-title"
+            class="text-[15px] md:text-[16px] font-bold uppercase leading-[24px]"
+          >
+            {{ !empty($materialSteps) ? ($materialSteps[0]['title'] ?? 'LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)') : 'LỰA CHỌN VÀ XỬ LÝ NGUYÊN LIỆU (PHA CHẾ ĐẤT)' }}
+          </h3>
+
+          <div class="hidden md:flex gap-4 shrink-0">
+            <button
+              class="section4-prev w-10 h-10 md:w-12 md:h-12 border border-black/20 rounded-full flex items-center justify-center hover:bg-black/5 transition-all focus:outline-none"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              class="section4-next w-10 h-10 md:w-12 md:h-12 border border-black/20 rounded-full flex items-center justify-center hover:bg-black/5 transition-all focus:outline-none"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="text-[15px]/[24px] md:text-base/9 text-black/75 space-y-4 text-left max-w-xl font-extralight pt-10 md:pt-0"
+        >
+          <p id="section4-step-description">
+            {{ !empty($materialSteps) ? ($materialSteps[0]['description'] ?? '') : '' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dots Pagination - Mobile Only -->
+    @if(!empty($materialSteps) && count($materialSteps) > 1)
+      <div class="flex justify-center gap-2 mt-2 md:mt-12 md:hidden">
+        @foreach($materialSteps as $index => $step)
+          <button
+            class="material-dot w-2 h-2 rounded-full transition-all duration-300 cursor-pointer {{ $index === 0 ? 'active' : '' }}"
+            data-index="{{ $index }}"
+          ></button>
+        @endforeach
+      </div>
+    @endif
+  </div>
+</section>
+
+@push('scripts')
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (typeof Swiper !== "undefined") {
+      const section4StepNumber = document.getElementById(
+        "section4-step-number",
+      );
+      const section4StepTitle = document.getElementById("section4-step-title");
+      const section4StepDescription = document.getElementById(
+        "section4-step-description",
+      );
+
+      const section4Steps = {{ Js::from($materialSteps) }};
+
+      const updateSection4Text = (index) => {
+        if (
+          !section4StepNumber ||
+          !section4StepTitle ||
+          !section4StepDescription
+        ) {
+          return;
+        }
+
+        const step = section4Steps[index] || section4Steps[0];
+        section4StepNumber.textContent = step.number;
+        section4StepTitle.textContent = step.title;
+        section4StepDescription.textContent = step.description;
+      };
+
+      const section4Swiper = new Swiper(".section4-swiper", {
+        slidesPerView: "auto",
+        spaceBetween: 24,
+        navigation: {
+          nextEl: ".section4-next",
+          prevEl: ".section4-prev",
+        },
+        breakpoints: {
+          768: {
+            spaceBetween: 32,
+          },
+        },
+      });
+
+      updateSection4Text(0);
+      section4Swiper.on("slideChange", () => {
+        updateSection4Text(section4Swiper.realIndex);
+      });
+
+      // Material dots handler
+      var materialDots = document.querySelectorAll(".material-dot");
+      if (materialDots.length) {
+        section4Swiper.on("slideChange", function () {
+          var currentIndex = section4Swiper.realIndex;
+          materialDots.forEach((dot, index) => {
+            dot.classList.toggle("active", index === currentIndex);
+          });
+        });
+
+        materialDots.forEach((dot) => {
+          dot.addEventListener("click", () => {
+            var index = parseInt(dot.dataset.index);
+            section4Swiper.slideToLoop(index);
+          });
+        });
+      }
+
+      // Text wrapper swipe handler for mobile
+      var textWrapper = section4StepNumber
+        ? section4StepNumber.closest("[data-aos]")
+        : null;
+      if (textWrapper && window.innerWidth < 768) {
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        textWrapper.addEventListener(
+          "touchstart",
+          (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+          },
+          false,
+        );
+
+        textWrapper.addEventListener(
+          "touchend",
+          (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+          },
+          false,
+        );
+
+        function handleSwipe() {
+          var swipeThreshold = 50;
+          var diff = touchStartX - touchEndX;
+
+          if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+              // Swiped left - next slide
+              section4Swiper.slideNext();
+            } else {
+              // Swiped right - previous slide
+              section4Swiper.slidePrev();
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+<!-- Material Dots Style -->
+<style>
+  .material-dot {
+    background-color: rgba(199, 110, 0, 0.3);
+  }
+  .material-dot.active {
+    background-color: #c76e00;
+    width: 8px;
+  }
+</style>
+@endpush

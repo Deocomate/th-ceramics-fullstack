@@ -1,4 +1,4 @@
-<x-layouts.client title="Ngói Âm Dương" data-page="products" main-class="bg-background-secondary" :hide-newsletter="true">
+<x-client.layouts.main title="Ngói Âm Dương" data-page="products" main-class="bg-background-secondary" :hide-newsletter="true">
 
     @push('styles')
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -27,7 +27,7 @@
         </style>
     @endpush
 
-    <x-catalog-button />
+    <x-client.shared.catalog-sticky-btn />
 
     <!-- SECTION 1: TOP BANNER -->
     <section class="relative min-h-[675px] md:min-h-[600px] flex items-center md:pt-24 md:pb-8 overflow-hidden">
@@ -95,12 +95,12 @@
 
     <!-- SECTION 2: BREADCRUMB -->
     <div class="w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
-        <x-products.breadcrumb current-label="Ngói Âm Dương" />
+        <x-client.shared.breadcrumb current-label="Ngói Âm Dương" />
     </div>
 
     <!-- SECTION 3: PRODUCT GRID -->
-    <x-products.product-filter />
-    <x-products.product-grid category="ngoi-am-duong" :products="$products"
+    <x-client.shared.product-filter />
+    <x-client.shared.product-grid category="ngoi-am-duong" :products="$products"
         routeName="client.products.ngoi-am-duong.detail" />
 
     <!-- SECTION 4: SIZE OPTIONS -->
@@ -130,12 +130,12 @@
 
     <!-- Các Component dùng chung của Layout Sản phẩm (Data binding) -->
     <!-- Truyền $giaTriVuotTroi vào component -->
-    <x-products.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi" />
+    <x-client.shared.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi" />
 
     <!-- Truyền $config->video vào component -->
-    <x-products.journey-video :video="$config->video" />
+    <x-client.shared.journey-video :video="$config->video" />
 
-    <x-products.works />
+    <x-client.shared.works />
 
     <!-- SECTION 6: FAQ -->
     <section class="w-full relative pb-20 md:pb-32 bg-background-secondary overflow-hidden" data-aos="fade-up">
@@ -145,7 +145,7 @@
         <img src="{{ asset('assets/images/background-decorate-02.svg') }}"
             class="absolute md:top-[62%] top-[80%] -translate-y-1/2 right-0 translate-x-[60%] w-auto object-contain opacity-50 pointer-events-none z-0"
             alt="" />
-        <x-products.faq-content />
+        <x-client.shared.faq-accordion />
     </section>
 
     @push('scripts')
@@ -166,4 +166,4 @@
             }
         </script>
     @endpush
-</x-layouts.client>
+</x-client.layouts.main>

@@ -143,7 +143,7 @@ test('recommendations compare mode exposes explicit compare table marker', funct
     ]);
 
     $html = Blade::render(
-        '<x-products.recommendations :related-products="$products" route-name="client.products.ngoi-hai-van-mieu.detail" pk-field="ngoi_hai_van_mieu_ct_id" product-type="ngoi_hai_van_mieu_ct" :compare-table="true" />',
+        '<x-client.shared.recommendations :related-products="$products" route-name="client.products.ngoi-hai-van-mieu.detail" pk-field="ngoi_hai_van_mieu_ct_id" product-type="ngoi_hai_van_mieu_ct" :compare-table="true" />',
         ['products' => collect([$product])]
     );
 

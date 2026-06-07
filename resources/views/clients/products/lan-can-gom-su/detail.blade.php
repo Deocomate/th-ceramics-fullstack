@@ -21,7 +21,7 @@
         ->get();
 @endphp
 
-<x-layouts.client title="{{ $product->name }} - Lan Can Gốm Sứ | Gốm Sứ Thanh Hải" data-page="products"
+<x-client.layouts.main title="{{ $product->name }} - Lan Can Gốm Sứ | Gốm Sứ Thanh Hải" data-page="products"
     main-class="flex-grow bg-background-secondary pb-14 md:pb-20">
     @push('head')
         <meta name="description" content="{{ $jsonLdDesc }}">
@@ -277,20 +277,20 @@
     </section>
 
     <!-- DẤU ẤN TRÊN NHỮNG CÔNG TRÌNH SECTION -->
-    <x-products.works-simple />
+    <x-client.shared.works-simple />
 
     <!-- Giá Trị Vượt Trội -->
-    <x-products.outstanding-value />
+    <x-client.shared.outstanding-value />
 
     <!-- Hành Trình Chế Tác -->
-    <x-products.journey-video :video="null" />
+    <x-client.shared.journey-video :video="null" />
 
     <!-- CÓ THỂ BẠN QUAN TÂM -->
-    <x-products.recommendations :related-products="$relatedProducts" route-name="client.products.lan-can-gom-su.detail"
+    <x-client.shared.recommendations :related-products="$relatedProducts" route-name="client.products.lan-can-gom-su.detail"
         pk-field="lan_can_gom_su_ct_id" product-type="lan_can_gom_su_ct" :compare-table="true" />
 
     <!-- FAQ Section -->
-    <x-products.faq2 />
+    <x-client.shared.faq-cta-banner />
 
     @push('scripts')
         <script>
@@ -378,4 +378,4 @@
             }
         </script>
     @endpush
-</x-layouts.client>
+</x-client.layouts.main>

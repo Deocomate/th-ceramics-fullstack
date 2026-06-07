@@ -1,4 +1,4 @@
-<x-admin.layout.app title="Màu Sắc Ngói Hài Cổ (SKU)" breadcrumb="Admin › DS Sản phẩm chi tiết › Ngói Hài Cổ › Màu Sắc">
+<x-admin.layouts.app title="Màu Sắc Ngói Hài Cổ (SKU)" breadcrumb="Admin › DS Sản phẩm chi tiết › Ngói Hài Cổ › Màu Sắc">
     
     {{-- THÔNG BÁO LỖI VALIDATION --}}
     @if ($errors->any())
@@ -349,4 +349,4 @@
         }
     </script>
     @endpush
-</x-admin.layout.app>
+</x-admin.layouts.app>
