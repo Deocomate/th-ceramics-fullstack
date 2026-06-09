@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\DinhMucGachTrangTri;
@@ -16,6 +17,7 @@ class DinhMucGachTrangTriService
         if (DinhMucGachTrangTri::query()->where('brick_type', $data['brick_type'])->exists()) {
             throw ValidationException::withMessages(['brick_type' => 'Loại gạch này đã tồn tại định mức.']);
         }
+
         return DinhMucGachTrangTri::query()->create($data);
     }
 
@@ -28,6 +30,7 @@ class DinhMucGachTrangTriService
         }
 
         $model->fill($data)->save();
+
         return $model->fresh();
     }
 

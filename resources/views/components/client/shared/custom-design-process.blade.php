@@ -46,7 +46,7 @@
     </div>
 </section>
 
-<section class="w-full max-w-[1920px] mx-auto">
+<section class="w-full mx-auto">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-6">
         <!-- Ảnh 1 -->
         <img src="/assets/images/trang-tri-01.png" alt="Gạch Trang Trí 1"

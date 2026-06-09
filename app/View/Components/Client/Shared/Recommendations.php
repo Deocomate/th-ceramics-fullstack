@@ -57,7 +57,7 @@ class Recommendations extends Component
             'image' => AssetPath::url($rawImage, 'assets/images/gach-co-work-2.jpg'),
             'name' => data_get($product, 'name', 'Sản phẩm'),
             'price' => $price,
-            'price_display' => $price > 0 ? number_format($price, 0, ',', '.') . ' đ/m²' : 'Liên hệ',
+            'price_display' => $price > 0 ? number_format($price, 0, ',', '.').' đ/m²' : 'Liên hệ',
             'color' => filled($rawColor) ? $rawColor : 'Tự chọn',
             'size' => filled($rawSize) ? $rawSize : '--',
             'type' => $resolvedType,

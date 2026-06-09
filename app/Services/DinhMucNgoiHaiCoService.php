@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\DinhMucNgoiHaiCo;
@@ -16,6 +17,7 @@ class DinhMucNgoiHaiCoService
         if (DinhMucNgoiHaiCo::query()->where('roof_type', $data['roof_type'])->exists()) {
             throw ValidationException::withMessages(['roof_type' => 'Loại mái này đã tồn tại định mức.']);
         }
+
         return DinhMucNgoiHaiCo::query()->create($data);
     }
 
@@ -29,6 +31,7 @@ class DinhMucNgoiHaiCoService
         }
 
         $model->fill($data)->save();
+
         return $model->fresh();
     }
 

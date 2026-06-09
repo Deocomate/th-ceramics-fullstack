@@ -244,12 +244,8 @@
   </section>
 @endif
 
-<!-- Breadcrumb -->
-<div class="w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
-  <x-client.shared.breadcrumb current-label="Gạch Trang Trí" />
-</div>
-
-<x-client.shared.product-filter />
+<!-- BREADCRUMB & PRODUCT FILTER -->
+<x-client.shared.product-breadcrumb-filter current-label="Gạch Trang Trí" />
 <x-client.shared.product-grid category="gach-trang-tri" :products="$products" routeName="client.products.gach-trang-tri.detail" />
 <x-client.shared.custom-design-process :images="$config && is_array($config->images) ? $config->images : []" />
 

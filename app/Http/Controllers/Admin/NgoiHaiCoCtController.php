@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\NgoiHaiCoCtService;
 use App\Http\Requests\StoreNgoiHaiCoCtRequest;
 use App\Http\Requests\UpdateNgoiHaiCoCtRequest;
+use App\Services\NgoiHaiCoCtService;
 use Illuminate\Http\Request;
 
 class NgoiHaiCoCtController extends Controller
@@ -15,6 +16,7 @@ class NgoiHaiCoCtController extends Controller
     {
         $status = $request->query('status', 'active');
         $products = $this->service->getAll($status);
+
         return view('admin.ngoi-hai-co-ct.index', compact('products', 'status'));
     }
 
@@ -26,6 +28,7 @@ class NgoiHaiCoCtController extends Controller
     public function store(StoreNgoiHaiCoCtRequest $request)
     {
         $this->service->create($request->validated());
+
         return redirect()->route('admin.ngoi-hai-co-ct.index')
             ->with('success', 'Thêm mới Ngói Hài Cổ thành công.');
     }
@@ -33,31 +36,36 @@ class NgoiHaiCoCtController extends Controller
     public function edit(int $id)
     {
         $product = $this->service->findById($id);
+
         return view('admin.ngoi-hai-co-ct.edit', compact('product'));
     }
 
     public function update(UpdateNgoiHaiCoCtRequest $request, int $id)
     {
         $this->service->update($id, $request->validated());
+
         return back()->with('success', 'Cập nhật thành công.');
     }
 
     public function destroy(int $id)
     {
         $this->service->toggleStatus($id, 1);
+
         return back()->with('success', 'Đã tạm ẩn sản phẩm.');
     }
 
     public function restore(int $id)
     {
         $this->service->toggleStatus($id, 0);
+
         return back()->with('success', 'Khôi phục sản phẩm thành công.');
     }
 
     public function destroyImage(Request $request, int $id)
     {
-        $request->validate(['image_path' =>['required', 'string']]);
+        $request->validate(['image_path' => ['required', 'string']]);
         $this->service->removeImageFromJson($id, $request->input('image_path'));
+
         return back()->with('success', 'Đã xóa ảnh khỏi sản phẩm.');
     }
 }

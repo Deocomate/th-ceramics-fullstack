@@ -15,6 +15,7 @@ class PhuKienNgoiController extends Controller
     public function index(): View
     {
         $phuKienNgoi = $this->service->getFirstRecord();
+
         return view('admin.phu-kien-ngoi.edit', compact('phuKienNgoi'));
     }
 
@@ -22,17 +23,18 @@ class PhuKienNgoiController extends Controller
     {
         $data = $request->validate([
             'thumbnail_main' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'banner_text_1'  => ['nullable', 'string', 'max:255'],
-            'banner_text_2'  => ['nullable', 'string', 'max:255'],
-            'sec1_title'     => ['nullable', 'string', 'max:255'],
-            'sec1_image'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'sec2_title'     => ['nullable', 'string', 'max:255'],
-            'sec2_image'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'new_images'     => ['nullable', 'array'],
-            'new_images.*'   => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'banner_text_1' => ['nullable', 'string', 'max:255'],
+            'banner_text_2' => ['nullable', 'string', 'max:255'],
+            'sec1_title' => ['nullable', 'string', 'max:255'],
+            'sec1_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'sec2_title' => ['nullable', 'string', 'max:255'],
+            'sec2_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'new_images' => ['nullable', 'array'],
+            'new_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         $this->service->update($data);
+
         return back()->with('success', 'Cập nhật Phụ Kiện Ngói thành công.');
     }
 
@@ -40,6 +42,7 @@ class PhuKienNgoiController extends Controller
     {
         $request->validate(['image_path' => ['required', 'string']]);
         $this->service->removeImageFromJson($request->input('image_path'));
+
         return back()->with('success', 'Đã xóa ảnh khỏi danh sách.');
     }
 }

@@ -74,4 +74,25 @@ class PhuKienNgoiCt extends Model
             default => 'PKN-BN',
         };
     }
+
+    public function getDisplayCodeAttribute(): string
+    {
+        $code = $this->relationLoaded('phanLoais')
+            ? $this->phanLoais->firstWhere('is_delete', 0)?->code
+            : $this->phanLoais()->where('is_delete', 0)->first()?->code;
+
+        return $code ?: (match ($this->category_type) {
+            self::TYPE_CHU_VAN => 'PKN-CV'.$this->phu_kien_ngoi_ct_id,
+            default => 'PKN-BN'.$this->phu_kien_ngoi_ct_id,
+        });
+    }
+
+    public function getDisplayPriceAttribute(): string
+    {
+        $price = $this->relationLoaded('phanLoais')
+            ? $this->phanLoais->where('is_delete', 0)->min('price')
+            : $this->phanLoais()->where('is_delete', 0)->min('price');
+
+        return $price > 0 ? 'Giá: '.number_format((float) $price, 0, ',', '.').' đ/m²' : 'Giá: Liên hệ';
+    }
 }

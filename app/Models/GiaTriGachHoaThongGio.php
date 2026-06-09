@@ -11,7 +11,7 @@ class GiaTriGachHoaThongGio extends Model
 
     protected $primaryKey = 'gia_tri_gach_hoa_thong_gio_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'background',
         'image',
         'title',

@@ -32,8 +32,8 @@ class TinTucService
         $slug = $baseSlug;
         $counter = 1;
 
-        while (TinTuc::where('slug', $slug)->when($ignoreId, fn($q) => $q->where('tin_tuc_id', '!=', $ignoreId))->exists()) {
-            $slug = $baseSlug . '-' . $counter;
+        while (TinTuc::where('slug', $slug)->when($ignoreId, fn ($q) => $q->where('tin_tuc_id', '!=', $ignoreId))->exists()) {
+            $slug = $baseSlug.'-'.$counter;
             $counter++;
         }
 
@@ -43,40 +43,47 @@ class TinTucService
     /**
      * Xử lý file upload trong mảng Blocks (JSON)
      */
-    private function processBlocks(array $blocks, array $blockImages =[]): array
+    private function processBlocks(array $blocks, array $blockImages = []): array
     {
         foreach ($blocks as $index => &$block) {
             // Upload ảnh 1 (Dùng cho split_content, image_metadata, full_width, call_to_action)
             if (isset($blockImages[$index]['image_url']) && $blockImages[$index]['image_url'] instanceof UploadedFile) {
                 // Xóa ảnh cũ nếu có
-                if (!empty($block['data']['image_url'])) FileUploadHelper::delete($block['data']['image_url']);
+                if (! empty($block['data']['image_url'])) {
+                    FileUploadHelper::delete($block['data']['image_url']);
+                }
                 $block['data']['image_url'] = FileUploadHelper::upload($blockImages[$index]['image_url'], 'tin_tuc/blocks');
             }
 
             // Upload ảnh 2 (Dành cho two_image_content)
             if (isset($blockImages[$index]['image_url_1']) && $blockImages[$index]['image_url_1'] instanceof UploadedFile) {
-                if (!empty($block['data']['image_url_1'])) FileUploadHelper::delete($block['data']['image_url_1']);
+                if (! empty($block['data']['image_url_1'])) {
+                    FileUploadHelper::delete($block['data']['image_url_1']);
+                }
                 $block['data']['image_url_1'] = FileUploadHelper::upload($blockImages[$index]['image_url_1'], 'tin_tuc/blocks');
             }
             if (isset($blockImages[$index]['image_url_2']) && $blockImages[$index]['image_url_2'] instanceof UploadedFile) {
-                if (!empty($block['data']['image_url_2'])) FileUploadHelper::delete($block['data']['image_url_2']);
+                if (! empty($block['data']['image_url_2'])) {
+                    FileUploadHelper::delete($block['data']['image_url_2']);
+                }
                 $block['data']['image_url_2'] = FileUploadHelper::upload($blockImages[$index]['image_url_2'], 'tin_tuc/blocks');
             }
 
             // Clean mảng specs (loại bỏ null)
             if (isset($block['data']['specs']) && is_array($block['data']['specs'])) {
-                $block['data']['specs'] = array_values(array_filter($block['data']['specs'], function($spec) {
-                    return !empty($spec['label']) || !empty($spec['value']);
+                $block['data']['specs'] = array_values(array_filter($block['data']['specs'], function ($spec) {
+                    return ! empty($spec['label']) || ! empty($spec['value']);
                 }));
             }
         }
+
         return array_values($blocks);
     }
 
     public function create(array $data): TinTuc
     {
         return DB::transaction(function () use ($data) {
-            $fillable =[
+            $fillable = [
                 'danh_muc_tin_tuc_id' => $data['danh_muc_tin_tuc_id'],
                 'tieu_de' => $data['tieu_de'],
                 'slug' => $this->generateUniqueSlug($data['tieu_de']),
@@ -94,7 +101,7 @@ class TinTucService
             if (isset($data['blocks']) && is_array($data['blocks'])) {
                 $fillable['noi_dung_blocks'] = $this->processBlocks($data['blocks'], $data['block_images'] ?? []);
             } else {
-                $fillable['noi_dung_blocks'] =[];
+                $fillable['noi_dung_blocks'] = [];
             }
 
             return TinTuc::create($fillable);
@@ -106,7 +113,7 @@ class TinTucService
         $model = $this->findById($id);
 
         return DB::transaction(function () use ($model, $data) {
-            $fillable =[
+            $fillable = [
                 'danh_muc_tin_tuc_id' => $data['danh_muc_tin_tuc_id'],
                 'tieu_de' => $data['tieu_de'],
                 'mo_ta_ngan' => $data['mo_ta_ngan'],
@@ -131,10 +138,11 @@ class TinTucService
             if (isset($data['blocks']) && is_array($data['blocks'])) {
                 $fillable['noi_dung_blocks'] = $this->processBlocks($data['blocks'], $data['block_images'] ?? []);
             } else {
-                $fillable['noi_dung_blocks'] =[];
+                $fillable['noi_dung_blocks'] = [];
             }
 
             $model->update($fillable);
+
             return $model->fresh();
         });
     }
@@ -142,19 +150,25 @@ class TinTucService
     public function destroy(int $id): void
     {
         $model = $this->findById($id);
-        
+
         // Xóa ảnh đại diện
         FileUploadHelper::delete($model->anh_dai_dien);
-        
+
         // Xóa ảnh trong blocks
         if (is_array($model->noi_dung_blocks)) {
             foreach ($model->noi_dung_blocks as $block) {
-                if (!empty($block['data']['image_url'])) FileUploadHelper::delete($block['data']['image_url']);
-                if (!empty($block['data']['image_url_1'])) FileUploadHelper::delete($block['data']['image_url_1']);
-                if (!empty($block['data']['image_url_2'])) FileUploadHelper::delete($block['data']['image_url_2']);
+                if (! empty($block['data']['image_url'])) {
+                    FileUploadHelper::delete($block['data']['image_url']);
+                }
+                if (! empty($block['data']['image_url_1'])) {
+                    FileUploadHelper::delete($block['data']['image_url_1']);
+                }
+                if (! empty($block['data']['image_url_2'])) {
+                    FileUploadHelper::delete($block['data']['image_url_2']);
+                }
             }
         }
-        
+
         $model->delete();
     }
 }

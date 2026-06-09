@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class DuAn extends Model
 {
     protected $table = 'du_an';
+
     protected $primaryKey = 'du_an_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'ten_du_an',
         'dia_diem',
         'san_pham',
@@ -22,7 +23,7 @@ class DuAn extends Model
 
     protected function casts(): array
     {
-        return[
+        return [
             'images' => 'array',
             'nam' => 'integer',
         ];

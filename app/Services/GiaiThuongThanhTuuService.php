@@ -21,11 +21,11 @@ class GiaiThuongThanhTuuService
     public function store(array $data): GiaiThuongThanhTuu
     {
         $imagePath = FileUploadHelper::upload($data['image'], 'giai_thuong_thanh_tuu/images');
-        
+
         /** @var GiaiThuongThanhTuu $model */
         $model = GiaiThuongThanhTuu::query()->create([
             'image' => $imagePath,
-            'des'   => $data['des'],
+            'des' => $data['des'],
         ]);
 
         return $model;
@@ -34,16 +34,16 @@ class GiaiThuongThanhTuuService
     public function update(int $id, array $data): GiaiThuongThanhTuu
     {
         $model = $this->findById($id);
-        $fillable =[
+        $fillable = [
             'des' => $data['des'] ?? $model->des,
         ];
-        
+
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
             $fillable['image'] = FileUploadHelper::replace($data['image'], $model->image, 'giai_thuong_thanh_tuu/images');
         }
 
         $model->fill($fillable)->save();
-        
+
         return $model->fresh();
     }
 
@@ -51,7 +51,7 @@ class GiaiThuongThanhTuuService
     {
         $model = $this->findById($id);
         FileUploadHelper::delete($model->image);
-        
+
         GiaiThuongThanhTuu::destroy($id);
     }
 }

@@ -11,7 +11,7 @@ class LinhVat extends Model
 
     protected $primaryKey = 'linh_vat_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'image',
         'title',
         'description',

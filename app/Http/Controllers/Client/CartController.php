@@ -166,33 +166,33 @@ class CartController extends Controller
 
         DB::transaction(function () use ($request, $cartItems, $couponCode, $subtotal, $shippingFee, $discount, $totalAmount, $couponService, &$order) {
             $order = Order::create([
-                'user_id'        => auth()->id(),
-                'order_code'     => Order::generateOrderCode(),
-                'customer_name'  => $request->customer_name,
-                'phone'          => $request->phone,
-                'email'          => $request->email,
-                'address'        => $request->address,
-                'note'           => $request->note,
-                'subtotal'       => $subtotal,
-                'shipping_fee'   => $shippingFee,
-                'discount'       => $discount,
-                'total_amount'   => $totalAmount,
-                'status'         => 'processing',
+                'user_id' => auth()->id(),
+                'order_code' => Order::generateOrderCode(),
+                'customer_name' => $request->customer_name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'address' => $request->address,
+                'note' => $request->note,
+                'subtotal' => $subtotal,
+                'shipping_fee' => $shippingFee,
+                'discount' => $discount,
+                'total_amount' => $totalAmount,
+                'status' => 'processing',
                 'payment_method' => $request->payment_method,
-                'coupon_code'    => $couponCode,
+                'coupon_code' => $couponCode,
             ]);
 
             foreach ($cartItems as $item) {
                 $order->items()->create([
                     'product_type' => $item['product_type'],
-                    'product_id'   => $item['product_id'],
-                    'variant_id'   => $item['variant_id'],
+                    'product_id' => $item['product_id'],
+                    'variant_id' => $item['variant_id'],
                     'product_name' => $item['name'],
                     'variant_name' => $item['variant_name'],
-                    'sku'          => $item['sku'],
-                    'price'        => $item['price'],
-                    'quantity'     => $item['quantity'],
-                    'total'        => $item['price'] * $item['quantity'],
+                    'sku' => $item['sku'],
+                    'price' => $item['price'],
+                    'quantity' => $item['quantity'],
+                    'total' => $item['price'] * $item['quantity'],
                 ]);
             }
 
@@ -209,6 +209,6 @@ class CartController extends Controller
         $cartService->removeCoupon();
 
         return redirect()->route('client.home')
-            ->with('success', 'Đặt hàng thành công! Mã đơn hàng: ' . $order->order_code);
+            ->with('success', 'Đặt hàng thành công! Mã đơn hàng: '.$order->order_code);
     }
 }

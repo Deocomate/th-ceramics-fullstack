@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class DanhMucDuAn extends Model
 {
     protected $table = 'danh_muc_du_an';
+
     protected $primaryKey = 'danh_muc_du_an_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'ten_danh_muc',
         'is_delete',
     ];

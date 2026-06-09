@@ -19,7 +19,7 @@ class OrderStatusUpdatedMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Cập nhật trạng thái đơn hàng #' . $this->order->order_code,
+            subject: 'Cập nhật trạng thái đơn hàng #'.$this->order->order_code,
         );
     }
 

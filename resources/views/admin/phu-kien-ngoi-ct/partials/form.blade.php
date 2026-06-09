@@ -6,13 +6,13 @@
     <div class="lg:col-span-2 space-y-5">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">TÃªn dÃ¡ng ngÃ³i <span class="text-red-500">*</span></label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Tên dáng ngói <span class="text-red-500">*</span></label>
                 <input type="text" name="name" value="{{ old('name', $product->name ?? '') }}" required class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
                 @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
             </div>
-            <x-admin.shared.color-field :value="old('color', $product->color ?? 'Tá»± chá»n')" />
+            <x-admin.shared.color-field :value="old('color', $product->color ?? 'Tự chọn')" />
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">KÃ­ch thÆ°á»›c</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Kích thước</label>
                 <input type="text" name="size" value="{{ old('size', $product->size ?? '') }}" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
             </div>
         </div>
@@ -20,10 +20,10 @@
         <div class="bg-gray-50/80 rounded-xl border border-gray-200 p-5">
             <div class="flex items-center justify-between mb-4 border-b border-gray-200 pb-3">
                 <div>
-                    <label class="block text-sm font-bold text-gray-800">Danh sÃ¡ch ThÃ´ng sá»‘ / MÃ´ táº£</label>
-                    <p class="text-xs text-gray-500 mt-0.5">Má»—i dÃ²ng tÆ°Æ¡ng á»©ng vá»›i 1 gáº¡ch Ä‘áº§u dÃ²ng trÃªn website.</p>
+                    <label class="block text-sm font-bold text-gray-800">Danh sách Thông số / Mô tả</label>
+                    <p class="text-xs text-gray-500 mt-0.5">Mỗi dòng tương ứng với 1 gạch đầu dòng trên website.</p>
                 </div>
-                <button type="button" onclick="addDesBlock()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-50 hover:text-[#A31D1D] hover:border-[#A31D1D] transition-colors shadow-sm">ThÃªm dÃ²ng má»›i</button>
+                <button type="button" onclick="addDesBlock()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-50 hover:text-[#A31D1D] hover:border-[#A31D1D] transition-colors shadow-sm">Thêm dòng mới</button>
             </div>
             <div id="des-blocks-container" class="space-y-2.5"></div>
         </div>
@@ -31,17 +31,17 @@
         <div class="bg-blue-50/30 rounded-xl border border-blue-100 p-5">
             <div class="flex items-center justify-between mb-4 border-b border-blue-200 pb-3">
                 <div>
-                    <label class="block text-sm font-bold text-blue-800">Danh sÃ¡ch KÃ­ch thÆ°á»›c chi tiáº¿t</label>
-                    <p class="text-xs text-gray-500 mt-0.5">Hiá»ƒn thá»‹ thÃ´ng sá»‘ chi tiáº¿t bÃªn cáº¡nh áº£nh báº£n váº½.</p>
+                    <label class="block text-sm font-bold text-blue-800">Danh sách Kích thước chi tiết</label>
+                    <p class="text-xs text-gray-500 mt-0.5">Hiển thị thông số chi tiết bên cạnh ảnh bản vẽ.</p>
                 </div>
-                <button type="button" onclick="addSizeDesBlock()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded-lg hover:bg-blue-50 hover:text-blue-700 hover:border-blue-400 transition-colors shadow-sm">ThÃªm dÃ²ng</button>
+                <button type="button" onclick="addSizeDesBlock()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded-lg hover:bg-blue-50 hover:text-blue-700 hover:border-blue-400 transition-colors shadow-sm">Thêm dòng</button>
             </div>
             <div id="size-des-blocks-container" class="space-y-2.5"></div>
         </div>
     </div>
 
     <div class="lg:col-span-1">
-        <label class="block text-sm font-semibold text-gray-700 mb-2">áº¢nh báº£n váº½ / KÃ­ch thÆ°á»›c</label>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Ảnh bản vẽ / Kích thước</label>
         <div class="aspect-square w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors">
             <img id="preview-size" src="{{ $isEdit && $product->size_image ? \App\Support\AssetPath::url($product->size_image) : 'https://placehold.co/400x400?text=Chon+Ban+Ve' }}" class="w-full h-full object-contain" alt="">
             <input type="file" name="size_image" accept="image/*" onchange="previewImage(event, 'preview-size')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
@@ -52,13 +52,13 @@
 
 <hr class="border-gray-100 my-8">
 <div class="flex flex-col h-full border border-gray-200 rounded-xl p-6 bg-gray-50/50">
-    <label class="block text-sm font-semibold text-gray-700 mb-2">{{ $isEdit ? 'ThÃªm hÃ¬nh áº£nh má»›i' : 'HÃ¬nh áº£nh sáº£n pháº©m' }} @unless($isEdit)<span class="text-red-500">*</span>@endunless</label>
+    <label class="block text-sm font-semibold text-gray-700 mb-2">{{ $isEdit ? 'Thêm hình ảnh mới' : 'Hình ảnh sản phẩm' }} @unless($isEdit)<span class="text-red-500">*</span>@endunless</label>
     <input type="file" id="multipleImagesInput" name="{{ $isEdit ? 'new_images[]' : 'images[]' }}" multiple {{ $isEdit ? '' : 'required' }} accept="image/*" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white" onchange="handleMultipleFiles(event)">
     @error('images') <p class="mt-2 text-xs text-red-600">{{ $message }}</p> @enderror
     @error('new_images') <p class="mt-2 text-xs text-red-600">{{ $message }}</p> @enderror
     <div class="mt-4 h-[180px] bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner">
         <div id="multiple-preview-container" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-3">
-            <div id="empty-preview-state" class="col-span-full min-h-[100px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium">ChÆ°a chá»n áº£nh nÃ o</div>
+            <div id="empty-preview-state" class="col-span-full min-h-[100px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium">Chưa chọn ảnh nào</div>
         </div>
     </div>
 </div>

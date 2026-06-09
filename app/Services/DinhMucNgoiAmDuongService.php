@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\DinhMucNgoiAmDuong;
@@ -19,7 +20,7 @@ class DinhMucNgoiAmDuongService
         if (DinhMucNgoiAmDuong::query()->where('roof_type', $data['roof_type'])
             ->where('tile_type', $data['tile_type'])->exists()) {
             throw ValidationException::withMessages([
-                'roof_type' => 'Định mức cho Loại mái và Loại ngói này đã tồn tại trên hệ thống.'
+                'roof_type' => 'Định mức cho Loại mái và Loại ngói này đã tồn tại trên hệ thống.',
             ]);
         }
 
@@ -35,11 +36,12 @@ class DinhMucNgoiAmDuongService
             ->where('tile_type', $data['tile_type'])
             ->where('dinh_muc_ngoi_am_duong_id', '!=', $id)->exists()) {
             throw ValidationException::withMessages([
-                'roof_type' => 'Định mức cho Loại mái và Loại ngói này đã tồn tại.'
+                'roof_type' => 'Định mức cho Loại mái và Loại ngói này đã tồn tại.',
             ]);
         }
 
         $model->fill($data)->save();
+
         return $model->fresh();
     }
 

@@ -10,7 +10,7 @@ class ThiCong extends Model
 
     protected $primaryKey = 'thi_cong';
 
-    protected $fillable =[
+    protected $fillable = [
         'tieu_de',
         'anh',
         'link_youtube',

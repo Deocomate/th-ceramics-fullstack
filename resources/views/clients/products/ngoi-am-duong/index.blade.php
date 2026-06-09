@@ -93,13 +93,8 @@
         </div>
     </section>
 
-    <!-- SECTION 2: BREADCRUMB -->
-    <div class="w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
-        <x-client.shared.breadcrumb current-label="Ngói Âm Dương" />
-    </div>
-
-    <!-- SECTION 3: PRODUCT GRID -->
-    <x-client.shared.product-filter />
+    <!-- BREADCRUMB & PRODUCT FILTER -->
+    <x-client.shared.product-breadcrumb-filter current-label="Ngói Âm Dương" />
     <x-client.shared.product-grid category="ngoi-am-duong" :products="$products"
         routeName="client.products.ngoi-am-duong.detail" />
 

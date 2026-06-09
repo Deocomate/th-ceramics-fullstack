@@ -77,7 +77,7 @@ class DinhMucSeeder extends Seeder
 
         foreach ($sizes as [$size, $value]) {
             DinhMucGachTrangTri::firstOrCreate(
-                ['brick_type' => 'Kích thước ' . $size],
+                ['brick_type' => 'Kích thước '.$size],
                 ['value' => $value]
             );
         }
@@ -94,7 +94,7 @@ class DinhMucSeeder extends Seeder
 
         foreach ($sizes as [$size, $value]) {
             DinhMucGachHoaThongGio::firstOrCreate(
-                ['brick_type' => 'Gạch ' . $size],
+                ['brick_type' => 'Gạch '.$size],
                 ['value' => $value]
             );
         }
@@ -111,7 +111,7 @@ class DinhMucSeeder extends Seeder
 
         foreach ($sizes as [$size, $value]) {
             DinhMucGachCoBatTrang::firstOrCreate(
-                ['brick_type' => 'Kích thước ' . $size],
+                ['brick_type' => 'Kích thước '.$size],
                 ['value' => $value]
             );
         }

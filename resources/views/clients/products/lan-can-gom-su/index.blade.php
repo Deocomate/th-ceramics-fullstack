@@ -133,11 +133,9 @@
                                             href="{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}"
                                             image="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-01.jpg') }}"
                                             title="{{ $item->name }}"
-                                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
-                                            code="MSP: {{ $item->display_code }}"
-                                            price="{{ $item->display_price }}"
-                                            :show-overlay="true"
-                                        />
+                                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
+                                            code="MSP: {{ $item->display_code }}" price="{{ $item->display_price }}"
+                                            :show-overlay="true" />
                                     @endforeach
                                 </div>
                             @endforeach
@@ -228,11 +226,9 @@
                                             href="{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}"
                                             image="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-02.jpg') }}"
                                             title="{{ $item->name }}"
-                                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
-                                            code="MSP: {{ $item->display_code }}"
-                                            price="{{ $item->display_price }}"
-                                            :show-overlay="true"
-                                        />
+                                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
+                                            code="MSP: {{ $item->display_code }}" price="{{ $item->display_price }}"
+                                            :show-overlay="true" />
                                     @endforeach
                                 </div>
                             @endforeach
@@ -284,12 +280,9 @@
                             class="col-span-2 lg:col-span-2"
                             image="{{ $firstProduct->images ? asset('storage/' . $firstProduct->images[0]) : asset('assets/images/lan-can-giot-le.jpg') }}"
                             title="{{ $firstProduct->name }}"
-                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
-                            code="MSP: {{ $firstProduct->display_code }}"
-                            price="{{ $firstProduct->display_price }}"
-                            :show-overlay="true"
-                            aspect="aspect-[2/1] md:aspect-[19/10]"
-                        />
+                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
+                            code="MSP: {{ $firstProduct->display_code }}" price="{{ $firstProduct->display_price }}"
+                            :show-overlay="true" aspect="aspect-[2/1] md:aspect-[19/10]" />
                     @endif
 
                     <!-- Khối ảnh nhỏ tiếp theo -->
@@ -298,12 +291,9 @@
                             href="{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}"
                             image="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-07.jpg') }}"
                             title="{{ $item->name }}"
-                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase mb-1 tracking-wide transition-colors group-hover:text-secondary"
-                            code="MSP: {{ $item->display_code }}"
-                            price="{{ $item->display_price }}"
-                            :show-overlay="true"
-                            aspect="aspect-[1.1/1] md:aspect-[9/10]"
-                        />
+                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
+                            code="MSP: {{ $item->display_code }}" price="{{ $item->display_price }}"
+                            :show-overlay="true" aspect="aspect-[1.1/1] md:aspect-[9/10]" />
                     @endforeach
                 </div>
             </div>

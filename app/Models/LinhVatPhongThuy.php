@@ -11,7 +11,7 @@ class LinhVatPhongThuy extends Model
 
     protected $primaryKey = 'linh_vat_phong_thuy_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'thumbnail_main',
         'video',
     ];

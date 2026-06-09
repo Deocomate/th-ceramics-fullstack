@@ -10,7 +10,7 @@ class Catalog extends Model
 
     protected $primaryKey = 'catalog_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'tieu_de',
         'anh_dai_dien',
         'file',

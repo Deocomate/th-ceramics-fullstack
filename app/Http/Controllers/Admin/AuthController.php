@@ -23,13 +23,13 @@ class AuthController extends Controller
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+            'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
 
         $credentials['remember'] = $request->boolean('remember');
 
-        if (!$this->authService->login($credentials)) {
+        if (! $this->authService->login($credentials)) {
             return back()
                 ->withInput($request->only('email', 'remember'))
                 ->withErrors(['email' => 'Email hoặc mật khẩu không đúng.']);
@@ -93,15 +93,15 @@ class AuthController extends Controller
     public function resetPassword(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'token'                 => ['required'],
-            'email'                 => ['required', 'email'],
-            'password'              => ['required', 'min:8', 'confirmed'],
+            'token' => ['required'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'min:8', 'confirmed'],
             'password_confirmation' => ['required'],
         ]);
 
         $status = $this->authService->resetPassword($data);
 
-        if ($status === \Illuminate\Support\Facades\Password::PASSWORD_RESET) {
+        if ($status === Password::PASSWORD_RESET) {
             return redirect()->route('admin.auth.login')
                 ->with('success', 'Mật khẩu đã được đặt lại thành công. Vui lòng đăng nhập.');
         }

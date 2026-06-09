@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\TrangChu;
 use App\Models\VeChungToi;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class HomeAndAboutUsSeeder extends Seeder
 {
@@ -32,7 +31,7 @@ class HomeAndAboutUsSeeder extends Seeder
             'loi_tri_an' => [
                 'Hơn 40 năm gắn bó với gốm sứ trang trí nội - ngoại thất, chúng tôi tin rằng mỗi sản phẩm không chỉ là vật liệu xây dựng, mà là kết tinh của đất, lửa và tấm lòng người làm nghề.',
                 'Sinh ra và lớn lên tại làng gốm Bát Tràng, nơi lưu giữ di sản nghề gốm được truyền qua nhiều thế hệ, chúng tôi thừa hưởng nền tảng thủ công truyền thống cùng nguồn nguyên liệu quý giá của quê hương. Là người kế thừa thể hệ thứ ba của dòng họ Vũ Gia, tôi tiếp bước con đường cha ông đã gây dựng, gìn giữ và làm giàu thêm giá trị di sản gốm Việt, đặc biệt là ngói âm dương loại ngói gắn liền với kiến trúc cung đình, đền chùa từ thời Lý – Trần đến nay.',
-                'Từ ngói lợp gốm sứ, gạch hoa thông gió đến các phụ kiện trang trí, mỗi sản phẩm đều là sự giao thoa giữa di sản truyền thống và tinh thần đương đại. Hành trình ấy đã đưa sản phẩm của chúng tôi hiện diện trên khắp mọi miền đất nước, trở thành một phần trong nhiều công trình mang đậm bản sắc và thẩm mỹ Việt.'
+                'Từ ngói lợp gốm sứ, gạch hoa thông gió đến các phụ kiện trang trí, mỗi sản phẩm đều là sự giao thoa giữa di sản truyền thống và tinh thần đương đại. Hành trình ấy đã đưa sản phẩm của chúng tôi hiện diện trên khắp mọi miền đất nước, trở thành một phần trong nhiều công trình mang đậm bản sắc và thẩm mỹ Việt.',
             ],
             'loi_tri_an_anh' => 'assets/images/am-duong-detail-01.png',
 

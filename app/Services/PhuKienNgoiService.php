@@ -41,7 +41,7 @@ class PhuKienNgoiService
             }
 
             // Gộp thêm ảnh mới vào mảng JSON hiện tại
-            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+            if (! empty($data['new_images']) && is_array($data['new_images'])) {
                 $currentImages = is_array($model->images) ? $model->images : [];
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
@@ -51,7 +51,7 @@ class PhuKienNgoiService
                 $fillable['images'] = $currentImages;
             }
 
-            if (!empty($fillable)) {
+            if (! empty($fillable)) {
                 $model->update($fillable);
             }
 

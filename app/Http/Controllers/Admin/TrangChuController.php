@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\TrangChuService;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class TrangChuController extends Controller
@@ -15,6 +15,7 @@ class TrangChuController extends Controller
     public function edit(): View
     {
         $trangChu = $this->service->getFirstRecord();
+
         return view('admin.trang-chu.edit', compact('trangChu'));
     }
 
@@ -22,23 +23,23 @@ class TrangChuController extends Controller
     {
         $data = $request->validate([
             'new_banner' => ['nullable', 'array'],
-            'new_banner.*' =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'new_banner.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'delete_banner' => ['nullable', 'array'],
             'delete_banner.*' => ['integer'],
-            
+
             'new_khach_hang' => ['nullable', 'array'],
-            'new_khach_hang.*' =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'delete_khach_hang' =>['nullable', 'array'],
+            'new_khach_hang.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'delete_khach_hang' => ['nullable', 'array'],
             'delete_khach_hang.*' => ['integer'],
 
             'loi_tri_an' => ['nullable', 'array'],
-            'loi_tri_an.*' =>['nullable', 'string'],
-            
-            'loi_tri_an_anh' =>['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'loi_tri_an.*' => ['nullable', 'string'],
+
+            'loi_tri_an_anh' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
 
             'new_ve_chung_toi_logo' => ['nullable', 'array'],
-            'new_ve_chung_toi_logo.*' =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'delete_ve_chung_toi_logo' =>['nullable', 'array'],
+            'new_ve_chung_toi_logo.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'delete_ve_chung_toi_logo' => ['nullable', 'array'],
             'delete_ve_chung_toi_logo.*' => ['integer'],
 
             'video' => ['nullable', 'string', 'max:255'],
@@ -48,7 +49,7 @@ class TrangChuController extends Controller
             'nhung_con_so.*.body' => ['nullable', 'string', 'max:255'],
 
             'new_showroom_images' => ['nullable', 'array'],
-            'new_showroom_images.*' =>['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'new_showroom_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'delete_showroom_images' => ['nullable', 'array'],
             'delete_showroom_images.*' => ['integer'],
 

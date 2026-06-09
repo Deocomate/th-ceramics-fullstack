@@ -11,7 +11,7 @@ class DenGomSu extends Model
 
     protected $primaryKey = 'den_gom_su_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'thumbnail_main',
         'video',
         'image1',

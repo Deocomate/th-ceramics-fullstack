@@ -17,7 +17,7 @@ class OrderFactory extends Factory
         return [
             'order_code' => Order::generateOrderCode(),
             'customer_name' => fake()->name(),
-            'phone' => '0' . fake()->numerify('#########'),
+            'phone' => '0'.fake()->numerify('#########'),
             'email' => fake()->optional()->safeEmail(),
             'address' => fake()->address(),
             'note' => fake()->optional()->sentence(),

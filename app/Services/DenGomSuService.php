@@ -37,7 +37,7 @@ class DenGomSuService
                 $fillable['video'] = $data['video'];
             }
 
-            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+            if (! empty($data['new_images']) && is_array($data['new_images'])) {
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
                         $path = FileUploadHelper::upload($file, 'den_gom_su/gallery');
@@ -47,6 +47,7 @@ class DenGomSuService
             }
 
             $model->update($fillable);
+
             return $model->fresh();
         });
     }

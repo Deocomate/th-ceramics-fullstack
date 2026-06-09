@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
@@ -14,7 +15,7 @@ class MauSacNgoiAmDuongCtService
 
     public function create(array $data)
     {
-        $fillable =[
+        $fillable = [
             'name' => $data['name'],
         ];
 
@@ -30,7 +31,7 @@ class MauSacNgoiAmDuongCtService
         /** @var MauSacNgoiAmDuongCt $model */
         $model = MauSacNgoiAmDuongCt::query()->findOrFail($id);
 
-        $fillable =[
+        $fillable = [
             'name' => $data['name'],
         ];
 
@@ -39,6 +40,7 @@ class MauSacNgoiAmDuongCtService
         }
 
         $model->fill($fillable)->save();
+
         return $model->fresh();
     }
 

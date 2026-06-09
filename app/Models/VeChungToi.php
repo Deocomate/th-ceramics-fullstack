@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class VeChungToi extends Model
 {
     protected $table = 've_chung_toi';
+
     protected $primaryKey = 've_chung_toi_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'banner', 'header_banner', 'body_banner',
         'gs_head', 'gs_gia_tri', 'gs_hanh_trinh',
         'gs_nguoi_sang_lap_anh', 'gs_nguoi_sang_lap_noi_dung', 'gs_giai_thuong',
@@ -21,7 +22,7 @@ class VeChungToi extends Model
 
     protected function casts(): array
     {
-        return[
+        return [
             'gs_head' => 'array',
             'gs_gia_tri' => 'array',
             'gs_hanh_trinh' => 'array',

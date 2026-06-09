@@ -93,7 +93,7 @@
                 href="{{ route('client.products.linh-vat-phong-thuy.detail', $product->linh_vat_phong_thuy_ct_id) }}"
                 image="{{ $productImage }}"
                 title="{{ $product->name ?? 'Sản phẩm' }}"
-                code="MSP: {{ $product->code ?? 'N/A' }}"
+                code="MSP: {{ $product->code ?: 'Đang cập nhật' }}"
                 price="{{ $productPrice > 0 ? number_format($productPrice, 0, ',', '.') . ' đ' : 'Liên hệ' }}"
               />
             @endforeach
@@ -125,7 +125,7 @@
         href="{{ route('client.products.linh-vat-phong-thuy.detail', $product->linh_vat_phong_thuy_ct_id) }}"
         image="{{ $productImage }}"
         title="{{ $product->name ?? 'Sản phẩm' }}"
-        code="MSP: {{ $product->code ?? 'N/A' }}"
+        code="MSP: {{ $product->code ?: 'Đang cập nhật' }}"
         price="{{ $productPrice > 0 ? number_format($productPrice, 0, ',', '.') . ' đ' : 'Liên hệ' }}"
         :show-overlay="true"
       />

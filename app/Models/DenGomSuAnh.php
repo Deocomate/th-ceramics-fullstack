@@ -11,7 +11,7 @@ class DenGomSuAnh extends Model
 
     protected $primaryKey = 'den_gom_su_anh_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'image',
         'den_gom_su_id',
     ];

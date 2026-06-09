@@ -76,8 +76,8 @@
         href="{{ route('client.products.linh-vat-phong-thuy.detail', $product->linh_vat_phong_thuy_ct_id) }}"
         image="{{ $imageUrl }}"
         title="{{ $product->name }}"
-        code="MSP: {{ $product->code }}"
-        price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
+        code="MSP: {{ $product->code ?: 'Đang cập nhật' }}"
+        price="{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . 'đ' : 'Liên hệ' }}"
         :show-overlay="true"
       />
     @endforeach

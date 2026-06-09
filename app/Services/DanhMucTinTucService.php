@@ -41,6 +41,7 @@ class DanhMucTinTucService
         }
 
         $model->update(['ten_danh_muc' => $data['ten_danh_muc']]);
+
         return $model->fresh();
     }
 

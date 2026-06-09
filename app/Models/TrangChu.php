@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class TrangChu extends Model
 {
     protected $table = 'trang_chu';
+
     protected $primaryKey = 'trang_chu_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'banner',
         'khach_hang_doi_tac',
         'loi_tri_an',
@@ -23,7 +24,7 @@ class TrangChu extends Model
 
     protected function casts(): array
     {
-        return[
+        return [
             'banner' => 'array',
             'khach_hang_doi_tac' => 'array',
             'loi_tri_an' => 'array',

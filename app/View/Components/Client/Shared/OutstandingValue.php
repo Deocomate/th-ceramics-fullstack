@@ -27,7 +27,7 @@ class OutstandingValue extends Component
         }
 
         $this->values = $values->map(function ($item, int $index) {
-            $fallback = 'assets/images/' . ($this->fallbackImages[$index] ?? $this->fallbackImages[0]);
+            $fallback = 'assets/images/'.($this->fallbackImages[$index] ?? $this->fallbackImages[0]);
 
             return (object) [
                 'title' => data_get($item, 'title', ''),

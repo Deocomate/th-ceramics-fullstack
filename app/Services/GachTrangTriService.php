@@ -19,14 +19,14 @@ class GachTrangTriService
     public function update(array $data): GachTrangTri
     {
         $model = $this->getFirstRecord();
-        
+
         return DB::transaction(function () use ($model, $data) {
-            $fillable =[];
-            
+            $fillable = [];
+
             if (isset($data['thumbnail_main']) && $data['thumbnail_main'] instanceof UploadedFile) {
                 $fillable['thumbnail_main'] = FileUploadHelper::replace($data['thumbnail_main'], $model->thumbnail_main, 'gach_trang_tri/images');
             }
-            
+
             if (array_key_exists('video', $data)) {
                 $fillable['video'] = $data['video'];
             }
@@ -34,7 +34,7 @@ class GachTrangTriService
             $currentImages = is_array($model->images) ? $model->images : [];
             $imagesChanged = false;
 
-            if (!empty($data['cong_doan_order']) && is_array($data['cong_doan_order'])) {
+            if (! empty($data['cong_doan_order']) && is_array($data['cong_doan_order'])) {
                 $orderedImages = array_values(array_filter(
                     $data['cong_doan_order'],
                     fn ($path) => is_string($path) && in_array($path, $currentImages, true)
@@ -43,8 +43,8 @@ class GachTrangTriService
                 $currentImages = array_merge($orderedImages, $missingImages);
                 $imagesChanged = true;
             }
-            
-            if (!empty($data['cong_doan_images']) && is_array($data['cong_doan_images'])) {
+
+            if (! empty($data['cong_doan_images']) && is_array($data['cong_doan_images'])) {
                 foreach ($data['cong_doan_images'] as $file) {
                     if ($file instanceof UploadedFile) {
                         $currentImages[] = FileUploadHelper::upload($file, 'gach_trang_tri/cong_doan_che_tac');
@@ -64,7 +64,7 @@ class GachTrangTriService
                 );
             }
 
-            if (!empty($fillable)) {
+            if (! empty($fillable)) {
                 $model->update($fillable);
             }
 

@@ -22,29 +22,16 @@
 
                             <div class="flex-grow flex gap-4 md:gap-10">
                                 @foreach ($items as $product)
-                                    <div class="flex flex-col group cursor-pointer w-[175px] md:w-[220px] shrink-0">
-                                      <a href="{{ $product['url'] }}" class="flex flex-col flex-grow">
-                                        <div class="product-card relative bg-white rounded-sm overflow-hidden mb-3 md:mb-5 transition-all duration-300 group-hover:-translate-y-1 aspect-square bg-gray-100 shadow-sm mb-2 md:mb-4">
-                                          <img
-                                            src="{{ $product['image'] }}"
-                                            alt="{{ $product['name'] }}"
-                                            class="w-full h-full object-cover mix-blend-multiply"
-                                            onerror="this.onerror=null; this.src='{{ asset('assets/images/ngoi-01.jpg') }}'"
-                                          />
-                                          <div class="product-overlay">
-                                            <img src="{{ asset('assets/images/eye.svg') }}" alt="Search" />
-                                            <span>Xem chi tiết</span>
-                                          </div>
-                                        </div>
-                                        <h3 class="font-bold text-[12px] md:text-base leading-snug h-6 md:h-12 overflow-hidden mb-0 md:mb-2 text-[#004B8D] hover:text-secondary transition-colors">
-                                          <span class="block lowercase first-letter:uppercase md:uppercase">
-                                            {{ $product['name'] }}
-                                          </span>
-                                        </h3>
-                                      </a>
-
+                                    <x-client.shared.product-card
+                                        href="{{ $product['url'] }}"
+                                        image="{{ $product['image'] }}"
+                                        title="{{ $product['name'] }}"
+                                        class="w-[175px] md:w-[220px] shrink-0"
+                                        aspect="aspect-square bg-gray-100 shadow-sm mb-2 md:mb-4"
+                                        title-class="font-bold text-[12px] md:text-base leading-snug h-6 md:h-12 overflow-hidden mb-0 md:mb-2 text-[#004B8D] hover:text-secondary transition-colors"
+                                        :show-overlay="true"
+                                    >
                                         @if($product['can_add_to_cart'])
-                                            <div class="mt-2">
                                             <button
                                                 type="button"
                                                 class="border border-secondary text-secondary text-[9px] md:text-[13px] font-bold py-1 md:py-2 px-4 md:px-6 rounded-full hover:bg-secondary hover:text-white transition-all whitespace-nowrap js-add-to-cart mt-2 self-start"
@@ -55,9 +42,8 @@
                                             >
                                                 Thêm vào giỏ
                                             </button>
-                                            </div>
                                         @endif
-                                    </div>
+                                    </x-client.shared.product-card>
                                 @endforeach
                             </div>
                         </div>

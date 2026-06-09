@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\DenGomSu;
+use App\Models\DenGomSuAnh;
 use App\Models\LanCanGomXu;
 use App\Models\LinhVat;
 use App\Models\LinhVatPhongThuy;
 use App\Models\LinhVatPhongThuyAnh;
-use App\Models\DenGomSu;
-use App\Models\DenGomSuAnh;
 use Illuminate\Database\Seeder;
 
 class ProductTypeSeeder extends Seeder
@@ -74,7 +74,7 @@ class ProductTypeSeeder extends Seeder
     private function seedDenGomSu(): void
     {
         $parent = DenGomSu::firstOrCreate(
-            ['den_gom_su_id' => 1],[
+            ['den_gom_su_id' => 1], [
                 'thumbnail_main' => 'assets/images/den-gom-banner.png',
                 'video' => 'https://www.youtube.com/embed/Win12rIicBI',
                 'title2' => 'Đèn gốm sứ cao cấp',

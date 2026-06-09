@@ -21,7 +21,7 @@ class NgoiAmDuongCtController extends Controller
     {
         $status = $request->query('status', 'active');
         $products = $this->service->getAll($status);
-        
+
         return view('admin.ngoi-am-duong-ct.index', compact('products', 'status'));
     }
 
@@ -34,6 +34,7 @@ class NgoiAmDuongCtController extends Controller
     {
         try {
             $this->service->create($request->validated());
+
             return redirect()->route('admin.ngoi-am-duong-ct.index')
                 ->with('success', 'Thêm mới chi tiết Ngói Âm Dương thành công.');
         } catch (InvalidArgumentException $e) {
@@ -44,6 +45,7 @@ class NgoiAmDuongCtController extends Controller
     public function edit(int $id): View
     {
         $product = $this->service->findById($id);
+
         return view('admin.ngoi-am-duong-ct.edit', compact('product'));
     }
 
@@ -51,6 +53,7 @@ class NgoiAmDuongCtController extends Controller
     {
         try {
             $this->service->update($id, $request->validated());
+
             return back()->with('success', 'Cập nhật sản phẩm thành công.');
         } catch (InvalidArgumentException $e) {
             return back()->withInput()->withErrors(['code' => $e->getMessage()]);
@@ -60,12 +63,14 @@ class NgoiAmDuongCtController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $this->service->deleteProduct($id);
+
         return back()->with('success', 'Đã tạm ẩn sản phẩm thành công.');
     }
 
     public function restore(int $id): RedirectResponse
     {
         $this->service->restoreProduct($id);
+
         return back()->with('success', 'Khôi phục sản phẩm thành công.');
     }
 
@@ -73,6 +78,7 @@ class NgoiAmDuongCtController extends Controller
     {
         $request->validate(['image_path' => ['required', 'string']]);
         $this->service->removeImageFromJson($id, $request->input('image_path'));
+
         return back()->with('success', 'Đã xóa ảnh khỏi sản phẩm.');
     }
 }

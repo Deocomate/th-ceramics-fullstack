@@ -35,7 +35,7 @@ class GachHoaThongGioService
                 $fillable['video_url'] = $data['video_url'];
             }
 
-            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+            if (! empty($data['new_images']) && is_array($data['new_images'])) {
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
                         $path = FileUploadHelper::upload($file, 'gach_hoa_thong_gio/gallery');
@@ -44,7 +44,7 @@ class GachHoaThongGioService
                 }
             }
 
-            if (!empty($data['process_images']) && is_array($data['process_images'])) {
+            if (! empty($data['process_images']) && is_array($data['process_images'])) {
                 $currentImages = is_array($model->process_images) ? $model->process_images : [];
                 foreach ($data['process_images'] as $file) {
                     if ($file instanceof UploadedFile) {
@@ -54,7 +54,7 @@ class GachHoaThongGioService
                 $fillable['process_images'] = $currentImages;
             }
 
-            if (!empty($fillable)) {
+            if (! empty($fillable)) {
                 $model->update($fillable);
             }
 
@@ -84,13 +84,13 @@ class GachHoaThongGioService
     public function addGiaTri(array $data): GiaTriGachHoaThongGio
     {
         $model = $this->getFirstRecord();
-        
+
         $imagePath = FileUploadHelper::upload($data['image'], 'gach_hoa_thong_gio/gia_tri');
 
         return $model->giaTri()->create([
-            'background'   => $data['background'],
-            'image'        => $imagePath,
-            'title'        => $data['title'],
+            'background' => $data['background'],
+            'image' => $imagePath,
+            'title' => $data['title'],
             'desscription' => $data['desscription'], // Theo đúng tên trong DB
         ]);
     }
@@ -98,11 +98,11 @@ class GachHoaThongGioService
     public function updateGiaTri(int $giaTriId, array $data): GiaTriGachHoaThongGio
     {
         $giaTri = GiaTriGachHoaThongGio::findOrFail($giaTriId);
-        
+
         $fillable = [
-            'title'        => $data['title'] ?? $giaTri->title,
+            'title' => $data['title'] ?? $giaTri->title,
             'desscription' => $data['desscription'] ?? $giaTri->desscription,
-            'background'   => $data['background'] ?? $giaTri->background,
+            'background' => $data['background'] ?? $giaTri->background,
         ];
 
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {

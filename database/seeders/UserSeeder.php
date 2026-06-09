@@ -20,8 +20,8 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
             [
-                'name'     => 'Admin',
-                'role'     => 'superadmin',
+                'name' => 'Admin',
+                'role' => 'superadmin',
                 'password' => Hash::make('Admin@123'),
             ]
         );

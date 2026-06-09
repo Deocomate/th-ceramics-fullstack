@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\DinhMucGachCoBatTrang;
@@ -16,6 +17,7 @@ class DinhMucGachCoBatTrangService
         if (DinhMucGachCoBatTrang::query()->where('brick_type', $data['brick_type'])->exists()) {
             throw ValidationException::withMessages(['brick_type' => 'Loại gạch này đã tồn tại định mức.']);
         }
+
         return DinhMucGachCoBatTrang::query()->create($data);
     }
 
@@ -28,6 +30,7 @@ class DinhMucGachCoBatTrangService
         }
 
         $model->fill($data)->save();
+
         return $model->fresh();
     }
 

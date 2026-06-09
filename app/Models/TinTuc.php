@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TinTuc extends Model
 {
     protected $table = 'tin_tuc';
+
     protected $primaryKey = 'tin_tuc_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'danh_muc_tin_tuc_id',
         'tieu_de',
         'slug',
@@ -24,7 +25,7 @@ class TinTuc extends Model
 
     protected function casts(): array
     {
-        return[
+        return [
             'noi_dung_blocks' => 'array',
             'ngay_dang' => 'datetime',
         ];

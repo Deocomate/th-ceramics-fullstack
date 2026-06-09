@@ -1,6 +1,6 @@
 <section class="w-full relative pb-8 md:pb-16" data-aos="fade-up" data-product-values>
   <div class="text-center mb-8 md:mb-12">
-    <h2 class="text-[20px] md:text-3xl font-semibold text-secondary uppercase">
+    <h2 class="text-[20px] md:text-[32px] md:leading-[45px] font-archivo font-semibold text-secondary uppercase">
       Giá trị vượt trội
     </h2>
   </div>
@@ -13,39 +13,43 @@
       alt="Giá trị vượt trội nền"
       class="absolute inset-0 w-full h-full object-cover z-0"
     />
+    <!-- Linear Gradient Overlay matching Figma design -->
     <div
-      class="absolute inset-0 z-[1] md:hidden bg-[linear-gradient(92deg,rgba(255,255,255,0)_0%,rgba(116,44,44,0.54)_55%,rgba(116,44,44,0.60)_84%),rgba(186,113,113,0.34)]"
+      class="absolute inset-0 z-[1]"
+      style="background: linear-gradient(92deg, rgba(255, 255, 255, 0) 0%, rgba(116.02, 44.05, 44.05, 0.54) 55%, rgba(116.02, 44.05, 44.05, 0.60) 84%), rgba(186.27, 112.52, 112.52, 0.34);"
     ></div>
 
     <div
-      class="relative z-10 container mx-auto px-6 lg:px-[140px] flex-grow flex flex-col items-end justify-start md:justify-center text-end text-white pt-[44px] md:pt-32"
+      class="relative z-10 w-full flex-grow flex flex-col items-end justify-start md:justify-center text-white pt-[44px] md:pt-32 pr-6 md:pr-[10%] lg:pr-[240px]"
     >
-      <h3
-        data-value-title
-        class="text-[20px] leading-[32px] md:text-3xl font-semibold mb-[5px] md:mb-10 tracking-[0.6px] md:tracking-wide drop-shadow-md transition-all duration-500"
-      >
-        {{ $values->first()->title }}
-      </h3>
+      <!-- Title & Description Container: Align items to end (right) & text right, and keep it right-aligned relative to parent -->
+      <div class="w-full max-w-[999px] flex flex-col items-end text-right gap-2 md:gap-10 pr-6 md:pr-0">
+        <h3
+          data-value-title
+          class="text-[20px] leading-[32px] md:text-[32px] md:leading-[45px] font-semibold mb-[5px] md:mb-0 tracking-[0.6px] md:tracking-wide drop-shadow-md transition-all duration-500 uppercase font-archivo"
+        >
+          {{ $values->first()->title }}
+        </h3>
 
-      <div class="w-full max-w-[383px] md:max-w-none md:shadow-none">
         <p
           data-value-description
-          class="font-charm text-[16px] leading-[28px] md:text-[32px]/relaxed max-w-[383px] md:max-w-5xl tracking-[1.1px] md:tracking-wider transition-all duration-500"
+          class="font-charm text-[16px] leading-[28px] md:text-[32px] md:leading-[50px] md:tracking-[0.64px] transition-all duration-500 font-normal"
         >
           {{ $values->first()->desscription }}
         </p>
       </div>
     </div>
 
+    <!-- Bottom Gallery Overlay aligned with left screen border -->
     <div
-      class="absolute top-[261px] left-0 z-10 w-full md:relative md:top-auto md:left-auto mb-0 md:mb-16 md:px-0 max-w-[1920px] mx-auto"
+      class="absolute bottom-0 left-0 z-10 w-full md:relative md:bottom-auto md:left-auto mb-0 md:mb-16 pl-4 md:pl-0"
     >
       <div
-        class="flex flex-row justify-center md:justify-start gap-2 md:gap-5 items-end translate-y-0 md:translate-y-[20px] px-2 md:px-0"
+        class="flex flex-row justify-start gap-2 md:gap-5 items-end translate-y-0 md:translate-y-[20px] pb-4 md:pb-0"
       >
         @foreach($values as $index => $item)
         <div
-          class="value-image-item {{ $index === 0 ? 'active' : '' }} aspect-[19/33] w-[80px] md:w-[200px] flex-shrink-0 shadow-lg"
+          class="value-image-item {{ $index === 0 ? 'active' : '' }} flex-shrink-0 shadow-lg"
           data-value-image
           data-title="{{ $item->title }}"
           data-description="{{ $item->desscription }}"
@@ -69,6 +73,8 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    width: 80px;
+    height: 130px;
   }
 
   .value-image-item img {
@@ -85,9 +91,14 @@
   }
 
   @media (min-width: 768px) {
+    .value-image-item {
+      width: 190px;
+      height: 330px;
+    }
     .value-image-item:hover,
     .value-image-item.active {
-      width: 240px !important;
+      width: 290px !important;
+      height: 330px !important;
     }
   }
 </style>

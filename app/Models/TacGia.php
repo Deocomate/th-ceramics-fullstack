@@ -10,7 +10,7 @@ class TacGia extends Model
 
     protected $primaryKey = 'tac_gia_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'ten_tac_gia',
         'link_fb',
         'link_linkedin',

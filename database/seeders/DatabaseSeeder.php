@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
             TacGiaSeeder::class,
             GiaTriVuotTroiSeeder::class,
-            
+
             // CÁC SEEDER THEO KẾ HOẠCH BÀI BẢN VÀ ĐẦY ĐỦ 100%:
             NgoiAmDuongSeeder::class,
             NgoiHaiSeeder::class,
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             LanCanGomSuSeeder::class,
             LinhVatPhongThuySeeder::class,
             DenGomSuSeeder::class,
-            
+
             // Các dữ liệu content khác
             DuAnSeeder::class,
             CatalogSeeder::class,

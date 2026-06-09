@@ -20,29 +20,29 @@ class CatalogService
 
     public function store(array $data): Catalog
     {
-        $fillable =[
+        $fillable = [
             'tieu_de' => $data['tieu_de'] ?? null,
         ];
 
         if (isset($data['anh_dai_dien']) && $data['anh_dai_dien'] instanceof UploadedFile) {
             $fillable['anh_dai_dien'] = FileUploadHelper::upload($data['anh_dai_dien'], 'catalog/images');
         }
-        
+
         if (isset($data['file']) && $data['file'] instanceof UploadedFile) {
             $fillable['file'] = FileUploadHelper::upload($data['file'], 'catalog/files');
         }
-        
+
         return Catalog::query()->create($fillable);
     }
 
     public function update(int $id, array $data): Catalog
     {
         $model = $this->findById($id);
-        
-        $fillable =[
+
+        $fillable = [
             'tieu_de' => array_key_exists('tieu_de', $data) ? $data['tieu_de'] : $model->tieu_de,
         ];
-        
+
         if (isset($data['anh_dai_dien']) && $data['anh_dai_dien'] instanceof UploadedFile) {
             $fillable['anh_dai_dien'] = FileUploadHelper::replace($data['anh_dai_dien'], $model->anh_dai_dien, 'catalog/images');
         }
@@ -52,7 +52,7 @@ class CatalogService
         }
 
         $model->fill($fillable)->save();
-        
+
         return $model->fresh();
     }
 
@@ -61,7 +61,7 @@ class CatalogService
         $model = $this->findById($id);
         FileUploadHelper::delete($model->anh_dai_dien);
         FileUploadHelper::delete($model->file);
-        
+
         $model->delete();
     }
 }

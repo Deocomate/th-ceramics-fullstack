@@ -210,7 +210,7 @@ class DuAnSeeder extends Seeder
             // Ensure unique slug
             if (isset($usedSlugs[$slug])) {
                 $usedSlugs[$slug]++;
-                $slug = $slug . '-' . $usedSlugs[$slug];
+                $slug = $slug.'-'.$usedSlugs[$slug];
             } else {
                 $usedSlugs[$slug] = 1;
             }
@@ -218,9 +218,9 @@ class DuAnSeeder extends Seeder
             // Pick 3 images deterministically per project
             $imgIdx = $idx * 3;
             $images = [
-                'assets/images/' . $allImages[$imgIdx % count($allImages)],
-                'assets/images/' . $allImages[($imgIdx + 1) % count($allImages)],
-                'assets/images/' . $allImages[($imgIdx + 2) % count($allImages)],
+                'assets/images/'.$allImages[$imgIdx % count($allImages)],
+                'assets/images/'.$allImages[($imgIdx + 1) % count($allImages)],
+                'assets/images/'.$allImages[($imgIdx + 2) % count($allImages)],
             ];
 
             DuAn::firstOrCreate(

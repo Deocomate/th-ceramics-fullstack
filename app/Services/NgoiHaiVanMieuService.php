@@ -41,17 +41,18 @@ class NgoiHaiVanMieuService
                 $fillable['video'] = $data['video'];
             }
 
-            if (!empty($data['cong_doan_images']) && is_array($data['cong_doan_images'])) {
+            if (! empty($data['cong_doan_images']) && is_array($data['cong_doan_images'])) {
                 $currentImages = is_array($ngoiHai->images) ? $ngoiHai->images : [];
                 foreach ($data['cong_doan_images'] as $file) {
-                    if ($file instanceof \Illuminate\Http\UploadedFile) {
-                        $currentImages[] = \App\Helpers\FileUploadHelper::upload($file, 'ngoi_hai_van_mieu/cong_doan_che_tac');
+                    if ($file instanceof UploadedFile) {
+                        $currentImages[] = FileUploadHelper::upload($file, 'ngoi_hai_van_mieu/cong_doan_che_tac');
                     }
                 }
                 $fillable['images'] = $currentImages;
             }
 
             $ngoiHai->update($fillable);
+
             return $ngoiHai->fresh();
         });
     }
@@ -67,7 +68,7 @@ class NgoiHaiVanMieuService
         $newImages = array_values($newImages); // Reset index
 
         $model->update(['images' => empty($newImages) ? null : $newImages]);
-        \App\Helpers\FileUploadHelper::delete($imagePathToRemove);
+        FileUploadHelper::delete($imagePathToRemove);
 
         return $model->fresh();
     }

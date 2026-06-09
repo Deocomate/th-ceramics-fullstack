@@ -13,7 +13,7 @@ test('generic breadcrumb renders linked items and current item', function () {
 
     expect($html)
         ->toContain('aria-label="Breadcrumb"')
-        ->toContain('href="' . route('client.home') . '"')
+        ->toContain('href="'.route('client.home').'"')
         ->toContain('Dịch vụ khách hàng')
         ->toContain('Trạng thái đơn hàng');
 });
@@ -50,6 +50,45 @@ test('recommendations render normalized product card and add to cart data', func
         ->toContain('data-product-id="7"');
 });
 
+test('product listing components use shared product card markup', function () {
+    $gridSource = file_get_contents(resource_path('views/components/client/shared/product-grid.blade.php'));
+    $recommendationsSource = file_get_contents(resource_path('views/components/client/shared/recommendations.blade.php'));
+
+    expect($gridSource)
+        ->toContain('<x-client.shared.product-card')
+        ->not->toContain('product-card relative bg-white rounded-sm')
+        ->and($recommendationsSource)
+        ->toContain('<x-client.shared.product-card')
+        ->not->toContain('product-card relative bg-white rounded-sm');
+});
+
+test('product grid renders shared product card and add to cart data', function () {
+    $html = Blade::render(
+        '<x-client.shared.product-grid :products="$products" route-name="client.products.gach-co-bat-trang.detail" pk-field="id" product-type="gach_co_bat_trang_ct" />',
+        [
+            'products' => collect([
+                (object) [
+                    'id' => 7,
+                    'name' => 'Grid test product',
+                    'code' => 'GRID-001',
+                    'images' => [],
+                    'price' => 125000,
+                ],
+            ]),
+        ],
+    );
+
+    expect($html)
+        ->toContain('Grid test product')
+        ->toContain('MSP: GRID-001')
+        ->toContain('125,000')
+        ->toContain('product-overlay')
+        ->toContain('eye.svg')
+        ->toContain('href="'.route('client.products.gach-co-bat-trang.detail', 7).'"')
+        ->toContain('data-product-type="gach_co_bat_trang_ct"')
+        ->toContain('data-product-id="7"');
+});
+
 test('product detail component exposes scoped data hooks', function () {
     $html = Blade::render(
         '<x-client.shared.product-detail-container title="Sản phẩm thử" price="125.000 đ/m²" raw-price="125000" sku="SKU-001" product-type="gach_co_bat_trang_ct" product-id="7" :images="$images" :colors="$colors" />',
@@ -71,7 +110,7 @@ test('product detail component exposes scoped data hooks', function () {
 
     expect($html)
         ->toContain('data-product-detail-container')
-        ->toContain('data-add-to-cart-url="' . route('client.cart.add') . '"')
+        ->toContain('data-add-to-cart-url="'.route('client.cart.add').'"')
         ->toContain('data-product-main-swiper')
         ->toContain('data-detail-sku')
         ->toContain('data-product-variant')
@@ -80,7 +119,7 @@ test('product detail component exposes scoped data hooks', function () {
 
 test('calculator components keep root data attributes without inline scripts', function () {
     $quantityHtml = Blade::render('<x-client.shared.quantity-calculator />');
-    $haiHtml = Blade::render("<x-client.products.ngoi-hai-van-mieu.calculator />");
+    $haiHtml = Blade::render('<x-client.products.ngoi-hai-van-mieu.calculator />');
 
     expect($quantityHtml)
         ->toContain('data-quantity-calculator')

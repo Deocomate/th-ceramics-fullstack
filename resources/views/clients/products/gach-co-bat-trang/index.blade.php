@@ -111,13 +111,8 @@
   </div>
 </section>
 
-<div class="w-[85%] max-w-[1320px] mx-auto">
-  <div class="pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
-    <x-client.shared.breadcrumb current-label="Gạch Cổ Bát Tràng" />
-  </div>
-</div>
-
-<x-client.shared.product-filter :show-type-filter="true" />
+<!-- BREADCRUMB & PRODUCT FILTER -->
+<x-client.shared.product-breadcrumb-filter current-label="Gạch Cổ Bát Tràng" :show-type-filter="true" />
 
 <div class="w-[85%] max-w-[1320px] mx-auto">
   <section class="md:pb-16">
@@ -181,8 +176,8 @@
                   @endphp
                   <div class="swiper-slide !h-auto">
                     <x-client.shared.product-card href="{{ route('client.products.gach-co-bat-trang.detail', $product->gach_co_bat_trang_ct_id) }}"
-                      image="{{ $assetUrl($productImage, $section['fallbacks'][0]) }}" title="{{ $product->name }}" code="MSP: {{ $product->code }}"
-                      price="Giá: {{ $product->price > 0 ? number_format($product->price) . ' đ/viên' : 'Liên hệ' }}" :show-overlay="true" />
+                      image="{{ $assetUrl($productImage, $section['fallbacks'][0]) }}" title="{{ $product->name }}" code="MSP: {{ $product->code ?: 'Đang cập nhật' }}"
+                      price="Giá: {{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/viên' : 'Liên hệ' }}" :show-overlay="true" />
                   </div>
                 @endforeach
               </div>

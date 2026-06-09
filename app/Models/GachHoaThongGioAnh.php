@@ -11,7 +11,7 @@ class GachHoaThongGioAnh extends Model
 
     protected $primaryKey = 'gach_hoa_thong_gio_anh_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'image',
         'gach_hoa_thong_gio_id',
     ];

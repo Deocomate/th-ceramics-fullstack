@@ -27,6 +27,24 @@ class NgoiHaiCoCt extends Model
         ];
     }
 
+    public function getCodeAttribute(): ?string
+    {
+        $firstColor = $this->relationLoaded('mauSacs')
+            ? $this->mauSacs->first(fn ($m) => $m->is_delete === 0)
+            : $this->mauSacs()->where('is_delete', 0)->first();
+
+        return $firstColor?->code;
+    }
+
+    public function getPriceAttribute(): float
+    {
+        $firstColor = $this->relationLoaded('mauSacs')
+            ? $this->mauSacs->first(fn ($m) => $m->is_delete === 0)
+            : $this->mauSacs()->where('is_delete', 0)->first();
+
+        return (float) ($firstColor?->price ?? 0);
+    }
+
     public function mauSacs(): HasMany
     {
         return $this->hasMany(MauSacNgoiHaiCoCt::class, 'ngoi_hai_co_ct_id', 'ngoi_hai_co_ct_id');

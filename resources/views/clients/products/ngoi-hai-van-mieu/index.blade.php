@@ -475,13 +475,10 @@
   </div>
 </section>
 
-<!-- Breadcrumb -->
-<div class="ngoi-hai-breadcrumb-scope w-[85%] max-w-[1320px] mx-auto pt-6 pb-3 md:pb-6 md:pt-8 relative z-10">
-  <x-client.shared.breadcrumb current-label="Ngói Hài Văn Miếu" />
-</div>
+<!-- BREADCRUMB & PRODUCT FILTER -->
+<x-client.shared.product-breadcrumb-filter current-label="Ngói Hài Văn Miếu" />
 
 <div class="ngoi-hai-product-grid-scope">
-  <x-client.shared.product-filter />
   <x-client.shared.product-grid category="ngoi-hai-van-mieu" :products="$products" routeName="client.products.ngoi-hai-van-mieu.detail" />
 </div>
 

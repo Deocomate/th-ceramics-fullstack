@@ -17,7 +17,7 @@
 
     if ($breadcrumbItems->isEmpty() && filled($currentLabel)) {
         $breadcrumbItems = collect([
-            ['label' => 'Trang chá»§', 'url' => route('client.home')],
+            ['label' => 'Trang chủ', 'url' => route('client.home')],
         ]);
 
         if (filled($parentLabel)) {

@@ -22,7 +22,7 @@ class AssetPath
             return asset($candidate);
         }
 
-        return asset('storage/' . ltrim($candidate, '/'));
+        return asset('storage/'.ltrim($candidate, '/'));
     }
 
     private static function normalize(mixed $path): string
@@ -32,6 +32,7 @@ class AssetPath
         for ($i = 0; $i < 2; $i++) {
             if (is_array($candidate)) {
                 $candidate = collect($candidate)->filter()->first();
+
                 continue;
             }
 

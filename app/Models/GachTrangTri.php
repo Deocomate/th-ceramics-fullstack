@@ -10,7 +10,7 @@ class GachTrangTri extends Model
 
     protected $primaryKey = 'gach_trang_tri_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'thumbnail_main',
         'video',
         'images',

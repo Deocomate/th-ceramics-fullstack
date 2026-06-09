@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
@@ -16,9 +17,9 @@ class NgoiAmDuongService
     public function update(array $data): NgoiAmDuong
     {
         $ngoiAmDuong = $this->getFirstRecord();
-        
+
         return DB::transaction(function () use ($ngoiAmDuong, $data) {
-            $fillable =[];
+            $fillable = [];
             if (isset($data['thumbnail_main']) && $data['thumbnail_main'] instanceof UploadedFile) {
                 $fillable['thumbnail_main'] = FileUploadHelper::replace($data['thumbnail_main'], $ngoiAmDuong->thumbnail_main, 'ngoi_am_duong/images');
             }
@@ -31,11 +32,11 @@ class NgoiAmDuongService
             if (array_key_exists('video', $data)) {
                 $fillable['video'] = $data['video'];
             }
-            
-            if (!empty($fillable)) {
+
+            if (! empty($fillable)) {
                 $ngoiAmDuong->fill($fillable)->save();
             }
-            
+
             return $ngoiAmDuong->fresh();
         });
     }

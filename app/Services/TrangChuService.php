@@ -12,19 +12,20 @@ class TrangChuService
     public function getFirstRecord(): TrangChu
     {
         $record = TrangChu::query()->first();
-        if (!$record) {
+        if (! $record) {
             $record = TrangChu::query()->create([
                 'banner' => [],
-                'khach_hang_doi_tac' =>[],
-                'loi_tri_an' =>[],
+                'khach_hang_doi_tac' => [],
+                'loi_tri_an' => [],
                 'loi_tri_an_anh' => '',
-                've_chung_toi_logo' =>[],
+                've_chung_toi_logo' => [],
                 'video' => null,
                 'nhung_con_so' => [],
-                'showroom_images' =>[],
+                'showroom_images' => [],
                 'showroom_noidung' => null,
             ]);
         }
+
         return $record;
     }
 
@@ -33,7 +34,7 @@ class TrangChuService
         $model = $this->getFirstRecord();
 
         return DB::transaction(function () use ($model, $data) {
-            $fillable =[];
+            $fillable = [];
 
             if (isset($data['loi_tri_an_anh']) && $data['loi_tri_an_anh'] instanceof UploadedFile) {
                 $fillable['loi_tri_an_anh'] = FileUploadHelper::replace($data['loi_tri_an_anh'], $model->loi_tri_an_anh, 'trang_chu/images');
@@ -66,10 +67,10 @@ class TrangChuService
                 }
                 $fillable['nhung_con_so'] = $nhungConSo;
             } else {
-                $fillable['nhung_con_so'] =[];
+                $fillable['nhung_con_so'] = [];
             }
 
-            $galleries =[
+            $galleries = [
                 'banner' => 'new_banner',
                 'khach_hang_doi_tac' => 'new_khach_hang',
                 've_chung_toi_logo' => 'new_ve_chung_toi_logo',
@@ -77,11 +78,11 @@ class TrangChuService
             ];
 
             foreach ($galleries as $dbField => $newField) {
-                $existing = is_array($model->{$dbField}) ? $model->{$dbField} :[];
+                $existing = is_array($model->{$dbField}) ? $model->{$dbField} : [];
                 $deleteField = str_replace('new_', 'delete_', $newField);
 
                 // Check xóa hình ảnh (Lọc các id đánh dấu và gọi Helper xóa file vật lý)
-                if (!empty($data[$deleteField])) {
+                if (! empty($data[$deleteField])) {
                     foreach ($data[$deleteField] as $idx) {
                         $idx = (int) $idx;
                         if (isset($existing[$idx])) {
@@ -93,7 +94,7 @@ class TrangChuService
                 }
 
                 // Check thêm hình ảnh
-                if (!empty($data[$newField]) && is_array($data[$newField])) {
+                if (! empty($data[$newField]) && is_array($data[$newField])) {
                     foreach ($data[$newField] as $file) {
                         if ($file instanceof UploadedFile) {
                             $existing[] = FileUploadHelper::upload($file, "trang_chu/{$dbField}");
@@ -104,6 +105,7 @@ class TrangChuService
             }
 
             $model->update($fillable);
+
             return $model->fresh();
         });
     }

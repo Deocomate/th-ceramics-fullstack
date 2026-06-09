@@ -31,7 +31,7 @@ class LinhVatPhongThuyService
                 $fillable['video'] = $data['video'];
             }
 
-            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+            if (! empty($data['new_images']) && is_array($data['new_images'])) {
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
                         $path = FileUploadHelper::upload($file, 'linh_vat_phong_thuy/gallery');
@@ -40,7 +40,7 @@ class LinhVatPhongThuyService
                 }
             }
 
-            if (!empty($fillable)) {
+            if (! empty($fillable)) {
                 $model->update($fillable);
             }
 
@@ -54,8 +54,8 @@ class LinhVatPhongThuyService
         $imagePath = FileUploadHelper::upload($data['image'], 'linh_vat_phong_thuy/items');
 
         return $model->linhVat()->create([
-            'image'       => $imagePath,
-            'title'       => $data['title'],
+            'image' => $imagePath,
+            'title' => $data['title'],
             'description' => $data['description'],
         ]);
     }
@@ -64,8 +64,8 @@ class LinhVatPhongThuyService
     {
         $item = LinhVat::findOrFail($itemId);
 
-        $fillable =[
-            'title'       => $data['title'] ?? $item->title,
+        $fillable = [
+            'title' => $data['title'] ?? $item->title,
             'description' => $data['description'] ?? $item->description,
         ];
 
@@ -74,6 +74,7 @@ class LinhVatPhongThuyService
         }
 
         $item->update($fillable);
+
         return $item->fresh();
     }
 

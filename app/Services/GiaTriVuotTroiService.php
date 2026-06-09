@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
@@ -20,12 +21,12 @@ class GiaTriVuotTroiService
     public function addGiaTri(array $data): GiaTriVuotTroi
     {
         $imagePath = FileUploadHelper::upload($data['image'], 'gia_tri_vuot_troi/images');
-        
+
         /** @var GiaTriVuotTroi $model */
         $model = GiaTriVuotTroi::query()->create([
-            'title'        => $data['title'],
+            'title' => $data['title'],
             'desscription' => $data['desscription'],
-            'image'        => $imagePath,
+            'image' => $imagePath,
         ]);
 
         return $model;
@@ -34,17 +35,17 @@ class GiaTriVuotTroiService
     public function updateGiaTri(int $id, array $data): GiaTriVuotTroi
     {
         $giaTri = $this->findById($id);
-        $fillable =[
-            'title'        => $data['title'] ?? $giaTri->title,
+        $fillable = [
+            'title' => $data['title'] ?? $giaTri->title,
             'desscription' => $data['desscription'] ?? $giaTri->desscription,
         ];
-        
+
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
             $fillable['image'] = FileUploadHelper::replace($data['image'], $giaTri->image, 'gia_tri_vuot_troi/images');
         }
 
         $giaTri->fill($fillable)->save();
-        
+
         return $giaTri->fresh();
     }
 
@@ -52,7 +53,7 @@ class GiaTriVuotTroiService
     {
         $giaTri = $this->findById($id);
         FileUploadHelper::delete($giaTri->image);
-        
+
         GiaTriVuotTroi::destroy($id);
     }
 }

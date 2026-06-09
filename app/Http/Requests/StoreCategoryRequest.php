@@ -22,7 +22,7 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name.required' => 'Tên lĩnh vực là bắt buộc.',
-            'name.unique'   => 'Lĩnh vực này đã tồn tại.',
+            'name.unique' => 'Lĩnh vực này đã tồn tại.',
         ];
     }
 }

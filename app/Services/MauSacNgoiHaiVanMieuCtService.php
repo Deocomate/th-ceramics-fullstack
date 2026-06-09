@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
@@ -29,16 +30,16 @@ class MauSacNgoiHaiVanMieuCtService
 
     public function create(array $data)
     {
-        if (!$this->globalCodeService->isUnique($data['code'])) {
+        if (! $this->globalCodeService->isUnique($data['code'])) {
             throw new InvalidArgumentException('Mã sản phẩm (Code) đã tồn tại trên hệ thống.');
         }
 
         $fillable = [
-            'name'                    => $data['name'],
-            'code'                    => $data['code'],
-            'price'                   => $data['price'],
+            'name' => $data['name'],
+            'code' => $data['code'],
+            'price' => $data['price'],
             'ngoi_hai_van_mieu_ct_id' => $data['ngoi_hai_van_mieu_ct_id'],
-            'is_delete'               => 0,
+            'is_delete' => 0,
         ];
 
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
@@ -53,14 +54,14 @@ class MauSacNgoiHaiVanMieuCtService
         /** @var MauSacNgoiHaiVanMieuCt $model */
         $model = MauSacNgoiHaiVanMieuCt::query()->findOrFail($id);
 
-        if (!$this->globalCodeService->isUnique($data['code'], 'mau_sac_ngoi_hai_van_mieu_ct', $model->mau_sac_ngoi_hai_van_mieu_ct_id)) {
+        if (! $this->globalCodeService->isUnique($data['code'], 'mau_sac_ngoi_hai_van_mieu_ct', $model->mau_sac_ngoi_hai_van_mieu_ct_id)) {
             throw new InvalidArgumentException('Mã sản phẩm (Code) này đã được sử dụng.');
         }
 
         $fillable = [
-            'name'                    => $data['name'],
-            'code'                    => $data['code'],
-            'price'                   => $data['price'],
+            'name' => $data['name'],
+            'code' => $data['code'],
+            'price' => $data['price'],
             'ngoi_hai_van_mieu_ct_id' => $data['ngoi_hai_van_mieu_ct_id'],
         ];
 
@@ -69,6 +70,7 @@ class MauSacNgoiHaiVanMieuCtService
         }
 
         $model->fill($fillable)->save();
+
         return $model->fresh();
     }
 

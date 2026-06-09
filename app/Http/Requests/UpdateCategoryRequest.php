@@ -16,7 +16,7 @@ class UpdateCategoryRequest extends FormRequest
         $categoryId = $this->route('category');
 
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:categories,name,' . $categoryId],
+            'name' => ['required', 'string', 'max:255', 'unique:categories,name,'.$categoryId],
         ];
     }
 
@@ -24,7 +24,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name.required' => 'Tên lĩnh vực là bắt buộc.',
-            'name.unique'   => 'Lĩnh vực này đã tồn tại.',
+            'name.unique' => 'Lĩnh vực này đã tồn tại.',
         ];
     }
 }

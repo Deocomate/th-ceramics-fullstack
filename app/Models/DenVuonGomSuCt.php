@@ -44,9 +44,11 @@ class DenVuonGomSuCt extends Model
 
     public function getDisplayVariantAttribute(): ?PhanLoaiDenVuonGomSuCt
     {
-        return $this->relationLoaded('phanLoais')
-            ? $this->phanLoais->where('is_delete', 0)->sortBy('price')->first()
-            : null;
+        $phanLoais = $this->relationLoaded('phanLoais')
+            ? $this->phanLoais
+            : $this->phanLoais()->where('is_delete', 0)->get();
+
+        return $phanLoais->where('is_delete', 0)->sortBy('price')->first();
     }
 
     public function getDisplayCodeAttribute(): ?string

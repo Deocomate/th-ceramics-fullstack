@@ -11,7 +11,7 @@ class LinhVatPhongThuyAnh extends Model
 
     protected $primaryKey = 'linh_vat_phong_thuy_anh_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'image',
         'linh_vat_phong_thuy_id',
     ];

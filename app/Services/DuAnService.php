@@ -32,8 +32,8 @@ class DuAnService
         $slug = $baseSlug;
         $counter = 1;
 
-        while (DuAn::where('slug', $slug)->when($ignoreId, fn($q) => $q->where('du_an_id', '!=', $ignoreId))->exists()) {
-            $slug = $baseSlug . '-' . $counter;
+        while (DuAn::where('slug', $slug)->when($ignoreId, fn ($q) => $q->where('du_an_id', '!=', $ignoreId))->exists()) {
+            $slug = $baseSlug.'-'.$counter;
             $counter++;
         }
 
@@ -53,7 +53,7 @@ class DuAnService
             ];
 
             $images = [];
-            if (!empty($data['images']) && is_array($data['images'])) {
+            if (! empty($data['images']) && is_array($data['images'])) {
                 foreach ($data['images'] as $file) {
                     if ($file instanceof UploadedFile) {
                         $images[] = FileUploadHelper::upload($file, 'du_an/images');
@@ -71,7 +71,7 @@ class DuAnService
         $model = $this->findById($id);
 
         return DB::transaction(function () use ($model, $data) {
-            $fillable =[
+            $fillable = [
                 'ten_du_an' => $data['ten_du_an'],
                 'dia_diem' => $data['dia_diem'],
                 'san_pham' => $data['san_pham'],
@@ -84,7 +84,7 @@ class DuAnService
                 $fillable['slug'] = $this->generateUniqueSlug($data['ten_du_an'], $model->du_an_id);
             }
 
-            if (!empty($data['new_images']) && is_array($data['new_images'])) {
+            if (! empty($data['new_images']) && is_array($data['new_images'])) {
                 $currentImages = is_array($model->images) ? $model->images : [];
                 foreach ($data['new_images'] as $file) {
                     if ($file instanceof UploadedFile) {
@@ -95,6 +95,7 @@ class DuAnService
             }
 
             $model->update($fillable);
+
             return $model->fresh();
         });
     }
@@ -102,22 +103,22 @@ class DuAnService
     public function destroy(int $id): void
     {
         $model = $this->findById($id);
-        
+
         if (is_array($model->images)) {
             foreach ($model->images as $img) {
                 FileUploadHelper::delete($img);
             }
         }
-        
+
         $model->delete();
     }
 
     public function removeImageFromJson(int $id, string $imagePathToRemove): DuAn
     {
         $model = $this->findById($id);
-        $currentImages = is_array($model->images) ? $model->images :[];
+        $currentImages = is_array($model->images) ? $model->images : [];
 
-        $newImages = array_filter($currentImages, fn($path) => $path !== $imagePathToRemove);
+        $newImages = array_filter($currentImages, fn ($path) => $path !== $imagePathToRemove);
         $model->update(['images' => empty($newImages) ? null : array_values($newImages)]);
         FileUploadHelper::delete($imagePathToRemove);
 

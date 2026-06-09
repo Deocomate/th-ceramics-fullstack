@@ -1,16 +1,16 @@
-﻿<x-admin.layouts.app title="ThÃªm Gáº¡ch Cá»• BÃ¡t TrÃ ng" breadcrumb="Admin â€º DS Sáº£n pháº©m chi tiáº¿t â€º ThÃªm má»›i">
+﻿<x-admin.layouts.app title="Thêm Gạch Cổ Bát Tràng" breadcrumb="Admin › DS Sản phẩm chi tiết › Thêm mới">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-            <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">ThÃ´ng tin sáº£n pháº©m má»›i</h2>
+            <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Thông tin sản phẩm mới</h2>
         </div>
         <form method="POST" action="{{ route('admin.gach-co-bat-trang-ct.store') }}" enctype="multipart/form-data" class="p-6">
             @csrf
 
-            <!-- HIá»‚N THá»Š Lá»–I CHUNG -->
+            <!-- HIỂN THỊ LỖI CHUNG -->
             @if ($errors->any())
                 <div class="mb-6 flex items-start gap-3 px-4 py-3 rounded text-sm text-red-800 bg-red-50 border border-red-200 shadow-sm">
                     <div>
-                        <strong class="font-semibold block mb-1">Vui lÃ²ng kiá»ƒm tra láº¡i cÃ¡c thÃ´ng tin sau:</strong>
+                        <strong class="font-semibold block mb-1">Vui lòng kiểm tra lại các thông tin sau:</strong>
                         <ul class="list-disc ml-4">
                             @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
                         </ul>
@@ -19,18 +19,18 @@
             @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Cá»˜T THÃ”NG TIN CHUNG -->
+                <!-- CỘT THÔNG TIN CHUNG -->
                 <div class="lg:col-span-2 space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">TÃªn sáº£n pháº©m <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tên sản phẩm <span class="text-red-500">*</span></label>
                             <input type="text" name="name" value="{{ old('name') }}" required
                                 class="w-full px-4 py-2.5 text-sm border rounded-lg focus:ring-1 outline-none transition-all {{ $errors->has('name') ? 'border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-gray-300 focus:border-[#A31D1D] focus:ring-[#A31D1D]' }}">
                             @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <x-admin.shared.color-field />
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">MÃ£ sáº£n pháº©m (Code) <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Mã sản phẩm (Code) <span class="text-red-500">*</span></label>
                             <input type="text" name="code" value="{{ old('code') }}" required placeholder="VD: GTT-001"
                                 class="w-full px-4 py-2.5 text-sm border rounded-lg focus:ring-1 outline-none transition-all font-mono {{ $errors->has('code') ? 'border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-gray-300 focus:border-[#A31D1D] focus:ring-[#A31D1D]' }}">
                             @error('code') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
@@ -38,24 +38,24 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">PhÃ¢n loáº¡i <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Phân loại <span class="text-red-500">*</span></label>
                         <select name="category_type" required class="w-full px-4 py-2.5 text-sm border rounded-lg focus:ring-1 outline-none transition-all {{ $errors->has('category_type') ? 'border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-gray-300 focus:border-[#A31D1D] focus:ring-[#A31D1D]' }}">
-                            <option value="bat" @selected(old('category_type', 'bat') === 'bat')>Gáº¡ch BÃ¡t</option>
-                            <option value="that" @selected(old('category_type') === 'that')>Gáº¡ch Tháº¥t & XÃ¢y</option>
-                            <option value="the" @selected(old('category_type') === 'the')>Gáº¡ch Tháº»</option>
+                            <option value="bat" @selected(old('category_type', 'bat') === 'bat')>Gạch Bát</option>
+                            <option value="that" @selected(old('category_type') === 'that')>Gạch Thất & Xây</option>
+                            <option value="the" @selected(old('category_type') === 'the')>Gạch Thẻ</option>
                         </select>
                         @error('category_type') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">GiÃ¡ (VNÄ) <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Giá (VNĐ) <span class="text-red-500">*</span></label>
                             <input type="number" name="price" value="{{ old('price') }}" required min="0"
                                 class="w-full px-4 py-2.5 text-sm border rounded-lg focus:ring-1 outline-none transition-all {{ $errors->has('price') ? 'border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-gray-300 focus:border-[#A31D1D] focus:ring-[#A31D1D]' }}">
                             @error('price') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">KÃ­ch thÆ°á»›c (Text)</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kích thước (Text)</label>
                             <input type="text" name="size" value="{{ old('size') }}" placeholder="VD: L200 x W200 x D20 mm"
                                 class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
                         </div>
@@ -63,40 +63,40 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Äá»‹nh má»©c</label>
-                            <input type="text" name="dinh_muc" value="{{ old('dinh_muc') }}" placeholder="VD: 11 viÃªn/m2"
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Định mức</label>
+                            <input type="text" name="dinh_muc" value="{{ old('dinh_muc') }}" placeholder="VD: 11 viên/m2"
                                 class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
                             @error('dinh_muc') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">CÃ¢n náº·ng</label>
-                            <input type="text" name="weight" value="{{ old('weight') }}" placeholder="VD: 1.5 kg/viÃªn"
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Cân nặng</label>
+                            <input type="text" name="weight" value="{{ old('weight') }}" placeholder="VD: 1.5 kg/viên"
                                 class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
                             @error('weight') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
-                    <!-- BLOCKS THÃ”NG Sá» -->
+                    <!-- BLOCKS THÔNG SỐ -->
                     <div class="bg-gray-50/80 rounded-xl border border-gray-200 p-5">
                         <div class="flex items-center justify-between mb-4 border-b border-gray-200 pb-3">
                             <div>
-                                <label class="block text-sm font-bold text-gray-800">Danh sÃ¡ch ThÃ´ng sá»‘ / MÃ´ táº£</label>
+                                <label class="block text-sm font-bold text-gray-800">Danh sách Thông số / Mô tả</label>
                             </div>
                             <button type="button" onclick="addDesBlock()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded-lg hover:text-[#A31D1D] transition-colors shadow-sm flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg> ThÃªm dÃ²ng má»›i
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg> Thêm dòng mới
                             </button>
                         </div>
                         <div id="des-blocks-container" class="space-y-2.5"></div>
                     </div>
                 </div>
 
-                <!-- Cá»˜T HÃŒNH áº¢NH KÃCH THÆ¯á»šC -->
+                <!-- CỘT HÌNH ẢNH KÍCH THƯỚC -->
                 <div class="lg:col-span-1">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">áº¢nh báº£n váº½ / KÃ­ch thÆ°á»›c</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Ảnh bản vẽ / Kích thước</label>
                     <div class="aspect-square w-full rounded-xl border-2 border-dashed bg-gray-50 flex items-center justify-center overflow-hidden relative group hover:bg-gray-100 transition-colors {{ $errors->has('size_image') ? 'border-red-500' : 'border-gray-300' }}">
                         <img id="preview-size" src="https://placehold.co/400x400?text=Chon+Ban+Ve" class="w-full h-full object-contain">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Táº£i áº£nh lÃªn</span>
+                            <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Tải ảnh lên</span>
                         </div>
                         <input type="file" name="size_image" accept="image/*" onchange="previewImage(event, 'preview-size')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </div>
@@ -104,10 +104,10 @@
                 </div>
             </div>
 
-            <!-- CHá»ŒN áº¢NH Sáº¢N PHáº¨M CHUNG -->
+            <!-- CHỌN ẢNH SẢN PHẨM CHUNG -->
             <hr class="border-gray-100 my-8">
             <div class="flex flex-col h-full border rounded-xl p-6 bg-gray-50/50 {{ $errors->has('images') || $errors->has('images.*') ? 'border-red-300 bg-red-50/30' : 'border-gray-200' }}">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">HÃ¬nh áº£nh sáº£n pháº©m <span class="text-red-500">*</span></label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Hình ảnh sản phẩm <span class="text-red-500">*</span></label>
                 <div class="relative mb-4">
                     <input type="file" id="multipleImagesInput" name="images[]" multiple required accept="image/*"
                         class="w-full text-sm border rounded-lg p-1.5 cursor-pointer bg-white {{ $errors->has('images') || $errors->has('images.*') ? 'border-red-500' : 'border-gray-300' }}" onchange="handleMultipleFiles(event)">
@@ -118,15 +118,15 @@
                 <div class="h-[250px] bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner flex flex-col">
                     <div id="multiple-preview-container" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-3">
                         <div id="empty-preview-state" class="col-span-full h-full min-h-[180px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium gap-2">
-                            <span>ChÆ°a cÃ³ áº£nh nÃ o</span>
+                            <span>Chưa có ảnh nào</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="pt-6 mt-8 flex justify-end gap-3 border-t border-gray-100">
-                <a href="{{ route('admin.gach-co-bat-trang-ct.index') }}" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Há»§y</a>
-                <button type="submit" class="px-8 py-2.5 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;">LÆ°u Sáº£n Pháº©m</button>
+                <a href="{{ route('admin.gach-co-bat-trang-ct.index') }}" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy</a>
+                <button type="submit" class="px-8 py-2.5 text-sm font-bold text-white rounded-lg shadow-sm transition-colors" style="background:#A31D1D;">Lưu Sản Phẩm</button>
             </div>
         </form>
     </div>
@@ -147,8 +147,8 @@
                     <div class="pl-3 pr-2 text-gray-300 cursor-move">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
                     </div>
-                    <input type="text" name="des[]" value="${value.replace(/"/g, '&quot;')}" placeholder="VD: Trá»ng lÆ°á»£ng: 1kg / viÃªn" class="flex-1 py-2.5 px-2 text-sm border-none focus:ring-0 outline-none text-gray-700 bg-transparent placeholder-gray-400">
-                    <button type="button" onclick="this.parentElement.remove()" class="px-3 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100" title="XÃ³a dÃ²ng nÃ y">
+                    <input type="text" name="des[]" value="${value.replace(/"/g, '&quot;')}" placeholder="VD: Trọng lượng: 1kg / viên" class="flex-1 py-2.5 px-2 text-sm border-none focus:ring-0 outline-none text-gray-700 bg-transparent placeholder-gray-400">
+                    <button type="button" onclick="this.parentElement.remove()" class="px-3 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100" title="Xóa dòng này">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 `;
