@@ -108,60 +108,67 @@ const initQuantityCalculator = (section) => {
 
     section.dataset.quantityCalculatorInitialized = "true";
 
-    const areaBlocks = () => Array.from(section.querySelectorAll("[data-area-block]"));
-    const initialBlocks = areaBlocks();
-    const masterTemplate = (initialBlocks.find((block) => block.querySelector("[data-remove-area]")) || initialBlocks[initialBlocks.length - 1])?.cloneNode(true);
-    const addAreaBtn = section.querySelector("[data-add-area]");
-    const calculateBtn = section.querySelector("[data-calculate-quantity]");
-    const totalAreaOutput = section.querySelector("[data-total-area-output]");
-    const rateOutputs = Array.from(section.querySelectorAll("[data-rate-output]"));
-    const valueOutputs = Array.from(section.querySelectorAll("[data-value-output]"));
+    const defaultRate = Number.parseFloat(section.dataset.defaultRate) || 25;
+    const fieldsContainer = section.querySelector("#calculator-fields-container");
+    const areaBlocks = () => Array.from(fieldsContainer?.querySelectorAll("[data-area-block]") || []);
+    const masterTemplate = areaBlocks()[0]?.cloneNode(true);
+    const addAreaBtn = section.querySelector("#btn-add-area");
+    const calculateBtn = section.querySelector("#btn-calculate-quantity");
+    const outputTotalArea = section.querySelector("#output-total-area");
+    const outputTotalBricks = section.querySelector("#output-total-bricks");
     const extraLossCheckbox = section.querySelector("#extra-loss-quantity");
     const lossRadios = Array.from(section.querySelectorAll('input[name="loss-rate"]'));
 
     const getLossFactor = () => {
-        if (!extraLossCheckbox || !extraLossCheckbox.checked) return 1;
+        if (!extraLossCheckbox?.checked) {
+            return 1;
+        }
 
         return Number.parseFloat(lossRadios.find((radio) => radio.checked)?.value) || 1;
     };
 
     const getBlockArea = (block) => {
-        const inputs = Array.from(block.querySelectorAll('input[type="number"]'));
+        const length = parseNumber(block.querySelector("[data-input-length]")?.value);
+        const width = parseNumber(block.querySelector("[data-input-width]")?.value);
 
-        return parseNumber(inputs[0]?.value) * parseNumber(inputs[1]?.value);
+        return length * width;
     };
 
     const renumberAreas = () => {
         areaBlocks().forEach((block, index) => {
-            const title = Array.from(block.querySelectorAll("span")).find((span) => (span.textContent || "").toUpperCase().includes("DI"));
-            if (title) title.textContent = `DIỆN TÍCH ${index + 1}`;
+            const label = block.querySelector(".area-title-label");
+            if (label) {
+                label.textContent = `DIỆN TÍCH ${index + 1}`;
+            }
+
+            const removeBtn = block.querySelector("[data-remove-area]");
+            if (removeBtn) {
+                removeBtn.classList.toggle("hidden", index === 0);
+            }
         });
     };
 
     const updateResults = () => {
-        const roundedArea = Math.ceil(areaBlocks().reduce((sum, block) => sum + getBlockArea(block), 0));
-        const lossFactor = getLossFactor();
-        let qtyToSync = 0;
+        let totalArea = 0;
 
-        if (totalAreaOutput) totalAreaOutput.textContent = `${formatNumber(roundedArea)} m²`;
-
-        rateOutputs.forEach((rateEl, index) => {
-            const rate = parseNumber(rateEl.textContent || "0");
-            const quantity = Math.ceil(roundedArea * rate * lossFactor);
-
-            if (!valueOutputs[index]) return;
-
-            valueOutputs[index].textContent = rate > 0 ? `${formatNumber(quantity)} viên` : "00 viên";
-            if (index === 0) qtyToSync = quantity;
+        areaBlocks().forEach((block) => {
+            totalArea += getBlockArea(block);
         });
 
-        syncPurchaseQuantity(qtyToSync);
-    };
+        if (totalArea <= 0) {
+            if (outputTotalArea) outputTotalArea.textContent = "0 m²";
+            if (outputTotalBricks) outputTotalBricks.textContent = "0 viên";
+            return;
+        }
 
-    const wireBlockInputs = (block) => {
-        block.querySelectorAll('input[type="number"]').forEach((input) => {
-            input.addEventListener("input", scheduleUpdate);
-        });
+        const calculatedAreaWithLoss = totalArea * getLossFactor();
+        const roundedArea = Math.ceil(calculatedAreaWithLoss);
+        const totalBricksNeeded = Math.ceil(roundedArea * defaultRate);
+
+        if (outputTotalArea) outputTotalArea.textContent = `${formatNumber(roundedArea)} m²`;
+        if (outputTotalBricks) outputTotalBricks.textContent = `${formatNumber(totalBricksNeeded)} viên`;
+
+        syncPurchaseQuantity(totalBricksNeeded);
     };
 
     const attachRemoveAreaListener = (block) => {
@@ -169,33 +176,24 @@ const initQuantityCalculator = (section) => {
             event.preventDefault();
             block.remove();
             renumberAreas();
-            updateResults();
         });
     };
 
     const addArea = () => {
-        if (!masterTemplate || !addAreaBtn?.parentElement) return;
+        if (!masterTemplate || !fieldsContainer) return;
 
         const newBlock = masterTemplate.cloneNode(true);
-        newBlock.querySelectorAll('input[type="number"]').forEach((input) => {
+        newBlock.querySelectorAll("input").forEach((input) => {
             input.value = "";
         });
 
-        addAreaBtn.parentElement.before(newBlock);
+        fieldsContainer.appendChild(newBlock);
         attachRemoveAreaListener(newBlock);
-        wireBlockInputs(newBlock);
         renumberAreas();
-    };
-
-    let calcTimeout;
-    const scheduleUpdate = () => {
-        clearTimeout(calcTimeout);
-        calcTimeout = setTimeout(updateResults, 300);
     };
 
     areaBlocks().forEach((block) => {
         attachRemoveAreaListener(block);
-        wireBlockInputs(block);
     });
 
     addAreaBtn?.addEventListener("click", (event) => {
@@ -206,8 +204,6 @@ const initQuantityCalculator = (section) => {
         event.preventDefault();
         updateResults();
     });
-    extraLossCheckbox?.addEventListener("change", updateResults);
-    lossRadios.forEach((radio) => radio.addEventListener("change", updateResults));
     renumberAreas();
 };
 
@@ -324,15 +320,6 @@ const initHaiVanMieuCalculator = (section) => {
         calcTimeout = setTimeout(updateResults, 300);
     };
 
-    const checkButtonState = () => {
-        if (!calculateBtn) return;
-
-        const disabled = roofStyleSelect && roofStyleSelect.value === "";
-        calculateBtn.disabled = disabled;
-        calculateBtn.classList.toggle("opacity-50", disabled);
-        calculateBtn.classList.toggle("cursor-not-allowed", disabled);
-    };
-
     getAreaBlocks().forEach(setupBlock);
     addAreaBtn?.addEventListener("click", (event) => {
         event.preventDefault();
@@ -345,11 +332,9 @@ const initHaiVanMieuCalculator = (section) => {
     extraLossCheckbox?.addEventListener("change", updateResults);
     lossRadios.forEach((radio) => radio.addEventListener("change", updateResults));
     roofStyleSelect?.addEventListener("change", () => {
-        checkButtonState();
         scheduleUpdate();
     });
 
-    checkButtonState();
     renumberAreas();
 };
 
@@ -400,9 +385,9 @@ const initWeightCalculator = (section) => {
 
         const roundedArea = Math.ceil(totalArea);
         const factor = getLossFactor();
-        const selectedTileOption = tileTypeSelect?.options[tileTypeSelect.selectedIndex];
-        const roof = roofStyleSelect?.value || "";
-        const tile = selectedTileOption?.value || "";
+        const selectedTileOption = getSelectedTileOption();
+        const roof = roofStyleSelect?.value || selectedTileOption?.dataset.roof || "";
+        const tile = selectedTileOption?.dataset.tile || selectedTileOption?.textContent?.trim() || "";
         let amCoeff = parseNumber(selectedTileOption?.dataset.am || "0");
         let duongCoeff = parseNumber(selectedTileOption?.dataset.duong || "0");
         let diemCoeff = parseNumber(selectedTileOption?.dataset.diem || "0");
@@ -488,6 +473,16 @@ const initWeightCalculator = (section) => {
         calcTimeout = setTimeout(updateResults, 300);
     };
 
+    const getSelectedTileOption = () => {
+        const selected = tileTypeSelect?.options[tileTypeSelect.selectedIndex];
+
+        if (!selected || selected.disabled || !selected.dataset.roof) {
+            return null;
+        }
+
+        return selected;
+    };
+
     const syncTileOptions = () => {
         const roof = roofStyleSelect?.value || "";
         tileTypeOptions.forEach((option) => {
@@ -496,18 +491,10 @@ const initWeightCalculator = (section) => {
             option.disabled = !visible;
         });
 
-        if (tileTypeSelect?.options[tileTypeSelect.selectedIndex]?.disabled) {
-            tileTypeSelect.value = "";
+        const selected = tileTypeSelect?.options[tileTypeSelect.selectedIndex];
+        if (!selected || selected.disabled || selected.value === "" || (roof && selected.dataset.roof !== roof)) {
+            tileTypeSelect.selectedIndex = 0;
         }
-    };
-
-    const checkButtonState = () => {
-        if (!calculateBtn) return;
-
-        const disabled = !roofStyleSelect?.value || !tileTypeSelect?.value;
-        calculateBtn.disabled = disabled;
-        calculateBtn.classList.toggle("opacity-50", disabled);
-        calculateBtn.classList.toggle("cursor-not-allowed", disabled);
     };
 
     getAreaBlocks().forEach(setupBlock);
@@ -523,16 +510,11 @@ const initWeightCalculator = (section) => {
     lossRadios.forEach((radio) => radio.addEventListener("change", updateResults));
     roofStyleSelect?.addEventListener("change", () => {
         syncTileOptions();
-        checkButtonState();
         scheduleUpdate();
     });
-    tileTypeSelect?.addEventListener("change", () => {
-        checkButtonState();
-        scheduleUpdate();
-    });
+    tileTypeSelect?.addEventListener("change", scheduleUpdate);
 
     syncTileOptions();
-    checkButtonState();
     renumberAreas();
 };
 

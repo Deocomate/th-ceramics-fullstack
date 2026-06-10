@@ -120,8 +120,12 @@ const initProductDetailContainer = (container) => {
 
         if (variant && container.contains(variant)) {
             const group = variant.parentElement;
-            group?.querySelectorAll("[data-product-variant]").forEach((item) => item.classList.remove("selected"));
+            group?.querySelectorAll("[data-product-variant]").forEach((item) => {
+                item.classList.remove("selected");
+                item.setAttribute("aria-pressed", "false");
+            });
             variant.classList.add("selected");
+            variant.setAttribute("aria-pressed", "true");
 
             const skuOutput = container.querySelector("[data-detail-sku]");
             const priceOutput = container.querySelector("[data-detail-price]");

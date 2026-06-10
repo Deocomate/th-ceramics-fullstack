@@ -109,18 +109,23 @@
                             class="w-full h-[26px] lg:h-[44px] px-2 lg:px-4 pr-6 lg:pr-10 border border-black/10 rounded-sm bg-transparent text-[10px] lg:text-[13px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
                             <option value="" disabled selected>LOẠI NGÓI</option>
                             @forelse ($dinhMucItems as $dm)
-                                <option value="{{ $dm->tile_type }}"
+                                <option value="{{ $dm->roof_type }}::{{ $dm->tile_type }}"
                                     data-roof="{{ $dm->roof_type }}"
+                                    data-tile="{{ $dm->tile_type }}"
                                     data-am="{{ $dm->ngoi_am }}"
                                     data-duong="{{ $dm->ngoi_duong }}"
                                     data-diem="{{ $dm->diem }}">
                                     {{ $dm->tile_type }}
                                 </option>
                             @empty
-                                <option value="15 cặp/m²" data-am="0" data-duong="0" data-diem="0">15 cặp/m²</option>
-                                <option value="27 cặp/m²" data-am="0" data-duong="0" data-diem="0">27 cặp/m²</option>
-                                <option value="43 cặp/m²" data-am="0" data-duong="0" data-diem="0">43 cặp/m²</option>
-                                <option value="80 cặp/m²" data-am="0" data-duong="0" data-diem="0">80 cặp/m²</option>
+                                <option value="Mái bê tông::15 cặp/m²" data-roof="Mái bê tông" data-tile="15 cặp/m²" data-am="15" data-duong="15" data-diem="3">15 cặp/m²</option>
+                                <option value="Mái bê tông::27 cặp/m²" data-roof="Mái bê tông" data-tile="27 cặp/m²" data-am="27" data-duong="27" data-diem="5">27 cặp/m²</option>
+                                <option value="Mái bê tông::43 cặp/m²" data-roof="Mái bê tông" data-tile="43 cặp/m²" data-am="43" data-duong="43" data-diem="6">43 cặp/m²</option>
+                                <option value="Mái bê tông::80 cặp/m²" data-roof="Mái bê tông" data-tile="80 cặp/m²" data-am="80" data-duong="80" data-diem="8">80 cặp/m²</option>
+                                <option value="Mái gỗ::15 cặp/m²" data-roof="Mái gỗ" data-tile="15 cặp/m²" data-am="25" data-duong="15" data-diem="3">15 cặp/m²</option>
+                                <option value="Mái gỗ::27 cặp/m²" data-roof="Mái gỗ" data-tile="27 cặp/m²" data-am="40" data-duong="27" data-diem="5">27 cặp/m²</option>
+                                <option value="Mái gỗ::43 cặp/m²" data-roof="Mái gỗ" data-tile="43 cặp/m²" data-am="60" data-duong="43" data-diem="6">43 cặp/m²</option>
+                                <option value="Mái gỗ::80 cặp/m²" data-roof="Mái gỗ" data-tile="80 cặp/m²" data-am="120" data-duong="80" data-diem="8">80 cặp/m²</option>
                             @endforelse
                         </select>
                         <div class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 pointer-events-none">

@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             DinhMucSeeder::class,
             PageConfigSeeder::class,
 
-            TacGiaSeeder::class,
             GiaTriVuotTroiSeeder::class,
 
             // CÁC SEEDER THEO KẾ HOẠCH BÀI BẢN VÀ ĐẦY ĐỦ 100%:

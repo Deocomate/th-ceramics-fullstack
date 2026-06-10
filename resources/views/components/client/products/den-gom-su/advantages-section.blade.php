@@ -60,69 +60,93 @@
     'title' => null,
     'subtitle' => null,
     'description' => null,
-    'items' => null,])
+    'items' => null,
+])
 <!-- Ưu điểm vượt trội Section -->
 <section class="md:pb-16 bg-background-secondary overflow-hidden md:pt-4">
-  <div class="w-[85%] max-w-[1320px] mx-auto">
-    <h2
-      class="text-secondary text-[20px] md:text-3xl font-semibold uppercase text-center md:mb-32 mt-1"
-      data-aos="fade-up"
-    >
-      Ưu điểm vượt trội
-    </h2>
+    <div class="w-[85%] max-w-[1320px] mx-auto">
+        <h2 class="text-secondary text-[20px] md:text-[32px] font-semibold uppercase text-center mt-1 font-archivo md:leading-[62.5px]" data-aos="fade-up">
+            Ưu điểm vượt trội
+        </h2>
 
-    @php
-      $galleryImages = $config->anh->pluck('image')->toArray();
-      $cardImages = array_pad(array_slice($galleryImages, 0, 4), 4, null);
-    @endphp
+        @php
+            $galleryImages = $config->anh->pluck('image')->toArray();
 
-    <!-- Mobile Swiper (Chỉ hiển thị trên mobile) -->
-    <div class="md:hidden">
-      <div class="swiper advantage-swiper">
-        <div class="swiper-wrapper">
-          @foreach($cardImages as $galleryImage)
-          <div class="swiper-slide h-auto">
-            <x-client.products.den-gom-su.advantage-card :bg-image="$galleryImage" />
-          </div>
-          @endforeach
-        </div>
-      </div>
-      <!-- Dots -->
-      <div
-        class="advantage-pagination flex justify-center items-center gap-[3px] w-full mt-6"
-      ></div>
-    </div>
+            $advantagesData = [
+                [
+                    'title' => 'Bền bỉ & Thân thiện',
+                    'description' => 'Chịu tốt mọi thời tiết, không han gỉ hay nứt vỡ như sắt và thủy tinh. Chất liệu đất nung tự nhiên cực kỳ an toàn và thân thiện môi trường',
+                    'image' => $galleryImages[0] ?? null
+                ],
+                [
+                    'title' => 'Giá trị phong thủy',
+                    'description' => 'Kết tinh từ Thổ - Hỏa, mang lại nguồn năng lượng ấm áp và vẻ đẹp độc bản từ đôi bàn tay nghệ nhân',
+                    'image' => $galleryImages[1] ?? null
+                ],
+                [
+                    'title' => 'Linh hoạt & Dễ dùng',
+                    'description' => 'Thiết kế thông minh giúp việc tháo lắp, thay bóng hay vệ sinh trở nên đơn giản, tiện lợi cho mọi không gian',
+                    'image' => $galleryImages[2] ?? null
+                ],
+                [
+                    'title' => 'Ánh sáng nghệ thuật',
+                    'description' => 'Chất gốm khuếch tán ánh sáng dịu nhẹ qua các đường chạm khắc, tạo hiệu ứng bóng đổ lung linh và thư thái',
+                    'image' => $galleryImages[3] ?? null
+                ]
+            ];
+        @endphp
 
-    <!-- Desktop Grid (ẩn trên mobile, hiển thị trên md) -->
-    <div
-      class="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 items-start"
-    >
-      @foreach($cardImages as $galleryImage)
-      <x-client.products.den-gom-su.advantage-card :bg-image="$galleryImage" />
-      @endforeach
-    </div>
-  </div>
-</section>
+         <!-- Mobile Swiper (Chỉ hiển thị trên mobile) -->
+         <div class="md:hidden">
+             <div class="swiper advantage-swiper">
+                 <div class="swiper-wrapper">
+                     @foreach ($advantagesData as $card)
+                         <div class="swiper-slide h-auto">
+                             <x-client.products.den-gom-su.advantage-card
+                                 :bg-image="$card['image']"
+                                 :title="$card['title']"
+                                 :description="$card['description']" />
+                         </div>
+                     @endforeach
+                 </div>
+             </div>
+             <!-- Dots -->
+             <div class="advantage-pagination flex justify-center items-center gap-[3px] w-full mt-6"></div>
+         </div>
+
+         <!-- Desktop Grid (ẩn trên mobile, hiển thị trên md) -->
+         <div class="hidden md:flex flex-wrap lg:flex-nowrap justify-between gap-[25px] items-start pt-[45px] lg:pt-[45px] pb-[50px]">
+             @foreach ($advantagesData as $index => $card)
+                 <div class="w-full md:w-[48%] lg:w-[312px] {{ $index % 2 === 0 ? 'lg:mt-[87px]' : '' }}">
+                     <x-client.products.den-gom-su.advantage-card
+                         :bg-image="$card['image']"
+                         :title="$card['title']"
+                         :description="$card['description']" />
+                 </div>
+             @endforeach
+         </div>
+     </div>
+ </section>
 
 @push('scripts')
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    new Swiper(".advantage-swiper", {
-      slidesPerView: 1,
-      spaceBetween: 20,
-      loop: false,
-      pagination: {
-        el: ".advantage-pagination",
-        clickable: true,
-        renderBullet: function (index, className) {
-          return (
-            '<span class="' +
-            className +
-            ' rounded-full bg-secondary/30 transition-all cursor-pointer inline-block"></span>'
-          );
-        },
-      },
-    });
-  });
-</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            new Swiper(".advantage-swiper", {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: false,
+                pagination: {
+                    el: ".advantage-pagination",
+                    clickable: true,
+                    renderBullet: function(index, className) {
+                        return (
+                            '<span class="' +
+                            className +
+                            ' rounded-full bg-secondary/30 transition-all cursor-pointer inline-block"></span>'
+                        );
+                    },
+                },
+            });
+        });
+    </script>
 @endpush

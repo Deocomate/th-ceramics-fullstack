@@ -1,7 +1,7 @@
 @if ($items->isNotEmpty())
-    <section class="w-full pb-0 md:pb-16 bg-background-secondary relative {{ $showDecor ? 'overflow-visible' : '' }}"
-        @if ($compareTable) data-compare-table="true" @endif
-        data-aos="fade-up">
+    <section
+        class="w-full pb-0 md:pb-16 bg-background-secondary relative recommendations-section {{ $showDecor ? 'overflow-visible' : '' }}"
+        @if ($compareTable) data-compare-table="true" @endif data-aos="fade-up">
         @if ($showDecor)
             <img src="{{ asset('assets/images/gtt-decorate-right.svg') }}"
                 class="absolute -left-[15%] md:-left-[20%] lg:-left-[20%] -translate-y-1/2 lg:top-[5%] w-[45%] md:w-[40%] lg:w-[35%] opacity-60 pointer-events-none z-0"
@@ -9,37 +9,38 @@
         @endif
 
         <div class="max-w-[1320px] w-[85%] mx-auto relative z-10">
-            <h2 class="text-[20px] md:text-3xl font-semibold text-secondary text-center uppercase mb-5 md:mb-16">
+            <h2
+                class="text-[20px] md:text-[32px] font-semibold text-secondary text-center uppercase mb-5 md:mb-[30px] font-archivo leading-[62.5px]">
                 CÓ THỂ BẠN QUAN TÂM
             </h2>
 
             <div class="relative">
-                <div class="overflow-x-auto pb-6 custom-recommend-scrollbar mobile-scroll-visible" data-scroll-indicator-init="true">
+                <div class="overflow-x-auto pb-6 md:pb-[19px] custom-recommend-scrollbar mobile-scroll-visible"
+                    data-scroll-indicator-init="true">
                     <div class="min-w-[900px] md:min-w-[1000px] w-max">
-                        <div class="flex gap-0 md:gap-10 mb-4 md:mb-8">
-                            <div class="hidden md:block w-[140px] shrink-0 sticky left-0 bg-background-secondary z-10">
-                            </div>
+                        <!-- Row 1: Thẻ sản phẩm -->
+                        <div class="flex gap-0 md:gap-[40px] mb-4 md:mb-[27px]">
+                            <!-- Desktop Sticky Left Placeholder -->
+                            <div class="hidden md:block w-[140px] shrink-0 sticky left-0 bg-background-secondary z-10"></div>
 
-                            <div class="flex-grow flex gap-4 md:gap-10">
+                            <div class="flex-grow flex gap-4 md:gap-[40px]">
+                                <!-- Mobile Sticky Left Placeholder (Đồng bộ khoảng cách xuất phát) -->
+                                <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible"></div>
+
                                 @foreach ($items as $product)
-                                    <x-client.shared.product-card
-                                        href="{{ $product['url'] }}"
-                                        image="{{ $product['image'] }}"
-                                        title="{{ $product['name'] }}"
-                                        class="w-[175px] md:w-[220px] shrink-0"
+                                    <x-client.shared.product-card href="{{ $product['url'] }}"
+                                        image="{{ $product['image'] }}" title="{{ $product['name'] }}"
+                                        class="w-[175px] md:w-[222px] shrink-0 text-left flex flex-col"
                                         aspect="aspect-square bg-gray-100 shadow-sm mb-2 md:mb-4"
-                                        title-class="font-bold text-[12px] md:text-base leading-snug h-6 md:h-12 overflow-hidden mb-0 md:mb-2 text-[#004B8D] hover:text-secondary transition-colors"
-                                        :show-overlay="true"
-                                    >
-                                        @if($product['can_add_to_cart'])
-                                            <button
-                                                type="button"
-                                                class="border border-secondary text-secondary text-[9px] md:text-[13px] font-bold py-1 md:py-2 px-4 md:px-6 rounded-full hover:bg-secondary hover:text-white transition-all whitespace-nowrap js-add-to-cart mt-2 self-start"
+                                        title-class="font-bold text-[12px] md:text-base leading-snug mb-0 md:mb-1 text-[#2162A1] hover:text-secondary transition-colors text-left w-full"
+                                        :show-overlay="true">
+                                        @if ($product['can_add_to_cart'])
+                                            <button type="button"
+                                                class="bg-secondary text-white border border-secondary text-[9px] md:text-[13px] font-bold py-1 md:py-2 px-4 md:px-6 rounded-full hover:bg-transparent hover:text-secondary transition-all whitespace-nowrap js-add-to-cart mt-1 mr-auto block"
                                                 data-product-type="{{ $product['type'] }}"
                                                 data-product-id="{{ $product['id'] }}"
                                                 data-product-name="{{ $product['name'] }}"
-                                                onclick="event.stopPropagation();"
-                                            >
+                                                onclick="event.stopPropagation();">
                                                 Thêm vào giỏ
                                             </button>
                                         @endif
@@ -48,57 +49,54 @@
                             </div>
                         </div>
 
-                        <div class="flex flex-col border-t border-black/10">
-                            <div class="flex gap-0 md:gap-10 group mobile-compare-row">
-                                <div
-                                    class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-start sticky left-0 bg-background-secondary z-10">
-                                    <span class="compare-cell-text">Giá</span>
-                                </div>
-                                <div class="flex-grow flex md:gap-10 items-start">
-                                    <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
-                                        <span class="mobile-compare-label">Giá</span>
-                                    </div>
-                                    @foreach ($items as $product)
-                                        <div
-                                            class="compare-cell-text w-[175px] md:w-[220px] shrink-0 text-[12px] md:text-base text-primary/80 mr-4 md:mr-auto">
-                                            {{ $product['price_display'] }}
-                                        </div>
-                                    @endforeach
-                                </div>
+                        <!-- Row 2: So sánh Giá -->
+                        <div class="flex gap-0 md:gap-[40px] group mobile-compare-row">
+                            <div class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-center sticky left-0 bg-background-secondary z-10">
+                                <span class="compare-cell-text">Giá</span>
                             </div>
-                            <div class="flex gap-0 md:gap-10 border-t border-black/10 group mobile-compare-row">
-                                <div
-                                    class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-start sticky left-0 bg-background-secondary z-10">
-                                    <span class="compare-cell-text">Màu sắc</span>
+                            <div class="flex-grow flex gap-4 md:gap-[40px] items-center">
+                                <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
+                                    <span class="mobile-compare-label">Giá</span>
                                 </div>
-                                <div class="flex-grow flex md:gap-10 items-start">
-                                    <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
-                                        <span class="mobile-compare-label">Màu sắc</span>
+                                @foreach ($items as $product)
+                                    <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] md:text-base text-primary/80 md:mr-auto">
+                                        {{ $product['price_display'] }}
                                     </div>
-                                    @foreach ($items as $product)
-                                        <div
-                                            class="compare-cell-text w-[175px] md:w-[220px] shrink-0 text-[12px] md:text-base text-primary/80 mr-4 md:mr-auto">
-                                            {{ $product['color'] }}
-                                        </div>
-                                    @endforeach
-                                </div>
+                                @endforeach
                             </div>
-                            <div class="flex md:gap-10 border-y border-black/10 group mobile-compare-row">
-                                <div
-                                    class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-start sticky left-0 bg-background-secondary z-10">
-                                    <span class="compare-cell-text">Kích thước</span>
+                        </div>
+
+                        <!-- Row 3: So sánh Màu sắc -->
+                        <div class="flex gap-0 md:gap-[40px] border-t border-black/10 group mobile-compare-row">
+                            <div class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-center sticky left-0 bg-background-secondary z-10">
+                                <span class="compare-cell-text">Màu sắc</span>
+                            </div>
+                            <div class="flex-grow flex gap-4 md:gap-[40px] items-center">
+                                <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
+                                    <span class="mobile-compare-label">Màu sắc</span>
                                 </div>
-                                <div class="flex-grow flex md:gap-10 items-start">
-                                    <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
-                                        <span class="mobile-compare-label">Kích thước</span>
+                                @foreach ($items as $product)
+                                    <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] md:text-base text-primary/80 md:mr-auto">
+                                        {{ $product['color'] }}
                                     </div>
-                                    @foreach ($items as $product)
-                                        <div
-                                            class="compare-cell-text w-[175px] md:w-[220px] shrink-0 text-[12px] md:text-base text-primary/80 leading-relaxed mr-4 md:mr-auto">
-                                            {{ $product['size'] }}
-                                        </div>
-                                    @endforeach
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Row 4: So sánh Kích thước -->
+                        <div class="flex md:gap-[40px] border-y border-black/10 group mobile-compare-row">
+                            <div class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-center sticky left-0 bg-background-secondary z-10">
+                                <span class="compare-cell-text">Kích thước</span>
+                            </div>
+                            <div class="flex-grow flex gap-4 md:gap-[40px] items-center">
+                                <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
+                                    <span class="mobile-compare-label">Kích thước</span>
                                 </div>
+                                @foreach ($items as $product)
+                                    <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] md:text-base text-primary/80 leading-relaxed md:mr-auto">
+                                        {{ $product['size'] }}
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -110,28 +108,35 @@
     @push('styles')
         <style>
             .custom-recommend-scrollbar {
-                scrollbar-color: rgba(199, 110, 0, 0.8) rgba(0, 0, 0, 0.08);
-                scrollbar-width: thin;
                 -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin !important;
+                scrollbar-color: #C76E00 rgba(250, 250, 250, 0.8) !important;
             }
 
             .custom-recommend-scrollbar::-webkit-scrollbar {
-                height: 6px !important;
-                -webkit-appearance: none;
+                height: 12px !important;
+                display: block !important;
             }
 
             .custom-recommend-scrollbar::-webkit-scrollbar-track {
-                background: rgba(0, 0, 0, 0.08) !important;
-                border-radius: 9999px;
+                background: rgba(250, 250, 250, 0.8) !important;
+                border: 1px solid #C76E00 !important;
+                border-radius: 6px !important;
             }
 
             .custom-recommend-scrollbar::-webkit-scrollbar-thumb {
-                background: rgba(199, 110, 0, 0.8) !important;
-                border-radius: 9999px;
+                background: #C76E00 !important;
+                border-radius: 6px !important;
+                border: 2px solid rgba(250, 250, 250, 0.8) !important;
             }
 
             .custom-recommend-scrollbar::-webkit-scrollbar-thumb:hover {
-                background: #c76e00 !important;
+                background: #A35A00 !important;
+            }
+
+            /* Disable arrow buttons for a clean, modern look */
+            .custom-recommend-scrollbar::-webkit-scrollbar-button {
+                display: none !important;
             }
 
             .compare-cell-text {
@@ -155,24 +160,102 @@
                 white-space: nowrap;
             }
 
+            /* Custom overrides to match Figma styles */
+            .recommendations-section h3 span {
+                text-transform: none !important;
+                text-transform: capitalize !important;
+                font-family: Archivo, sans-serif !important;
+                font-weight: 600 !important;
+                font-size: 16px !important;
+                line-height: normal !important;
+                color: #2162A1 !important;
+                text-align: left !important;
+                display: block !important;
+            }
+
+            .recommendations-section h3 span:hover {
+                color: #C76E00 !important;
+            }
+
+            .recommendations-section .js-add-to-cart {
+                width: 122px !important;
+                height: 27px !important;
+                border-radius: 19px !important;
+                font-family: Archivo, sans-serif !important;
+                font-weight: 600 !important;
+                font-size: 16px !important;
+                line-height: 1 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                margin-top: 4px !important;
+                margin-left: 0 !important;
+                margin-right: auto !important;
+                transition: all 0.3s ease !important;
+                text-transform: none !important;
+            }
+
+            .recommendations-section .js-add-to-cart {
+                background-color: #C76E00 !important;
+                color: #FFFFFF !important;
+                border: 1px solid #C76E00 !important;
+            }
+
+            .recommendations-section .js-add-to-cart:hover {
+                background-color: transparent !important;
+                color: #C76E00 !important;
+                border: 1px solid #C76E00 !important;
+            }
+
             @media (min-width: 768px) {
                 .mobile-compare-row {
-                    height: auto;
-                    align-items: center;
+                    height: 41px !important;
+                    min-height: 41px !important;
+                    align-items: center !important;
                 }
 
                 .mobile-compare-row>div {
-                    align-items: center;
+                    height: 100% !important;
+                    align-items: center !important;
                 }
 
-                .compare-cell-text {
-                    margin-top: 0;
-                    margin-bottom: 0;
-                    padding-top: 16px;
-                    padding-bottom: 16px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-start;
+                .recommendations-section .compare-cell-text {
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                    height: 100% !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: flex-start !important;
+                    color: #2E2F2A !important;
+                    font-family: Archivo, sans-serif !important;
+                    font-size: 16px !important;
+                    line-height: 40px !important;
+                }
+
+                /* Borders for sticky header cells to align with container borders and prevent double lines */
+                .recommendations-section .mobile-compare-row>div:first-child {
+                    border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+                    border-bottom: none !important;
+                }
+
+                .recommendations-section .mobile-compare-row:last-child>div:first-child {
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+                }
+
+                /* Font weights for header and rows */
+                .recommendations-section .mobile-compare-row>div:first-child .compare-cell-text {
+                    font-weight: 600 !important;
+                }
+
+                .recommendations-section .mobile-compare-row:nth-child(1) .flex-grow .compare-cell-text,
+                .recommendations-section .mobile-compare-row:nth-child(2) .flex-grow .compare-cell-text {
+                    font-weight: 400 !important;
+                }
+
+                .recommendations-section .mobile-compare-row:nth-child(3) .flex-grow .compare-cell-text {
+                    font-weight: 300 !important;
                 }
             }
         </style>

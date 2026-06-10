@@ -49,4 +49,37 @@
             </div>
         </div>
     </section>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const statusUrl = @json(route('verification.status'));
+                const redirectUrl = @json(route('client.dich-vu.trang-thai-don-hang'));
+
+                const checkVerification = async () => {
+                    try {
+                        const response = await fetch(statusUrl, {
+                            headers: { 'Accept': 'application/json' },
+                            credentials: 'same-origin',
+                        });
+
+                        if (!response.ok) {
+                            return;
+                        }
+
+                        const data = await response.json();
+
+                        if (data.verified) {
+                            window.location.href = redirectUrl;
+                        }
+                    } catch (error) {
+                        // Ignore transient network errors; next poll will retry.
+                    }
+                };
+
+                checkVerification();
+                setInterval(checkVerification, 5000);
+            });
+        </script>
+    @endpush
 </x-client.layouts.main>

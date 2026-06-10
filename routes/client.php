@@ -39,6 +39,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/tai-khoan/xac-thuc-email', [AuthController::class, 'verifyNotice'])
         ->name('verification.notice');
+    Route::get('/tai-khoan/xac-thuc-email/trang-thai', [AuthController::class, 'verificationStatus'])
+        ->name('verification.status');
     Route::get('/tai-khoan/xac-thuc-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])
         ->middleware('signed')
         ->name('verification.verify');

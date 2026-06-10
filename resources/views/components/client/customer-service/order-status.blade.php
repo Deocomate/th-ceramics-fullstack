@@ -60,7 +60,18 @@
     'title' => null,
     'subtitle' => null,
     'description' => null,
-    'items' => null,])
+    'items' => null,
+    'orders' => collect(),
+    'counts' => [
+        'all' => 0,
+        'pending_payment' => 0,
+        'processing' => 0,
+        'shipping' => 0,
+        'completed' => 0,
+        'canceled' => 0,
+        'returned' => 0,
+    ],
+])
 <div class="flex-1 lg:pl-12">
   <h1 class="text-[30px] lg:text-[36px] leading-[36px] font-arima text-primary mb-[30px] lg:mb-10 mt-[-6px]">Trạng thái đơn hàng</h1>
 

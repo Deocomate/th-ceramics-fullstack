@@ -1,185 +1,172 @@
 @props(['images' => []])
 
 @php
-  $configuredImages = collect($images)->filter()->values();
-  $slides = $configuredImages->isNotEmpty()
-      ? $configuredImages->map(fn ($image) => ['image' => $image, 'aspect' => 'aspect-[4/6]'])
-      : collect([
-          ['image' => 'assets/images/cong-doan-01.jpg', 'aspect' => 'aspect-[4/6]'],
-          ['image' => 'assets/images/trang-tri-slide-01.jpg', 'aspect' => 'aspect-[11/10]'],
-          ['image' => null, 'aspect' => 'aspect-[4/6]'],
-          ['image' => null, 'aspect' => 'aspect-[4/6]'],
-          ['image' => null, 'aspect' => 'aspect-[4/6]'],
-          ['image' => null, 'aspect' => 'aspect-[4/6]'],
-          ['image' => null, 'aspect' => 'aspect-[4/6]'],
-          ['image' => null, 'aspect' => 'aspect-[4/6]'],
-          ['image' => null, 'aspect' => 'aspect-[4/6]'],
-          ['image' => 'assets/images/cong-doan-02.jpg', 'aspect' => 'aspect-[4/6]'],
-      ]);
+    $configuredImages = collect($images)->filter()->values();
+    $slides = $configuredImages->isNotEmpty()
+        ? $configuredImages->map(fn($image) => ['image' => $image, 'aspect' => 'aspect-[4/6]'])
+        : collect([
+            ['image' => 'assets/images/cong-doan-01.jpg', 'aspect' => 'aspect-[4/6]'],
+            ['image' => 'assets/images/trang-tri-slide-01.jpg', 'aspect' => 'aspect-[11/10]'],
+            ['image' => null, 'aspect' => 'aspect-[4/6]'],
+            ['image' => null, 'aspect' => 'aspect-[4/6]'],
+            ['image' => null, 'aspect' => 'aspect-[4/6]'],
+            ['image' => null, 'aspect' => 'aspect-[4/6]'],
+            ['image' => null, 'aspect' => 'aspect-[4/6]'],
+            ['image' => null, 'aspect' => 'aspect-[4/6]'],
+            ['image' => null, 'aspect' => 'aspect-[4/6]'],
+            ['image' => 'assets/images/cong-doan-02.jpg', 'aspect' => 'aspect-[4/6]'],
+        ]);
 @endphp
 
-<section
-  class="w-full py-8 md:py-16 bg-background-secondary overflow-hidden"
-  data-aos="fade-up"
->
-  <div class="max-w-[1920px] mx-auto">
-    <h2
-      class="text-[20px] md:text-3xl font-semibold text-secondary text-center uppercase mb-5 md:mb-16"
-    >
-      CÔNG ĐOẠN CHẾ TÁC
-    </h2>
+<section class="w-full py-8 md:py-16 bg-background-secondary overflow-hidden" data-aos="fade-up">
+    <div class="max-w-[1920px] mx-auto">
+        <h2 class="text-[20px] md:text-3xl font-semibold text-secondary text-center uppercase mb-5 md:mb-16">
+            CÔNG ĐOẠN CHẾ TÁC
+        </h2>
 
-    <div class="relative group px-10 md:px-20">
-      <div
-        class="swiper fabrication-slider overflow-visible h-[320px] md:h-[420px] lg:h-[509px]"
-      >
-        <div class="swiper-wrapper">
-          @foreach ($slides as $slide)
-          <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
-            <div class="h-full {{ $slide['aspect'] }} overflow-hidden rounded-sm {{ $slide['image'] ? 'bg-gray-200' : 'bg-[#E5E5E5]' }}">
-              @if ($slide['image'])
-              <img src="{{ \App\Support\AssetPath::url($slide['image'], 'assets/images/cong-doan-01.jpg') }}" alt="Công đoạn chế tác" class="w-full h-full object-cover" />
-              @endif
+        <div class="relative group px-10 md:px-20">
+            <div class="swiper fabrication-slider overflow-visible h-[320px] md:h-[420px] lg:h-[509px]">
+                <div class="swiper-wrapper">
+                    @foreach ($slides as $slide)
+                        <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
+                            <div
+                                class="h-full {{ $slide['aspect'] }} overflow-hidden rounded-sm {{ $slide['image'] ? 'bg-gray-200' : 'bg-[#E5E5E5]' }}">
+                                @if ($slide['image'])
+                                    <img src="{{ \App\Support\AssetPath::url($slide['image'], 'assets/images/cong-doan-01.jpg') }}"
+                                        alt="Công đoạn chế tác" class="w-full h-full object-cover" />
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
-          </div>
-          @endforeach
-        </div>
-      </div>
 
-      <div
-        class="hidden md:flex fabrication-prev absolute left-2 md:left-6 lg:left-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded rotate-45 items-center justify-center text-white cursor-pointer hover:bg-secondary/90 shadow-lg transition-all"
-      >
-        <div class="-rotate-45">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-        </div>
-      </div>
-      <div
-        class="fabrication-next absolute right-2 md:right-6 lg:right-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded rotate-45 hidden md:flex items-center justify-center text-white cursor-pointer hover:bg-secondary/90 shadow-lg transition-all"
-      >
-        <div class="-rotate-45">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </div>
-      </div>
+            <div
+                class="hidden md:flex fabrication-prev absolute left-2 md:left-6 lg:left-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded rotate-45 items-center justify-center text-white cursor-pointer hover:bg-secondary/90 shadow-lg transition-all">
+                <div class="-rotate-45">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div
+                class="fabrication-next absolute right-2 md:right-6 lg:right-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded rotate-45 hidden md:flex items-center justify-center text-white cursor-pointer hover:bg-secondary/90 shadow-lg transition-all">
+                <div class="-rotate-45">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+            </div>
 
-      <div
-        class="fabrication-pagination mt-10 md:mt-12 flex justify-center gap-[1px] md:gap-3"
-      ></div>
+            <div class="fabrication-pagination mt-10 md:mt-12 flex justify-center gap-[1px] md:gap-3"></div>
+        </div>
     </div>
-  </div>
 </section>
 
-<div
-  id="fabrication-lightbox"
-  class="fixed inset-0 z-[9999] pointer-events-none flex items-center justify-center bg-black/85 p-4 opacity-0 transition-opacity duration-300 ease-out"
->
-  <button
-    id="fabrication-lightbox-close"
-    type="button"
-    aria-label="Close image preview"
-    class="absolute right-4 top-4 md:right-6 md:top-6 text-white text-3xl leading-none hover:text-neutral-200 opacity-0 translate-y-2 transition-all duration-300 ease-out"
-  >
-    &times;
-  </button>
-  <img
-    id="fabrication-lightbox-image"
-    src=""
-    alt="Phóng to ảnh công đoạn chế tác"
-    class="max-w-[95vw] max-h-[90vh] object-contain opacity-0 scale-95 transition-all duration-300 ease-out will-change-transform"
-  />
+<div id="fabrication-lightbox"
+    class="fixed inset-0 z-[9999] pointer-events-none flex items-center justify-center bg-black/85 p-4 opacity-0 transition-opacity duration-300 ease-out">
+    <button id="fabrication-lightbox-close" type="button" aria-label="Close image preview"
+        class="absolute right-4 top-4 md:right-6 md:top-6 text-white text-3xl leading-none hover:text-neutral-200 opacity-0 translate-y-2 transition-all duration-300 ease-out">
+        &times;
+    </button>
+    <img id="fabrication-lightbox-image" src="" alt="Phóng to ảnh công đoạn chế tác"
+        class="max-w-[95vw] max-h-[90vh] object-contain opacity-0 scale-95 transition-all duration-300 ease-out will-change-transform" />
 </div>
 
 @push('scripts')
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const fabricationSlider = document.querySelector(".fabrication-slider");
-    if (fabricationSlider) {
-      const fabricationRoot = fabricationSlider.closest(".group") || document;
-      const fabricationNextEl = fabricationRoot.querySelector(".fabrication-next");
-      const fabricationPrevEl = fabricationRoot.querySelector(".fabrication-prev");
-      const fabricationPaginationEl = fabricationRoot.querySelector(".fabrication-pagination");
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const fabricationSlider = document.querySelector(".fabrication-slider");
+            if (fabricationSlider) {
+                const fabricationRoot = fabricationSlider.closest(".group") || document;
+                const fabricationNextEl = fabricationRoot.querySelector(".fabrication-next");
+                const fabricationPrevEl = fabricationRoot.querySelector(".fabrication-prev");
+                const fabricationPaginationEl = fabricationRoot.querySelector(".fabrication-pagination");
 
-      new Swiper(".fabrication-slider", {
-        slidesPerView: "auto",
-        spaceBetween: 20,
-        centeredSlides: true,
-        loop: true,
-        pagination: {
-          el: fabricationPaginationEl,
-          clickable: true,
-          renderBullet: function (index, className) {
-            return '<span class="' + className + ' w-2 h-2 rounded-full bg-secondary/30 transition-all cursor-pointer mx-[3.5px] inline-block"></span>';
-          },
-        },
-        navigation: {
-          nextEl: fabricationNextEl,
-          prevEl: fabricationPrevEl,
-        },
-        breakpoints: {
-          768: { spaceBetween: 40 },
-          1280: { spaceBetween: 80 },
-        },
-        on: {
-          init: function () {
-            setTimeout(() => {
-              if (typeof AOS !== "undefined") AOS.refresh();
-            }, 500);
-          },
-        },
-      });
-    }
+                new Swiper(".fabrication-slider", {
+                    slidesPerView: "auto",
+                    spaceBetween: 20,
+                    centeredSlides: true,
+                    loop: true,
+                    pagination: {
+                        el: fabricationPaginationEl,
+                        clickable: true,
+                        renderBullet: function(index, className) {
+                            return '<span class="' + className +
+                                ' w-2 h-2 rounded-full bg-secondary/30 transition-all cursor-pointer mx-[3.5px] inline-block"></span>';
+                        },
+                    },
+                    navigation: {
+                        nextEl: fabricationNextEl,
+                        prevEl: fabricationPrevEl,
+                    },
+                    breakpoints: {
+                        768: {
+                            spaceBetween: 40
+                        },
+                        1280: {
+                            spaceBetween: 50
+                        },
+                    },
+                    on: {
+                        init: function() {
+                            setTimeout(() => {
+                                if (typeof AOS !== "undefined") AOS.refresh();
+                            }, 500);
+                        },
+                    },
+                });
+            }
 
-    const lightbox = document.getElementById("fabrication-lightbox");
-    const lightboxImage = document.getElementById("fabrication-lightbox-image");
-    const closeButton = document.getElementById("fabrication-lightbox-close");
+            const lightbox = document.getElementById("fabrication-lightbox");
+            const lightboxImage = document.getElementById("fabrication-lightbox-image");
+            const closeButton = document.getElementById("fabrication-lightbox-close");
 
-    if (!lightbox || !lightboxImage || !closeButton) return;
+            if (!lightbox || !lightboxImage || !closeButton) return;
 
-    const slideImages = document.querySelectorAll(".fabrication-slider .swiper-slide img");
-    if (!slideImages.length) return;
+            const slideImages = document.querySelectorAll(".fabrication-slider .swiper-slide img");
+            if (!slideImages.length) return;
 
-    const closeLightbox = () => {
-      lightbox.classList.remove("opacity-100");
-      lightbox.classList.add("opacity-0");
-      closeButton.classList.add("opacity-0", "translate-y-2");
-      lightboxImage.classList.remove("opacity-100", "scale-100");
-      lightboxImage.classList.add("opacity-0", "scale-95");
-      document.body.classList.remove("overflow-hidden");
-      setTimeout(() => {
-        lightbox.classList.add("pointer-events-none");
-        lightboxImage.src = "";
-      }, 280);
-    };
+            const closeLightbox = () => {
+                lightbox.classList.remove("opacity-100");
+                lightbox.classList.add("opacity-0");
+                closeButton.classList.add("opacity-0", "translate-y-2");
+                lightboxImage.classList.remove("opacity-100", "scale-100");
+                lightboxImage.classList.add("opacity-0", "scale-95");
+                document.body.classList.remove("overflow-hidden");
+                setTimeout(() => {
+                    lightbox.classList.add("pointer-events-none");
+                    lightboxImage.src = "";
+                }, 280);
+            };
 
-    slideImages.forEach((image) => {
-      image.classList.add("cursor-zoom-in");
-      image.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        lightboxImage.src = image.currentSrc || image.src;
-        lightbox.classList.remove("pointer-events-none", "opacity-0");
-        lightbox.classList.add("opacity-100");
-        requestAnimationFrame(() => {
-          closeButton.classList.remove("opacity-0", "translate-y-2");
-          lightboxImage.classList.remove("opacity-0", "scale-95");
-          lightboxImage.classList.add("opacity-100", "scale-100");
+            slideImages.forEach((image) => {
+                image.classList.add("cursor-zoom-in");
+                image.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    lightboxImage.src = image.currentSrc || image.src;
+                    lightbox.classList.remove("pointer-events-none", "opacity-0");
+                    lightbox.classList.add("opacity-100");
+                    requestAnimationFrame(() => {
+                        closeButton.classList.remove("opacity-0", "translate-y-2");
+                        lightboxImage.classList.remove("opacity-0", "scale-95");
+                        lightboxImage.classList.add("opacity-100", "scale-100");
+                    });
+                    document.body.classList.add("overflow-hidden");
+                });
+            });
+
+            closeButton.addEventListener("click", closeLightbox);
+            lightbox.addEventListener("click", (event) => {
+                if (event.target === lightbox) closeLightbox();
+            });
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape" && lightbox.classList.contains("opacity-100")) {
+                    closeLightbox();
+                }
+            });
         });
-        document.body.classList.add("overflow-hidden");
-      });
-    });
-
-    closeButton.addEventListener("click", closeLightbox);
-    lightbox.addEventListener("click", (event) => {
-      if (event.target === lightbox) closeLightbox();
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && lightbox.classList.contains("opacity-100")) {
-        closeLightbox();
-      }
-    });
-  });
-</script>
+    </script>
 @endpush

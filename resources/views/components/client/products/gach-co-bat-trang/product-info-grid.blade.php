@@ -49,29 +49,35 @@
       <tr
         class="border-b border-black/10 text-[14px] leading-[24px] md:text-[20px] md:leading-normal font-bold"
       >
-        <th class="font-bold">
+        <th class="text-center font-bold pb-[10px] pt-[10px] md:pb-[18px] md:pt-[18px]">
           Kích thước<br />(mm)
         </th>
-        <th class="font-bold">
+        <th class="text-center font-bold pb-[10px] pt-[10px] md:pb-[18px] md:pt-[18px]">
           Định mức<br />(viên/m2)
         </th>
-        <th class="font-bold">
+        <th class="text-center font-bold pb-[10px] pt-[10px] md:pb-[18px] md:pt-[18px]">
           Cân nặng<br />(kg)
         </th>
-        <th class="py-[10px] md:py-4 text-center font-bold">Giá<br />(VND)</th>
+        <th class="text-center font-bold pb-[10px] pt-[10px] md:pb-[18px] md:pt-[18px]">
+          Giá<br />(VND)
+        </th>
       </tr>
     </thead>
     <tbody
       class="text-[14px] leading-[24px] md:text-[20px] md:leading-normal text-primary font-light"
     >
       @foreach($products as $product)
+      @php
+        $ptClass = $loop->first ? 'md:pt-[39px]' : 'md:pt-[19.5px]';
+        $cellClass = "text-center py-[10px] md:pb-[19.5px] {$ptClass}";
+      @endphp
       <tr class="hover:bg-black/5 transition-colors cursor-pointer group"
         onclick="window.location.href = '{{ route('client.products.gach-co-bat-trang.detail', $product->gach_co_bat_trang_ct_id) }}'"
       >
-        <td>{{ $product->size ?: '—' }}</td>
-        <td>{{ $product->dinh_muc ?: '—' }}</td>
-        <td>{{ $product->weight ?: '—' }}</td>
-        <td>{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}</td>
+        <td class="{{ $cellClass }}">{{ $product->size ?: '—' }}</td>
+        <td class="{{ $cellClass }}">{{ $product->dinh_muc ?: '—' }}</td>
+        <td class="{{ $cellClass }}">{{ $product->weight ?: '—' }}</td>
+        <td class="{{ $cellClass }}">{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}</td>
       </tr>
       @endforeach
     </tbody>

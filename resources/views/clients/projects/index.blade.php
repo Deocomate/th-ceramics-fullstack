@@ -1,4 +1,4 @@
-<x-client.layouts.main title="Dự án" data-page="projects">
+<x-client.layouts.main title="Dự án" data-page="projects" main-class="bg-[#F5EDE8]">
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />

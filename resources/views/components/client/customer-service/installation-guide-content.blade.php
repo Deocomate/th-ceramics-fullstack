@@ -60,7 +60,9 @@
     'title' => null,
     'subtitle' => null,
     'description' => null,
-    'items' => null,])
+    'items' => null,
+    'guides' => collect(),
+])
 <div class="flex-1 lg:pl-12">
   <h1 class="text-[30px] lg:text-[36px] font-arima font-medium text-primary mb-5 lg:mt-[-6px] lg:mb-10">Hướng dẫn thi công</h1>
 

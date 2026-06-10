@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\DanhMucTinTuc;
-use App\Models\TacGia;
 use App\Models\TinTuc;
 use App\Services\ViewHistoryService;
 use Illuminate\Contracts\View\View;
@@ -78,8 +77,6 @@ class NewsController extends Controller
 
         $historyService->trackArticle($article->tin_tuc_id);
 
-        $author = TacGia::query()->latest()->first();
-
-        return view('clients.news.detail', compact('article', 'relatedNews', 'author'));
+        return view('clients.news.detail', compact('article', 'relatedNews'));
     }
 }

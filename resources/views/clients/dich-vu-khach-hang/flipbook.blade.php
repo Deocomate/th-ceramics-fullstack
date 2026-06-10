@@ -42,10 +42,23 @@
     .my-page {
       background: #fff;
       box-shadow: 0 0 12px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
     .my-page canvas {
       display: block;
-      width: 100%; height: 100%;
+      width: 100%;
+      height: auto;
+    }
+    .my-page .page-loading {
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(0, 0, 0, 0.08);
+      border-top-color: rgba(0, 0, 0, 0.35);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
     }
   </style>
 </head>
@@ -60,59 +73,10 @@
 
 <div id="flipbook"></div>
 
+<script src="{{ asset('assets/js/catalog-flipbook.js') }}"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', async function() {
-    const pdfUrl = @json(asset('storage/' . $catalog->file));
-    const flipbookEl = document.getElementById('flipbook');
-    const spinner = document.getElementById('spinner');
-
-    try {
-      const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
-      const totalPages = pdf.numPages;
-
-      const pageDivs = [];
-      for (let i = 1; i <= totalPages; i++) {
-        const pageDiv = document.createElement('div');
-        pageDiv.className = 'my-page';
-        pageDiv.dataset.pageNumber = i;
-        flipbookEl.appendChild(pageDiv);
-        pageDivs.push(pageDiv);
-      }
-
-      const pageFlip = new St.PageFlip(flipbookEl, {
-        width: 500,
-        height: 700,
-        size: 'stretch',
-        minWidth: 315,
-        maxWidth: 1000,
-        minHeight: 420,
-        maxHeight: 1350,
-        showCover: true,
-        mobileScrollSupport: false,
-        usePortrait: window.innerWidth < 768,
-      });
-      pageFlip.loadFromHTML(document.querySelectorAll('.my-page'));
-
-      spinner.style.display = 'none';
-
-      for (let i = 1; i <= totalPages; i++) {
-        pdf.getPage(i).then(page => {
-          const viewport = page.getViewport({ scale: 1.5 });
-          const canvas = document.createElement('canvas');
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
-
-          const ctx = canvas.getContext('2d');
-          page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
-            pageDivs[i-1].appendChild(canvas);
-          });
-        });
-      }
-
-    } catch (err) {
-      spinner.innerHTML = '<p style="color: #f87171;">Không thể tải catalog. Vui lòng thử lại sau.</p>';
-      console.error('Flipbook error:', err);
-    }
+  document.addEventListener('DOMContentLoaded', function () {
+    initCatalogFlipbook(@json(asset('storage/' . $catalog->file)));
   });
 </script>
 

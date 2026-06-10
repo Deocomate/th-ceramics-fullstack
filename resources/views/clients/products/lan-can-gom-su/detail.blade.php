@@ -89,42 +89,10 @@
         class="w-full md:w-[85%] max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-5 md:gap-4 lg:gap-6 xl:gap-8 pb-8 md:pb-10 lg:pb-24 pt-0 md:pt-4">
 
         <!-- Left: Images -->
-        <div class="flex flex-col md:gap-5 lg:col-span-3">
-            <!-- Main Image Swiper -->
-            <div
-                class="w-full aspect-square bg-white md:shadow-lg relative overflow-hidden group swiper product-main-swiper">
-                <div class="swiper-wrapper" aria-live="polite">
-                    @foreach ($images as $index => $img)
-                        <div class="swiper-slide w-full h-full">
-                            <img src="{{ str_contains($img, 'assets/') ? asset($img) : asset('storage/' . $img) }}"
-                                alt="{{ $product->name }}"
-                                class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110">
-                        </div>
-                    @endforeach
-                </div>
-                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
-            </div>
-
-            <!-- Mobile Dots Pagination -->
-            <div class="md:hidden flex justify-center mt-5">
-                <div class="product-main-pagination flex justify-center gap-[7px]"></div>
-            </div>
-
-            <!-- Thumbnails (Desktop only) -->
-            <div class="hidden md:block w-full mt-2 overflow-hidden swiper product-thumb-swiper">
-                <div class="swiper-wrapper" aria-live="polite">
-                    @foreach ($images as $index => $img)
-                        <div class="swiper-slide aspect-square bg-[#5C2321] cursor-pointer shadow-sm hover:opacity-80 transition-opacity"
-                            style="width: 90px; margin-right: 20px;">
-                            <img src="{{ str_contains($img, 'assets/') ? asset($img) : asset('storage/' . $img) }}"
-                                alt="{{ $product->name }} thumb"
-                                class="w-full h-full object-cover object-center mix-blend-screen opacity-90">
-                        </div>
-                    @endforeach
-                </div>
-                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
-            </div>
-        </div>
+        <x-client.shared.product-image-swiper 
+            :images="$images" 
+            thumb-bg="bg-[#5C2321]" 
+            thumb-img-class="w-full h-full object-cover object-center mix-blend-screen opacity-90" />
 
         <!-- Right: Info -->
         <div class="flex flex-col lg:col-span-2 w-[85%] md:w-full mx-auto md:mt-0 pt-[18px] md:pt-0">

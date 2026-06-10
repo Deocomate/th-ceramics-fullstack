@@ -62,7 +62,7 @@
     'description' => null,
     'items' => null,])
 <section
-  class="w-full flex flex-col-reverse lg:flex-row min-h-[500px] md:h-[60vh] lg:h-[70vh] bg-neutral-2 overflow-hidden"
+  class="w-full flex flex-col-reverse lg:flex-row min-h-[500px] md:h-[60vh] lg:h-[70vh] bg-[#F5EDE8] overflow-hidden"
 >
   <!-- Left Half: Image -->
   <div

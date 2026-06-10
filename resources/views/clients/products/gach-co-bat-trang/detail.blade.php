@@ -53,10 +53,7 @@ productId="{{ $product->gach_co_bat_trang_ct_id }}"
         <x-client.shared.quantity-calculator
             image="{{ !empty($product->size_image) ? asset('storage/' . $product->size_image) : asset('assets/images/gtt-size.png') }}"
             :dinhMuc="$dinhMuc"
-            :showInfo="true"
-            label1="Gạch"
-            rate1="{{ $dinhMuc->first() ? $dinhMuc->first()->value . ' viên/m²' : '-- viên/m²' }}"
-            areaNote="Diện tích được làm tròn lên đến m² gần nhất." />
+            :rate="$dinhMuc->first()?->value" />
     </div>
     <div class="order-3 md:order-none">
         <x-client.shared.fabrication-process />

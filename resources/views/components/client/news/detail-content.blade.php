@@ -68,6 +68,8 @@
   $subtitleClass = 'text-[12px] font-bold text-primary opacity-80 uppercase tracking-widest mb-4';
   $titleClass = 'text-3xl md:text-4xl font-arima font-medium text-primary mb-4 md:mb-6 leading-tight';
   $descClass = 'text-[14px] text-primary/80 leading-[1.8] text-left md:text-justify font-light md:font-normal whitespace-pre-line';
+  $specLabelClass = 'font-archivo text-xs font-semibold text-black leading-[30px]';
+  $specValueClass = 'text-sm text-primary/80';
 @endphp
 
 <section class="pt-10 pb-20 md:py-24 bg-neutral-2">
@@ -121,14 +123,14 @@
             <div class="w-full md:w-1/2">
               <img src="{{ $imageUrl }}" alt="{{ $imageAlt }}" class="w-full h-auto object-cover border border-black/5">
             </div>
-            <div class="w-full md:w-1/2 flex flex-col gap-5 md:pl-4">
+            <div class="w-full md:w-1/2 flex flex-col md:pl-4">
               @foreach ($specs as $spec)
-                <div class="flex flex-col gap-1 border-b border-gray-200 pb-3 last:border-0">
+                <div class="flex flex-col">
                   @if (data_get($spec, 'label'))
-                    <span class="text-[13px] font-extrabold text-primary uppercase tracking-widest">{{ data_get($spec, 'label') }}</span>
+                    <span class="{{ $specLabelClass }}">{{ data_get($spec, 'label') }}</span>
                   @endif
                   @if (data_get($spec, 'value'))
-                    <span class="text-[15px] text-primary/80">{{ data_get($spec, 'value') }}</span>
+                    <span class="{{ $specValueClass }}">{{ data_get($spec, 'value') }}</span>
                   @endif
                 </div>
               @endforeach
@@ -175,14 +177,14 @@
               @endif
 
               @if ($specs->isNotEmpty())
-                <div class="w-full md:w-3/4 flex flex-col gap-5 mt-6 md:mt-8 border-t border-gray-200 pt-6">
+                <div class="w-full md:w-3/4 flex flex-col mt-6 md:mt-8">
                   @foreach ($specs as $spec)
-                    <div class="flex flex-col gap-1">
+                    <div class="flex flex-col">
                       @if (data_get($spec, 'label'))
-                        <span class="text-[13px] font-extrabold text-primary uppercase tracking-widest">{{ data_get($spec, 'label') }}</span>
+                        <span class="{{ $specLabelClass }}">{{ data_get($spec, 'label') }}</span>
                       @endif
                       @if (data_get($spec, 'value'))
-                        <span class="text-sm text-primary/80">{{ data_get($spec, 'value') }}</span>
+                        <span class="{{ $specValueClass }}">{{ data_get($spec, 'value') }}</span>
                       @endif
                     </div>
                   @endforeach

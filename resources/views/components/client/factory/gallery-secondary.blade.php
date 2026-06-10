@@ -67,7 +67,7 @@
     $gallery2 = is_string($factory->gallery_2) ? json_decode($factory->gallery_2, true) : $factory->gallery_2;
     $gallery2 = is_array($gallery2) ? $gallery2 : [];
 @endphp
-<section class="bg-background-secondary pb-8 md:pb-24 lg:pb-36 overflow-hidden">
+<section class="bg-[#F5EDE8] pb-8 md:pb-24 lg:pb-36 overflow-hidden">
   <!-- Header row -->
   <div class="w-[85%] max-w-[1320px] mx-auto mb-8 md:flex justify-end hidden">
     <!-- Navigation Buttons -->

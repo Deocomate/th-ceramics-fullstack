@@ -1,79 +1,8 @@
-@props([
-    'trangChu' => null,
-    'ngoiAmDuongs' => null,
-    'ngoiHais' => null,
-    'gachHoas' => null,
-    'about' => null,
-    'factory' => null,
-    'showroomImages' => null,
-    'showroomContent' => null,
-    'news' => null,
-    'article' => null,
-    'author' => null,
-    'articles' => null,
-    'relatedArticles' => null,
-    'historyArticles' => null,
-    'projects' => null,
-    'project' => null,
-    'relatedProjects' => null,
-    'categories' => null,
-    'selectedCategory' => null,
-    'currentCategory' => null,
-    'config' => null,
-    'products' => null,
-    'relatedProducts' => null,
-    'product' => null,
-    'colors' => null,
-    'dinhMuc' => null,
-    'giaTriVuotTroi' => null,
-    'parentConfig' => null,
-    'pageLabel' => null,
-    'indexRouteName' => null,
-    'categoryType' => null,
-    'categoryLabel' => null,
-    'denGomProducts' => null,
-    'denSuProducts' => null,
-    'featuredProducts' => null,
-    'collectionProducts' => null,
-    'ngheProducts' => null,
-    'linhVatProducts' => null,
-    'bgImage' => null,
-    'activeOrder' => false,
-    'activeAccount' => false,
-    'activeCatalog' => false,
-    'activeGuide' => false,
-    'activeProcess' => false,
-    'activePrivacy' => false,
-    'activeReturn' => false,
-    'activeShipping' => false,
-    'image' => null,
-    'label1' => null,
-    'rate1' => null,
-    'label2' => null,
-    'rate2' => null,
-    'sectionId' => null,
-    'sectionClass' => null,
-    'sectionTitle' => null,
-    'desktopLinkHref' => null,
-    'detailRouteName' => null,
-    'wrapperClass' => null,
-    'titleClass' => null,
-    'title' => null,
-    'subtitle' => null,
-    'description' => null,
-    'items' => null,])
-@php
-  $authorData = $author ?? null;
-  $authorName = $authorData?->ten_tac_gia ?? 'Gốm sứ Thanh Hải';
-  $authorAvatar = \App\Support\AssetPath::url($authorData?->anh_dai_dien, 'assets/images/author.svg');
-  $authorDesc = $authorData?->mo_ta ?? 'Thông tin tác giả đang được cập nhật.';
-@endphp
-
 <!-- Author Section for News Detail -->
 <section class="w-[85%] max-w-[1320px] mx-auto pb-6 md:pb-16 bg-background-secondary pt-4">
   <div class="w-full max-w-[1000px] border-t md:border-b border-gray-300 md:ml-[5%]">
     <!-- Top Bar: Ratings & Share -->
-    <div class="flex flex-col md:flex-row items-center justify-between py-6 mb-6 gap-6">
+    <div class="flex flex-col md:flex-row items-center justify-between py-6 gap-6">
       <!-- Ratings -->
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-1 text-secondary">
@@ -124,39 +53,6 @@
             <img src="{{ asset('assets/images/linkedin-2.svg') }}" alt="LinkedIn" class="w-5 h-5" />
           </a>
         </div>
-      </div>
-    </div>
-
-    <!-- Author Area -->
-    <div class="flex-col md:flex-row items-center md:items-start gap-10 mb-12 hidden md:flex">
-      <!-- Author Image -->
-      <div class="w-48 h-48 rounded-full overflow-hidden flex-shrink-0 shadow-md">
-        <img src="{{ $authorAvatar }}" alt="{{ $authorName }}" class="w-full h-full object-cover" />
-      </div>
-
-      <!-- Author Content -->
-      <div class="flex-grow">
-        <h3 class="text-3xl font-arima font-semibold text-primary mb-3">{{ $authorName }}</h3>
-
-        <!-- Handle Icons -->
-        <div class="flex items-center gap-4 mb-6">
-          <a href="#" class="opacity-80 hover:opacity-100 transition-all">
-            <img src="{{ asset('assets/images/fb-circle.svg') }}" alt="FB" class="w-5 h-5 grayscale opacity-80 hover:grayscale-0 hover:opacity-100" />
-          </a>
-          <a href="#" class="opacity-80 hover:opacity-100 transition-all">
-            <img src="{{ asset('assets/images/linkedin-1.svg') }}" alt="IN" class="w-5 h-5 grayscale opacity-80 hover:grayscale-0 hover:opacity-100" />
-          </a>
-          <a href="#" class="opacity-80 hover:opacity-100 transition-all">
-            <img src="{{ asset('assets/images/telegram.svg') }}" alt="TG" class="w-5 h-5 grayscale opacity-80 hover:grayscale-0 hover:opacity-100" />
-          </a>
-          <a href="#" class="opacity-80 hover:opacity-100 transition-all">
-            <img src="{{ asset('assets/images/skype.svg') }}" alt="SK" class="w-5 h-5 grayscale opacity-80 hover:grayscale-0 hover:opacity-100" />
-          </a>
-        </div>
-
-        <p class="text-base text-primary/80 leading-relaxed text-justify max-w-4xl">
-          {{ $authorDesc }}
-        </p>
       </div>
     </div>
   </div>

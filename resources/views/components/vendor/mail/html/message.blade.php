@@ -2,7 +2,7 @@
 {{-- Header --}}
 <x-slot:header>
 <x-mail::header :url="config('app.url')">
-{{ config('app.name') }}
+<img src="{{ rtrim(config('app.url'), '/') }}/assets/images/logo.png" class="logo" alt="{{ config('app.name') }}">
 </x-mail::header>
 </x-slot:header>
 
@@ -21,7 +21,7 @@
 {{-- Footer --}}
 <x-slot:footer>
 <x-mail::footer>
-© {{ date('Y') }} {{ config('app.name') }}. {{ __('All rights reserved.') }}
+© {{ date('Y') }} {{ config('app.name') }}. Bảo lưu mọi quyền.
 </x-mail::footer>
 </x-slot:footer>
 </x-mail::layout>

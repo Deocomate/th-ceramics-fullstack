@@ -25,19 +25,19 @@ class GachCoBatTrangSeeder extends Seeder
             'video' => $this->generateVideoLink(),
             'images' => $this->copySpecificImages('gach-co-bat-trang-cong-doan', ['gach-co-work-1.jpg', 'gach-co-work-2.jpg']),
             'section_bat' => [
-                'title' => 'Sản Phẩm Gạch Bát — Tinh Hoa Gốm Mộc',
+                'title' => 'Sản Phẩm Gạch Bát',
                 'description' => 'Gạch bát được tạo hình thủ công từ đất sét nguyên chất, nung 1.200°C. Bề mặt hoài cổ phù hợp Indochine.',
                 'colors' => ['#A98467', '#B22222', '#5D5FEF'],
                 'gallery' => $this->copySpecificImages('gach-co-bat-trang-sec', ['gach-bat-01.jpg', 'gach-bat-02.jpg', 'gach-bat-detail-1.png', 'gach-bat-detail-2.png']),
             ],
             'section_that' => [
-                'title' => 'Gạch Thất & Xây — Nghệ Thuật Đất Nung',
+                'title' => 'Gạch Thất',
                 'description' => 'Khối gạch vuông vắn là kết quả của tạo hình thủ công truyền qua nhiều thế hệ. Phân tán lực tốt, xây tường vững chắc.',
                 'colors' => ['#A98467', '#B22222', '#5D5FEF'],
                 'gallery' => $this->copySpecificImages('gach-co-bat-trang-sec', ['gach-that-01.jpg', 'gach-co-work-1.jpg']),
             ],
             'section_the' => [
-                'title' => 'Gạch Thẻ — Linh Hoạt Thiết Kế',
+                'title' => 'Gạch Thẻ',
                 'description' => 'Gạch thẻ mỏng, dẹt mang đến sự linh hoạt thi công ốp vách. Độ dày 1.5-2.5cm, đa dạng màu sắc.',
                 'colors' => ['#A98467', '#B22222', '#5D5FEF'],
                 'gallery' => $this->copySpecificImages('gach-co-bat-trang-sec', ['gach-the-01.jpg', 'gach-co-work-2.jpg']),

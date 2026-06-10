@@ -1,66 +1,5 @@
-@props([
-    'trangChu' => null,
-    'ngoiAmDuongs' => null,
-    'ngoiHais' => null,
-    'gachHoas' => null,
-    'about' => null,
-    'factory' => null,
-    'showroomImages' => null,
-    'showroomContent' => null,
-    'news' => null,
-    'article' => null,
-    'articles' => null,
-    'relatedArticles' => null,
-    'historyArticles' => null,
-    'projects' => null,
-    'project' => null,
-    'relatedProjects' => null,
-    'categories' => null,
-    'selectedCategory' => null,
-    'currentCategory' => null,
-    'config' => null,
-    'products' => null,
-    'relatedProducts' => null,
-    'product' => null,
-    'colors' => null,
-    'dinhMuc' => null,
-    'giaTriVuotTroi' => null,
-    'parentConfig' => null,
-    'pageLabel' => null,
-    'indexRouteName' => null,
-    'categoryType' => null,
-    'categoryLabel' => null,
-    'denGomProducts' => null,
-    'denSuProducts' => null,
-    'featuredProducts' => null,
-    'collectionProducts' => null,
-    'ngheProducts' => null,
-    'linhVatProducts' => null,
-    'bgImage' => null,
-    'activeOrder' => false,
-    'activeAccount' => false,
-    'activeCatalog' => false,
-    'activeGuide' => false,
-    'activeProcess' => false,
-    'activePrivacy' => false,
-    'activeReturn' => false,
-    'activeShipping' => false,
-    'image' => null,
-    'label1' => null,
-    'rate1' => null,
-    'label2' => null,
-    'rate2' => null,
-    'sectionId' => null,
-    'sectionClass' => null,
-    'sectionTitle' => null,
-    'desktopLinkHref' => null,
-    'detailRouteName' => null,
-    'wrapperClass' => null,
-    'titleClass' => null,
-    'title' => null,
-    'subtitle' => null,
-    'description' => null,
-    'items' => null,])
+@props(['showroomImages' => null])
+
 @php
   $slides = collect($showroomImages ?? [])->values();
   if ($slides->isEmpty()) {
@@ -70,25 +9,25 @@
 
 <!-- Main Content -->
 <section
-  class="md:w-full max-w-[1920px] px-6 lg:px-[8%] 2xl:pl-[12.5%] mx-auto pt-12 pb-16 md:py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 xl:gap-20 items-center overflow-hidden"
+  class="md:w-full max-w-[1920px] px-6 lg:px-[8%] 2xl:pl-[12.5%] mx-auto pt-12 pb-16 md:py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 xl:gap-20 items-center overflow-hidden text-white"
 >
   <!-- Left: Text Info -->
   <div
-    class="lg:col-span-5 flex flex-col gap-6 relative z-10"
+    class="lg:col-span-5 flex flex-col gap-6 relative z-10 text-white"
     data-aos="fade-right"
   >
-    <h2 class="font-arima text-3xl md:text-4xl lg:text-[48px] font-medium leading-[1.2]">Showroom Bát Tràng</h2>
+    <h2 class="font-arima text-3xl md:text-4xl lg:text-[48px] font-medium leading-[1.2] text-white">Showroom Bát Tràng</h2>
 
     <div class="h-[1px] w-[100%] lg:ml-[20%] lg:w-[120%] bg-white/20 mb-8 lg:mb-16"></div>
 
-    <div class="w-[85%] md:w-full mx-auto md:mx-0 flex flex-col gap-5 text-xs mb-8">
+    <div class="w-[85%] md:w-full mx-auto md:mx-0 flex flex-col gap-5 text-xs mb-8 text-white">
       <div class="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr] gap-4 items-start">
-        <span class="font-medium tracking-[0.1em] uppercase text-xs mt-[3px]">ĐỊA CHỈ</span>
-        <span class="font-semibold text-sm leading-snug w-full max-w-[280px]">18 Giang Cao, Bát Tràng,<br class="md:hidden"> Gia Lâm, Hà Nội</span>
+        <span class="font-medium tracking-[0.1em] uppercase text-xs mt-[3px] text-white">ĐỊA CHỈ</span>
+        <span class="font-semibold text-sm leading-snug w-full max-w-[280px] text-white">18 Giang Cao, Bát Tràng,<br class="md:hidden"> Gia Lâm, Hà Nội</span>
       </div>
       <div class="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr] gap-4 items-center mt-2">
-        <span class="font-medium tracking-[0.1em] uppercase text-xs">email</span>
-        <span class="font-semibold text-sm">gsthaithanh@gmail.com</span>
+        <span class="font-medium tracking-[0.1em] uppercase text-xs text-white">ĐIỆN THOẠI</span>
+        <span class="font-semibold text-sm text-white">0966 55 8808</span>
       </div>
     </div>
 
@@ -102,7 +41,7 @@
           alt=""
           class="mb-1.5 shrink-0 brightness-0 invert"
         />
-        <span class="font-extrabold text-[13px]">Điện thoại</span>
+        <span class="font-extrabold text-[13px]">Liên hệ ngay</span>
       </a>
       <a
         href="https://maps.google.com/?q=18+Giang+Cao,+Bat+Trang,+Gia+Lam,+Ha+Noi"

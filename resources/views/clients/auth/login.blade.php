@@ -122,7 +122,8 @@
                     <!-- Remember & Forgot Password -->
                     <div class="flex items-center justify-between mt-2">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="remember"
+                            <input type="checkbox" name="remember" value="1"
+                                {{ old('remember') ? 'checked' : '' }}
                                 class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary accent-secondary">
                             <span class="text-sm text-gray-600">Ghi nhớ đăng nhập</span>
                         </label>

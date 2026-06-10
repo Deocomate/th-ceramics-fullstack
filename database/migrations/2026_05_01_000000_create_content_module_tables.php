@@ -50,19 +50,6 @@ return new class extends Migration
             $table->foreign('danh_muc_tin_tuc_id')->references('danh_muc_tin_tuc_id')->on('danh_muc_tin_tuc')->onDelete('cascade');
         });
 
-        // Tac gia
-        Schema::create('tac_gia', function (Blueprint $table) {
-            $table->increments('tac_gia_id');
-            $table->string('ten_tac_gia');
-            $table->text('link_fb')->nullable();
-            $table->text('link_linkedin')->nullable();
-            $table->text('link_tele')->nullable();
-            $table->text('link_sky')->nullable();
-            $table->longText('mo_ta');
-            $table->string('anh_dai_dien');
-            $table->timestamps();
-        });
-
         // Thi cong
         Schema::create('thi_cong', function (Blueprint $table) {
             $table->increments('thi_cong');
@@ -86,7 +73,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('catalog');
         Schema::dropIfExists('thi_cong');
-        Schema::dropIfExists('tac_gia');
         Schema::dropIfExists('tin_tuc');
         Schema::dropIfExists('danh_muc_tin_tuc');
         Schema::dropIfExists('du_an');

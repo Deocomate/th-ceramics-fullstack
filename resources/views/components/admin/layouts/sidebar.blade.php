@@ -251,7 +251,7 @@
         </div>
 
         {{-- Các Nội Dung Khác --}}
-        @php $isMiscContent = request()->routeIs(['admin.tac-gia.*', 'admin.thi-cong.*', 'admin.catalog.*']); @endphp
+        @php $isMiscContent = request()->routeIs(['admin.thi-cong.*', 'admin.catalog.*']); @endphp
         <div>
             <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-misc', this)">
                 <div class="flex items-center gap-3">
@@ -262,7 +262,6 @@
             </button>
             <div id="menu-misc" class="grid transition-all duration-300 ease-in-out {{ $isMiscContent ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0' }}">
                 <div class="overflow-hidden pl-9 pr-3 space-y-1 pb-1">
-                    <a href="{{ route('admin.tac-gia.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.tac-gia.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Tác giả</a>
                     <a href="{{ route('admin.thi-cong.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.thi-cong.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Video thi công</a>
                     <a href="{{ route('admin.catalog.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.catalog.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Catalogs</a>
                 </div>

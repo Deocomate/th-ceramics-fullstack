@@ -74,7 +74,7 @@
         e($title ?: $fallback)
     );
 @endphp
-<section class="bg-background-secondary relative overflow-hidden text-primary">
+<section class="bg-[#F5EDE8] relative overflow-hidden text-primary">
   <!-- Grid Overlay Blueprint Lines -->
   <div class="grid-overlay absolute inset-0 z-0 pointer-events-none">
     <div class="w-[85%] max-w-[1320px] mx-auto h-full relative">

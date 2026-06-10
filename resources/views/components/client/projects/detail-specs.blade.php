@@ -61,7 +61,7 @@
     'subtitle' => null,
     'description' => null,
     'items' => null,])
-<div class="py-16 lg:py-24 bg-neutral-2">
+<div class="py-16 lg:py-24 bg-[#F5EDE8]">
   <div class="w-[85%] max-w-[1000px] mx-auto">
     <!-- Section Header -->
     <div class="mb-10 lg:mb-16" data-aos="fade-up">

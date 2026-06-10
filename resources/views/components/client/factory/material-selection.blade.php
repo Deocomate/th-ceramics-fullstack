@@ -70,7 +70,7 @@
     $materialSteps = is_string($factory->material_steps) ? json_decode($factory->material_steps, true) : $factory->material_steps;
     $materialSteps = is_array($materialSteps) ? $materialSteps : [];
 @endphp
-<section class="bg-background-secondary relative overflow-hidden text-primary">
+<section class="bg-[#F5EDE8] relative overflow-hidden text-primary">
   <!-- 1. Slider Segment -->
   <div class="relative z-10 pt-16 md:pt-24 lg:pt-32">
     <!-- Carousel -->

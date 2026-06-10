@@ -1,4 +1,4 @@
-<x-client.layouts.main title="Chi tiết dự án" data-page="project-detail-2" main-class="bg-background-secondary overflow-x-hidden">
+<x-client.layouts.main title="Chi tiết dự án" data-page="project-detail-2" main-class="bg-[#F5EDE8] overflow-x-hidden">
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -67,7 +67,7 @@
 </section>
 
 <!-- ======================= PHOTO GALLERY GRID ======================= -->
-<section class="py-14 lg:py-20 bg-background-secondary">
+<section class="py-14 lg:py-20 bg-[#F5EDE8]">
   <div class="w-[90%] max-w-[1400px] mx-auto">
 
     <!-- Section heading -->

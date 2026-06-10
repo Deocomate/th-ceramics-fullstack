@@ -81,9 +81,46 @@ class AuthenticationTest extends TestCase
 
         $this->actingAs($user)
             ->get($url)
-            ->assertRedirect(route('client.home'));
+            ->assertRedirect(route('client.dich-vu.trang-thai-don-hang'));
 
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
+    }
+
+    public function test_verified_user_redirected_from_verification_notice(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email_verified_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('verification.notice'))
+            ->assertRedirect(route('client.dich-vu.trang-thai-don-hang'));
+    }
+
+    public function test_resend_verification_when_already_verified(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email_verified_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('verification.send'))
+            ->assertRedirect(route('client.dich-vu.trang-thai-don-hang'));
+    }
+
+    public function test_verification_status_returns_json(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email_verified_at' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->getJson(route('verification.status'))
+            ->assertOk()
+            ->assertJson(['verified' => false]);
     }
 
     public function test_unverified_user_is_redirected_from_profile_and_checkout(): void
@@ -198,6 +235,24 @@ class AuthenticationTest extends TestCase
 
         $response->assertRedirect(route('client.home'));
         $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_login_with_remember_me(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => 'Password123',
+            'role' => 'customer',
+        ]);
+
+        $this->post(route('client.auth.login.post'), [
+            'email' => 'test@example.com',
+            'password' => 'Password123',
+            'remember' => '1',
+        ])->assertRedirect(route('client.home'));
+
+        $this->assertAuthenticatedAs($user);
+        $this->assertNotNull($user->fresh()->remember_token);
     }
 
     /**

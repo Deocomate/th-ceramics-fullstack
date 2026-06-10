@@ -60,7 +60,10 @@
     'title' => null,
     'subtitle' => null,
     'description' => null,
-    'items' => null,])
+    'items' => null,
+    'featuredCatalog' => null,
+    'catalogs' => collect(),
+])
 <div class="flex-1 lg:pl-12">
   <h1 class="text-[30px] lg:text-[36px] font-arima font-medium text-primary mb-6 lg:mt-[-6px]">Tải Catalog</h1>
 

@@ -20,7 +20,23 @@ class Recommendations extends Component
         public ?string $productType = null,
         public bool $compareTable = false,
     ) {
-        $this->items = collect($relatedProducts)->values()->map(fn ($product) => $this->normalizeProduct($product));
+        $normalized = collect($relatedProducts)->values()->map(fn ($product) => $this->normalizeProduct($product));
+
+        if ($normalized->count() > 4) {
+            $looped = collect();
+            for ($i = 0; $i < 3; $i++) {
+                $looped = $looped->concat($normalized);
+            }
+            $normalized = $looped->take(10);
+        } elseif ($normalized->isNotEmpty()) {
+            $looped = collect();
+            while ($looped->count() < 10) {
+                $looped = $looped->concat($normalized);
+            }
+            $normalized = $looped->take(10);
+        }
+
+        $this->items = $normalized;
     }
 
     public function render(): View

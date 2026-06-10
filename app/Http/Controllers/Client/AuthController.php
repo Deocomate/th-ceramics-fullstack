@@ -33,11 +33,19 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        if ($this->authService->login($request->validated())) {
+        $credentials = [
+            'email' => $request->validated('email'),
+            'password' => $request->validated('password'),
+            'remember' => $request->boolean('remember'),
+        ];
+
+        if ($this->authService->login($credentials)) {
             return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
         }
 
-        return back()->withErrors(['error' => 'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.'])->withInput();
+        return back()
+            ->withErrors(['error' => 'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.'])
+            ->withInput($request->only('email', 'remember'));
     }
 
     /**
@@ -87,8 +95,8 @@ class AuthController extends Controller
         $status = $this->authService->forgotPassword($request->email);
 
         return $status === Password::RESET_LINK_SENT
-            ? back()->with('success', __($status))
-            : back()->withErrors(['email' => __($status)])->withInput();
+            ? back()->with('success', $this->passwordStatusMessage($status))
+            : back()->withErrors(['email' => $this->passwordStatusMessage($status)])->withInput();
     }
 
     /**
@@ -110,8 +118,8 @@ class AuthController extends Controller
         $status = $this->authService->resetPassword($request->validated());
 
         return $status === Password::PASSWORD_RESET
-            ? redirect()->route('client.auth.login')->with('success', __($status))
-            : back()->withErrors(['email' => __($status)])->withInput();
+            ? redirect()->route('client.auth.login')->with('success', $this->passwordStatusMessage($status))
+            : back()->withErrors(['email' => $this->passwordStatusMessage($status)])->withInput();
     }
 
     /**
@@ -243,6 +251,11 @@ class AuthController extends Controller
 
     public function verifyNotice()
     {
+        if (auth()->user()->hasVerifiedEmail()) {
+            return redirect()->route('client.dich-vu.trang-thai-don-hang')
+                ->with('success', 'Email đã được xác thực thành công.');
+        }
+
         return view('clients.auth.verify-email');
     }
 
@@ -250,18 +263,37 @@ class AuthController extends Controller
     {
         $request->fulfill();
 
-        return redirect()->route('client.home')
+        return redirect()->route('client.dich-vu.trang-thai-don-hang')
             ->with('success', 'Email đã được xác thực thành công.');
+    }
+
+    public function verificationStatus(Request $request)
+    {
+        return response()->json([
+            'verified' => $request->user()->hasVerifiedEmail(),
+        ]);
     }
 
     public function resendVerification(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('client.home');
+            return redirect()->route('client.dich-vu.trang-thai-don-hang');
         }
 
         $request->user()->sendEmailVerificationNotification();
 
         return back()->with('success', 'Email xác thực đã được gửi lại.');
+    }
+
+    private function passwordStatusMessage(string $status): string
+    {
+        return match ($status) {
+            Password::RESET_LINK_SENT => 'Chúng tôi đã gửi liên kết đặt lại mật khẩu đến email của bạn.',
+            Password::PASSWORD_RESET => 'Mật khẩu đã được đặt lại thành công. Bạn có thể đăng nhập ngay.',
+            Password::INVALID_USER => 'Không tìm thấy tài khoản với email này.',
+            Password::INVALID_TOKEN => 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.',
+            Password::RESET_THROTTLED => 'Vui lòng đợi trước khi yêu cầu đặt lại mật khẩu lần nữa.',
+            default => 'Đã xảy ra lỗi. Vui lòng thử lại.',
+        };
     }
 }

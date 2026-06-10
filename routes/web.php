@@ -45,7 +45,6 @@ use App\Http\Controllers\Admin\PhanLoaiLanCanGomSuCtController;
 use App\Http\Controllers\Admin\PhanLoaiPhuKienNgoiCtController;
 use App\Http\Controllers\Admin\PhuKienNgoiController;
 use App\Http\Controllers\Admin\PhuKienNgoiCtController;
-use App\Http\Controllers\Admin\TacGiaController;
 use App\Http\Controllers\Admin\ThiCongController;
 use App\Http\Controllers\Admin\TinTucController;
 use App\Http\Controllers\Admin\TrangChuController;
@@ -443,13 +442,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{id}/edit', [TinTucController::class, 'edit'])->name('edit');
             Route::put('/{id}', [TinTucController::class, 'update'])->name('update');
             Route::delete('/{id}', [TinTucController::class, 'destroy'])->name('destroy');
-        });
-
-        Route::prefix('tac-gia')->name('tac-gia.')->group(function () {
-            Route::get('/', [TacGiaController::class, 'index'])->name('index');
-            Route::post('/', [TacGiaController::class, 'store'])->name('store');
-            Route::put('/{id}', [TacGiaController::class, 'update'])->name('update');
-            Route::delete('/{id}', [TacGiaController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('thi-cong')->name('thi-cong.')->group(function () {
