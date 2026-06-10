@@ -138,89 +138,12 @@
                     </div>
                 </div>
 
-                <!-- Template tính diện tích -->
-                <div class="flex flex-col lg:flex-row gap-2 lg:gap-4 items-start lg:items-end mb-6 lg:mb-0">
-                    <div class="hidden lg:flex w-full lg:w-[150px] shrink-0 pb-1 flex-col">
-                        <span class="font-semibold text-primary uppercase text-base">DIỆN TÍCH 1</span>
-                        <button class="text-[14px] text-secondary underline text-left font-bold w-fit ml-4 mt-1"
-                            style="display: none;">Loại bỏ</button>
-                    </div>
-                    <div class="flex-1 w-full flex flex-row lg:grid lg:grid-cols-12 gap-2 lg:gap-7 items-end">
-                        <div
-                            class="w-[111px] md:w-[111px] lg:w-auto shrink-0 col-span-12 lg:col-span-3 flex flex-col justify-end">
-                            <div class="flex items-center gap-2 lg:hidden mb-2 pl-2">
-                                <span class="font-semibold text-primary uppercase text-[11px] leading-tight">DIỆN TÍCH
-                                    1</span>
-                                <button class="text-[8px] text-secondary/70 underline italic font-bold"
-                                    style="display: none;">Loại bỏ</button>
-                            </div>
-                            <div class="relative">
-                                <select
-                                    class="w-full h-[30px] lg:h-[45px] px-2 lg:px-3 pr-5 lg:pr-6 border border-black/10 rounded-sm bg-transparent text-[9px] lg:text-[11px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
-                                    <option selected>HÌNH CHỮ NHẬT</option>
-                                    <option>HÌNH THANG</option>
-                                    <option>HÌNH TAM GIÁC</option>
-                                </select>
-                                <div
-                                    class="absolute right-1 lg:right-3 top-1/2 -translate-y-1/2 pointer-events-none text-secondary">
-                                    <svg class="w-2.5 h-2.5 lg:w-3 lg:h-3" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Các Input: Dài/Đáy Lớn, Rộng/Đáy Bé, Chiều Cao -->
-                        <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
-                            <label
-                                class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
-                                CHIỀU DÀI
-                                <span
-                                    class="block text-[7px] lg:text-[12px] font-normal italic normal-case text-secondary/70 mt-[2px] lg:mt-1 tracking-normal">Chiều
-                                    tính diềm mái</span>
-                            </label>
-                            <div class="relative">
-                                <input type="number" step="0.01" placeholder="0"
-                                    class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
-                                <span
-                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
-                            </div>
-                        </div>
-                        <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2">
-                            <label
-                                class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
-                                CHIỀU RỘNG
-                                <span
-                                    class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
-                            </label>
-                            <div class="relative">
-                                <input type="number" step="0.01" placeholder="0"
-                                    class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
-                                <span
-                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
-                            </div>
-                        </div>
-                        <div class="flex-1 lg:col-span-3 flex flex-col gap-1 lg:gap-2" style="display: none">
-                            <label
-                                class="text-[9px] lg:text-[16px] uppercase font-semibold text-primary text-center tracking-tight leading-none min-h-[16px] lg:min-h-auto">
-                                CHIỀU CAO
-                                <span
-                                    class="block text-[7px] lg:text-[12px] opacity-0 mt-[2px] lg:mt-1 tracking-normal">_</span>
-                            </label>
-                            <div class="relative">
-                                <input type="number" step="0.01" placeholder="0"
-                                    class="w-full h-[30px] lg:h-[45px] p-2 lg:p-3 border border-black/10 rounded-sm bg-transparent text-[12px] lg:text-base text-left pr-4 lg:pr-6 focus:border-secondary outline-none transition-colors" />
-                                <span
-                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-primary/40">m</span>
-                            </div>
-                        </div>
-                    </div>
+                <div data-weight-calculator-areas>
+                    <x-client.shared.shape-area-block :index="1" variant="weight" />
                 </div>
 
                 <div class="text-center">
-                    <button class="text-secondary font-semibold text-sm underline">+ Thêm diện tích</button>
+                    <button type="button" data-add-area class="text-secondary font-semibold text-sm underline">+ Thêm diện tích</button>
                 </div>
 
                 <!-- Tính hao hụt -->

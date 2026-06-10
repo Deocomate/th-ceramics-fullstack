@@ -20,44 +20,34 @@ const syncPurchaseQuantity = (quantity) => {
     });
 };
 
-const getVisibleNumberInputs = (block) =>
-    Array.from(block.querySelectorAll('input[type="number"]')).filter((input) => {
-        const wrapper = input.closest("[data-input-wrapper]") || input.closest(".flex-1") || input.parentElement;
+const DIEM_NOTE = '<span class="block text-[7px] md:text-[12px] font-normal italic normal-case text-[rgba(199,110,0,0.70)] md:text-secondary mt-0 md:mt-1 tracking-normal leading-[18px] md:leading-normal">Chiều tính diềm mái</span>';
+const LABEL_SPACER = '<span class="block text-[7px] md:text-[12px] opacity-0 mt-0 md:mt-1 tracking-normal leading-[18px] md:leading-normal">_</span>';
 
-        return wrapper?.style.display !== "none";
-    });
+const getShapeSelect = (block) => block.querySelector("[data-shape-select]") || block.querySelector("select");
 
-const getShapeType = (select) => (select?.value || select?.options[select.selectedIndex]?.text || "").toUpperCase();
+const getShapeType = (select) => {
+    const value = (select?.value || "").toLowerCase();
 
-const isRectangle = (type) => type.includes("CHỮ NHẬT") || type.includes("CHá»® NHáº¬T");
-const isTrapezoid = (type) => type.includes("THANG");
-const isTriangle = (type) => type.includes("TAM GI") || type.includes("TAM GIÃ");
-
-const calculateShapeArea = (block) => {
-    const select = block.querySelector("select");
-    const type = getShapeType(select);
-    const inputs = getVisibleNumberInputs(block);
-
-    if (isRectangle(type)) {
-        return parseNumber(inputs[0]?.value) * parseNumber(inputs[1]?.value);
+    if (value === "rectangle" || value === "trapezoid" || value === "triangle") {
+        return value;
     }
 
-    if (isTrapezoid(type)) {
-        return ((parseNumber(inputs[0]?.value) + parseNumber(inputs[1]?.value)) * parseNumber(inputs[2]?.value)) / 2;
+    const text = (select?.options[select.selectedIndex]?.text || "").toUpperCase();
+
+    if (text.includes("THANG")) {
+        return "trapezoid";
     }
 
-    if (isTriangle(type)) {
-        return (parseNumber(inputs[0]?.value) * parseNumber(inputs[1]?.value)) / 2;
+    if (text.includes("TAM GI")) {
+        return "triangle";
     }
 
-    return parseNumber(inputs[0]?.value) * parseNumber(inputs[1]?.value);
+    return "rectangle";
 };
 
-const calculateShapeLength = (block) => {
-    const inputs = getVisibleNumberInputs(block);
+const getDimension = (block, role) => parseNumber(block.querySelector(`[data-dimension="${role}"]`)?.value);
 
-    return parseNumber(inputs[0]?.value);
-};
+const getInputWrapper = (block, role) => block.querySelector(`[data-input-wrapper][data-input-role="${role}"]`);
 
 const setLabelHtml = (wrapper, html) => {
     const label = wrapper?.querySelector("label");
@@ -67,38 +57,85 @@ const setLabelHtml = (wrapper, html) => {
     }
 };
 
+const showWrapper = (wrapper) => wrapper?.style.removeProperty("display");
+const hideWrapper = (wrapper) => {
+    if (wrapper) {
+        wrapper.style.display = "none";
+    }
+};
+
+const calculateShapeArea = (block) => {
+    const shape = getShapeType(getShapeSelect(block));
+
+    if (shape === "trapezoid") {
+        return ((getDimension(block, "primary") + getDimension(block, "secondary")) * getDimension(block, "height")) / 2;
+    }
+
+    if (shape === "triangle") {
+        return (getDimension(block, "primary") * getDimension(block, "height")) / 2;
+    }
+
+    return getDimension(block, "primary") * getDimension(block, "secondary");
+};
+
+const calculateDiemLength = (block) => {
+    const shape = getShapeType(getShapeSelect(block));
+
+    if (shape === "trapezoid") {
+        return getDimension(block, "secondary");
+    }
+
+    return getDimension(block, "primary");
+};
+
 const applyShapeInputs = (block) => {
-    const select = block.querySelector("[data-shape-select]") || block.querySelector("select");
-    const type = getShapeType(select);
-    const wrappers = Array.from(block.querySelectorAll("[data-input-wrapper]"));
+    const shape = getShapeType(getShapeSelect(block));
+    const primary = getInputWrapper(block, "primary");
+    const secondary = getInputWrapper(block, "secondary");
+    const height = getInputWrapper(block, "height");
 
-    if (wrappers.length === 0) {
+    if (!primary || !secondary || !height) {
         return;
     }
 
-    if (isRectangle(type)) {
-        setLabelHtml(wrappers[0], 'CHIỀU DÀI <span class="block text-[7px] md:text-[12px] font-normal italic normal-case text-[rgba(199,110,0,0.70)] md:text-secondary mt-0 md:mt-1 tracking-normal leading-[18px] md:leading-normal">Chiều tính diềm mái</span>');
-        setLabelHtml(wrappers[1], 'CHIỀU RỘNG <span class="block text-[7px] md:text-[12px] opacity-0 mt-0 md:mt-1 tracking-normal leading-[18px] md:leading-normal">_</span>');
-        wrappers[1]?.style.removeProperty("display");
-        if (wrappers[2]) wrappers[2].style.display = "none";
+    if (shape === "trapezoid") {
+        setLabelHtml(primary, `ĐÁY BÉ ${LABEL_SPACER}`);
+        setLabelHtml(secondary, `ĐÁY LỚN ${DIEM_NOTE}`);
+        setLabelHtml(height, `CHIỀU CAO ${LABEL_SPACER}`);
+        showWrapper(primary);
+        showWrapper(secondary);
+        showWrapper(height);
         return;
     }
 
-    if (isTrapezoid(type)) {
-        setLabelHtml(wrappers[0], 'ĐÁY LỚN <span class="block text-[7px] md:text-[12px] font-normal italic normal-case text-[rgba(199,110,0,0.70)] md:text-secondary mt-0 md:mt-1 tracking-normal leading-[18px] md:leading-normal">Chiều tính diềm mái</span>');
-        setLabelHtml(wrappers[1], 'ĐÁY BÉ <span class="block text-[7px] md:text-[12px] opacity-0 mt-0 md:mt-1 tracking-normal leading-[18px] md:leading-normal">_</span>');
-        setLabelHtml(wrappers[2], 'CHIỀU CAO <span class="block text-[7px] md:text-[12px] opacity-0 mt-0 md:mt-1 tracking-normal leading-[18px] md:leading-normal">_</span>');
-        wrappers[1]?.style.removeProperty("display");
-        wrappers[2]?.style.removeProperty("display");
+    if (shape === "triangle") {
+        setLabelHtml(primary, `CHIỀU DÀI ${DIEM_NOTE}`);
+        setLabelHtml(height, `CHIỀU CAO ${LABEL_SPACER}`);
+        showWrapper(primary);
+        hideWrapper(secondary);
+        showWrapper(height);
         return;
     }
 
-    if (isTriangle(type)) {
-        setLabelHtml(wrappers[0], 'ĐÁY <span class="block text-[7px] md:text-[12px] font-normal italic normal-case text-[rgba(199,110,0,0.70)] md:text-secondary mt-0 md:mt-1 tracking-normal leading-[18px] md:leading-normal">Chiều tính diềm mái</span>');
-        if (wrappers[1]) wrappers[1].style.display = "none";
-        setLabelHtml(wrappers[2], 'CHIỀU CAO <span class="block text-[7px] md:text-[12px] opacity-0 mt-0 md:mt-1 tracking-normal leading-[18px] md:leading-normal">_</span>');
-        wrappers[2]?.style.removeProperty("display");
+    setLabelHtml(primary, `CHIỀU DÀI ${DIEM_NOTE}`);
+    setLabelHtml(secondary, `CHIỀU RỘNG ${LABEL_SPACER}`);
+    showWrapper(primary);
+    showWrapper(secondary);
+    hideWrapper(height);
+};
+
+const resetShapeBlock = (block) => {
+    const select = getShapeSelect(block);
+
+    if (select) {
+        select.value = "rectangle";
     }
+
+    block.querySelectorAll("[data-dimension]").forEach((input) => {
+        input.value = "";
+    });
+
+    applyShapeInputs(block);
 };
 
 const initQuantityCalculator = (section) => {
@@ -234,8 +271,7 @@ const initHaiVanMieuCalculator = (section) => {
     const extraLossCheckbox = section.querySelector("#extra-loss-hai-vm");
     const lossRadios = Array.from(section.querySelectorAll('input[name="loss-rate-hai-vm"]'));
     const getAreaBlocks = () => Array.from(section.querySelectorAll("[data-area-block]"));
-    const initialBlocks = getAreaBlocks();
-    const masterTemplate = (initialBlocks.find((block) => block.querySelector("[data-remove-area]")) || initialBlocks[initialBlocks.length - 1])?.cloneNode(true);
+    const masterTemplate = getAreaBlocks()[0]?.cloneNode(true);
     let noticeTimer;
 
     const getLossFactor = () => {
@@ -255,13 +291,17 @@ const initHaiVanMieuCalculator = (section) => {
             block.querySelectorAll("[data-area-title]").forEach((title) => {
                 title.textContent = `DIỆN TÍCH ${index + 1}`;
             });
+
+            block.querySelectorAll("[data-remove-area]").forEach((button) => {
+                button.classList.toggle("hidden", index === 0);
+            });
         });
     };
 
     const updateResults = () => {
         const totalArea = getAreaBlocks().reduce((sum, block) => sum + calculateShapeArea(block), 0);
-        const roundedArea = Math.ceil(totalArea);
-        const combinedFactor = getLossFactor() * getRoofFactor();
+        const roundedArea = Math.ceil(totalArea * getLossFactor());
+        const roofFactor = getRoofFactor();
         let qtyToSync = 0;
 
         if (totalAreaOutput) totalAreaOutput.textContent = `${formatNumber(roundedArea)} m²`;
@@ -269,7 +309,7 @@ const initHaiVanMieuCalculator = (section) => {
         rateOutputs.forEach((rateEl, index) => {
             const rateMatch = (rateEl.textContent || "").match(/([\d.,]+)/);
             const rate = rateMatch ? parseNumber(rateMatch[1]) : 0;
-            const quantity = Math.ceil(roundedArea * rate * combinedFactor);
+            const quantity = Math.ceil(roundedArea * rate * roofFactor);
 
             if (!valueOutputs[index]) return;
 
@@ -283,7 +323,7 @@ const initHaiVanMieuCalculator = (section) => {
 
     const wireBlockInputs = (block) => {
         block.querySelectorAll('input[type="number"]').forEach((input) => input.addEventListener("input", scheduleUpdate));
-        block.querySelector("[data-shape-select]")?.addEventListener("change", () => {
+        getShapeSelect(block)?.addEventListener("change", () => {
             applyShapeInputs(block);
             scheduleUpdate();
         });
@@ -306,9 +346,7 @@ const initHaiVanMieuCalculator = (section) => {
         if (!masterTemplate || !addAreaBtn?.parentElement) return;
 
         const newBlock = masterTemplate.cloneNode(true);
-        newBlock.querySelectorAll('input[type="number"]').forEach((input) => {
-            input.value = "";
-        });
+        resetShapeBlock(newBlock);
         addAreaBtn.parentElement.before(newBlock);
         setupBlock(newBlock);
         renumberAreas();
@@ -349,12 +387,12 @@ const initWeightCalculator = (section) => {
     const roofStyleSelect = section.querySelector("#roof-style");
     const tileTypeSelect = section.querySelector("#tile-type");
     const tileTypeOptions = Array.from(tileTypeSelect?.querySelectorAll("option[data-roof]") || []);
-    const areasContainer = section.querySelector(".space-y-4.col-span-1.lg\\:col-span-3") || section.querySelector(".space-y-4");
-    const addAreaBtn = Array.from(section.querySelectorAll("button")).find((button) => (button.textContent || "").includes("+"));
+    const areasContainer = section.querySelector("[data-weight-calculator-areas]");
+    const addAreaBtn = section.querySelector("[data-add-area]");
     const calculateBtn = section.querySelector("#calculate-btn");
     const extraLossCheckbox = section.querySelector("#extra-loss");
     const lossRadios = Array.from(section.querySelectorAll('input[name="loss-rate"]'));
-    const getAreaBlocks = () => Array.from(areasContainer?.children || []).filter((element) => element.classList.contains("flex") && element.querySelector("select") && element.querySelector('input[type="number"]'));
+    const getAreaBlocks = () => Array.from(areasContainer?.querySelectorAll("[data-area-block]") || []);
     const masterTemplate = getAreaBlocks()[0]?.cloneNode(true);
     let noticeTimer;
 
@@ -366,11 +404,13 @@ const initWeightCalculator = (section) => {
 
     const renumberAreas = () => {
         getAreaBlocks().forEach((block, index) => {
-            Array.from(block.querySelectorAll("span"))
-                .filter((span) => (span.textContent || "").toUpperCase().includes("DI"))
-                .forEach((span) => {
-                    span.textContent = `DIỆN TÍCH ${index + 1}`;
-                });
+            block.querySelectorAll("[data-area-title]").forEach((title) => {
+                title.textContent = `DIỆN TÍCH ${index + 1}`;
+            });
+
+            block.querySelectorAll("[data-remove-area]").forEach((button) => {
+                button.classList.toggle("hidden", index === 0);
+            });
         });
     };
 
@@ -380,11 +420,12 @@ const initWeightCalculator = (section) => {
 
         getAreaBlocks().forEach((block) => {
             totalArea += calculateShapeArea(block);
-            totalLength += calculateShapeLength(block);
+            totalLength += calculateDiemLength(block);
         });
 
-        const roundedArea = Math.ceil(totalArea);
-        const factor = getLossFactor();
+        const lossFactor = getLossFactor();
+        const roundedArea = Math.ceil(totalArea * lossFactor);
+        const roundedLength = Math.ceil(totalLength * lossFactor);
         const selectedTileOption = getSelectedTileOption();
         const roof = roofStyleSelect?.value || selectedTileOption?.dataset.roof || "";
         const tile = selectedTileOption?.dataset.tile || selectedTileOption?.textContent?.trim() || "";
@@ -399,9 +440,9 @@ const initWeightCalculator = (section) => {
             diemCoeff = parseNumber(row?.diem || "0");
         }
 
-        const ngoiAm = Math.ceil(roundedArea * factor * amCoeff);
-        const ngoiDuong = Math.ceil(roundedArea * factor * duongCoeff);
-        const diem = Math.ceil(totalLength * factor * diemCoeff);
+        const ngoiAm = Math.ceil(roundedArea * amCoeff);
+        const ngoiDuong = Math.ceil(roundedArea * duongCoeff);
+        const diem = Math.ceil(roundedLength * diemCoeff);
         const resAm = section.querySelector("#res-am");
         const resDuong = section.querySelector("#res-duong");
         const resDiem = section.querySelector("#res-diem");
@@ -422,7 +463,7 @@ const initWeightCalculator = (section) => {
 
         if (resDiem) {
             const spans = resDiem.querySelectorAll("span");
-            if (spans[1]) spans[1].textContent = `${formatNumber(totalLength)} md`;
+            if (spans[1]) spans[1].textContent = `${formatNumber(roundedLength)} md`;
             if (spans[2]) spans[2].textContent = diemCoeff > 0 ? `${diemCoeff} cặp/md` : "-- cặp/md";
             if (spans[3]) spans[3].textContent = `${formatNumber(diem)} cặp`;
         }
@@ -433,7 +474,7 @@ const initWeightCalculator = (section) => {
 
     const wireBlockInputs = (block) => {
         block.querySelectorAll('input[type="number"]').forEach((input) => input.addEventListener("input", scheduleUpdate));
-        block.querySelector("select")?.addEventListener("change", () => {
+        getShapeSelect(block)?.addEventListener("change", () => {
             applyShapeInputs(block);
             scheduleUpdate();
         });
@@ -442,10 +483,7 @@ const initWeightCalculator = (section) => {
     const setupBlock = (block) => {
         applyShapeInputs(block);
         wireBlockInputs(block);
-        block.querySelectorAll("button.underline").forEach((button) => {
-            if (!(button.textContent || "").includes("Lo")) return;
-
-            button.style.display = "block";
+        block.querySelectorAll("[data-remove-area]").forEach((button) => {
             button.addEventListener("click", (event) => {
                 event.preventDefault();
                 block.remove();
@@ -456,13 +494,11 @@ const initWeightCalculator = (section) => {
     };
 
     const addArea = () => {
-        if (!masterTemplate || !addAreaBtn?.parentElement) return;
+        if (!masterTemplate || !areasContainer) return;
 
         const newBlock = masterTemplate.cloneNode(true);
-        newBlock.querySelectorAll("input").forEach((input) => {
-            input.value = "";
-        });
-        addAreaBtn.parentElement.before(newBlock);
+        resetShapeBlock(newBlock);
+        areasContainer.appendChild(newBlock);
         setupBlock(newBlock);
         renumberAreas();
     };
@@ -524,4 +560,11 @@ const initProductCalculators = () => {
     document.querySelectorAll("[data-hai-vm-calculator]").forEach(initHaiVanMieuCalculator);
 };
 
-export { initProductCalculators };
+export {
+    applyShapeInputs,
+    calculateDiemLength,
+    calculateShapeArea,
+    getShapeType,
+    initProductCalculators,
+    resetShapeBlock,
+};
