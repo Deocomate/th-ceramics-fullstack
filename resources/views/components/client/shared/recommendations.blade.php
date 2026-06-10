@@ -50,7 +50,7 @@
                         </div>
 
                         <!-- Row 2: So sánh Giá -->
-                        <div class="flex gap-0 md:gap-[40px] group mobile-compare-row">
+                        <div class="flex gap-0 md:gap-[40px] border-t border-black/10 group mobile-compare-row">
                             <div class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-center sticky left-0 bg-background-secondary z-10">
                                 <span class="compare-cell-text">Giá</span>
                             </div>
@@ -232,16 +232,6 @@
                     font-family: Archivo, sans-serif !important;
                     font-size: 16px !important;
                     line-height: 40px !important;
-                }
-
-                /* Borders for sticky header cells to align with container borders and prevent double lines */
-                .recommendations-section .mobile-compare-row>div:first-child {
-                    border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
-                    border-bottom: none !important;
-                }
-
-                .recommendations-section .mobile-compare-row:last-child>div:first-child {
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
                 }
 
                 /* Font weights for header and rows */
