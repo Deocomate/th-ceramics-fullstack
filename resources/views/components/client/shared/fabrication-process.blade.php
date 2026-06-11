@@ -16,6 +16,10 @@
             ['image' => null, 'aspect' => 'aspect-[4/6]'],
             ['image' => 'assets/images/cong-doan-02.jpg', 'aspect' => 'aspect-[4/6]'],
         ]);
+
+    $slideWidthClass = fn(string $aspect) => str_contains($aspect, '11/10')
+        ? 'w-[calc(320px*11/10)] md:w-[calc(420px*11/10)] lg:w-[calc(509px*11/10)]'
+        : 'w-[calc(320px*4/6)] md:w-[calc(420px*4/6)] lg:w-[calc(509px*4/6)]';
 @endphp
 
 <section class="w-full py-8 md:py-16 bg-background-secondary overflow-hidden" data-aos="fade-up">
@@ -28,7 +32,7 @@
             <div class="swiper fabrication-slider overflow-visible h-[320px] md:h-[420px] lg:h-[509px]">
                 <div class="swiper-wrapper">
                     @foreach ($slides as $slide)
-                        <div class="swiper-slide !w-auto h-full transition-opacity duration-300">
+                        <div class="swiper-slide h-full shrink-0 {{ $slideWidthClass($slide['aspect']) }}">
                             <div
                                 class="h-full {{ $slide['aspect'] }} overflow-hidden rounded-sm {{ $slide['image'] ? 'bg-gray-200' : 'bg-[#E5E5E5]' }}">
                                 @if ($slide['image'])
@@ -74,28 +78,54 @@
         class="max-w-[95vw] max-h-[90vh] object-contain opacity-0 scale-95 transition-all duration-300 ease-out will-change-transform" />
 </div>
 
+@push('styles')
+    <style>
+        .fabrication-slider .swiper-wrapper {
+            transition-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        .fabrication-slider .swiper-slide {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+    </style>
+@endpush
+
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const fabricationSlider = document.querySelector(".fabrication-slider");
-            if (fabricationSlider) {
+            if (fabricationSlider && typeof Swiper !== "undefined" && fabricationSlider.dataset.fabricationInitDone !== "true") {
                 const fabricationRoot = fabricationSlider.closest(".group") || document;
                 const fabricationNextEl = fabricationRoot.querySelector(".fabrication-next");
                 const fabricationPrevEl = fabricationRoot.querySelector(".fabrication-prev");
                 const fabricationPaginationEl = fabricationRoot.querySelector(".fabrication-pagination");
+                const slideCount = fabricationSlider.querySelectorAll(".swiper-slide").length;
+                const canLoop = slideCount >= 3;
 
-                new Swiper(".fabrication-slider", {
+                const syncFabricationSwiper = (swiper) => {
+                    swiper.update();
+                    if (swiper.params.loop) {
+                        swiper.loopFix();
+                    }
+                };
+
+                const fabricationSwiper = new Swiper(fabricationSlider, {
                     slidesPerView: "auto",
                     spaceBetween: 20,
                     centeredSlides: true,
-                    loop: true,
+                    loop: canLoop,
+                    loopAdditionalSlides: slideCount,
+                    loopPreventsSliding: false,
+                    watchSlidesProgress: true,
+                    roundLengths: true,
+                    speed: 500,
+                    grabCursor: true,
+                    slidesPerGroup: 1,
                     pagination: {
                         el: fabricationPaginationEl,
                         clickable: true,
-                        renderBullet: function(index, className) {
-                            return '<span class="' + className +
-                                ' w-2 h-2 rounded-full bg-secondary/30 transition-all cursor-pointer mx-[3.5px] inline-block"></span>';
-                        },
                     },
                     navigation: {
                         nextEl: fabricationNextEl,
@@ -103,20 +133,56 @@
                     },
                     breakpoints: {
                         768: {
-                            spaceBetween: 40
+                            spaceBetween: 40,
                         },
                         1280: {
-                            spaceBetween: 50
+                            spaceBetween: 50,
                         },
                     },
                     on: {
-                        init: function() {
-                            setTimeout(() => {
-                                if (typeof AOS !== "undefined") AOS.refresh();
-                            }, 500);
+                        init(swiper) {
+                            requestAnimationFrame(() => syncFabricationSwiper(swiper));
+                        },
+                        resize(swiper) {
+                            syncFabricationSwiper(swiper);
                         },
                     },
                 });
+
+                fabricationSlider.dataset.fabricationInitDone = "true";
+
+                const slideImages = fabricationSlider.querySelectorAll("img");
+                if (slideImages.length) {
+                    let loadedCount = 0;
+                    const onAllImagesReady = () => syncFabricationSwiper(fabricationSwiper);
+
+                    slideImages.forEach((image) => {
+                        if (image.complete) {
+                            loadedCount += 1;
+                            if (loadedCount === slideImages.length) {
+                                onAllImagesReady();
+                            }
+                            return;
+                        }
+
+                        const markLoaded = () => {
+                            loadedCount += 1;
+                            if (loadedCount === slideImages.length) {
+                                onAllImagesReady();
+                            }
+                        };
+
+                        image.addEventListener("load", markLoaded, { once: true });
+                        image.addEventListener("error", markLoaded, { once: true });
+                    });
+                }
+
+                setTimeout(() => {
+                    if (typeof AOS !== "undefined") {
+                        AOS.refresh();
+                    }
+                    syncFabricationSwiper(fabricationSwiper);
+                }, 500);
             }
 
             const lightbox = document.getElementById("fabrication-lightbox");
@@ -126,7 +192,9 @@
             if (!lightbox || !lightboxImage || !closeButton) return;
 
             const slideImages = document.querySelectorAll(".fabrication-slider .swiper-slide img");
-            if (!slideImages.length) return;
+            if (!slideImages.length) {
+                return;
+            }
 
             const closeLightbox = () => {
                 lightbox.classList.remove("opacity-100");
