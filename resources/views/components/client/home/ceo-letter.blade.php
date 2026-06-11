@@ -62,35 +62,33 @@
     'description' => null,
     'items' => null,])
 <section class="bg-primary text-white relative overflow-hidden">
-  <img src="{{ asset('assets/images/background-decorate.svg') }}" alt="" class="hidden lg:block absolute -bottom-40 -right-20 w-[560px] h-[541px] opacity-60 pointer-events-none">
-
-  <div class="hidden lg:block py-16 lg:py-20">
-    <div class="w-[85%] max-w-[1320px] mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div class="flex flex-col justify-center lg:max-w-xl" data-aos="fade-right">
-          <h2 class="text-secondary text-2xl lg:text-4xl font-bold mb-8 uppercase">Lời tri ân</h2>
+  <div class="hidden lg:block py-[40px] relative">
+    <div class="max-w-[1600px] mx-auto px-[60px] xl:px-[140px] relative min-h-[740px]">
+      <div class="flex flex-col lg:flex-row gap-[40px] xl:gap-[93.78px] justify-between lg:items-stretch items-start">
+        <div class="w-full lg:w-[574px] shrink-0" data-aos="fade-right">
+          <h2 class="text-[#BC5A13] text-[36px] font-bold mb-[10px] uppercase leading-[62.50px]" style="font-family: 'Archivo', sans-serif;">Lời tri ân</h2>
           @if($trangChu && !empty($trangChu->loi_tri_an))
             @foreach($trangChu->loi_tri_an as $paragraph)
-            <p class="text-neutral-1 text-sm/5 lg:text-base/7 font-normal tracking-wider">
+            <p class="text-white text-[16px] font-normal leading-[28px] tracking-[0.32px] @if(!$loop->last) mb-[30px] @endif" style="font-family: 'Roboto', sans-serif;">
               {{ $paragraph }}
             </p>
-            @if(!$loop->last)<br/><br/>@endif
             @endforeach
           @endif
-          <div class="flex flex-col items-start">
-            <div class="flex flex-col items-center">
-              <img src="{{ asset('assets/images/sign.png') }}" alt="Signature">
-              <p class="text-white font-bold text-lg mt-2">Giám đốc Vũ Mạnh Hải</p>
-            </div>
+          <div class="flex flex-col items-start mt-[30px]">
+            <img src="{{ asset('assets/images/sign.png') }}" alt="Signature" class="w-[272.34px] h-[163.60px] object-contain">
+            <p class="text-[#EFE4DE] font-bold text-[20px] leading-[25px] ml-[40px] mt-[4px]" style="font-family: 'Roboto', sans-serif;">Giám đốc Vũ Mạnh Hải</p>
           </div>
         </div>
-        <div class="relative" data-aos="fade-left" data-aos-delay="200">
-          <img
-            src="{{ $trangChu?->loi_tri_an_anh
-                ? (Str::startsWith($trangChu->loi_tri_an_anh, 'assets/') ? asset($trangChu->loi_tri_an_anh) : asset('storage/' . $trangChu->loi_tri_an_anh))
-                : asset('assets/images/ceo.jpg') }}"
-            alt="Director" class="w-full rounded-lg shadow-lg"
-          >
+        <div class="relative w-full lg:w-[643.44px] lg:self-stretch shrink-0 flex lg:items-center" data-aos="fade-left" data-aos-delay="200">
+          <div class="relative w-full h-[643.44px]">
+            <img src="{{ asset('assets/images/background-decorate.svg') }}" alt="" class="absolute right-[-235px] top-[400px] w-[550px] h-[550px] opacity-50 pointer-events-none z-0 max-w-none">
+            <img
+              src="{{ $trangChu?->loi_tri_an_anh
+                  ? (Str::startsWith($trangChu->loi_tri_an_anh, 'assets/') ? asset($trangChu->loi_tri_an_anh) : asset('storage/' . $trangChu->loi_tri_an_anh))
+                  : asset('assets/images/ceo.jpg') }}"
+              alt="Director" class="relative z-10 w-full h-full object-cover rounded-[7px] shadow-[0px_7px_4px_rgba(0,0,0,0.25)]"
+            >
+          </div>
         </div>
       </div>
     </div>

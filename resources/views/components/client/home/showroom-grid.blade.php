@@ -36,7 +36,7 @@
 
     <div class="mt-8 md:mt-12 flex flex-col items-center" data-aos="fade-up" data-aos-delay="400">
       @if($trangChu?->showroom_noidung)
-      <p class="text-white lg:text-[#EFE4DE] text-[12px] md:text-[20px] lg:text-[26px] font-['Roboto'] italic font-normal leading-[20px] md:leading-[32px] lg:leading-[43px] text-center max-w-[1142px] mx-auto tracking-[0.52px] break-words">
+      <p class="text-white lg:text-[#EFE4DE] text-[12px] md:text-[20px] lg:text-[26px] italic font-light leading-[20px] md:leading-[32px] lg:leading-[43px] text-center max-w-[1142px] mx-auto tracking-[0.52px] break-words" style="font-family: 'Roboto', sans-serif;">
         {{ $trangChu->showroom_noidung }}
       </p>
       @endif

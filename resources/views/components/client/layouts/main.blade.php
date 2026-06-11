@@ -24,8 +24,8 @@
                         primary: "#2E2F2A",
                         secondary: "#C76E00",
                         textPrimary: "#2E2F2A",
-                        neutral: { 1: "#EFE4DE", 2: "#F5EDE7" },
-                        background: { primary: "#FFF", secondary: "#EFE4DE" },
+                        neutral: { 1: "#EFE4DE", 2: "#F5EDE8" },
+                        background: { primary: "#FFF", secondary: "#F5EDE8" },
                     },
                     fontFamily: {
                         archivo: ['"Archivo"', "sans-serif"],

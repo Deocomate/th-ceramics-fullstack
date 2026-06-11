@@ -305,7 +305,7 @@
     <x-client.shared.journey-video :hide-title="true" />
 
     <!-- Nâng tầm giá trị nghệ thuật Section -->
-    <section class="max-w-[1320px] w-[85%] mx-auto md:pb-20" data-aos="fade-up">
+    <section class="max-w-[1320px] w-[85%] mx-auto md:pb-10" data-aos="fade-up">
         <h2
             class="font-archivo text-[20px] md:text-[32px] font-semibold uppercase text-secondary leading-[36px] md:leading-[45px] mb-8 md:mb-12 text-left">
             Nâng tầm giá trị nghệ thuật
@@ -364,7 +364,7 @@
     </section>
 
     <!-- Dấu ấn trên những công trình Section -->
-    <section class="w-full overflow-hidden mt-12 md:mt-24 pb-12" data-aos="fade-up">
+    <section class="w-full overflow-hidden mt-12 pb-12" data-aos="fade-up">
         <!-- Header/Title -->
         <div class="max-w-[1320px] w-[85%] mx-auto mb-[21px] md:mb-12">
             <h2
@@ -476,8 +476,7 @@
     </section>
 
     <!-- FAQ Section -->
-    <section
-        class="w-full relative pt-[40px] pb-20 md:pt-[150px] md:pb-[120px] bg-background-secondary overflow-hidden"
+    <section class="w-full relative pt-[40px] pb-20 md:pb-[120px] bg-background-secondary overflow-hidden"
         data-aos="fade-up">
         <img src="{{ asset('assets/images/gtt-decorate-left.svg') }}"
             class="absolute top-[38%] -translate-y-1/3 md:left-[-5rem] -left-1/2 w-[42%] object-contain opacity-80 pointer-events-none z-0"

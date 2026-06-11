@@ -558,8 +558,6 @@
   </div>
 </section>
 
-<x-client.shared.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" />
-
 <div class="ngoi-hai-journey-scope">
   <x-client.shared.journey-video :video="$config->video ?? null" />
 </div>
@@ -572,11 +570,11 @@
 <section class="w-full relative pb-[65px] md:pb-32 bg-background-secondary overflow-hidden" data-aos="fade-up">
   <!-- Background Decoration -->
   <img src="{{ asset('assets/images/background-decorate-03.svg') }}"
-    class="absolute top-[20%] -translate-y-1/2 md:left-4 -left-[20%] md:translate-x-[10%] translate-x-0 w-auto object-contain opacity-100 pointer-events-none z-0"
-    alt="" />
+       class="absolute top-[20%] -translate-y-1/2 left-0 -translate-x-[35%] xl:-translate-x-[20%] w-auto max-h-[85%] object-contain opacity-100 pointer-events-none z-0"
+       alt="" />
   <img src="{{ asset('assets/images/background-decorate-02.svg') }}"
-    class="absolute md:top-[62%] top-[80%] -translate-y-1/2 right-0 translate-x-[60%] w-auto object-contain opacity-50 pointer-events-none z-0"
-    alt="" />
+       class="absolute top-[80%] -translate-y-1/2 right-0 translate-x-[35%] xl:translate-x-[20%] w-auto max-h-[85%] object-contain opacity-50 pointer-events-none z-0"
+       alt="" />
 
   <div class="ngoi-hai-faq-scope">
     <x-client.shared.faq-accordion />

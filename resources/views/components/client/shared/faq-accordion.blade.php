@@ -7,9 +7,9 @@
     </div>
 
     <div class="bg-white px-6 md:px-10 py-8 shadow-lg relative" data-aos="fade-up" data-aos-delay="200">
-        <div class="faq-item border-b border-gray-200 pb-10 mb-2">
+        <div class="faq-item border-b border-gray-200 group active">
             <button
-                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none pt-[30px] pb-[30px] group-[.active]:pb-[12px]">
                 <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Showroom của Gốm sứ Thanh
                     Hải ở đâu?</span>
                 <span
@@ -20,7 +20,7 @@
                 </span>
             </button>
             <div
-                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed block overflow-hidden transition-all duration-300">
+                class="faq-content text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed block overflow-hidden transition-all duration-300 pb-[30px]">
                 <p class="mb-2">
                     <span class="font-bold text-textPrimary">Trả lời:</span> Chúng tôi chỉ
                     có duy nhất 1 showroom tại địa chỉ: Số 18 Phố Gốm - Giang Cao - Bát
@@ -33,9 +33,9 @@
             </div>
         </div>
 
-        <div class="faq-item border-b border-gray-200 pb-10 mb-2">
+        <div class="faq-item border-b border-gray-200 group">
             <button
-                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none pt-[30px] pb-[30px] group-[.active]:pb-[12px]">
                 <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Tôi có thể đặt màu sắc và
                     mẫu mã theo yêu cầu riêng không?</span>
                 <span
@@ -46,7 +46,7 @@
                 </span>
             </button>
             <div
-                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300">
+                class="faq-content text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300 pb-[30px]">
                 <p>
                     <span class="font-bold text-textPrimary">Trả lời:</span> Vui lòng liên
                     hệ với chúng tôi để biết thêm chi tiết về việc đặt màu sắc và mẫu mã
@@ -55,9 +55,9 @@
             </div>
         </div>
 
-        <div class="faq-item border-b border-gray-200 pb-10 mb-2">
+        <div class="faq-item border-b border-gray-200 group">
             <button
-                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none pt-[30px] pb-[30px] group-[.active]:pb-[12px]">
                 <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Tôi có thể tham quan
                     xưởng sản xuất hay không?</span>
                 <span
@@ -68,7 +68,7 @@
                 </span>
             </button>
             <div
-                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300">
+                class="faq-content text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300 pb-[30px]">
                 <p>
                     <span class="font-bold text-textPrimary">Trả lời:</span> Quý khách
                     hoàn toàn có thể tham quan xưởng sản xuất của chúng tôi. Vui lòng liên
@@ -77,9 +77,9 @@
             </div>
         </div>
 
-        <div class="faq-item border-b border-gray-200 pb-10 mb-2">
+        <div class="faq-item border-b border-gray-200 group">
             <button
-                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none pt-[30px] pb-[30px] group-[.active]:pb-[12px]">
                 <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Chi phí vận chuyển và
                     phạm vi giao hàng như thế nào?</span>
                 <span
@@ -90,7 +90,7 @@
                 </span>
             </button>
             <div
-                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300">
+                class="faq-content text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300 pb-[30px]">
                 <p>
                     <span class="font-bold text-textPrimary">Trả lời:</span> Chúng tôi
                     giao hàng toàn quốc. Chi phí vận chuyển sẽ phụ thuộc vào khối lượng
@@ -99,9 +99,9 @@
             </div>
         </div>
 
-        <div class="faq-item mb-8">
+        <div class="faq-item border-b border-gray-200 group">
             <button
-                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none">
+                class="faq-button w-full flex justify-between items-center text-left font-bold text-textPrimary hover:text-secondary transition-colors focus:outline-none pt-[30px] pb-[30px] group-[.active]:pb-[12px]">
                 <span class="text-[14px] leading-[21px] md:text-[18px] md:leading-normal pr-4">Đặc tính thủ công của
                     ngói âm dương cần lưu ý gì?</span>
                 <span
@@ -112,7 +112,7 @@
                 </span>
             </button>
             <div
-                class="faq-content mt-4 text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300">
+                class="faq-content text-gray-600 text-[14px] leading-[22.75px] md:text-[18px] md:leading-relaxed hidden overflow-hidden transition-all duration-300 pb-[30px]">
                 <p>
                     <span class="font-bold text-textPrimary">Trả lời:</span> Ngói thủ công
                     mang vẻ đẹp độc bản, màu sắc có độ chuyển tự nhiên do nhiệt độ lò,
@@ -165,15 +165,18 @@
                                 otherIcon.classList.replace("text-white",
                                     "text-gray-500");
                             }
+                            otherItem.classList.remove("active");
                         });
 
                         if (isOpen) {
                             content.classList.add("hidden");
+                            item.classList.remove("active");
                             icon.classList.add("rotate-180");
                             icon.classList.replace("bg-textPrimary", "bg-gray-200");
                             icon.classList.replace("text-white", "text-gray-500");
                         } else {
                             content.classList.remove("hidden");
+                            item.classList.add("active");
                             icon.classList.remove("rotate-180");
                             icon.classList.replace("bg-gray-200", "bg-textPrimary");
                             icon.classList.replace("text-gray-500", "text-white");

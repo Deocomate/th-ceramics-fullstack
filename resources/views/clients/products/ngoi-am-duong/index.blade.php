@@ -37,7 +37,7 @@
                 alt="Ngói Âm Dương Banner" class="w-full h-full object-cover object-bottom" />
             <div class="absolute inset-0 bg-black/70"></div>
             <div
-                class="absolute bottom-0 left-0 right-0 h-3/5 md:h-3/5 bg-[linear-gradient(to_top,#EFE4DE_10%,white_25%,white_60%,transparent_100%)]">
+                class="absolute bottom-0 left-0 right-0 h-3/5 md:h-3/5 bg-[linear-gradient(to_top,#F5EDE8_10%,white_25%,white_60%,transparent_100%)]">
             </div>
         </div>
 
@@ -49,7 +49,7 @@
                     data-aos="fade-up" data-aos-duration="1000">
                     Ngói Âm Dương
                 </h1>
-                <p class="font-italianno text-[30px] leading-[37.5px] md:text-5xl lg:text-[48px] md:leading-tight text-white/80 drop-shadow-md max-w-4xl mx-auto text-nowrap"
+                <p class="font-italianno text-[30px] leading-[37.5px] md:text-5xl lg:text-[48px] lg:leading-[45px] lg:tracking-[0.96px] text-white/80 lg:text-white drop-shadow-md lg:drop-shadow-none max-w-4xl mx-auto text-nowrap"
                     data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
                     "Chưng cất tinh đất, tôi luyện qua lửa<br />Thanh Hải kiến tạo dáng hình di sản trong<br
                         class="block md:hidden" />
@@ -135,10 +135,10 @@
     <!-- SECTION 6: FAQ -->
     <section class="w-full relative pb-20 md:pb-32 bg-background-secondary overflow-hidden" data-aos="fade-up">
         <img src="{{ asset('assets/images/background-decorate-03.svg') }}"
-            class="absolute top-[20%] -translate-y-1/2 md:left-4 -left-[20%] md:translate-x-[10%] translate-x-0 w-auto object-contain opacity-100 pointer-events-none z-0"
+            class="absolute top-[20%] -translate-y-1/2 left-0 -translate-x-[35%] xl:-translate-x-[20%] w-auto max-h-[85%] object-contain opacity-100 pointer-events-none z-0"
             alt="" />
         <img src="{{ asset('assets/images/background-decorate-02.svg') }}"
-            class="absolute md:top-[62%] top-[80%] -translate-y-1/2 right-0 translate-x-[60%] w-auto object-contain opacity-50 pointer-events-none z-0"
+            class="absolute top-[80%] -translate-y-1/2 right-0 translate-x-[35%] xl:translate-x-[20%] w-auto max-h-[85%] object-contain opacity-50 pointer-events-none z-0"
             alt="" />
         <x-client.shared.faq-accordion />
     </section>
