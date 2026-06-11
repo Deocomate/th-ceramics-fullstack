@@ -5,6 +5,22 @@
   const PRELOAD_AHEAD = 5;
   const PRELOAD_BEHIND = 1;
   const BACKGROUND_CONCURRENCY = 2;
+  const UI_CHROME_HEIGHT = 128;
+  const ZOOM_MIN = 1.0;
+  const ZOOM_MAX = 2.0;
+  const ZOOM_STEP = 0.25;
+
+  let currentZoom = ZOOM_MIN;
+  let panX = 0;
+  let panY = 0;
+
+  let pageFlip = null;
+  let renderer = null;
+  let pdfDoc = null;
+  let flipPlan = [];
+  let maxUnitW = 0;
+  let maxUnitH = 0;
+  let totalPdfPages = 0;
 
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -39,21 +55,51 @@
       }
     }
 
-    return { flipPlan, maxUnitW, maxUnitH };
+    return { flipPlan, maxUnitW, maxUnitH, totalPdfPages: pdf.numPages };
   }
 
   function calcFlipDimensions(maxUnitW, maxUnitH) {
     const isMobile = window.innerWidth < 768;
     const maxW = isMobile
       ? window.innerWidth * 0.88
-      : Math.min(window.innerWidth * 0.42, 520);
-    const maxH = window.innerHeight * 0.82;
+      : Math.min(window.innerWidth * 0.46, 800);
+    const maxH = (window.innerHeight - UI_CHROME_HEIGHT) * (isMobile ? 0.88 : 0.90);
     const scale = Math.min(maxW / maxUnitW, maxH / maxUnitH);
 
     return {
       flipW: Math.round(maxUnitW * scale),
       flipH: Math.round(maxUnitH * scale),
     };
+  }
+
+  function formatPageDisplay(flipPlan, currentIndex, isPortrait) {
+    const entry = flipPlan[currentIndex];
+    if (!entry) {
+      return '1';
+    }
+
+    if (isPortrait || currentIndex === 0) {
+      return String(entry.pdfPageNumber);
+    }
+
+    if (entry.side === 'left') {
+      const rightEntry = flipPlan[currentIndex + 1];
+      if (rightEntry?.side === 'right' && rightEntry.pdfPageNumber === entry.pdfPageNumber) {
+        return String(entry.pdfPageNumber);
+      }
+      if (rightEntry) {
+        return entry.pdfPageNumber + '-' + rightEntry.pdfPageNumber;
+      }
+    }
+
+    if (entry.side === 'right') {
+      const leftEntry = flipPlan[currentIndex - 1];
+      if (leftEntry?.side === 'left' && leftEntry.pdfPageNumber === entry.pdfPageNumber) {
+        return String(entry.pdfPageNumber);
+      }
+    }
+
+    return String(entry.pdfPageNumber);
   }
 
   function renderPageToCanvas(page, canvas, entry, flipW, flipH) {
@@ -215,7 +261,273 @@
 
   function showError(spinner, message) {
     spinner.innerHTML =
-      '<p style="color: #f87171;">' + message + '</p>';
+      '<p class="text-red-500 text-sm font-medium">' + message + '</p>';
+  }
+
+  function setupControls(pageFlip, flipPlan, totalPdfPages, flipW, flipH) {
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const pageNumEl = document.getElementById('page-num');
+    const pageCountEl = document.getElementById('page-count');
+    const zoomInBtn = document.getElementById('zoom-in-btn');
+    const zoomOutBtn = document.getElementById('zoom-out-btn');
+    const zoomLevelEl = document.getElementById('zoom-level');
+    const zoomSlider = document.getElementById('zoom-slider');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const fullscreenIcon = document.getElementById('fullscreen-icon');
+    const flipbookEl = document.getElementById('flipbook');
+    const zoomWrapEl = document.getElementById('flipbook-zoom-wrap');
+    const viewportEl = document.getElementById('flipbook-viewport');
+
+    if (!flipbookEl || !viewportEl || !zoomWrapEl) {
+      return;
+    }
+
+    let currentZoom = ZOOM_MIN;
+    let panX = 0;
+    let panY = 0;
+    const isPortrait = window.innerWidth < 768;
+
+    if (pageCountEl) {
+      pageCountEl.textContent = String(totalPdfPages);
+    }
+
+    function updateNavButtons() {
+      const currentIndex = pageFlip.getCurrentPageIndex();
+      const lastIndex = pageFlip.getPageCount() - 1;
+
+      if (prevBtn) {
+        prevBtn.disabled = currentIndex <= 0;
+      }
+      if (nextBtn) {
+        nextBtn.disabled = currentIndex >= lastIndex;
+      }
+    }
+
+    function updatePageNumber(currentIndex) {
+      if (!pageNumEl) {
+        return;
+      }
+
+      pageNumEl.textContent = formatPageDisplay(
+        flipPlan,
+        currentIndex,
+        isPortrait
+      );
+    }
+
+    function applyZoom() {
+      const isZoomed = currentZoom > ZOOM_MIN;
+
+      if (isZoomed) {
+        const bookWidth = isPortrait ? flipW : (flipW * 2);
+        const zoomedWidth = Math.round(bookWidth * currentZoom);
+        const zoomedHeight = Math.round(flipH * currentZoom);
+
+        const viewportWidth = viewportEl.clientWidth;
+        const viewportHeight = viewportEl.clientHeight;
+
+        // Constrain panX and panY
+        if (zoomedWidth > viewportWidth) {
+          const maxPanX = (zoomedWidth - viewportWidth) / 2;
+          panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
+        } else {
+          panX = 0;
+        }
+
+        if (zoomedHeight > viewportHeight) {
+          const maxPanY = (zoomedHeight - viewportHeight) / 2;
+          panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
+        } else {
+          panY = 0;
+        }
+
+        flipbookEl.style.transformOrigin = 'center center';
+        flipbookEl.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + currentZoom + ')';
+      } else {
+        panX = 0;
+        panY = 0;
+        flipbookEl.style.transform = '';
+        flipbookEl.style.transformOrigin = '';
+      }
+
+      if (zoomLevelEl) {
+        zoomLevelEl.textContent = Math.round(currentZoom * 100) + '%';
+      }
+
+      if (zoomSlider) {
+        zoomSlider.value = String(Math.round(currentZoom * 100));
+      }
+
+      viewportEl.classList.toggle('is-zoomed', isZoomed);
+      flipbookEl.style.pointerEvents = isZoomed ? 'none' : '';
+
+      if (zoomInBtn) {
+        zoomInBtn.disabled = currentZoom >= ZOOM_MAX;
+        zoomInBtn.style.opacity = currentZoom >= ZOOM_MAX ? '0.35' : '';
+      }
+      if (zoomOutBtn) {
+        zoomOutBtn.disabled = currentZoom <= ZOOM_MIN;
+        zoomOutBtn.style.opacity = currentZoom <= ZOOM_MIN ? '0.35' : '';
+      }
+    }
+
+    function goPrev() {
+      if (currentZoom > ZOOM_MIN) {
+        return;
+      }
+      pageFlip.flipPrev();
+    }
+
+    function goNext() {
+      if (currentZoom > ZOOM_MIN) {
+        return;
+      }
+      pageFlip.flipNext();
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', goPrev);
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', goNext);
+    }
+
+    window.addEventListener('keydown', function (event) {
+      if (currentZoom > ZOOM_MIN) {
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        goPrev();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        goNext();
+      }
+    });
+
+    if (zoomInBtn) {
+      zoomInBtn.addEventListener('click', function () {
+        currentZoom = Math.min(ZOOM_MAX, currentZoom + ZOOM_STEP);
+        applyZoom();
+      });
+    }
+
+    if (zoomOutBtn) {
+      zoomOutBtn.addEventListener('click', function () {
+        currentZoom = Math.max(ZOOM_MIN, currentZoom - ZOOM_STEP);
+        applyZoom();
+      });
+    }
+
+    if (zoomSlider) {
+      zoomSlider.addEventListener('input', function (event) {
+        currentZoom = parseFloat(event.target.value) / 100;
+        applyZoom();
+      });
+    }
+
+    function updateFullscreenIcon() {
+      if (!fullscreenIcon) {
+        return;
+      }
+
+      const isFs = !!document.fullscreenElement;
+      fullscreenIcon.setAttribute('data-lucide', isFs ? 'minimize' : 'maximize');
+
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    }
+
+    if (fullscreenBtn) {
+      fullscreenBtn.addEventListener('click', function () {
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        } else {
+          document.documentElement.requestFullscreen();
+        }
+      });
+    }
+
+    document.addEventListener('fullscreenchange', updateFullscreenIcon);
+
+    let isPanning = false;
+    let panStartX = 0;
+    let panStartY = 0;
+    let startPanX = 0;
+    let startPanY = 0;
+
+    viewportEl.addEventListener('mousedown', function (event) {
+      if (currentZoom <= ZOOM_MIN || event.button !== 0) {
+        return;
+      }
+
+      isPanning = true;
+      panStartX = event.clientX;
+      panStartY = event.clientY;
+      startPanX = panX;
+      startPanY = panY;
+      viewportEl.classList.add('is-panning');
+      event.preventDefault();
+    });
+
+    window.addEventListener('mousemove', function (event) {
+      if (!isPanning) {
+        return;
+      }
+
+      const dx = event.clientX - panStartX;
+      const dy = event.clientY - panStartY;
+      panX = startPanX + dx;
+      panY = startPanY + dy;
+      applyZoom();
+    });
+
+    window.addEventListener('mouseup', function () {
+      if (isPanning) {
+        isPanning = false;
+        viewportEl.classList.remove('is-panning');
+      }
+    });
+
+    viewportEl.addEventListener('touchstart', function (event) {
+      if (currentZoom <= ZOOM_MIN || event.touches.length !== 1) {
+        return;
+      }
+
+      isPanning = true;
+      panStartX = event.touches[0].clientX;
+      panStartY = event.touches[0].clientY;
+      startPanX = panX;
+      startPanY = panY;
+    }, { passive: true });
+
+    viewportEl.addEventListener('touchmove', function (event) {
+      if (!isPanning || event.touches.length !== 1) {
+        return;
+      }
+
+      const dx = event.touches[0].clientX - panStartX;
+      const dy = event.touches[0].clientY - panStartY;
+      panX = startPanX + dx;
+      panY = startPanY + dy;
+      applyZoom();
+    }, { passive: true });
+
+    viewportEl.addEventListener('touchend', function () {
+      isPanning = false;
+    });
+
+    pageFlip.on('flip', function (event) {
+      updatePageNumber(event.data);
+      updateNavButtons();
+    });
+
+    updatePageNumber(pageFlip.getCurrentPageIndex());
+    updateNavButtons();
+    applyZoom();
   }
 
   async function initCatalogFlipbook(pdfUrl) {
@@ -227,9 +539,23 @@
     }
 
     try {
-      const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
-      const { flipPlan, maxUnitW, maxUnitH } = await analyzePdf(pdf);
+      pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
+      const analysis = await analyzePdf(pdfDoc);
+      flipPlan = analysis.flipPlan;
+      maxUnitW = analysis.maxUnitW;
+      maxUnitH = analysis.maxUnitH;
+      totalPdfPages = analysis.totalPdfPages;
+
       const { flipW, flipH } = calcFlipDimensions(maxUnitW, maxUnitH);
+
+      const isMobile = window.innerWidth < 768;
+      const bookWidth = isMobile ? flipW : (flipW * 2);
+
+      const zoomWrapEl = document.getElementById('flipbook-zoom-wrap');
+      if (zoomWrapEl) {
+        zoomWrapEl.style.width = bookWidth + 'px';
+        zoomWrapEl.style.height = flipH + 'px';
+      }
 
       const pageDivs = flipPlan.map(function (entry, index) {
         const pageDiv = document.createElement('div');
@@ -246,37 +572,74 @@
         return;
       }
 
-      const renderer = createPageRenderer(pdf, pageDivs, flipPlan, flipW, flipH);
+      renderer = createPageRenderer(pdfDoc, pageDivs, flipPlan, flipW, flipH);
 
       await renderer.preloadAround(0);
       spinner.style.display = 'none';
 
-      const pageFlip = new St.PageFlip(flipbookEl, {
+      pageFlip = new St.PageFlip(flipbookEl, {
         width: flipW,
         height: flipH,
         size: 'stretch',
-        minWidth: Math.round(flipW * 0.65),
-        maxWidth: Math.round(flipW * 1.35),
-        minHeight: Math.round(flipH * 0.65),
-        maxHeight: Math.round(flipH * 1.35),
+        minWidth: 100,
+        maxWidth: 3000,
+        minHeight: 100,
+        maxHeight: 3000,
         showCover: true,
         mobileScrollSupport: false,
-        usePortrait: window.innerWidth < 768,
+        usePortrait: isMobile,
       });
 
       pageFlip.loadFromHTML(pageDivs);
 
       pageFlip.on('flip', function (event) {
-        const currentIndex = event.data;
-        renderer.preloadAround(currentIndex);
+        renderer.preloadAround(event.data);
       });
 
+      setupControls(pageFlip, flipPlan, totalPdfPages, flipW, flipH);
       renderer.startBackgroundLoad(0);
     } catch (err) {
       showError(spinner, 'Không thể tải catalog. Vui lòng thử lại sau.');
       console.error('Flipbook error:', err);
     }
   }
+
+  window.addEventListener('resize', function () {
+    if (!pageFlip) {
+      return;
+    }
+    const { flipW: newW, flipH: newH } = calcFlipDimensions(maxUnitW, maxUnitH);
+    const isPortrait = window.innerWidth < 768;
+    const bookWidth = isPortrait ? newW : (newW * 2);
+
+    const zoomWrapEl = document.getElementById('flipbook-zoom-wrap');
+    if (zoomWrapEl) {
+      zoomWrapEl.style.width = bookWidth + 'px';
+      zoomWrapEl.style.height = newH + 'px';
+    }
+
+    currentZoom = ZOOM_MIN;
+    panX = 0;
+    panY = 0;
+
+    const flipbookEl = document.getElementById('flipbook');
+    if (flipbookEl) {
+      flipbookEl.style.transform = '';
+      flipbookEl.style.transformOrigin = '';
+    }
+    const zoomLevelEl = document.getElementById('zoom-level');
+    if (zoomLevelEl) {
+      zoomLevelEl.textContent = '100%';
+    }
+    const zoomSlider = document.getElementById('zoom-slider');
+    if (zoomSlider) {
+      zoomSlider.value = '100';
+    }
+    const viewportEl = document.getElementById('flipbook-viewport');
+    if (viewportEl) {
+      viewportEl.classList.remove('is-zoomed');
+    }
+  });
 
   window.initCatalogFlipbook = initCatalogFlipbook;
 })();
