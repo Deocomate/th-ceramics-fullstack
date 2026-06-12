@@ -231,12 +231,12 @@
 
                 @if ($chunks->count() > 1)
                     <!-- Navigation Buttons -->
-                    <button data-btn-prev class="absolute top-0 left-0 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-secondary bg-white/90 text-secondary flex items-center justify-center hover:bg-secondary hover:text-white transition-all duration-300 shadow-md disabled:opacity-30 disabled:cursor-not-allowed" type="button" aria-label="Slide trước">
+                    <button data-btn-prev class="absolute top-0 left-0 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-secondary bg-transparent text-secondary flex items-center justify-center hover:bg-secondary hover:text-white transition-all duration-300 shadow-md disabled:opacity-30 disabled:cursor-not-allowed" type="button" aria-label="Slide trước">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
-                    <button data-btn-next class="absolute top-0 right-0 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-secondary bg-white/90 text-secondary flex items-center justify-center hover:bg-secondary hover:text-white transition-all duration-300 shadow-md disabled:opacity-30 disabled:cursor-not-allowed" type="button" aria-label="Slide tiếp theo">
+                    <button data-btn-next class="absolute top-0 right-0 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-secondary bg-transparent text-secondary flex items-center justify-center hover:bg-secondary hover:text-white transition-all duration-300 shadow-md disabled:opacity-30 disabled:cursor-not-allowed" type="button" aria-label="Slide tiếp theo">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
                         </svg>
