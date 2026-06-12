@@ -81,9 +81,9 @@
                 class="h-16 md:h-20 lg:h-[110px] drop-shadow-sm opacity-25 scale-[60%] md:scale-100">
         </div>
 
-        <div class="bg-[#EBCEC1] opacity-80 p-6 lg:p-10" style="margin-left: max(0px, calc((100% - 1320px) / 2))"
+        <div class="bg-[#EBCFC2] opacity-80 p-6 lg:p-0" style="margin-left: max(0px, calc((100% - 1320px) / 2))"
             data-aos="fade-up" data-aos-delay="100">
-            <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 max-w-[1320px]">
+            <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 max-w-[1320px] lg:py-10 lg:pl-10">
                 <div class="w-full lg:w-[55%] flex flex-col justify-between">
                     <div class="lg:hidden" data-product-section>
                         <div class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide"
@@ -160,7 +160,7 @@
                     <!-- KẾT THÚC: Desktop Slider Ngói Bờ Nóc -->
                 </div>
 
-                <div class="w-full lg:w-[45%] mr-0 lg:mr-[10%] flex flex-col justify-stretch">
+                <div class="w-full lg:w-[45%] flex flex-col justify-stretch">
                     <div
                         class="w-full flex-grow relative shadow-lg overflow-hidden bg-black/5 min-h-[400px] lg:min-h-[500px]">
                         <img src="{{ $assetUrl($config->sec1_image, 'assets/images/bo-noc.png') }}" alt=""

@@ -64,10 +64,10 @@
 ])
 <!-- Danh Mục Sản Phẩm Section 2 -->
 <section class="w-full pb-[30px] md:pb-16">
-    <div class="bg-[#EBCEC1] opacity-80 p-6 lg:p-10" style="margin-right: max(0px, calc((100% - 1320px) / 2))"
+    <div class="bg-[#EBCFC2] opacity-80 p-6 lg:p-0" style="margin-right: max(0px, calc((100% - 1320px) / 2))"
         data-aos="fade-up" data-aos-delay="100">
-        <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 max-w-[1320px] ml-auto">
-            <div class="w-full lg:w-[45%] ml-0 lg:ml-[10%] flex flex-col justify-stretch">
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 max-w-[1320px] ml-auto lg:py-10 lg:pr-10">
+            <div class="w-full lg:w-[45%] flex flex-col justify-stretch">
                 <div
                     class="w-full flex-grow relative shadow-xl overflow-hidden bg-black/5 min-h-[400px] lg:min-h-[500px] border border-black/10">
                     <img src="{{ asset('assets/images/lan-can-bau.png') }}" alt=""

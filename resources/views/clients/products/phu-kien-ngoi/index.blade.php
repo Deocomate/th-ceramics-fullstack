@@ -134,86 +134,126 @@
                     'assets/images/gach-hoa-02.png',
                     'assets/images/dao-kim.png',
                     'assets/images/pk-04.jpg',
+                    'assets/images/pk-01.jpg',
+                    'assets/images/pk-02.jpg',
+                    'assets/images/pk-05.jpg',
+                    'assets/images/pk-06.jpg',
+                    'assets/images/lan-can-01.jpg',
+                    'assets/images/lan-can-02.jpg',
                 ];
-                $galleryImage = fn(int $index) => $assetUrl($galleries[$index] ?? null, $galleryFallbacks[$index]);
+                $allImages = count($galleries) > 0 ? $galleries : $galleryFallbacks;
+                $chunks = collect($allImages)->chunk(6);
+
+                // Pad the last chunk if it has < 6 items and we have multiple pages
+                if ($chunks->count() > 1 && $chunks->last()->count() < 6) {
+                    $lastChunk = $chunks->last();
+                    $needed = 6 - $lastChunk->count();
+                    for ($i = 0; $i < $needed; $i++) {
+                        $lastChunk->push($galleryFallbacks[$i % count($galleryFallbacks)]);
+                    }
+                }
             @endphp
 
-            <div class="flex flex-col gap-2 md:gap-4">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 items-end">
-                    <div class="col-span-1" data-aos="fade-up" data-aos-delay="0">
-                        <a href="{{ $galleryImage(0) }}"
-                            class="glightbox w-full aspect-[1.1/1] shadow overflow-hidden relative group block">
-                            <img src="{{ $galleryImage(0) }}" alt=""
-                                class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </a>
-                    </div>
-                    <div class="col-span-1" data-aos="fade-up" data-aos-delay="100">
-                        <div class="w-full aspect-[8/10] bg-[#BD724F] shadow"></div>
-                    </div>
-                    <div class="col-span-2 hidden md:block" data-aos="fade-up" data-aos-delay="200">
-                        <a href="{{ $galleryImage(1) }}"
-                            class="glightbox w-full aspect-[11/5] shadow overflow-hidden relative group block">
-                            <img src="{{ $galleryImage(1) }}" alt=""
-                                class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </a>
-                    </div>
-                </div>
+            <div class="relative w-full" data-gallery-slider>
+                <div class="slider-pages-container">
+                    @foreach ($chunks as $chunkIndex => $chunk)
+                        @php
+                            $chunkValues = $chunk->values();
+                            $getImageUrl = fn(int $idx) => $assetUrl($chunkValues[$idx] ?? null, $galleryFallbacks[$idx]);
+                        @endphp
+                        <div class="flex flex-col gap-2 md:gap-4 {{ $chunkIndex === 0 ? '' : 'hidden' }}" data-slider-page="{{ $chunkIndex }}">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 items-end">
+                                <div class="col-span-1" data-aos="fade-up" data-aos-delay="0">
+                                    <a href="{{ $getImageUrl(0) }}"
+                                        class="glightbox w-full aspect-[1.1/1] shadow overflow-hidden relative group block">
+                                        <img src="{{ $getImageUrl(0) }}" alt=""
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </a>
+                                </div>
+                                <div class="col-span-1" data-aos="fade-up" data-aos-delay="100">
+                                    <div class="w-full aspect-[8/10] bg-[#BD724F] shadow"></div>
+                                </div>
+                                <div class="col-span-2 hidden md:block" data-aos="fade-up" data-aos-delay="200">
+                                    <a href="{{ $getImageUrl(1) }}"
+                                        class="glightbox w-full aspect-[11/5] shadow overflow-hidden relative group block">
+                                        <img src="{{ $getImageUrl(1) }}" alt=""
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </a>
+                                </div>
+                            </div>
 
-                <div class="grid grid-cols-1 md:hidden gap-2 md:gap-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="col-span-1">
-                        <a href="{{ $galleryImage(1) }}"
-                            class="glightbox w-full aspect-[22/10] shadow overflow-hidden relative group block">
-                            <img src="{{ $galleryImage(1) }}" alt=""
-                                class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </a>
-                    </div>
-                </div>
+                            <div class="grid grid-cols-1 md:hidden gap-2 md:gap-4" data-aos="fade-up" data-aos-delay="200">
+                                <div class="col-span-1">
+                                    <a href="{{ $getImageUrl(1) }}"
+                                        class="glightbox w-full aspect-[22/10] shadow overflow-hidden relative group block">
+                                        <img src="{{ $getImageUrl(1) }}" alt=""
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </a>
+                                </div>
+                            </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 items-start">
-                    <div class="col-span-1 row-span-2 md:row-span-1 h-full" data-aos="fade-up" data-aos-delay="0">
-                        <a href="{{ $galleryImage(2) }}"
-                            class="glightbox w-full md:aspect-[8/10] shadow overflow-hidden relative group block">
-                            <img src="{{ $galleryImage(2) }}" alt=""
-                                class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </a>
-                    </div>
-                    <div class="contents md:flex md:flex-col md:gap-4">
-                        <a href="{{ $galleryImage(3) }}"
-                            class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block"
-                            data-aos="fade-up" data-aos-delay="100">
-                            <img src="{{ $galleryImage(3) }}" alt=""
-                                class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </a>
-                        <div class="w-full aspect-[19/10] bg-[#BD724F] shadow" data-aos="fade-up" data-aos-delay="200">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 items-start">
+                                <div class="col-span-1 row-span-2 md:row-span-1 h-full" data-aos="fade-up" data-aos-delay="0">
+                                    <a href="{{ $getImageUrl(2) }}"
+                                        class="glightbox w-full md:aspect-[8/10] shadow overflow-hidden relative group block">
+                                        <img src="{{ $getImageUrl(2) }}" alt=""
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </a>
+                                </div>
+                                <div class="contents md:flex md:flex-col md:gap-4">
+                                    <a href="{{ $getImageUrl(3) }}"
+                                        class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block"
+                                        data-aos="fade-up" data-aos-delay="100">
+                                        <img src="{{ $getImageUrl(3) }}" alt=""
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </a>
+                                    <div class="w-full aspect-[19/10] bg-[#BD724F] shadow" data-aos="fade-up" data-aos-delay="200">
+                                    </div>
+                                </div>
+                                <div class="col-span-1" data-aos="fade-up" data-aos-delay="200">
+                                    <a href="{{ $getImageUrl(4) }}"
+                                        class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block">
+                                        <img src="{{ $getImageUrl(4) }}" alt=""
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </a>
+                                </div>
+                                <div class="col-span-1" data-aos="fade-up" data-aos-delay="300">
+                                    <a href="{{ $getImageUrl(5) }}"
+                                        class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block">
+                                        <img src="{{ $getImageUrl(5) }}" alt=""
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-span-1" data-aos="fade-up" data-aos-delay="200">
-                        <a href="{{ $galleryImage(4) }}"
-                            class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block">
-                            <img src="{{ $galleryImage(4) }}" alt=""
-                                class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </a>
-                    </div>
-                    <div class="col-span-1" data-aos="fade-up" data-aos-delay="300">
-                        <a href="{{ $galleryImage(5) }}"
-                            class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block">
-                            <img src="{{ $galleryImage(5) }}" alt=""
-                                class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </a>
-                    </div>
+                    @endforeach
                 </div>
 
-                <div class="mt-4 md:mt-6 flex justify-end items-center" data-aos="fade-up">
-                    <a href="{{ route('client.projects.index') }}"
-                        class="font-archivo text-sm md:text-base font-bold uppercase tracking-[0.08em] text-secondary transition-opacity duration-300 hover:opacity-70 inline-flex items-center gap-2">
-                        Xem thêm
-                        <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M10.707 2.29292C10.5184 2.11076 10.2658 2.00997 10.0036 2.01224C9.7414 2.01452 9.49059 2.11969 9.30518 2.3051C9.11977 2.49051 9.0146 2.74132 9.01233 3.00352C9.01005 3.26571 9.11084 3.51832 9.293 3.70692L12.586 6.99992H1C0.734784 6.99992 0.48043 7.10528 0.292893 7.29281C0.105357 7.48035 0 7.7347 0 7.99992C0 8.26514 0.105357 8.51949 0.292893 8.70703C0.48043 8.89456 0.734784 8.99992 1 8.99992H12.586L9.293 12.2929C9.19749 12.3852 9.12131 12.4953 9.0689 12.6175C9.01649 12.7395 8.9889 12.8707 8.98775 13.0035C8.9866 13.1363 9.0119 13.268 9.06218 13.3909C9.11246 13.5138 9.18671 13.6254 9.28061 13.7193C9.3745 13.8132 9.48615 13.8875 9.60905 13.9377C9.73194 13.988 9.86362 14.0133 9.9964 14.0122C10.1292 14.011 10.2604 13.9834 10.3824 13.931C10.5044 13.8786 10.6148 13.8024 10.707 13.7069L15.707 8.70692C15.8945 8.51939 15.9998 8.26508 15.9998 7.99992C15.9998 7.73475 15.8945 7.48045 15.707 7.29292L10.707 2.29292Z"
-                                fill="currentColor"></path>
+                @if ($chunks->count() > 1)
+                    <!-- Navigation Buttons -->
+                    <button data-btn-prev class="absolute top-0 left-0 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-secondary bg-white/90 text-secondary flex items-center justify-center hover:bg-secondary hover:text-white transition-all duration-300 shadow-md disabled:opacity-30 disabled:cursor-not-allowed" type="button" aria-label="Slide trước">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
                         </svg>
-                    </a>
-                </div>
+                    </button>
+                    <button data-btn-next class="absolute top-0 right-0 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full border border-secondary bg-white/90 text-secondary flex items-center justify-center hover:bg-secondary hover:text-white transition-all duration-300 shadow-md disabled:opacity-30 disabled:cursor-not-allowed" type="button" aria-label="Slide tiếp theo">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                @endif
+            </div>
+
+            <div class="mt-6 md:mt-8 flex justify-end items-center" data-aos="fade-up">
+                <a href="{{ route('client.projects.index') }}"
+                    class="font-archivo text-sm md:text-base font-bold uppercase tracking-[0.08em] text-secondary transition-opacity duration-300 hover:opacity-70 inline-flex items-center gap-2">
+                    Xem thêm
+                    <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M10.707 2.29292C10.5184 2.11076 10.2658 2.00997 10.0036 2.01224C9.7414 2.01452 9.49059 2.11969 9.30518 2.3051C9.11977 2.49051 9.0146 2.74132 9.01233 3.00352C9.01005 3.26571 9.11084 3.51832 9.293 3.70692L12.586 6.99992H1C0.734784 6.99992 0.48043 7.10528 0.292893 7.29281C0.105357 7.48035 0 7.7347 0 7.99992C0 8.26514 0.105357 8.51949 0.292893 8.70703C0.48043 8.89456 0.734784 8.99992 1 8.99992H12.586L9.293 12.2929C9.19749 12.3852 9.12131 12.4953 9.0689 12.6175C9.01649 12.7395 8.9889 12.8707 8.98775 13.0035C8.9866 13.1363 9.0119 13.268 9.06218 13.3909C9.11246 13.5138 9.18671 13.6254 9.28061 13.7193C9.3745 13.8132 9.48615 13.8875 9.60905 13.9377C9.73194 13.988 9.86362 14.0133 9.9964 14.0122C10.1292 14.011 10.2604 13.9834 10.3824 13.931C10.5044 13.8786 10.6148 13.8024 10.707 13.7069L15.707 8.70692C15.8945 8.51939 15.9998 8.26508 15.9998 7.99992C15.9998 7.73475 15.8945 7.48045 15.707 7.29292L10.707 2.29292Z"
+                            fill="currentColor"></path>
+                    </svg>
+                </a>
             </div>
         </div>
     </section>
@@ -231,6 +271,50 @@
         <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
+                // Logic cho Gallery Slider (Cả cụm)
+                const gallerySlider = document.querySelector('[data-gallery-slider]');
+                if (gallerySlider) {
+                    const pages = gallerySlider.querySelectorAll('[data-slider-page]');
+                    const btnPrev = gallerySlider.querySelector('[data-btn-prev]');
+                    const btnNext = gallerySlider.querySelector('[data-btn-next]');
+
+                    if (pages.length > 1 && btnPrev && btnNext) {
+                        let currentPage = 0;
+                        const totalPages = pages.length;
+
+                        const updateSlider = () => {
+                            pages.forEach((page, index) => {
+                                if (index === currentPage) {
+                                    page.classList.remove('hidden');
+                                    page.classList.add('flex', 'animate-fade-in-slider');
+                                } else {
+                                    page.classList.add('hidden');
+                                    page.classList.remove('flex', 'animate-fade-in-slider');
+                                }
+                            });
+
+                            btnPrev.disabled = (currentPage === 0);
+                            btnNext.disabled = (currentPage === totalPages - 1);
+                        };
+
+                        btnPrev.addEventListener('click', () => {
+                            if (currentPage > 0) {
+                                currentPage--;
+                                updateSlider();
+                            }
+                        });
+
+                        btnNext.addEventListener('click', () => {
+                            if (currentPage < totalPages - 1) {
+                                currentPage++;
+                                updateSlider();
+                            }
+                        });
+
+                        updateSlider();
+                    }
+                }
+
                 // Logic cho Desktop Product Sliders
                 const desktopSliders = document.querySelectorAll('[data-desktop-slider]');
 

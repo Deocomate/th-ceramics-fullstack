@@ -117,9 +117,9 @@
                 </h2>
             </div>
 
-            <div class="bg-[#EBCEC1] opacity-80 p-6 lg:p-10" style="margin-left: max(0px, calc((100% - 1320px) / 2))"
+            <div class="bg-[#EBCFC2] opacity-80 p-6 lg:p-0" style="margin-left: max(0px, calc((100% - 1320px) / 2))"
                 data-aos="fade-up" data-aos-delay="100">
-                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 max-w-[1320px]">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 max-w-[1320px] lg:py-10 lg:pl-10">
                     <!-- Khối hiển thị sản phẩm bên trái -->
                     <div class="w-full lg:w-[55%] flex flex-col justify-between">
 
@@ -163,7 +163,7 @@
                     </div>
 
                     <!-- Khối hình ảnh Banner nổi bật bên phải -->
-                    <div class="w-full lg:w-[45%] mr-0 lg:mr-[10%] flex flex-col justify-stretch">
+                    <div class="w-full lg:w-[45%] flex flex-col justify-stretch">
                         <div
                             class="w-full flex-grow relative shadow-xl overflow-hidden bg-black/5 min-h-[400px] lg:min-h-[500px] border border-black/10">
                             <img src="{{ $section1Image }}" alt="{{ $section1Title }}"
@@ -190,11 +190,11 @@
     <!-- Danh Mục Sản Phẩm Section 2 -->
     @if ($section2Products->isNotEmpty())
         <section class="w-full pb-[30px] md:pb-16">
-            <div class="bg-[#EBCEC1] opacity-80 p-6 lg:p-10" style="margin-right: max(0px, calc((100% - 1320px) / 2))"
+            <div class="bg-[#EBCFC2] opacity-80 p-6 lg:p-0" style="margin-right: max(0px, calc((100% - 1320px) / 2))"
                 data-aos="fade-up" data-aos-delay="100">
-                <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 max-w-[1320px] ml-auto">
+                <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 max-w-[1320px] ml-auto lg:py-10 lg:pr-10">
                     <!-- Khối hình ảnh Banner nổi bật bên trái -->
-                    <div class="w-full lg:w-[45%] ml-0 lg:ml-[10%] flex flex-col justify-stretch">
+                    <div class="w-full lg:w-[45%] flex flex-col justify-stretch">
                         <div
                             class="w-full flex-grow relative shadow-xl overflow-hidden bg-black/5 min-h-[400px] lg:min-h-[500px] border border-black/10">
                             <img src="{{ $section2Image }}" alt="{{ $section2Title }}"
