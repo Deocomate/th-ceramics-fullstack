@@ -440,6 +440,8 @@ const initAddToCartButtons = () => {
 
         const productType = button.dataset.productType;
         const productId = parseInt(button.dataset.productId || "", 10);
+        const variantIdRaw = button.dataset.variantId;
+        const variantId = variantIdRaw ? parseInt(variantIdRaw, 10) : null;
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || "";
 
         if (!productType || !productId) {
@@ -459,7 +461,7 @@ const initAddToCartButtons = () => {
             body: JSON.stringify({
                 product_type: productType,
                 product_id: productId,
-                variant_id: null,
+                variant_id: variantId,
                 qty: 1,
             }),
         })

@@ -12,6 +12,7 @@ class PhuKienNgoiCtService
     public function getAll(string $status = 'active', ?string $categoryType = null)
     {
         $query = PhuKienNgoiCt::query()
+            ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)->orderBy('price')])
             ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
             ->latest();
 

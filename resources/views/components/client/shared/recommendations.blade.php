@@ -33,18 +33,11 @@
                                         class="w-[175px] md:w-[222px] shrink-0 text-left flex flex-col"
                                         aspect="aspect-square bg-gray-100 shadow-sm mb-2 md:mb-4"
                                         title-class="font-bold text-[12px] md:text-base leading-snug mb-0 md:mb-1 text-[#2162A1] hover:text-secondary transition-colors text-left w-full"
-                                        :show-overlay="true">
-                                        @if ($product['can_add_to_cart'])
-                                            <button type="button"
-                                                class="bg-secondary text-white border border-secondary text-[9px] md:text-[13px] font-bold py-1 md:py-2 px-4 md:px-6 rounded-full hover:bg-transparent hover:text-secondary transition-all whitespace-nowrap js-add-to-cart mt-1 mr-auto block"
-                                                data-product-type="{{ $product['type'] }}"
-                                                data-product-id="{{ $product['id'] }}"
-                                                data-product-name="{{ $product['name'] }}"
-                                                onclick="event.stopPropagation();">
-                                                Thêm vào giỏ
-                                            </button>
-                                        @endif
-                                    </x-client.shared.product-card>
+                                        :show-overlay="true"
+                                        :product-type="$product['type']"
+                                        :product-id="$product['id']"
+                                        :variant-id="$product['variant_id']"
+                                        add-to-cart-variant="filled" />
                                 @endforeach
                             </div>
                         </div>
@@ -110,7 +103,7 @@
             .custom-recommend-scrollbar {
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: thin !important;
-                scrollbar-color: #C76E00 rgba(250, 250, 250, 0.8) !important;
+                scrollbar-color: rgba(199, 110, 0, 0.35) rgba(250, 250, 250, 0.8) !important;
             }
 
             .custom-recommend-scrollbar::-webkit-scrollbar {
@@ -120,18 +113,18 @@
 
             .custom-recommend-scrollbar::-webkit-scrollbar-track {
                 background: rgba(250, 250, 250, 0.8) !important;
-                border: 1px solid #C76E00 !important;
+                border: 1px solid rgba(199, 110, 0, 0.2) !important;
                 border-radius: 6px !important;
             }
 
             .custom-recommend-scrollbar::-webkit-scrollbar-thumb {
-                background: #C76E00 !important;
+                background: rgba(199, 110, 0, 0.35) !important;
                 border-radius: 6px !important;
                 border: 2px solid rgba(250, 250, 250, 0.8) !important;
             }
 
             .custom-recommend-scrollbar::-webkit-scrollbar-thumb:hover {
-                background: #A35A00 !important;
+                background: rgba(199, 110, 0, 0.55) !important;
             }
 
             /* Disable arrow buttons for a clean, modern look */
@@ -196,14 +189,14 @@
             }
 
             .recommendations-section .js-add-to-cart {
-                background-color: #C76E00 !important;
-                color: #FFFFFF !important;
+                background-color: transparent !important;
+                color: #C76E00 !important;
                 border: 1px solid #C76E00 !important;
             }
 
             .recommendations-section .js-add-to-cart:hover {
-                background-color: transparent !important;
-                color: #C76E00 !important;
+                background-color: #C76E00 !important;
+                color: #FFFFFF !important;
                 border: 1px solid #C76E00 !important;
             }
 

@@ -1,16 +1,9 @@
 @props(['products' => collect(), 'category' => null, 'routeName' => null, 'pkField' => null, 'productType' => null])
 
 @php
-    $typeByRoute = [
-        'client.products.ngoi-am-duong.detail' => 'ngoi_am_duong_ct',
-        'client.products.ngoi-hai-van-mieu.detail' => 'ngoi_hai_van_mieu_ct',
-        'client.products.ngoi-hai-co.detail' => 'ngoi_hai_co_ct',
-        'client.products.gach-hoa-thong-gio.detail' => 'gach_hoa_thong_gio_ct',
-        'client.products.gach-trang-tri.detail' => 'gach_trang_tri_ct',
-        'client.products.gach-co-bat-trang.detail' => 'gach_co_bat_trang_ct',
-        'client.products.linh-vat-phong-thuy.detail' => 'linh_vat_phong_thuy_ct',
-    ];
-    $resolvedProductType = $productType ?: $typeByRoute[$routeName] ?? null;
+    use App\Support\ClientProductType;
+
+    $resolvedProductType = $productType ?: ClientProductType::fromDetailRoute($routeName);
 @endphp
 
 <section class="w-[85%] max-w-[1320px] mx-auto pb-[43px] md:pb-16 animate-fade-in-up">
@@ -18,7 +11,7 @@
         data-aos="fade-up" data-aos-delay="200">
         @forelse ($products as $product)
             @php
-                $productId = $pkField ? data_get($product, $pkField) : $product->getKey();
+                $productId = ClientProductType::resolveProductId($product, $resolvedProductType, $pkField);
                 $detailUrl =
                     $routeName && $productId && \Illuminate\Support\Facades\Route::has($routeName)
                         ? route($routeName, $productId)
@@ -32,16 +25,9 @@
             @endphp
             <x-client.shared.product-card href="{{ $detailUrl }}" image="{{ $imageUrl }}"
                 title="{{ $product->name ?? '' }}" code="{{ $codeText }}"
-                price="{{ $priceText }}" :show-overlay="true">
-                @if ($resolvedProductType && $productId && $price > 0)
-                    <button type="button"
-                        class="js-add-to-cart border border-secondary text-secondary text-[11px] md:text-[13px] font-bold py-1.5 px-4 rounded-full hover:bg-secondary hover:text-white transition-all mt-3 self-start"
-                        data-product-type="{{ $resolvedProductType }}" data-product-id="{{ $productId }}"
-                        data-product-name="{{ $product->name ?? '' }}" onclick="event.stopPropagation();">
-                        Thêm vào giỏ
-                    </button>
-                @endif
-            </x-client.shared.product-card>
+                price="{{ $priceText }}" :show-overlay="true"
+                :product-type="$resolvedProductType" :product-id="$productId"
+                :product="$product" :pk-field="$pkField" />
         @empty
             <div class="col-span-full text-center py-12 text-gray-500">Chưa có sản phẩm nào.</div>
         @endforelse

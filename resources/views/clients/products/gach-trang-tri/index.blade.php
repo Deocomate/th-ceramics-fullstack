@@ -17,6 +17,9 @@
                 --slider-offset-1: 513px;
                 --slider-offset-2: 657px;
                 --slider-radius: 80px;
+                --slider-motion-duration: 1.15s;
+                --slider-motion-ease: cubic-bezier(0.33, 1, 0.68, 1);
+                --slider-content-duration: 0.95s;
             }
 
             @media (min-width: 768px) and (max-width: 1279px) {
@@ -68,14 +71,28 @@
             .custom-project-slide.slide-left-2,
             .custom-project-slide.slide-right-1,
             .custom-project-slide.slide-right-2 {
-                transition: width 0.7s cubic-bezier(0.25, 1, 0.3, 1),
-                    height 0.7s cubic-bezier(0.25, 1, 0.3, 1),
-                    transform 0.7s cubic-bezier(0.25, 1, 0.3, 1),
-                    opacity 0.7s cubic-bezier(0.25, 1, 0.3, 1),
-                    border-radius 0.7s cubic-bezier(0.25, 1, 0.3, 1);
+                transition: width var(--slider-motion-duration) var(--slider-motion-ease),
+                    height var(--slider-motion-duration) var(--slider-motion-ease),
+                    transform var(--slider-motion-duration) var(--slider-motion-ease),
+                    opacity var(--slider-motion-duration) var(--slider-motion-ease),
+                    border-radius var(--slider-motion-duration) var(--slider-motion-ease),
+                    filter 0.55s ease;
                 pointer-events: auto;
                 opacity: 1;
-                /* Keep opacity at 1 to prevent washed out grey background! */
+            }
+
+            .custom-project-slide.slide-left-1,
+            .custom-project-slide.slide-left-2,
+            .custom-project-slide.slide-right-1,
+            .custom-project-slide.slide-right-2 {
+                cursor: pointer;
+            }
+
+            .custom-project-slide.slide-left-1:hover,
+            .custom-project-slide.slide-left-2:hover,
+            .custom-project-slide.slide-right-1:hover,
+            .custom-project-slide.slide-right-2:hover {
+                filter: brightness(1.05);
             }
 
             .custom-project-slide.slide-center {
@@ -129,11 +146,19 @@
                 opacity: 0;
             }
 
+            .custom-project-slide.slide-outer-left,
+            .custom-project-slide.slide-outer-right {
+                transition: transform var(--slider-motion-duration) var(--slider-motion-ease),
+                    opacity calc(var(--slider-motion-duration) * 0.85) var(--slider-motion-ease);
+            }
+
             .custom-project-slide .slide-content {
                 opacity: 0;
                 transform: translateY(20px);
                 pointer-events: none;
-                transition: opacity 0.5s ease, transform 0.5s ease;
+                transition: opacity var(--slider-content-duration) var(--slider-motion-ease),
+                    transform var(--slider-content-duration) var(--slider-motion-ease);
+                transition-delay: 0s;
                 z-index: 10;
             }
 
@@ -141,10 +166,12 @@
                 opacity: 1;
                 transform: translateY(0);
                 pointer-events: auto;
+                transition-delay: 0.2s;
             }
 
             .project-dot {
                 background-color: rgba(199, 110, 0, 0.3);
+                transition: width 0.5s var(--slider-motion-ease), background-color 0.5s var(--slider-motion-ease);
             }
 
             .project-dot.active {
@@ -386,12 +413,12 @@
                         <div class="custom-project-slide cursor-pointer" data-index="{{ $index }}">
                             <img src="{{ $mediaUrl($projectImage, asset('assets/images/trang-tri-slide-01.jpg')) }}"
                                 alt="{{ $project->ten_du_an ?? 'Công trình' }}"
-                                class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+                                class="w-full h-full object-cover transition-transform duration-1000 ease-out hover:scale-[1.03]" />
                             <div class="absolute inset-0 pointer-events-none z-[2]"
                                 style="background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.80) 100%)">
                             </div>
                             <div
-                                class="slide-content absolute bottom-[25px] left-[20px] md:bottom-12 md:left-12 lg:bottom-16 lg:left-16 text-white z-10 max-w-[85%] transition-all duration-500">
+                                class="slide-content absolute bottom-[25px] left-[20px] md:bottom-12 md:left-12 lg:bottom-16 lg:left-16 text-white z-10 max-w-[85%]">
                                 <h3
                                     class="font-archivo font-bold text-[16px] md:text-lg lg:text-[20px] uppercase tracking-wider mb-1 lg:mb-2 leading-[20px] md:leading-tight">
                                     {{ $project->ten_du_an ?? '' }}
@@ -445,12 +472,12 @@
                     @foreach ($fallbackProjects as $index => $project)
                         <div class="custom-project-slide cursor-pointer" data-index="{{ $index }}">
                             <img src="{{ $project['image'] }}" alt="{{ $project['ten_du_an'] }}"
-                                class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+                                class="w-full h-full object-cover transition-transform duration-1000 ease-out hover:scale-[1.03]" />
                             <div class="absolute inset-0 pointer-events-none z-[2]"
                                 style="background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.80) 100%)">
                             </div>
                             <div
-                                class="slide-content absolute bottom-[25px] left-[20px] md:bottom-12 md:left-12 lg:bottom-16 lg:left-16 text-white z-10 max-w-[85%] transition-all duration-500">
+                                class="slide-content absolute bottom-[25px] left-[20px] md:bottom-12 md:left-12 lg:bottom-16 lg:left-16 text-white z-10 max-w-[85%]">
                                 <h3
                                     class="font-archivo font-bold text-[16px] md:text-lg lg:text-[20px] uppercase tracking-wider mb-1 lg:mb-2 leading-[20px] md:leading-tight">
                                     {{ $project['ten_du_an'] }}
@@ -479,10 +506,10 @@
     <section class="w-full relative pt-[40px] pb-20 md:pb-[120px] bg-background-secondary overflow-hidden"
         data-aos="fade-up">
         <img src="{{ asset('assets/images/gtt-decorate-left.svg') }}"
-            class="absolute top-[38%] -translate-y-1/3 md:left-[-5rem] -left-1/2 w-[42%] object-contain opacity-80 pointer-events-none z-0"
+            class="absolute top-[38%] -translate-y-1/3 md:left-[-5rem] -left-1/2 w-[42%] object-contain opacity-50 pointer-events-none z-0"
             alt="" />
         <img src="{{ asset('assets/images/gtt-decorate-right.svg') }}"
-            class="absolute top-[38%] -translate-y-1/3 md:right-[-5rem] -right-1/2 w-[42%] object-contain opacity-80 pointer-events-none z-0"
+            class="absolute top-[38%] -translate-y-1/3 md:right-[-5rem] -right-1/2 w-[42%] object-contain opacity-50 pointer-events-none z-0"
             alt="" />
         <x-client.shared.faq-accordion />
     </section>
@@ -536,13 +563,47 @@
                         originalSlides.forEach(function(_, index) {
                             var dot = document.createElement("button");
                             dot.className =
-                                "project-dot w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 cursor-pointer" +
+                                "project-dot w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-500 cursor-pointer" +
                                 (index === 0 ? " active" : "");
                             dot.setAttribute("data-index", index);
                             dotsContainer.appendChild(dot);
                         });
                     }
                     var dots = dotsContainer ? dotsContainer.querySelectorAll(".project-dot") : [];
+                    var hoverTimer = null;
+
+                    function promoteSideSlide(slide) {
+                        if (!slide || slide.classList.contains("slide-center")) {
+                            return false;
+                        }
+
+                        if (slide.classList.contains("slide-left-1")) {
+                            currentIndex = (currentIndex - 1 + N) % N;
+                        } else if (slide.classList.contains("slide-right-1")) {
+                            currentIndex = (currentIndex + 1) % N;
+                        } else if (slide.classList.contains("slide-left-2")) {
+                            currentIndex = (currentIndex - 2 + N) % N;
+                        } else if (slide.classList.contains("slide-right-2")) {
+                            currentIndex = (currentIndex + 2) % N;
+                        } else {
+                            return false;
+                        }
+
+                        updateSlider();
+                        resetAutoPlay();
+                        return true;
+                    }
+
+                    function scheduleSideSlidePromotion(slide) {
+                        clearTimeout(hoverTimer);
+                        hoverTimer = setTimeout(function() {
+                            promoteSideSlide(slide);
+                        }, 220);
+                    }
+
+                    function cancelSideSlidePromotion() {
+                        clearTimeout(hoverTimer);
+                    }
 
                     function updateSlider() {
                         slides.forEach(function(slide, i) {
@@ -588,27 +649,17 @@
                         }
                     }
 
-                    // Click navigation for slides
-                    slides.forEach(function(slide, idx) {
+                    // Click and hover navigation for side slides
+                    slides.forEach(function(slide) {
                         slide.addEventListener("click", function() {
-                            if (slide.classList.contains("slide-left-1")) {
-                                currentIndex = (currentIndex - 1 + N) % N;
-                                updateSlider();
-                                resetAutoPlay();
-                            } else if (slide.classList.contains("slide-right-1")) {
-                                currentIndex = (currentIndex + 1) % N;
-                                updateSlider();
-                                resetAutoPlay();
-                            } else if (slide.classList.contains("slide-left-2")) {
-                                currentIndex = (currentIndex - 2 + N) % N;
-                                updateSlider();
-                                resetAutoPlay();
-                            } else if (slide.classList.contains("slide-right-2")) {
-                                currentIndex = (currentIndex + 2) % N;
-                                updateSlider();
-                                resetAutoPlay();
-                            }
+                            promoteSideSlide(slide);
                         });
+
+                        slide.addEventListener("mouseenter", function() {
+                            scheduleSideSlidePromotion(slide);
+                        });
+
+                        slide.addEventListener("mouseleave", cancelSideSlidePromotion);
                     });
 
                     // Pagination dots click handler

@@ -1,66 +1,7 @@
 @props([
-    'trangChu' => null,
-    'ngoiAmDuongs' => null,
-    'ngoiHais' => null,
-    'gachHoas' => null,
-    'about' => null,
-    'factory' => null,
-    'showroomImages' => null,
-    'showroomContent' => null,
-    'news' => null,
-    'article' => null,
-    'articles' => null,
-    'relatedArticles' => null,
-    'historyArticles' => null,
-    'projects' => null,
-    'project' => null,
-    'relatedProjects' => null,
-    'categories' => null,
-    'selectedCategory' => null,
-    'currentCategory' => null,
-    'config' => null,
-    'products' => null,
-    'relatedProducts' => null,
-    'product' => null,
-    'colors' => null,
-    'dinhMuc' => null,
-    'giaTriVuotTroi' => null,
-    'parentConfig' => null,
-    'pageLabel' => null,
-    'indexRouteName' => null,
-    'categoryType' => null,
-    'categoryLabel' => null,
-    'denGomProducts' => null,
-    'denSuProducts' => null,
-    'featuredProducts' => null,
-    'collectionProducts' => null,
-    'ngheProducts' => null,
-    'linhVatProducts' => null,
-    'bgImage' => null,
-    'activeOrder' => false,
-    'activeAccount' => false,
-    'activeCatalog' => false,
-    'activeGuide' => false,
-    'activeProcess' => false,
-    'activePrivacy' => false,
-    'activeReturn' => false,
-    'activeShipping' => false,
-    'image' => null,
-    'label1' => null,
-    'rate1' => null,
-    'label2' => null,
-    'rate2' => null,
-    'sectionId' => null,
-    'sectionClass' => null,
-    'sectionTitle' => null,
-    'desktopLinkHref' => null,
-    'detailRouteName' => null,
-    'wrapperClass' => null,
-    'titleClass' => null,
-    'title' => null,
-    'subtitle' => null,
-    'description' => null,
-    'items' => null,
+    'products' => collect(),
+    'sectionImage' => null,
+    'sectionTitle' => 'LAN CAN BẦU',
 ])
 <!-- Danh Mục Sản Phẩm Section 2 -->
 <section class="w-full pb-[30px] md:pb-16">
@@ -70,7 +11,7 @@
             <div class="w-full lg:w-[45%] flex flex-col justify-stretch">
                 <div
                     class="w-full flex-grow relative shadow-xl overflow-hidden bg-black/5 min-h-[400px] lg:min-h-[500px] border border-black/10">
-                    <img src="{{ asset('assets/images/lan-can-bau.png') }}" alt=""
+                    <img src="{{ $sectionImage ? asset('storage/' . $sectionImage) : asset('assets/images/lan-can-bau.png') }}" alt="{{ $sectionTitle }}"
                         class="absolute inset-0 w-full h-full object-cover" />
                     <div
                         class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-[560px] z-10 hover:scale-105 transition-transform duration-300">
@@ -80,7 +21,7 @@
                             <span
                                 class="lan-can-brush-title absolute text-white font-bold text-[24px] md:text-[32px] uppercase tracking-wider"
                                 style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4)">
-                                LAN CAN BẦU
+                                {{ $sectionTitle }}
                             </span>
                         </div>
                     </div>
@@ -89,29 +30,25 @@
             <div class="w-full lg:w-[55%] flex flex-col justify-between">
                 <div
                     class="grid grid-cols-2 gap-x-4 md:gap-x-8 lg:gap-x-16 gap-y-6 md:gap-y-10 lg:gap-y-12 mb-6 md:mb-10">
-                    <x-client.shared.product-card href="#" image="{{ asset('assets/images/lan-can-02.jpg') }}"
-                        title="Riềm Âm Dương Sen Bầu"
-                        title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
-                        code="MSP: 1234RDS" price="Giá: 675.000 đ/m2" :show-overlay="true" />
-
-                    <x-client.shared.product-card href="#" image="{{ asset('assets/images/lan-can-04.jpg') }}"
-                        title="Riềm Âm Dương Sen Bầu"
-                        title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
-                        code="MSP: 1234RDS" price="Giá: 675.000 đ/m2" :show-overlay="true" />
-
-                    <x-client.shared.product-card href="#" image="{{ asset('assets/images/lan-can-05.jpg') }}"
-                        title="Riềm Âm Dương Sen Bầu"
-                        title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
-                        code="MSP: 1234RDS" price="Giá: 675.000 đ/m2" :show-overlay="true" />
-
-                    <x-client.shared.product-card href="#" image="{{ asset('assets/images/lan-can-06.jpg') }}"
-                        title="Riềm Âm Dương Sen Bầu"
-                        title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
-                        code="MSP: 1234RDS" price="Giá: 675.000 đ/m2" :show-overlay="true" />
+                    @forelse ($products->take(4) as $product)
+                        <x-client.shared.product-card
+                            href="{{ route('client.products.lan-can-gom-su.detail', $product->lan_can_gom_su_ct_id) }}"
+                            image="{{ !empty($product->images) ? asset('storage/' . $product->images[0]) : asset('assets/images/lan-can-02.jpg') }}"
+                            title="{{ $product->name }}"
+                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
+                            code="MSP: {{ $product->display_code }}"
+                            price="{{ $product->display_price }}"
+                            :show-overlay="true"
+                            product-type="lan_can_gom_su_ct"
+                            :product-id="$product->lan_can_gom_su_ct_id"
+                            :product="$product" />
+                    @empty
+                        <p class="col-span-2 text-center text-gray-600 py-8">Chưa có sản phẩm.</p>
+                    @endforelse
                 </div>
 
                 <div class="flex items-center justify-center gap-5 mt-0 md:mt-10 lg:mt-auto">
-                    <button
+                    <button type="button"
                         class="w-[40px] h-[40px] rounded-full border border-secondary flex items-center justify-center text-secondary hover:bg-secondary hover:text-white transition-all duration-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"
@@ -119,7 +56,7 @@
                             </path>
                         </svg>
                     </button>
-                    <button
+                    <button type="button"
                         class="w-[40px] h-[40px] rounded-full bg-secondary flex items-center justify-center text-white hover:opacity-90 transition-all duration-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"

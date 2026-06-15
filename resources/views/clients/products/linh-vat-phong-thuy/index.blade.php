@@ -127,7 +127,9 @@
                             price="{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . 'đ' : 'Liên hệ' }}"
                             :show-overlay="true"
                             aspect="{{ $isFirst ? 'aspect-[2/1] md:aspect-[18.8/10]' : 'aspect-[1.1/1] md:aspect-[9/10]' }}"
-                            data-aos="fade-up" data-aos-delay="{{ $delay }}" />
+                            data-aos="fade-up" data-aos-delay="{{ $delay }}"
+                            detail-route-name="client.products.linh-vat-phong-thuy.detail"
+                            :product="$product" />
                     @endforeach
                 </div>
             </div>

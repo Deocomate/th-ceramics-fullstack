@@ -71,9 +71,9 @@
     <section
         class="w-full md:w-[85%] max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-5 md:gap-4 lg:gap-6 xl:gap-8 pb-8 md:pb-10 lg:pb-24 pt-0 md:pt-4">
         <!-- Left: Images Gallery -->
-        <x-client.shared.product-image-swiper 
-            :images="$product->images ?? []" 
-            thumb-bg="bg-gray-100 border border-transparent overflow-hidden" 
+        <x-client.shared.product-image-swiper
+            :images="$product->images ?? []"
+            thumb-bg="bg-gray-100 border border-transparent overflow-hidden"
             thumb-img-class="w-full h-full object-cover"
             main-bg="bg-gray-50 flex items-center justify-center"
             main-img-class="object-contain" />
@@ -362,20 +362,9 @@
                                             price=""
                                             :show-overlay="true"
                                             aspect="aspect-square bg-white shadow-sm mb-2 md:mb-4"
-                                        >
-                                            <form action="{{ route('client.cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
-                                                @csrf
-                                                <input type="hidden" name="product_id" value="{{ $related->linh_vat_phong_thuy_ct_id }}">
-                                                <input type="hidden" name="product_type" value="linh_vat_phong_thuy_ct">
-                                                <input type="hidden" name="quantity" value="1">
-                                                <button
-                                                  type="submit"
-                                                  class="border border-secondary text-secondary text-[9px] md:text-[13px] font-bold py-1 md:py-2 px-4 md:px-6 rounded-full hover:bg-secondary hover:text-white transition-all whitespace-nowrap"
-                                                >
-                                                  Thêm vào giỏ
-                                                </button>
-                                            </form>
-                                        </x-client.shared.product-card>
+                                            detail-route-name="client.products.linh-vat-phong-thuy.detail"
+                                            :product="$related"
+                                        />
                                     @endforeach
                                 </div>
                             </div>

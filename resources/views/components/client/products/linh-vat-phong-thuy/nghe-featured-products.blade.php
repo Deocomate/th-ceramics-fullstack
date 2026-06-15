@@ -95,6 +95,8 @@
                 title="{{ $product->name ?? 'Sản phẩm' }}"
                 code="MSP: {{ $product->code ?: 'Đang cập nhật' }}"
                 price="{{ $productPrice > 0 ? number_format($productPrice, 0, ',', '.') . ' đ' : 'Liên hệ' }}"
+                detail-route-name="client.products.linh-vat-phong-thuy.detail"
+                :product="$product"
               />
             @endforeach
           </div>
@@ -128,6 +130,8 @@
         code="MSP: {{ $product->code ?: 'Đang cập nhật' }}"
         price="{{ $productPrice > 0 ? number_format($productPrice, 0, ',', '.') . ' đ' : 'Liên hệ' }}"
         :show-overlay="true"
+        detail-route-name="client.products.linh-vat-phong-thuy.detail"
+        :product="$product"
       />
     @endforeach
   </div>

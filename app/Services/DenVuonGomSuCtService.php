@@ -13,7 +13,9 @@ class DenVuonGomSuCtService
 {
     public function getAll(string $status = 'active')
     {
-        $query = DenVuonGomSuCt::query()->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])->latest();
+        $query = DenVuonGomSuCt::query()
+            ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)->orderBy('price')])
+            ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])->latest();
         if ($status === 'active') {
             $query->where('is_delete', 0);
         } elseif ($status === 'deleted') {

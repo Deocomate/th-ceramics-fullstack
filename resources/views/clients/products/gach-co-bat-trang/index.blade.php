@@ -207,7 +207,9 @@
                                                 title="{{ $product->name }}"
                                                 code="MSP: {{ $product->code ?: 'Đang cập nhật' }}"
                                                 price="Giá: {{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/viên' : 'Liên hệ' }}"
-                                                :show-overlay="true" />
+                                                :show-overlay="true"
+                                                detail-route-name="client.products.gach-co-bat-trang.detail"
+                                                :product="$product" />
                                         </div>
                                     @endforeach
                                 </div>

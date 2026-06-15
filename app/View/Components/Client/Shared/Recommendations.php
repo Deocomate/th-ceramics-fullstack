@@ -3,6 +3,7 @@
 namespace App\View\Components\Client\Shared;
 
 use App\Support\AssetPath;
+use App\Support\ClientProductType;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
@@ -77,7 +78,9 @@ class Recommendations extends Component
             'color' => filled($rawColor) ? $rawColor : 'Tự chọn',
             'size' => filled($rawSize) ? $rawSize : '--',
             'type' => $resolvedType,
-            'can_add_to_cart' => $price > 0 && $resolvedType && $resolvedType !== 'den_vuon_gom_su_ct',
+            'variant_id' => is_object($product)
+                ? ClientProductType::resolveFirstVariantId($product, $resolvedType)
+                : null,
         ];
     }
 }

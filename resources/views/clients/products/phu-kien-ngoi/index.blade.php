@@ -90,7 +90,7 @@
     @if ($masonryProducts->isNotEmpty())
         <section class="relative mx-auto pb-10 lg:pb-16 overflow-visible">
             <img src="{{ asset('assets/images/pk-decorate-left.svg') }}" alt=""
-                class="absolute top-10 lg:-top-[11%] left-0 w-[60%] max-w-[400px] lg:max-w-[620px] opacity-70 z-0 pointer-events-none"
+                class="absolute top-10 lg:-top-[5%] left-0 w-[60%] max-w-[400px] lg:max-w-[620px] opacity-70 z-0 pointer-events-none"
                 data-aos="fade-right" data-aos-duration="1000">
             <img src="{{ asset('assets/images/pk-decorate-right.svg') }}" alt=""
                 class="absolute bottom-[-5%] lg:bottom-[-18%] right-0 w-[70%] max-w-[500px] lg:max-w-[780px] opacity-70 z-0 pointer-events-none"
@@ -110,7 +110,10 @@
                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                             code="MSP: {{ $product->display_code }}" price="{{ $product->display_price }}"
                             :show-overlay="true" aspect="{{ $item['card'] }} bg-white shadow mb-4 lg:mb-6"
-                            data-aos="fade-up" data-aos-delay="{{ $item['delay'] }}" />
+                            data-aos="fade-up" data-aos-delay="{{ $item['delay'] }}"
+                            product-type="phu_kien_ngoi_ct"
+                            :product-id="$product->phu_kien_ngoi_ct_id"
+                            :product="$product" />
                     @endforeach
                 </div>
             </div>

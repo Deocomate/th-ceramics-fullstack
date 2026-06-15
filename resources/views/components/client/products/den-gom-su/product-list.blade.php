@@ -90,6 +90,8 @@
             title="{{ $product->name }}"
             code="MSP: {{ $product->display_code ?? 'Đang cập nhật' }}"
             price="{{ $product->display_price }}"
+            detail-route-name="client.products.den-gom-su.detail"
+            :product="$product"
           />
           @endforeach
         </div>
@@ -132,6 +134,8 @@
       code="MSP: {{ $product->display_code ?? 'Đang cập nhật' }}"
       price="{{ $product->display_price }}"
       :show-overlay="true"
+      detail-route-name="client.products.den-gom-su.detail"
+      :product="$product"
     />
     @empty
     <div class="col-span-full py-12 text-center text-gray-500">Chưa có sản phẩm nào.</div>

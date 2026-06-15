@@ -135,7 +135,10 @@
                                             title="{{ $item->name }}"
                                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                                             code="MSP: {{ $item->display_code }}" price="{{ $item->display_price }}"
-                                            :show-overlay="true" />
+                                            :show-overlay="true"
+                                            product-type="lan_can_gom_su_ct"
+                                            :product-id="$item->lan_can_gom_su_ct_id"
+                                            :product="$item" />
                                     @endforeach
                                 </div>
                             @endforeach
@@ -228,7 +231,10 @@
                                             title="{{ $item->name }}"
                                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                                             code="MSP: {{ $item->display_code }}" price="{{ $item->display_price }}"
-                                            :show-overlay="true" />
+                                            :show-overlay="true"
+                                            product-type="lan_can_gom_su_ct"
+                                            :product-id="$item->lan_can_gom_su_ct_id"
+                                            :product="$item" />
                                     @endforeach
                                 </div>
                             @endforeach
@@ -282,7 +288,10 @@
                             title="{{ $firstProduct->name }}"
                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                             code="MSP: {{ $firstProduct->display_code }}" price="{{ $firstProduct->display_price }}"
-                            :show-overlay="true" aspect="aspect-[2/1] md:aspect-[19/10]" />
+                            :show-overlay="true" aspect="aspect-[2/1] md:aspect-[19/10]"
+                            product-type="lan_can_gom_su_ct"
+                            :product-id="$firstProduct->lan_can_gom_su_ct_id"
+                            :product="$firstProduct" />
                     @endif
 
                     <!-- Khối ảnh nhỏ tiếp theo -->
@@ -293,7 +302,10 @@
                             title="{{ $item->name }}"
                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                             code="MSP: {{ $item->display_code }}" price="{{ $item->display_price }}"
-                            :show-overlay="true" aspect="aspect-[1.1/1] md:aspect-[9/10]" />
+                            :show-overlay="true" aspect="aspect-[1.1/1] md:aspect-[9/10]"
+                            product-type="lan_can_gom_su_ct"
+                            :product-id="$item->lan_can_gom_su_ct_id"
+                            :product="$item" />
                     @endforeach
                 </div>
             </div>

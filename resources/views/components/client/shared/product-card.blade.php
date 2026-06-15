@@ -1,16 +1,3 @@
-@props([
-    'href' => '#',
-    'image' => null,
-    'alt' => '',
-    'title' => '',
-    'code' => '',
-    'price' => '',
-    'aspect' => 'aspect-square shadow-lg',
-    'blend' => true,
-    'showOverlay' => false,
-    'titleClass' => '',
-])
-
 <div {{ $attributes->merge(['class' => 'flex flex-col group cursor-pointer']) }}>
     <a href="{{ $href }}" class="flex flex-col flex-grow">
         <div
@@ -45,7 +32,17 @@
         </div>
     </a>
 
-    @if ($slot->isNotEmpty())
+    @if ($shouldShowAddToCart)
+        <button type="button"
+            class="js-add-to-cart {{ $addToCartButtonClasses }}"
+            data-product-type="{{ $resolvedProductType }}"
+            data-product-id="{{ $resolvedProductId }}"
+            data-product-name="{{ $title }}"
+            @if ($resolvedVariantId) data-variant-id="{{ $resolvedVariantId }}" @endif
+            onclick="event.stopPropagation();">
+            Thêm vào giỏ
+        </button>
+    @elseif ($slot->isNotEmpty())
         <div class="mt-2">
             {{ $slot }}
         </div>

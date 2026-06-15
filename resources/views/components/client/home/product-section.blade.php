@@ -90,6 +90,8 @@
                                         code="MSP: {{ getHomeProductCode($product) }}"
                                         price="{{ getHomeProductPrice($product) }}"
                                         :blend="false"
+                                        :product="$product"
+                                        :detail-route-name="$detailRouteName"
                                     />
                                 @endforeach
                             </div>
@@ -115,7 +117,8 @@
                     <div class="flex flex-col">
                         <x-client.shared.product-card href="{{ $detailUrl }}" image="{{ $imageUrl }}"
                             title="{{ $product->name }}" code="MSP: {{ getHomeProductCode($product) }}"
-                            price="Giá: {{ getHomeProductPrice($product) }}" :blend="false" :show-overlay="true" />
+                            price="Giá: {{ getHomeProductPrice($product) }}" :blend="false" :show-overlay="true"
+                            :product="$product" :detail-route-name="$detailRouteName" />
                     </div>
                 @endforeach
             </div>

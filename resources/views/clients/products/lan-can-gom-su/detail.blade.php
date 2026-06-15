@@ -16,6 +16,7 @@
     // Lấy danh sách sản phẩm liên quan cho section "Có thể bạn quan tâm"
     $relatedProducts = \App\Models\LanCanGomSuCt::where('is_delete', 0)
         ->where('lan_can_gom_su_ct_id', '!=', $product->lan_can_gom_su_ct_id)
+        ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)->orderBy('price')])
         ->inRandomOrder()
         ->take(6)
         ->get();
@@ -89,9 +90,9 @@
         class="w-full md:w-[85%] max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-5 md:gap-4 lg:gap-6 xl:gap-8 pb-8 md:pb-10 lg:pb-24 pt-0 md:pt-4">
 
         <!-- Left: Images -->
-        <x-client.shared.product-image-swiper 
-            :images="$images" 
-            thumb-bg="bg-[#5C2321]" 
+        <x-client.shared.product-image-swiper
+            :images="$images"
+            thumb-bg="bg-[#5C2321]"
             thumb-img-class="w-full h-full object-cover object-center mix-blend-screen opacity-90" />
 
         <!-- Right: Info -->
