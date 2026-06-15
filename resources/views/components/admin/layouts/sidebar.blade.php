@@ -233,7 +233,7 @@
         </div>
 
         {{-- Dự Án --}}
-        @php $isProject = request()->routeIs(['admin.danh-muc-du-an.*', 'admin.du-an.*']); @endphp
+        @php $isProject = request()->routeIs(['admin.danh-muc-du-an.*', 'admin.du-an.*', 'admin.trang-du-an.*']); @endphp
         <div>
             <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]" onclick="toggleSubmenu('menu-project', this)">
                 <div class="flex items-center gap-3">
@@ -246,6 +246,7 @@
                 <div class="overflow-hidden pl-9 pr-3 space-y-1 pb-1">
                     <a href="{{ route('admin.danh-muc-du-an.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.danh-muc-du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Danh mục</a>
                     <a href="{{ route('admin.du-an.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Dự án</a>
+                    <a href="{{ route('admin.trang-du-an.index') }}" class="block px-3 py-2 rounded-lg text-[12px] font-medium transition-all {{ request()->routeIs('admin.trang-du-an.*') ? 'text-white bg-white/[0.08]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]' }}">Cấu hình trang</a>
                 </div>
             </div>
         </div>

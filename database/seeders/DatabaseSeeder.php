@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
 
             // Các dữ liệu content khác
             DuAnSeeder::class,
+            TrangDuAnSeeder::class,
             CatalogSeeder::class,
             VeChungToiSeeder::class,
             TinTucSeeder::class,

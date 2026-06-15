@@ -40,6 +40,7 @@
             'admin.danh-muc-tin-tuc' => 'client.news.index',
             'admin.du-an' => 'client.projects.index',
             'admin.danh-muc-du-an' => 'client.projects.index',
+            'admin.trang-du-an' => 'client.projects.index',
             'admin.catalog' => 'client.dich-vu.tai-catalog',
         ];
 

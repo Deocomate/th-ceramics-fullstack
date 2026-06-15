@@ -74,6 +74,7 @@
 
     <!-- Sections Wrapped in Accordion for Mobile -->
     <div class="order-1 md:order-2 w-full flex flex-col pt-0 pb-2 md:pb-0">
+        @if ($colors->isNotEmpty())
         <!-- Product Color Palette Accordion Item -->
         <div class="md:border-none">
             <button class="md:hidden w-full flex justify-between items-center py-[20px] px-[30px]"
@@ -92,6 +93,7 @@
             </div>
         </div>
         <hr class="mx-[30px] border-t border-black/10 md:hidden" />
+        @endif
 
         <!-- Weight Calculator Accordion Item -->
         <div class="md:border-none">

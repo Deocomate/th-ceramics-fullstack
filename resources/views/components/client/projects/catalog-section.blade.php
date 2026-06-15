@@ -1,4 +1,5 @@
 @props([
+    'pageConfig' => null,
     'trangChu' => null,
     'ngoiAmDuongs' => null,
     'ngoiHais' => null,
@@ -60,7 +61,10 @@
     'title' => null,
     'subtitle' => null,
     'description' => null,
-    'items' => null,])
+    'items' => null,
+])
+
+@if ($pageConfig?->promo_enabled)
 <!-- Catalog Section -->
 <section
   id="catalog-section"
@@ -86,15 +90,13 @@
         data-aos="fade-right"
       >
         <h2 class="text-[36px] leading-[45px] lg:text-[48px] font-arima font-light text-primary lg:leading-tight mb-8 md:mb-4">
-          Gạch thông<br class="hidden md:block"/>
-          gió 300x300<br class="hidden md:block"/>
-          thường
+          {!! nl2br(e($pageConfig->promo_title)) !!}
         </h2>
         <a
-          href="#"
+          href="{{ $pageConfig->promo_cta_url ?: '#' }}"
           class="inline-block px-4 md:px-8 py-2 md:py-3 border border-primary text-[15px] leading-[22.5px] tracking-[0.38px] font-semibold text-primary uppercase hover:bg-primary hover:text-white transition-all duration-300"
         >
-          XEM CATALOG
+          {{ $pageConfig->promo_cta_label }}
         </a>
       </div>
 
@@ -105,8 +107,8 @@
       >
         <div class="relative group">
           <img
-            src="{{ asset('assets/images/news-detail-5.png') }}"
-            alt="Gạch thông gió"
+            src="{{ \App\Support\AssetPath::url($pageConfig->promo_image, 'assets/images/news-detail-5.png') }}"
+            alt="{{ \Illuminate\Support\Str::before($pageConfig->promo_title, chr(10)) }}"
             class="w-full h-auto aspect-[67/45] object-cover shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
           />
         </div>
@@ -114,3 +116,4 @@
     </div>
   </div>
 </section>
+@endif

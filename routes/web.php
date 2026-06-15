@@ -48,6 +48,7 @@ use App\Http\Controllers\Admin\PhuKienNgoiCtController;
 use App\Http\Controllers\Admin\ThiCongController;
 use App\Http\Controllers\Admin\TinTucController;
 use App\Http\Controllers\Admin\TrangChuController;
+use App\Http\Controllers\Admin\TrangDuAnController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VeChungToiController;
 use Illuminate\Support\Facades\Route;
@@ -415,6 +416,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // ── Dự Án ────────────────────────────────────────────────────────
+        Route::prefix('trang-du-an')->name('trang-du-an.')->group(function () {
+            Route::get('/', [TrangDuAnController::class, 'index'])->name('index');
+            Route::put('/', [TrangDuAnController::class, 'update'])->name('update');
+        });
+
         Route::prefix('du-an')->name('du-an.')->group(function () {
             Route::get('/', [DuAnController::class, 'index'])->name('index');
             Route::get('/create', [DuAnController::class, 'create'])->name('create');

@@ -434,64 +434,9 @@
                         </div>
                     @endforeach
                 @else
-                    {{-- Fallback static slides when no project data --}}
-                    @php
-                        $fallbackProjects = [
-                            [
-                                'ten_du_an' => 'CHÙA BÁI ĐÍNH',
-                                'dia_diem' => 'Ninh Bình',
-                                'san_pham' => 'Ngói âm dương nâu đen',
-                                'image' => asset('assets/images/trang-tri-slide-01.jpg'),
-                            ],
-                            [
-                                'ten_du_an' => 'CHÙA BÁI ĐÍNH 2',
-                                'dia_diem' => 'Ninh Bình',
-                                'san_pham' => 'Ngói âm dương nâu đen',
-                                'image' => asset('assets/images/trang-tri-slide-01.jpg'),
-                            ],
-                            [
-                                'ten_du_an' => 'CHÙA BÁI ĐÍNH 3',
-                                'dia_diem' => 'Ninh Bình',
-                                'san_pham' => 'Ngói âm dương nâu đen',
-                                'image' => asset('assets/images/trang-tri-slide-01.jpg'),
-                            ],
-                            [
-                                'ten_du_an' => 'CHÙA BÁI ĐÍNH 4',
-                                'dia_diem' => 'Ninh Bình',
-                                'san_pham' => 'Ngói âm dương nâu đen',
-                                'image' => asset('assets/images/trang-tri-slide-01.jpg'),
-                            ],
-                            [
-                                'ten_du_an' => 'CHÙA BÁI ĐÍNH 5',
-                                'dia_diem' => 'Ninh Bình',
-                                'san_pham' => 'Ngói âm dương nâu đen',
-                                'image' => asset('assets/images/trang-tri-slide-01.jpg'),
-                            ],
-                        ];
-                    @endphp
-                    @foreach ($fallbackProjects as $index => $project)
-                        <div class="custom-project-slide cursor-pointer" data-index="{{ $index }}">
-                            <img src="{{ $project['image'] }}" alt="{{ $project['ten_du_an'] }}"
-                                class="w-full h-full object-cover transition-transform duration-1000 ease-out hover:scale-[1.03]" />
-                            <div class="absolute inset-0 pointer-events-none z-[2]"
-                                style="background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.80) 100%)">
-                            </div>
-                            <div
-                                class="slide-content absolute bottom-[25px] left-[20px] md:bottom-12 md:left-12 lg:bottom-16 lg:left-16 text-white z-10 max-w-[85%]">
-                                <h3
-                                    class="font-archivo font-bold text-[16px] md:text-lg lg:text-[20px] uppercase tracking-wider mb-1 lg:mb-2 leading-[20px] md:leading-tight">
-                                    {{ $project['ten_du_an'] }}
-                                </h3>
-                                <div
-                                    class="font-archivo text-[12px] md:text-sm lg:text-[16px] leading-[16px] md:leading-relaxed">
-                                    <p class="mt-[4px] md:mt-0"><span class="font-bold">Địa điểm:</span><span
-                                            class="font-normal"> {{ $project['dia_diem'] }}</span></p>
-                                    <p class="mt-[2px] md:mt-0"><span class="font-bold">Sản phẩm:</span><span
-                                            class="font-normal"> {{ $project['san_pham'] }}</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+                    <div class="text-center text-white py-12 w-full">
+                        Đang cập nhật hình ảnh công trình...
+                    </div>
                 @endif
             </div>
         </div>

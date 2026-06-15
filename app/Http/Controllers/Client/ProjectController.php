@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\DanhMucDuAn;
 use App\Models\DuAn;
+use App\Services\TrangDuAnService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
+    public function __construct(private readonly TrangDuAnService $trangDuAnService) {}
+
     public function index(Request $request)
     {
         $categories = DanhMucDuAn::where('is_delete', 0)->get();
@@ -26,8 +29,9 @@ class ProjectController extends Controller
         }
 
         $projects = $query->latest()->paginate(8)->appends($request->query());
+        $pageConfig = $this->trangDuAnService->getFirstRecord();
 
-        return view('clients.projects.index', compact('categories', 'projects'));
+        return view('clients.projects.index', compact('categories', 'projects', 'pageConfig'));
     }
 
     public function detail($slug)

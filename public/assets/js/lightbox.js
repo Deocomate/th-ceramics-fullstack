@@ -125,15 +125,15 @@ const initLightbox = () => {
         const slide = event.target.closest('.swiper-slide');
         if (!slide) return;
 
-        // Skip logo/partner sliders
+        // Skip logo/partner sliders and the lightbox itself
         const swiperEl = slide.closest('.swiper');
         if (!swiperEl) return;
-        if (swiperEl.classList.contains('partner-swiper')) return;
+        if (swiperEl.classList.contains('partner-swiper') || swiperEl.classList.contains('global-lightbox-swiper')) return;
 
         const img = slide.querySelector('img');
         if (!img) return;
 
-        // Handle link checks: skip actual navigation links
+        // Handle link checks: skip actual navigation links and pre-existing glightbox links
         const link = event.target.closest('a') || slide.closest('a') || img.closest('a');
         if (link) {
             const href = link.getAttribute('href') || '';
@@ -141,7 +141,12 @@ const initLightbox = () => {
             const isDummyHref = href.startsWith('#') || href.startsWith('javascript:');
             const isLightboxLink = link.classList.contains('glightbox');
             
-            if (!isImgHref && !isDummyHref && !isLightboxLink) {
+            if (isLightboxLink) {
+                // Let GLightbox handle it natively to prevent duplicate lightbox overlays
+                return;
+            }
+            
+            if (!isImgHref && !isDummyHref) {
                 // Let normal page navigation happen
                 return;
             }
@@ -164,8 +169,11 @@ const initLightbox = () => {
     const lightbox = document.getElementById('global-lightbox');
     if (lightbox) {
         lightbox.addEventListener('click', (event) => {
-            // Close if clicking outside the image container
-            if (event.target === lightbox || event.target.classList.contains('swiper-slide')) {
+            // Close if clicking outside the image and navigation controls
+            const isImg = event.target.tagName === 'IMG';
+            const isNav = event.target.closest('.global-lightbox-next') || event.target.closest('.global-lightbox-prev');
+            
+            if (!isImg && !isNav) {
                 closeLightbox();
             }
         });
