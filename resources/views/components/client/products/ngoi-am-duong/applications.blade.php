@@ -112,11 +112,11 @@
 
     <div class="flex justify-between items-start md:grid md:grid-cols-5 gap-2 md:gap-8 overflow-hidden w-full px-2">
       @foreach ($icons as $item)
-      <div class="flex flex-col items-center gap-3 md:gap-6 group cursor-pointer w-[60px] md:w-auto">
+      <div class="flex flex-col items-center gap-3 md:gap-6 group cursor-pointer w-[60px] md:w-auto transition-opacity duration-300 hover:opacity-50">
         <div class="w-[44px] h-[44px] md:w-16 md:h-16 flex items-center justify-center">
           <img src="{{ \App\Support\AssetPath::url(data_get($item, 'icon'), 'assets/images/tu-gia.svg') }}" alt="{{ data_get($item, 'label', '') }}" class="w-full h-full object-contain" />
         </div>
-        <span class="text-secondary font-bold text-[10px] md:text-lg md:tracking-wide group-hover:text-primary transition-colors text-center leading-tight">{{ data_get($item, 'label', '') }}</span>
+        <span class="text-secondary font-bold text-[10px] md:text-lg md:tracking-wide text-center leading-tight">{{ data_get($item, 'label', '') }}</span>
       </div>
       @endforeach
     </div>

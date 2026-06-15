@@ -19,7 +19,7 @@
                     data-scroll-indicator-init="true">
                     <div class="min-w-[900px] md:min-w-[1000px] w-max">
                         <!-- Row 1: Thẻ sản phẩm -->
-                        <div class="flex gap-0 md:gap-[40px] mb-4 md:mb-[27px]">
+                        <div class="flex gap-0 md:gap-[40px] mb-4 md:mb-[15px]">
                             <!-- Desktop Sticky Left Placeholder -->
                             <div class="hidden md:block w-[140px] shrink-0 sticky left-0 bg-background-secondary z-10"></div>
 
@@ -170,35 +170,7 @@
                 color: #C76E00 !important;
             }
 
-            .recommendations-section .js-add-to-cart {
-                width: 32px !important;
-                height: 32px !important;
-                padding: 0 !important;
-                border-radius: 50% !important;
-                display: inline-flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                margin-top: 0 !important;
-                margin-left: auto !important;
-                margin-right: 0 !important;
-                transition: all 0.3s ease !important;
-                background-color: transparent !important;
-                color: #C76E00 !important;
-                border: 1px solid #C76E00 !important;
-            }
-
-            .recommendations-section .js-add-to-cart:hover {
-                background-color: #C76E00 !important;
-                color: #FFFFFF !important;
-                border: 1px solid #C76E00 !important;
-            }
-
             @media (min-width: 768px) {
-                .recommendations-section .js-add-to-cart {
-                    width: 36px !important;
-                    height: 36px !important;
-                }
-
                 .mobile-compare-row {
                     height: 41px !important;
                     min-height: 41px !important;
