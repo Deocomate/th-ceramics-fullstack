@@ -46,7 +46,14 @@ class NewsController extends Controller
         }
 
         $recentArticles = $historyService->recentArticles(3);
+        if ($recentArticles->isEmpty()) {
+            $recentArticles = $historyService->defaultArticles(3);
+        }
+
         $recentProducts = $historyService->recentProducts(4);
+        if ($recentProducts->isEmpty()) {
+            $recentProducts = $historyService->defaultProducts(4);
+        }
 
         return view('clients.news.index', compact(
             'categoryId',

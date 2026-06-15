@@ -451,10 +451,10 @@
     <section class="w-full relative pt-[40px] pb-20 md:pb-[120px] bg-background-secondary overflow-hidden"
         data-aos="fade-up">
         <img src="{{ asset('assets/images/gtt-decorate-left.svg') }}"
-            class="absolute top-[38%] -translate-y-1/3 md:left-[-5rem] -left-1/2 w-[42%] object-contain opacity-50 pointer-events-none z-0"
+            class="absolute top-[38%] -translate-y-1/3 md:left-[-5rem] -left-1/2 w-[42%] object-contain opacity-100 pointer-events-none z-0"
             alt="" />
         <img src="{{ asset('assets/images/gtt-decorate-right.svg') }}"
-            class="absolute top-[38%] -translate-y-1/3 md:right-[-5rem] -right-1/2 w-[42%] object-contain opacity-50 pointer-events-none z-0"
+            class="absolute top-[38%] -translate-y-1/3 md:right-[-5rem] -right-1/2 w-[42%] object-contain opacity-100 pointer-events-none z-0"
             alt="" />
         <x-client.shared.faq-accordion />
     </section>

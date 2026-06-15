@@ -57,6 +57,10 @@
                     transform: translateY(0);
                 }
             }
+
+            .lan-can-product-grid .product-card {
+                border-radius: 0;
+            }
         </style>
     @endpush
 
@@ -266,46 +270,41 @@
     @endif
 
     @php
-        // Lấy 3 sản phẩm không nằm trong 2 section trên (nếu có)
-        $usedIds = collect($section1ProductIds)->merge($section2ProductIds)->filter()->unique()->toArray();
-        $productListProducts = $usedIds
-            ? $products->whereNotIn('lan_can_gom_su_ct_id', $usedIds)->take(3)
-            : $products->skip(16)->take(3);
+        $allProducts = $products instanceof \Illuminate\Contracts\Pagination\Paginator
+            ? collect($products->items())->values()
+            : collect($products ?? [])->values();
+
+        $gridProducts = $allProducts->take(3);
     @endphp
 
-    @if ($productListProducts->isNotEmpty())
-        <!-- Product List Section -->
-        <section class="relative mx-auto pb-10 lg:pb-16 overflow-visible">
-            <div class="relative w-[85%] max-w-[1320px] mx-auto z-10">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-8 gap-y-4 lg:gap-y-6" data-aos="fade-up">
-                    <!-- Khối ảnh lớn đầu tiên (Chiếm 2 cột) -->
-                    @php $firstProduct = $productListProducts->first(); @endphp
-                    @if ($firstProduct)
+    @if ($gridProducts->isNotEmpty())
+        <!-- Product Grid Section (layout từ Linh Vật Phong Thủy) -->
+        <section class="mt-8 md:mt-auto relative mx-auto pb-12 overflow-visible lan-can-product-grid">
+            <div class="relative w-[85%] md:w-full max-w-[1920px] mx-auto z-10">
+                <div class="md:ml-[15.5%] grid grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-8 gap-y-[30px] lg:gap-y-6"
+                    data-aos="fade-up">
+                    @foreach ($gridProducts as $product)
+                        @php
+                            $productImage = \App\Support\AssetPath::url(
+                                collect($product->images ?? [])->first(),
+                                'assets/images/lan-can-01.jpg',
+                            );
+                            $delay = 100 + $loop->index * 100;
+                            $isFirst = $loop->first;
+                        @endphp
                         <x-client.shared.product-card
-                            href="{{ route('client.products.lan-can-gom-su.detail', $firstProduct->lan_can_gom_su_ct_id) }}"
-                            class="col-span-2 lg:col-span-2"
-                            image="{{ $firstProduct->images ? asset('storage/' . $firstProduct->images[0]) : asset('assets/images/lan-can-giot-le.jpg') }}"
-                            title="{{ $firstProduct->name }}"
+                            href="{{ route('client.products.lan-can-gom-su.detail', $product->lan_can_gom_su_ct_id) }}"
+                            class="{{ $isFirst ? 'col-span-2 lg:col-span-2' : '' }}" image="{{ $productImage }}"
+                            title="{{ $product->name }}"
                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
-                            code="MSP: {{ $firstProduct->display_code }}" price="{{ $firstProduct->display_price }}"
-                            :show-overlay="true" aspect="aspect-[2/1] md:aspect-[19/10]"
+                            code="MSP: {{ $product->display_code }}" price="{{ $product->display_price }}"
+                            :show-overlay="true"
+                            aspect="{{ $isFirst ? 'aspect-[2/1] md:aspect-[18.8/10]' : 'aspect-[1.1/1] md:aspect-[9/10]' }}"
+                            data-aos="fade-up" data-aos-delay="{{ $delay }}"
+                            detail-route-name="client.products.lan-can-gom-su.detail"
                             product-type="lan_can_gom_su_ct"
-                            :product-id="$firstProduct->lan_can_gom_su_ct_id"
-                            :product="$firstProduct" />
-                    @endif
-
-                    <!-- Khối ảnh nhỏ tiếp theo -->
-                    @foreach ($productListProducts->skip(1)->take(2) as $item)
-                        <x-client.shared.product-card
-                            href="{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}"
-                            image="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-07.jpg') }}"
-                            title="{{ $item->name }}"
-                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
-                            code="MSP: {{ $item->display_code }}" price="{{ $item->display_price }}"
-                            :show-overlay="true" aspect="aspect-[1.1/1] md:aspect-[9/10]"
-                            product-type="lan_can_gom_su_ct"
-                            :product-id="$item->lan_can_gom_su_ct_id"
-                            :product="$item" />
+                            :product-id="$product->lan_can_gom_su_ct_id"
+                            :product="$product" />
                     @endforeach
                 </div>
             </div>

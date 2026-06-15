@@ -7,6 +7,10 @@
             @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
             @import url("https://fonts.googleapis.com/css2?family=Lavishly+Yours&display=swap");
             @import url("https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Ephesis&family=Italianno&display=swap");
+
+            .lvpt-product-grid .product-card {
+                border-radius: 0;
+            }
         </style>
     @endpush
 
@@ -105,7 +109,7 @@
 
     <!-- Product Grid Section -->
     @if ($currentProducts->isNotEmpty())
-        <section class="mt-8 md:mt-auto relative mx-auto pb-8 overflow-visible">
+        <section class="mt-8 md:mt-auto relative mx-auto pb-8 overflow-visible lvpt-product-grid">
             <div class="relative w-[85%] md:w-full max-w-[1920px] mx-auto z-10">
                 <div class="md:ml-[15.5%] grid grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-8 gap-y-[30px] lg:gap-y-6"
                     data-aos="fade-up">

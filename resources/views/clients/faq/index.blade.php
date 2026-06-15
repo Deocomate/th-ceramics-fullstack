@@ -1,9 +1,9 @@
 <x-client.layouts.main title="FAQ - Câu hỏi thường gặp" main-class="bg-background-secondary" :hide-newsletter="true">
     @push('styles')
         <style>
-            @import url("https://fonts.googleapis.com/css2?family=Arima:wght@400;600;700&display=swap");
+            @import url("https://fonts.googleapis.com/css2?family=Arima:wght@400;500;600;700&display=swap");
             @import url("https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap");
-            @import url("https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;600;700&display=swap");
+            @import url("https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500;600;700&display=swap");
 
             .font-arima {
                 font-family: 'Arima', cursive;
@@ -82,13 +82,13 @@
         <!-- Sidebar -->
         <div class="lg:col-span-1 lg:sticky lg:top-28 h-fit">
             <div class="mb-8">
-                <h1 class="text-4xl md:text-5xl font-aref text-primary mb-8 md:mb-12 font-bold">FAQ</h1>
+                <h1 class="text-[48px] leading-10 font-aref text-primary mb-8 md:mb-12 font-bold">FAQ</h1>
                 <hr class="border-t border-black/10 w-full" />
             </div>
             <nav class="flex flex-col gap-5">
                 @foreach ($faqsGrouped->keys() as $category)
                     <a href="#{{ $category }}"
-                        class="text-xs md:text-sm font-medium text-primary uppercase hover:text-secondary transition-colors">
+                        class="text-sm font-archivo font-medium text-primary uppercase leading-10 hover:text-secondary transition-colors">
                         {{ \App\Models\Faq::CATEGORIES[$category] ?? $category }}
                     </a>
                 @endforeach
@@ -98,18 +98,18 @@
         <!-- Content Area -->
         <div class="lg:col-span-3">
             <!-- Breadcrumb -->
-            <div class="flex items-center gap-2 text-xs md:text-sm text-primary/60 mb-8 md:mb-0 font-medium">
+            <div class="flex items-center gap-2 text-sm font-archivo font-normal text-primary leading-10 mb-8 md:mb-0">
                 <a href="{{ route('client.home') }}" class="hover:text-secondary transition-colors">Trang chủ</a>
                 <span>&gt;</span>
-                <span class="text-primary/80">Câu hỏi thường gặp</span>
+                <span>Câu hỏi thường gặp</span>
             </div>
 
             @foreach ($faqsGrouped as $category => $faqs)
                 @php $categoryTitle = \App\Models\Faq::CATEGORIES[$category] ?? $category; @endphp
                 <div id="{{ $category }}" class="mt-12 md:mt-0 scroll-mt-24">
                     <div class="flex items-center gap-5 lg:gap-[12px] mb-8 pt-10">
-                        <div class="w-[2px] lg:w-[6px] h-8 bg-secondary"></div>
-                        <h2 class="text-2xl lg:text-[32px] lg:leading-[40px] font-semibold text-primary font-arima">
+                        <div class="w-[2px] h-8 bg-secondary"></div>
+                        <h2 class="text-[32px] leading-10 font-semibold text-primary font-arima">
                             {{ $categoryTitle }}</h2>
                     </div>
                     <div class="space-y-4 md:space-y-0 faq-category-container pt-6 md:pt-0">
@@ -118,7 +118,7 @@
                                 <button
                                     class="accordion-button w-full flex justify-between items-center text-left gap-4 group focus:outline-none py-2 md:py-0 faq-accordion-button transition-all">
                                     <span
-                                        class="text-base lg:text-[16px] lg:font-medium lg:leading-[40px] text-primary/80 group-hover:text-secondary transition-colors font-arima">
+                                        class="text-base font-medium leading-10 text-primary group-hover:text-secondary transition-colors font-arima">
                                         {{ $faq->question }}
                                     </span>
                                     <span
@@ -133,7 +133,7 @@
                                 <div class="accordion-content overflow-hidden transition-all duration-300 max-h-0">
                                     <div class="pt-4 pb-6 faq-accordion-content-inner">
                                         <p
-                                            class="text-sm/7 lg:font-extralight lg:text-[14px] lg:leading-[25px] text-primary text-justify font-archivo">
+                                            class="text-sm font-extralight leading-[25px] text-primary text-justify font-archivo">
                                             {{ $faq->answer }}
                                         </p>
                                     </div>

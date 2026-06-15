@@ -27,16 +27,16 @@
         <div
             class="relative w-full max-w-[1320px] mx-auto px-6 sm:px-8 xl:px-0 pt-12 md:pt-16 lg:pt-20 xl:pt-[126px] pb-10 md:pb-12 xl:pb-[33px]">
             <div
-                class="grid grid-cols-1 gap-y-9 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-[120px_minmax(250px,1fr)_minmax(140px,0.65fr)_minmax(210px,0.85fr)] lg:gap-x-8 lg:gap-y-10 xl:grid-cols-[130px_minmax(280px,1.05fr)_minmax(145px,0.65fr)_minmax(340px,1.25fr)_minmax(220px,0.9fr)] xl:gap-x-9 2xl:gap-x-12 items-start">
-                <div class="flex flex-col items-start sm:items-center gap-6 md:gap-10 lg:gap-[44px] min-w-0">
+                class="grid grid-cols-1 gap-y-9 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-[160px_minmax(250px,1fr)_minmax(140px,0.65fr)_minmax(210px,0.85fr)] lg:gap-x-8 lg:gap-y-10 xl:grid-cols-[160px_minmax(280px,1.05fr)_minmax(145px,0.65fr)_minmax(340px,1.25fr)_minmax(220px,0.9fr)] xl:gap-x-9 2xl:gap-x-12 items-start">
+                <div class="flex flex-col items-start sm:items-center gap-6 md:gap-10 lg:gap-[44px] shrink-0">
                     <div>
                         <img src="{{ asset('assets/images/logo.png') }}" alt="Logo"
                             class="w-[88px] h-[88px] object-contain" />
                     </div>
                     <div>
-                        <a href="#" class="inline-block" aria-label="Đã thông báo Bộ Công Thương">
+                        <a href="#" class="inline-block shrink-0" aria-label="Đã thông báo Bộ Công Thương">
                             <img src="{{ asset('assets/images/bo-cong-thuong.png') }}" alt="Đã thông báo Bộ Công Thương"
-                                class="h-[46px] sm:h-[52px] w-auto" />
+                                class="h-[46px] sm:h-[52px] w-auto max-w-none object-contain shrink-0" />
                         </a>
                     </div>
                 </div>
@@ -170,10 +170,10 @@
         </div>
     </div>
 
-    <div class="md:hidden fixed right-3 bottom-20 sm:right-4 sm:bottom-24 z-[60] flex flex-col items-center gap-3"
+    <div class="fixed right-3 bottom-20 sm:right-4 sm:bottom-24 md:right-8 md:bottom-8 z-[60] flex flex-col items-center gap-3"
         aria-label="Hành động nhanh">
         <button type="button" data-back-to-top aria-label="Lên đầu trang"
-            class="w-12 h-12 rounded-full bg-secondary text-white shadow-lg ring-1 ring-black/10 flex items-center justify-center transition-all duration-300 active:scale-95 opacity-0 translate-y-2 pointer-events-none">
+            class="w-12 h-12 rounded-full bg-secondary text-white shadow-lg ring-1 ring-black/10 flex items-center justify-center transition-all duration-300 active:scale-95 md:hover:scale-105 opacity-0 translate-y-2 pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" class="w-5 h-5" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"></path>
@@ -181,7 +181,7 @@
         </button>
 
         <a href="{{ $zaloLink }}" target="_blank" rel="noopener noreferrer" aria-label="Hỗ trợ Zalo"
-            class="w-12 h-12 rounded-full bg-[#EBDDD0] shadow-lg ring-1 ring-black/10 flex items-center justify-center transition-transform duration-300 active:scale-95">
+            class="md:hidden w-12 h-12 rounded-full bg-[#EBDDD0] shadow-lg ring-1 ring-black/10 flex items-center justify-center transition-transform duration-300 active:scale-95">
             <img src="{{ asset('assets/images/zalo.png') }}" alt="Zalo" class="w-8 h-8 object-contain" />
         </a>
     </div>

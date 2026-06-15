@@ -30,18 +30,18 @@
     <!-- Content -->
     <div class="flex flex-col gap-6 md:col-span-3" data-aos="fade-left">
       <div>
-        <p class="text-xs md:text-base font-bold text-primary uppercase mb-6">
+        <p class="text-base font-archivo font-bold text-primary uppercase leading-[62.5px] mb-6">
           Bạn còn câu hỏi?
         </p>
         <h2
-          class="text-3xl md:text-[40px] font-arima text-primary leading-tight mb-2"
+          class="text-[40px] font-normal font-arima text-primary leading-10 mb-2"
         >
           Chúng tôi sẵn sàng hỗ trợ
         </h2>
       </div>
 
-      <div class="space-y-2 text-sm md:text-base text-primary">
-        <p class="text-primary mb-4 font-medium">
+      <div class="space-y-2 text-base text-primary">
+        <p class="text-primary mb-4 font-archivo font-normal leading-[25px]">
           Thứ 2 - Chủ nhật<span class="mx-2">|</span>9AM - 5PM
         </p>
 
@@ -55,7 +55,7 @@
           </div>
           <a
             href="tel:{{ $contactHotlineLink }}"
-            class="hover:text-secondary transition-colors text-primary"
+            class="font-archivo font-extralight leading-7 hover:text-secondary transition-colors text-primary"
             >{{ $contactHotline }}</a
           >
         </div>
@@ -70,7 +70,7 @@
           </div>
           <a
             href="mailto:{{ $contactEmail }}"
-            class="hover:text-secondary transition-colors text-primary"
+            class="font-archivo font-extralight leading-7 hover:text-secondary transition-colors text-primary"
             >{{ $contactEmail }}</a
           >
         </div>
@@ -83,17 +83,17 @@
               />
             </svg>
           </div>
-          <div class="text-primary leading-relaxed">
-            <p class="text-sm md:text-base text-primary">
+          <div class="text-primary leading-7">
+            <p class="text-base font-archivo font-extralight text-primary">
               Tại
               <a
                 href="https://maps.app.goo.gl/5HRZ796Qq714sPcCA"
                 target="_blank"
-                class="text-secondary underline font-bold"
+                class="text-secondary underline font-medium"
                 >Gốm sứ Thanh Hải</a
               >
             </p>
-            <p class="text-sm md:text-base text-primary">
+            <p class="text-base font-archivo font-extralight text-primary">
               {{ $contactAddress }}
             </p>
           </div>
@@ -103,7 +103,7 @@
       <div class="mt-8">
         <a
           href="{{ route('client.contact') }}"
-          class="inline-block px-12 py-3 border border-black/20 text-primary font-bold text-xs md:text-sm tracking-widest hover:bg-secondary hover:text-white hover:border-secondary transition-all uppercase"
+          class="inline-block px-12 py-3 border border-black/20 text-primary font-archivo font-semibold text-base leading-10 hover:bg-secondary hover:text-white hover:border-secondary transition-all uppercase"
         >
           Liên hệ
         </a>

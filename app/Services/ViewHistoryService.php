@@ -89,6 +89,54 @@ class ViewHistoryService
             ->values();
     }
 
+    public function defaultArticles(int $limit = 3): Collection
+    {
+        return TinTuc::query()
+            ->with('danhMuc')
+            ->whereIn('trang_thai', ['published', 'active'])
+            ->whereHas('danhMuc', fn ($query) => $query->where('is_delete', false))
+            ->latest('ngay_dang')
+            ->take($limit)
+            ->get();
+    }
+
+    public function defaultProducts(int $limit = 4): Collection
+    {
+        $sourceTypes = ['ngoi_am_duong_ct', 'gach_hoa_thong_gio_ct'];
+        $perType = (int) ceil($limit / count($sourceTypes));
+        $items = collect();
+
+        foreach ($sourceTypes as $type) {
+            $map = $this->productTypeMap();
+
+            if (! isset($map[$type])) {
+                continue;
+            }
+
+            $config = $map[$type];
+            $idColumn = (new $config['model'])->getKeyName();
+
+            $ids = $config['model']::query()
+                ->when($config['has_delete'], fn ($query) => $query->where('is_delete', false))
+                ->latest($idColumn)
+                ->limit($perType)
+                ->pluck($idColumn);
+
+            foreach ($ids as $id) {
+                $resolved = $this->resolveProductItem([
+                    'type' => $type,
+                    'id' => (int) $id,
+                ]);
+
+                if ($resolved) {
+                    $items->push($resolved);
+                }
+            }
+        }
+
+        return $items->take($limit)->values();
+    }
+
     private function resolveProductItem(array $item): ?object
     {
         $type = (string) ($item['type'] ?? '');

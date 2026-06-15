@@ -138,7 +138,7 @@
             class="absolute top-[20%] -translate-y-1/2 left-0 -translate-x-[35%] xl:-translate-x-[20%] w-auto max-h-[85%] object-contain opacity-100 pointer-events-none z-0"
             alt="" />
         <img src="{{ asset('assets/images/background-decorate-02.svg') }}"
-            class="absolute top-[80%] -translate-y-1/2 right-0 translate-x-[35%] xl:translate-x-[20%] w-auto max-h-[85%] object-contain opacity-50 pointer-events-none z-0"
+            class="absolute top-[80%] -translate-y-[72%] right-0 translate-x-[35%] xl:translate-x-[35%] w-auto max-h-[85%] object-contain opacity-50 pointer-events-none z-0"
             alt="" />
         <x-client.shared.faq-accordion />
     </section>

@@ -4,100 +4,90 @@
 
 <style>
     .product-collage-swiper .swiper-slide>div {
-        --gap: 13px;
-        --w-cols: calc(100% - 4 * var(--gap));
-        --col1-w: calc(0.1538 * var(--w-cols));
-        --col2-w: calc(0.2308 * var(--w-cols));
-        --col3-w: calc(0.2308 * var(--w-cols));
-        --col4-w: calc(0.2308 * var(--w-cols));
-        --col5-w: calc(0.1538 * var(--w-cols));
-
-        --col1-l: 0px;
-        --col2-l: calc(var(--col1-w) + var(--gap));
-        --col3-l: calc(var(--col2-l) + var(--col2-w) + var(--gap));
-        --col4-l: calc(var(--col3-l) + var(--col3-w) + var(--gap));
-        --col5-l: calc(var(--col4-l) + var(--col4-w) + var(--gap));
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1469 / 623;
     }
 
     .product-collage-swiper .swiper-slide .collage-img-0 {
-        left: var(--col1-l);
-        width: var(--col1-w);
-        top: 32%;
-        height: 26%;
+        left: 16.4200%;
+        top: 15.7351%;
+        width: 20.9557%;
+        height: 48.6757%;
     }
 
     .product-collage-swiper .swiper-slide .collage-img-1 {
-        left: var(--col2-l);
-        width: var(--col2-w);
-        top: 15%;
-        height: 38%;
+        left: 3.5725%;
+        top: 36.9117%;
+        width: 11.8495%;
+        height: 27.4992%;
     }
 
     .product-collage-swiper .swiper-slide .collage-img-2 {
-        left: var(--col2-l);
-        width: calc(8/17 * (var(--col2-w) - var(--gap)));
-        top: calc(53% + var(--gap));
-        height: 16%;
+        left: 64.3294%;
+        top: 36.9117%;
+        width: 20.4567%;
+        height: 48.5296%;
     }
 
     .product-collage-swiper .swiper-slide .collage-img-3 {
-        left: calc(var(--col2-l) + 8/17 * (var(--col2-w) - var(--gap)) + var(--gap));
-        width: calc(9/17 * (var(--col2-w) - var(--gap)));
-        top: calc(53% + var(--gap));
-        height: 28%;
+        left: 38.6657%;
+        top: 21.5088%;
+        width: 24.4383%;
+        height: 57.3033%;
     }
 
     .product-collage-swiper .swiper-slide .collage-img-4 {
-        left: var(--col3-l);
-        width: var(--col3-w);
-        top: 18%;
-        height: 48%;
+        left: 64.3805%;
+        top: 0%;
+        width: 14.1572%;
+        height: 33.5297%;
     }
 
     .product-collage-swiper .swiper-slide .collage-img-5 {
-        left: var(--col4-l);
-        width: calc(2/3 * var(--col4-w));
-        top: 8%;
-        height: 22%;
+        left: 85.8407%;
+        top: 36.9181%;
+        width: 14.1592%;
+        height: 36.9181%;
     }
 
     .product-collage-swiper .swiper-slide .collage-img-6 {
-        left: var(--col4-l);
-        width: var(--col4-w);
-        top: calc(30% + var(--gap));
-        height: 40%;
+        left: 22.8441%;
+        top: 66.4703%;
+        width: 14.5316%;
+        height: 33.5297%;
     }
 
     .product-collage-swiper .swiper-slide .collage-img-7 {
-        left: var(--col5-l);
-        width: var(--col5-w);
-        top: 32%;
-        height: 32%;
+        left: 13.8869%;
+        top: 66.4526%;
+        width: 7.7603%;
+        height: 19.4221%;
     }
 
     /* Squares positioning */
     .product-collage-swiper .swiper-slide .collage-sq-0 {
-        background: #C0815F;
-        left: calc(var(--col1-l) - 3.5%);
-        top: 52%;
-        width: 2.5%;
-        aspect-ratio: 1;
+        background: #B77F57;
+        left: 0%;
+        top: 57.1428%;
+        width: 2.9952%;
+        height: 7.2231%;
     }
 
     .product-collage-swiper .swiper-slide .collage-sq-1 {
-        background: #5A6A4E;
-        left: calc(var(--col4-l) + 13%);
-        top: 24%;
-        width: 2.5%;
-        aspect-ratio: 1;
+        background: #586549;
+        left: 79.8475%;
+        top: 25.7351%;
+        width: 3.3054%;
+        height: 7.7940%;
     }
 
     .product-collage-swiper .swiper-slide .collage-sq-2 {
-        background: #C06848;
-        left: var(--col5-l);
-        top: 66%;
-        width: 2.5%;
-        aspect-ratio: 1;
+        background: #C65A3B;
+        left: 85.7324%;
+        top: 77.6468%;
+        width: 3.3054%;
+        height: 7.7940%;
     }
 </style>
 
@@ -115,7 +105,7 @@
             class="w-full origin-center rotate-[-55deg] scale-x-[-1] opacity-10 drop-shadow-sm" />
     </div>
 
-    <div class="w-full max-w-[1510px] px-4 md:px-[65px] mx-auto flex flex-col items-center relative z-10"
+    <div class="w-full max-w-[1660px] px-4 md:px-[65px] mx-auto flex flex-col items-center relative z-10"
         data-aos="fade-up">
         <!-- Swiper Container -->
         <div class="swiper product-collage-swiper w-full pb-0">
@@ -169,8 +159,8 @@
                 $allImages = $galleryImages->pluck('image')->filter()->values()->toArray();
                 $chunkSize = 8;
                 $imageChunks = array_chunk($allImages, $chunkSize);
-                $SHADOWS = ['shadow-sm', 'shadow-md', 'shadow-sm', 'shadow-sm', 'shadow-lg focal', 'shadow-sm', 'shadow-md', 'shadow-sm'];
-                $ZCLASSES = ['z-20', 'z-20', 'z-20', 'z-20', 'z-30', 'z-20', 'z-20', 'z-20'];
+                $SHADOWS = ['shadow-sm', 'shadow-md', 'shadow-sm', 'shadow-lg focal', 'shadow-sm', 'shadow-sm', 'shadow-md', 'shadow-sm'];
+                $ZCLASSES = ['z-20', 'z-20', 'z-20', 'z-30', 'z-20', 'z-20', 'z-20', 'z-20'];
                 $slidesArray = [];
                 foreach ($imageChunks as $chunkIdx => $chunk) {
                     $slideImages = [];
@@ -217,7 +207,7 @@
                 }
                 var slideEl = document.createElement("div");
                 slideEl.className = "swiper-slide w-full";
-                slideEl.innerHTML = '<div class="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[2.5/1]">' +
+                slideEl.innerHTML = '<div class="relative w-full aspect-[1469/623]">' +
                     squaresHtml + imagesHtml + "</div>";
                 wrapper.appendChild(slideEl);
             }

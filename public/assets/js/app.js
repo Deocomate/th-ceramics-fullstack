@@ -294,8 +294,7 @@ const initMobileFloatingActions = () => {
     mobileFloatingActionsInitialized = true;
 
     const toggleBackToTop = () => {
-        const isMobile = window.matchMedia("(max-width: 767px)").matches;
-        const shouldShow = isMobile && window.scrollY > 260;
+        const shouldShow = window.scrollY > 260;
 
         backToTopButton.classList.toggle("opacity-0", !shouldShow);
         backToTopButton.classList.toggle("translate-y-2", !shouldShow);

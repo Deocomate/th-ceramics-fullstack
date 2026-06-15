@@ -23,12 +23,12 @@
     <div class="absolute z-[2] left-[-40%] md:left-[-30%] lg:left-[-33%] top-[40%] md:top-[50%] lg:top-[60%] xl:top-[70%] w-[65%] md:w-[55%] lg:w-[63%] pointer-events-none"
         data-aos="fade-up-right" data-aos-anchor-placement="top-bottom">
         <img src="{{ asset('assets/images/gach-hoa-decorate.png') }}" alt=""
-            class="w-full origin-center -translate-y-1/2 rotate-[-45deg] md:opacity-35 opacity-25 drop-shadow-sm" />
+            class="w-full origin-center -translate-y-1/2 rotate-[-45deg] md:opacity-100 opacity-50 drop-shadow-sm" />
     </div>
     <div class="absolute z-[2] right-[-40%] md:right-[-30%] lg:right-[-33%] top-[40%] md:top-[50%] lg:top-[60%] xl:top-[70%] w-[65%] md:w-[55%] lg:w-[63%] pointer-events-none"
         data-aos="fade-up-left" data-aos-anchor-placement="top-bottom">
         <img src="{{ asset('assets/images/gach-hoa-decorate.png') }}" alt=""
-            class="w-full origin-center -translate-y-1/2 rotate-[45deg] scale-x-[-1] md:opacity-35 opacity-25 drop-shadow-sm" />
+            class="w-full origin-center -translate-y-1/2 rotate-[45deg] scale-x-[-1] md:opacity-100 opacity-50 drop-shadow-sm" />
     </div>
 
     <!-- Content -->

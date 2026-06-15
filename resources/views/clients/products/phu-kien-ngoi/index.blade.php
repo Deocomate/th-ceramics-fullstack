@@ -145,12 +145,12 @@
                     'assets/images/lan-can-02.jpg',
                 ];
                 $allImages = count($galleries) > 0 ? $galleries : $galleryFallbacks;
-                $chunks = collect($allImages)->chunk(6);
+                $chunks = collect($allImages)->chunk(7);
 
-                // Pad the last chunk if it has < 6 items and we have multiple pages
-                if ($chunks->count() > 1 && $chunks->last()->count() < 6) {
+                // Pad the last chunk if it has < 7 items and we have multiple pages
+                if ($chunks->count() > 1 && $chunks->last()->count() < 7) {
                     $lastChunk = $chunks->last();
-                    $needed = 6 - $lastChunk->count();
+                    $needed = 7 - $lastChunk->count();
                     for ($i = 0; $i < $needed; $i++) {
                         $lastChunk->push($galleryFallbacks[$i % count($galleryFallbacks)]);
                     }
@@ -173,13 +173,20 @@
                                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                     </a>
                                 </div>
-                                <div class="col-span-1" data-aos="fade-up" data-aos-delay="100">
-                                    <div class="w-full aspect-[8/10] bg-[#BD724F] shadow"></div>
+                                <div class="contents md:flex md:flex-col md:gap-4">
+                                    <div class="w-full aspect-[19/10] bg-[#BD724F] shadow" data-aos="fade-up" data-aos-delay="100">
+                                    </div>
+                                    <a href="{{ $getImageUrl(1) }}"
+                                        class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block"
+                                        data-aos="fade-up" data-aos-delay="200">
+                                        <img src="{{ $getImageUrl(1) }}" alt=""
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </a>
                                 </div>
                                 <div class="col-span-2 hidden md:block" data-aos="fade-up" data-aos-delay="200">
-                                    <a href="{{ $getImageUrl(1) }}"
+                                    <a href="{{ $getImageUrl(2) }}"
                                         class="glightbox w-full aspect-[11/5] shadow overflow-hidden relative group block">
-                                        <img src="{{ $getImageUrl(1) }}" alt=""
+                                        <img src="{{ $getImageUrl(2) }}" alt=""
                                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                     </a>
                                 </div>
@@ -187,9 +194,9 @@
 
                             <div class="grid grid-cols-1 md:hidden gap-2 md:gap-4" data-aos="fade-up" data-aos-delay="200">
                                 <div class="col-span-1">
-                                    <a href="{{ $getImageUrl(1) }}"
+                                    <a href="{{ $getImageUrl(2) }}"
                                         class="glightbox w-full aspect-[22/10] shadow overflow-hidden relative group block">
-                                        <img src="{{ $getImageUrl(1) }}" alt=""
+                                        <img src="{{ $getImageUrl(2) }}" alt=""
                                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                     </a>
                                 </div>
@@ -197,33 +204,33 @@
 
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 items-start">
                                 <div class="col-span-1 row-span-2 md:row-span-1 h-full" data-aos="fade-up" data-aos-delay="0">
-                                    <a href="{{ $getImageUrl(2) }}"
+                                    <a href="{{ $getImageUrl(3) }}"
                                         class="glightbox w-full md:aspect-[8/10] shadow overflow-hidden relative group block">
-                                        <img src="{{ $getImageUrl(2) }}" alt=""
+                                        <img src="{{ $getImageUrl(3) }}" alt=""
                                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                     </a>
                                 </div>
                                 <div class="contents md:flex md:flex-col md:gap-4">
-                                    <a href="{{ $getImageUrl(3) }}"
+                                    <a href="{{ $getImageUrl(4) }}"
                                         class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block"
                                         data-aos="fade-up" data-aos-delay="100">
-                                        <img src="{{ $getImageUrl(3) }}" alt=""
+                                        <img src="{{ $getImageUrl(4) }}" alt=""
                                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                     </a>
                                     <div class="w-full aspect-[19/10] bg-[#BD724F] shadow" data-aos="fade-up" data-aos-delay="200">
                                     </div>
                                 </div>
                                 <div class="col-span-1" data-aos="fade-up" data-aos-delay="200">
-                                    <a href="{{ $getImageUrl(4) }}"
+                                    <a href="{{ $getImageUrl(5) }}"
                                         class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block">
-                                        <img src="{{ $getImageUrl(4) }}" alt=""
+                                        <img src="{{ $getImageUrl(5) }}" alt=""
                                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                     </a>
                                 </div>
                                 <div class="col-span-1" data-aos="fade-up" data-aos-delay="300">
-                                    <a href="{{ $getImageUrl(5) }}"
+                                    <a href="{{ $getImageUrl(6) }}"
                                         class="glightbox w-full aspect-[8/10] shadow overflow-hidden relative group block">
-                                        <img src="{{ $getImageUrl(5) }}" alt=""
+                                        <img src="{{ $getImageUrl(6) }}" alt=""
                                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                     </a>
                                 </div>
