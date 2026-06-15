@@ -121,8 +121,10 @@
                         </div>
                     </div>
 
+                    <div class="space-y-6 lg:space-y-8" data-hai-vm-areas>
                     <x-client.shared.shape-area-block :index="1" variant="hai-vm" />
-                    <x-client.shared.shape-area-block :index="2" default-shape="trapezoid" :show-remove="true" variant="hai-vm" />
+                    <x-client.shared.shape-area-block :index="2" default-shape="trapezoid" variant="hai-vm" />
+                    </div>
 
                     <div class="text-center">
                         <button data-add-area

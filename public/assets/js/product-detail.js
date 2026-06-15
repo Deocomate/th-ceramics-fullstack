@@ -1,3 +1,5 @@
+import { addToCart, dispatchCartUpdated, showCartToast } from "./cart-ui.js";
+
 const formatPrice = (raw) => {
     const value = Number.parseFloat(raw || "0");
 
@@ -168,47 +170,36 @@ const initProductDetailContainer = (container) => {
             const type = container.dataset.productType || "";
             const id = Number.parseInt(container.dataset.productId || "", 10);
             const qty = Number.parseInt(container.querySelector("[data-detail-quantity-input]")?.value || "1", 10) || 1;
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || "";
-            const addToCartUrl = container.dataset.addToCartUrl || "/gio-hang/them";
             const variantElements = Array.from(container.querySelectorAll("[data-product-variant]"));
             const selectedVariant = container.querySelector("[data-product-variant].selected");
 
             if (!type || !id) {
-                alert("Thông tin sản phẩm không đầy đủ.");
+                showCartToast("Thông tin sản phẩm không đầy đủ.", "error");
                 return;
             }
 
             if (variantElements.length > 0 && !selectedVariant) {
-                alert("Vui lòng chọn màu sắc/phân loại trước khi thêm vào giỏ hàng!");
+                showCartToast("Vui lòng chọn màu sắc/phân loại trước khi thêm vào giỏ hàng!", "error");
                 return;
             }
 
             addToCartButton.disabled = true;
 
-            fetch(addToCartUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": csrfToken,
-                    Accept: "application/json",
-                },
-                body: JSON.stringify({
-                    product_type: type,
-                    product_id: id,
-                    variant_id: selectedVariant?.dataset.variantId ? Number.parseInt(selectedVariant.dataset.variantId, 10) : null,
-                    qty,
-                }),
+            addToCart({
+                productType: type,
+                productId: id,
+                variantId: selectedVariant?.dataset.variantId
+                    ? Number.parseInt(selectedVariant.dataset.variantId, 10)
+                    : null,
+                qty,
             })
-                .then((response) => response.json())
                 .then((data) => {
-                    if (data.status === "success") {
-                        alert("Đã thêm vào giỏ hàng!");
-                        return;
-                    }
-
-                    alert(data.message || "Có lỗi xảy ra.");
+                    showCartToast(data.message || "Đã thêm vào giỏ hàng!");
+                    dispatchCartUpdated({ count: data.cart_count, total: data.cart_total });
                 })
-                .catch(() => alert("Lỗi kết nối. Vui lòng thử lại."))
+                .catch((error) => {
+                    showCartToast(error.message || "Có lỗi xảy ra.", "error");
+                })
                 .finally(() => {
                     addToCartButton.disabled = false;
                 });

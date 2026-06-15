@@ -77,6 +77,8 @@ Route::name('client.')->group(function () {
 
     // Giỏ hàng / Thanh toán
     Route::get('/gio-hang', [CartController::class, 'cart'])->name('cart.index');
+    Route::get('/gio-hang/san-pham-options', [CartController::class, 'productOptions'])->name('cart.product-options');
+    Route::get('/gio-hang/mini', [CartController::class, 'mini'])->name('cart.mini');
     Route::get('/thanh-toan', [CartController::class, 'checkout'])->middleware(['auth', 'verified'])->name('cart.checkout');
     Route::post('/gio-hang/them', [CartController::class, 'add'])->name('cart.add');
     Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('cart.update');

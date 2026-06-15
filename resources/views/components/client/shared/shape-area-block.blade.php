@@ -1,14 +1,13 @@
 @props([
     'index' => 1,
     'defaultShape' => 'rectangle',
-    'showRemove' => false,
     'variant' => 'hai-vm',
 ])
 
 @php
     $isWeight = $variant === 'weight';
     $rowClass = $isWeight
-        ? 'flex flex-col lg:flex-row gap-2 lg:gap-4 items-start lg:items-end mb-6 lg:mb-0'
+        ? 'flex flex-col lg:flex-row gap-2 lg:gap-4 items-start lg:items-end'
         : 'flex flex-col lg:flex-row gap-2 lg:gap-4 items-start lg:items-end';
     $desktopLabelClass = $isWeight
         ? 'hidden lg:flex w-full lg:w-[150px] shrink-0 pb-1 flex-col'
@@ -45,13 +44,13 @@
 <div class="{{ $rowClass }}" data-area-block>
     <div class="{{ $desktopLabelClass }}">
         <span class="font-semibold text-primary uppercase text-base" data-area-title>DIỆN TÍCH {{ $index }}</span>
-        <button type="button" data-remove-area class="{{ $removeDesktopClass }} {{ $showRemove ? '' : 'hidden' }}">Loại bỏ</button>
+        <button type="button" data-remove-area class="{{ $removeDesktopClass }} hidden">Loại bỏ</button>
     </div>
     <div class="{{ $gridClass }}">
         <div class="{{ $shapeColClass }}">
             <div class="flex items-center gap-2 {{ $isWeight ? 'lg:hidden mb-2 pl-2' : 'md:hidden mb-1 pl-0.5' }}">
                 <span class="{{ $mobileTitleClass }}" data-area-title>DIỆN TÍCH {{ $index }}</span>
-                <button type="button" data-remove-area class="{{ $removeMobileClass }} {{ $showRemove ? '' : 'hidden' }}">Loại bỏ</button>
+                <button type="button" data-remove-area class="{{ $removeMobileClass }} hidden">Loại bỏ</button>
             </div>
             <div class="relative">
                 <select data-shape-select class="{{ $selectClass }}">

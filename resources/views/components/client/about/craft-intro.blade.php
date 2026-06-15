@@ -79,9 +79,7 @@
       <span>{{ $line }}</span>
     @endforeach
   </h2>
-  <p
-    class="text-textPrimary leading-[28px] text-justify md:text-center font-medium tracking-[0.48px] md:tracking-wide"
-  >
+  <p class="about-description text-justify md:text-center">
     {{ $craftBody }}
   </p>
 </div>

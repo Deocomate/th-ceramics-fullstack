@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\AddToCartRequest;
 use App\Http\Requests\Cart\CheckoutRequest;
+use App\Http\Requests\Cart\ProductCartOptionsRequest;
 use App\Http\Requests\Cart\UpdateCartRequest;
 use App\Mail\OrderCreatedMail;
 use App\Models\Order;
 use App\Services\CartService;
 use App\Services\CouponService;
+use App\Services\ProductCartOptionsService;
+use App\Support\AssetPath;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -50,11 +54,21 @@ class CartController extends Controller
                 $request->qty
             );
 
+            $cart = $cartService->getCart();
+            $rowId = md5("{$request->product_type}_{$request->product_id}_{$request->variant_id}");
+            $item = $cart[$rowId] ?? null;
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Đã thêm vào giỏ hàng.',
                 'cart_count' => $cartService->getCount(),
                 'cart_total' => $cartService->getTotal(),
+                'item' => $item ? [
+                    'name' => $item['name'],
+                    'variant_name' => $item['variant_name'],
+                    'quantity' => $item['quantity'],
+                    'price_formatted' => number_format($item['price'], 0, ',', '.').' đ',
+                ] : null,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -62,6 +76,53 @@ class CartController extends Controller
                 'message' => $e->getMessage(),
             ], 422);
         }
+    }
+
+    public function productOptions(ProductCartOptionsRequest $request, ProductCartOptionsService $optionsService): JsonResponse
+    {
+        try {
+            return response()->json([
+                'status' => 'success',
+                'data' => $optionsService->getOptions($request->product_type, (int) $request->product_id),
+            ]);
+        } catch (ModelNotFoundException) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Sản phẩm không tồn tại.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    public function mini(CartService $cartService): JsonResponse
+    {
+        $items = collect($cartService->getCart())
+            ->take(5)
+            ->map(fn (array $item) => [
+                'row_id' => $item['row_id'],
+                'name' => $item['name'],
+                'variant_name' => $item['variant_name'],
+                'quantity' => $item['quantity'],
+                'price_formatted' => number_format($item['price'], 0, ',', '.').' đ',
+                'line_total_formatted' => number_format($item['price'] * $item['quantity'], 0, ',', '.').' đ',
+                'image_url' => AssetPath::url($item['image']),
+            ])
+            ->values()
+            ->all();
+
+        $subtotal = $cartService->getSubtotal();
+
+        return response()->json([
+            'status' => 'success',
+            'cart_count' => $cartService->getCount(),
+            'subtotal' => $subtotal,
+            'subtotal_formatted' => number_format($subtotal, 0, ',', '.').' đ',
+            'items' => $items,
+        ]);
     }
 
     public function update(UpdateCartRequest $request, CartService $cartService)

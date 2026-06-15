@@ -2,9 +2,6 @@
     main-class="flex-grow bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
     @push('styles')
         <style>
-            @import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
-            @import url("https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Italianno&display=swap");
-
             /* Custom scrollbar for comparison table */
             .custom-recommend-scrollbar::-webkit-scrollbar {
                 height: 6px;
@@ -25,34 +22,6 @@
             }
         </style>
     @endpush
-
-    <!-- Top Banner for Detail -->
-    <section class="hidden md:flex relative w-full">
-        <div
-            class="relative w-full aspect-[4/3] md:aspect-[8/6] lg:aspect-auto lg:h-[695px] lg:[clip-path:inset(40px_0_0_0)] lg:-mt-[40px]">
-            @php $detailBanner = (!empty($product->images) && is_array($product->images)) ? $product->images[0] : null; @endphp
-            <img src="{{ $detailBanner ? asset('storage/' . $detailBanner) : asset('assets/images/pk-banner.png') }}"
-                alt="{{ $product->name }}" class="w-full h-full object-cover">
-
-            <div class="absolute inset-0 flex flex-col items-center pt-[5%] md:pt-[5%] lg:pt-[5%]" data-aos="fade-up"
-                data-aos-delay="100">
-                <div class="text-center text-white px-4 w-[85%] max-w-[1320px] mx-auto">
-                    <h1
-                        class="font-sans text-[26px] md:text-4xl lg:text-[44px] font-bold uppercase mb-2 md:mb-6 drop-shadow-md">
-                        LINH VẬT PHONG THỦY
-                    </h1>
-                    <p
-                        class="font-italianno text-xl md:text-[34px] lg:text-[48px] font-light leading-none tracking-wide drop-shadow-sm text-white/95">
-                        Tâm linh hội tụ, vượng khí an gia
-                    </p>
-                    <p
-                        class="font-italianno text-xl md:text-[34px] lg:text-[48px] font-light leading-none tracking-wide drop-shadow-sm text-white/95">
-                        {{ $product->name }}
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Sub Breadcrumb -->
     <div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
@@ -357,7 +326,7 @@
                                             class="w-[175px] md:w-[220px] shrink-0"
                                             image="{{ $relatedImg ? asset('storage/' . $relatedImg) : asset('assets/images/ngoi-01.jpg') }}"
                                             title="{{ $related->name }}"
-                                            title-class="font-bold text-[12px] md:text-base leading-snug h-6 md:h-12 overflow-hidden mb-0 md:mb-2 uppercase text-[#004B8D] hover:text-secondary transition-colors"
+                                            title-class="font-bold text-[12px] md:text-base leading-snug h-6 md:h-12 overflow-hidden mb-0 md:mb-2 text-[#004B8D] hover:text-secondary transition-colors"
                                             code=""
                                             price=""
                                             :show-overlay="true"

@@ -107,7 +107,7 @@
                         <x-client.shared.product-card href="{{ $productUrl($product) }}" class="{{ $item['wrapper'] }}"
                             image="{{ $productImageUrl($product, 'assets/images/pk-01.jpg') }}"
                             title="{{ $product->name }}"
-                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
+                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                             code="MSP: {{ $product->display_code }}" price="{{ $product->display_price }}"
                             :show-overlay="true" aspect="{{ $item['card'] }} bg-white shadow mb-4 lg:mb-6"
                             data-aos="fade-up" data-aos-delay="{{ $item['delay'] }}"

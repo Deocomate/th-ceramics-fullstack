@@ -79,9 +79,7 @@
     >
       {{ $materialTitle }}
     </h3>
-    <p
-      class="text-textPrimary leading-[28px] text-justify md:text-left md:mb-4 font-medium tracking-[0.48px] md:tracking-wide lg:max-w-md"
-    >
+    <p class="about-description text-justify md:text-left md:mb-4 lg:max-w-md">
       {{ $materialBody }}
     </p>
   </div>

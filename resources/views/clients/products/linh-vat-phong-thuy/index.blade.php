@@ -122,7 +122,7 @@
                             href="{{ route('client.products.linh-vat-phong-thuy.detail', $product->linh_vat_phong_thuy_ct_id) }}"
                             class="{{ $isFirst ? 'col-span-2 lg:col-span-2' : '' }}" image="{{ $productImage }}"
                             title="{{ $product->name }}"
-                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
+                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                             code="MSP: {{ $product->code ?: 'Đang cập nhật' }}"
                             price="{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . 'đ' : 'Liên hệ' }}"
                             :show-overlay="true"

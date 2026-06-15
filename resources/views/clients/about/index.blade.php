@@ -9,18 +9,14 @@
         top: 170px !important;
       }
 
-      .about-content p {
-        line-height: 1.75;
-      }
-
-      .tab-craft-copy p {
+      .about-description {
         color: #2e2f2a;
         font-family: "Roboto", sans-serif;
         font-size: 16px;
         font-style: normal;
         font-weight: 500;
         line-height: 28px;
-        letter-spacing: 0.48px;
+        letter-spacing: 0.32px;
       }
     </style>
     @endpush

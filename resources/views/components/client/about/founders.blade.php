@@ -93,9 +93,7 @@
     </div>
     <!-- Text Content -->
     <div class="w-full md:w-1/2 xl:pr-16">
-      <p
-        class="text-textPrimary leading-[28px] text-justify md:text-left font-medium tracking-wide"
-      >
+      <p class="about-description text-justify md:text-left">
         {{ $founderContent }}
       </p>
     </div>

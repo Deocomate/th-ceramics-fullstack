@@ -82,7 +82,7 @@ const calculateDiemLength = (block) => {
     const shape = getShapeType(getShapeSelect(block));
 
     if (shape === "trapezoid") {
-        return getDimension(block, "secondary");
+        return getDimension(block, "primary");
     }
 
     return getDimension(block, "primary");
@@ -99,8 +99,8 @@ const applyShapeInputs = (block) => {
     }
 
     if (shape === "trapezoid") {
-        setLabelHtml(primary, `ĐÁY BÉ ${LABEL_SPACER}`);
-        setLabelHtml(secondary, `ĐÁY LỚN ${DIEM_NOTE}`);
+        setLabelHtml(primary, `ĐÁY LỚN ${DIEM_NOTE}`);
+        setLabelHtml(secondary, `ĐÁY BÉ ${LABEL_SPACER}`);
         setLabelHtml(height, `CHIỀU CAO ${LABEL_SPACER}`);
         showWrapper(primary);
         showWrapper(secondary);
@@ -122,6 +122,16 @@ const applyShapeInputs = (block) => {
     showWrapper(primary);
     showWrapper(secondary);
     hideWrapper(height);
+};
+
+const updateRemoveButtons = (blocks) => {
+    const canRemove = blocks.length > 1;
+
+    blocks.forEach((block) => {
+        block.querySelectorAll("[data-remove-area]").forEach((button) => {
+            button.classList.toggle("hidden", !canRemove);
+        });
+    });
 };
 
 const resetShapeBlock = (block) => {
@@ -172,17 +182,16 @@ const initQuantityCalculator = (section) => {
     };
 
     const renumberAreas = () => {
-        areaBlocks().forEach((block, index) => {
+        const blocks = areaBlocks();
+
+        blocks.forEach((block, index) => {
             const label = block.querySelector(".area-title-label");
             if (label) {
                 label.textContent = `DIỆN TÍCH ${index + 1}`;
             }
-
-            const removeBtn = block.querySelector("[data-remove-area]");
-            if (removeBtn) {
-                removeBtn.classList.toggle("hidden", index === 0);
-            }
         });
+
+        updateRemoveButtons(blocks);
     };
 
     const updateResults = () => {
@@ -270,7 +279,8 @@ const initHaiVanMieuCalculator = (section) => {
     const valueOutputs = Array.from(section.querySelectorAll("[data-value-output]"));
     const extraLossCheckbox = section.querySelector("#extra-loss-hai-vm");
     const lossRadios = Array.from(section.querySelectorAll('input[name="loss-rate-hai-vm"]'));
-    const getAreaBlocks = () => Array.from(section.querySelectorAll("[data-area-block]"));
+    const areasContainer = section.querySelector("[data-hai-vm-areas]");
+    const getAreaBlocks = () => Array.from(areasContainer?.querySelectorAll("[data-area-block]") || []);
     const masterTemplate = getAreaBlocks()[0]?.cloneNode(true);
     let noticeTimer;
 
@@ -287,15 +297,15 @@ const initHaiVanMieuCalculator = (section) => {
     };
 
     const renumberAreas = () => {
-        getAreaBlocks().forEach((block, index) => {
+        const blocks = getAreaBlocks();
+
+        blocks.forEach((block, index) => {
             block.querySelectorAll("[data-area-title]").forEach((title) => {
                 title.textContent = `DIỆN TÍCH ${index + 1}`;
             });
-
-            block.querySelectorAll("[data-remove-area]").forEach((button) => {
-                button.classList.toggle("hidden", index === 0);
-            });
         });
+
+        updateRemoveButtons(blocks);
     };
 
     const updateResults = () => {
@@ -343,11 +353,11 @@ const initHaiVanMieuCalculator = (section) => {
     };
 
     const addArea = () => {
-        if (!masterTemplate || !addAreaBtn?.parentElement) return;
+        if (!masterTemplate || !areasContainer) return;
 
         const newBlock = masterTemplate.cloneNode(true);
         resetShapeBlock(newBlock);
-        addAreaBtn.parentElement.before(newBlock);
+        areasContainer.appendChild(newBlock);
         setupBlock(newBlock);
         renumberAreas();
     };
@@ -403,15 +413,15 @@ const initWeightCalculator = (section) => {
     };
 
     const renumberAreas = () => {
-        getAreaBlocks().forEach((block, index) => {
+        const blocks = getAreaBlocks();
+
+        blocks.forEach((block, index) => {
             block.querySelectorAll("[data-area-title]").forEach((title) => {
                 title.textContent = `DIỆN TÍCH ${index + 1}`;
             });
-
-            block.querySelectorAll("[data-remove-area]").forEach((button) => {
-                button.classList.toggle("hidden", index === 0);
-            });
         });
+
+        updateRemoveButtons(blocks);
     };
 
     const updateResults = () => {
@@ -519,6 +529,38 @@ const initWeightCalculator = (section) => {
         return selected;
     };
 
+    const selectFirstEnabledOption = (select) => {
+        if (!select) {
+            return null;
+        }
+
+        const option = Array.from(select.options).find((opt) => !opt.disabled && opt.value !== "");
+
+        if (option) {
+            select.value = option.value;
+
+            return option;
+        }
+
+        return null;
+    };
+
+    const selectFirstTileForRoof = (roof) => {
+        if (!tileTypeSelect || !roof) {
+            return null;
+        }
+
+        const option = tileTypeOptions.find((opt) => !opt.disabled && opt.dataset.roof === roof);
+
+        if (option) {
+            tileTypeSelect.value = option.value;
+
+            return option;
+        }
+
+        return null;
+    };
+
     const syncTileOptions = () => {
         const roof = roofStyleSelect?.value || "";
         tileTypeOptions.forEach((option) => {
@@ -527,9 +569,9 @@ const initWeightCalculator = (section) => {
             option.disabled = !visible;
         });
 
-        const selected = tileTypeSelect?.options[tileTypeSelect.selectedIndex];
-        if (!selected || selected.disabled || selected.value === "" || (roof && selected.dataset.roof !== roof)) {
-            tileTypeSelect.selectedIndex = 0;
+        const selected = getSelectedTileOption();
+        if (!selected || (roof && selected.dataset.roof !== roof)) {
+            selectFirstTileForRoof(roof);
         }
     };
 
@@ -550,6 +592,7 @@ const initWeightCalculator = (section) => {
     });
     tileTypeSelect?.addEventListener("change", scheduleUpdate);
 
+    selectFirstEnabledOption(roofStyleSelect);
     syncTileOptions();
     renumberAreas();
 };

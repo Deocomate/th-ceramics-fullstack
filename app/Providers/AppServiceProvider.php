@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\PageContact;
+use App\Services\CartService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        View::composer('components.client.layouts.header', function ($view) {
+            $view->with('cartCount', app(CartService::class)->getCount());
+        });
+
         if (! Schema::hasTable('page_contact')) {
             View::share('globalContact', null);
 

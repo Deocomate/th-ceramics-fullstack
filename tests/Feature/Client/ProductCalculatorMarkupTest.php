@@ -61,11 +61,15 @@ test('ngoi am duong detail renders weight calculator with shape area markup', fu
         ->assertOk()
         ->assertSee('data-weight-calculator', false)
         ->assertSee('data-weight-calculator-areas', false)
+        ->assertSee('space-y-6', false)
         ->assertSee('data-shape-select', false)
         ->assertSee('data-dimension="primary"', false)
         ->assertSee('data-dimension="secondary"', false)
         ->assertSee('data-dimension="height"', false)
-        ->assertSee('data-add-area', false);
+        ->assertSee('data-add-area', false)
+        ->assertSee('Mái gỗ', false)
+        ->assertDontSee('>KIỂU MÁI</option>', false)
+        ->assertDontSee('>LOẠI NGÓI</option>', false);
 });
 
 test('ngoi hai van mieu detail renders shape calculator blocks', function () {

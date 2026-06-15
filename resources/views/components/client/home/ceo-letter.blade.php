@@ -75,7 +75,7 @@
             @endforeach
           @endif
           <div class="flex flex-col items-start mt-[30px]">
-            <img src="{{ asset('assets/images/sign.png') }}" alt="Signature" class="w-[272.34px] h-[163.60px] object-contain">
+            <img src="{{ asset('assets/images/sign.svg') }}" alt="Signature" class="w-[272.34px] h-[163.60px] object-contain">
             <p class="text-[#EFE4DE] font-bold text-[20px] leading-[25px] ml-[40px] mt-[4px]" style="font-family: 'Roboto', sans-serif;">Giám đốc Vũ Mạnh Hải</p>
           </div>
         </div>
@@ -108,7 +108,7 @@
 
       <div class="mt-8 flex w-full justify-end pr-[38px]">
         <div class="flex w-fit flex-col items-start">
-          <img src="{{ asset('assets/images/sign.png') }}" alt="" class="h-[55px] w-[91px] object-contain">
+          <img src="{{ asset('assets/images/sign.svg') }}" alt="" class="h-[55px] w-[91px] object-contain">
           <p class="pt-2 text-[12px] font-bold leading-[28px] text-white">Giám đốc Vũ Mạnh Hải</p>
         </div>
       </div>

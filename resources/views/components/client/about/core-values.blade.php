@@ -118,9 +118,7 @@
         {{ data_get($value, 'head', 'Giá trị cốt lõi') }}
       </h4>
       <!-- Description -->
-      <p
-        class="text-textPrimary text-justify md:text-center font-['Roboto'] text-[16px] font-medium leading-[28px] tracking-[0.32px]"
-      >
+      <p class="about-description text-justify md:text-center">
         {{ data_get($value, 'body', '') }}
       </p>
     </div>

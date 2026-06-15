@@ -128,7 +128,7 @@
                                             href="{{ route('client.products.phu-kien-ngoi.ngoi-bo-noc.detail', $product->phu_kien_ngoi_ct_id) }}"
                                             image="{{ $productImageUrl($product, 'assets/images/bo-noc.png') }}"
                                             title="{{ $product->name }}"
-                                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] uppercase -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
+                                            title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                                             code="MSP: {{ $product->display_code }}"
                                             price="{{ $product->display_price }}" :show-overlay="true"
                                             detail-route-name="client.products.phu-kien-ngoi.ngoi-bo-noc.detail"

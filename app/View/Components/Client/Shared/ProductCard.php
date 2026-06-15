@@ -58,9 +58,7 @@ class ProductCard extends Component
             && filled($this->resolvedProductType)
             && filled($this->resolvedProductId);
 
-        $this->addToCartButtonClasses = $this->addToCartVariant === 'filled'
-            ? 'bg-transparent text-secondary border border-secondary text-[9px] md:text-[13px] font-bold py-1 md:py-2 px-4 md:px-6 rounded-full hover:bg-secondary hover:text-white transition-all whitespace-nowrap mt-1 mr-auto block'
-            : 'border border-secondary text-secondary text-[11px] md:text-[13px] font-bold py-1.5 px-4 rounded-full hover:bg-secondary hover:text-white transition-all mt-3 self-start';
+        $this->addToCartButtonClasses = 'inline-flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-full border border-secondary text-secondary hover:bg-secondary hover:text-white transition-all';
     }
 
     public function render(): View|Closure|string

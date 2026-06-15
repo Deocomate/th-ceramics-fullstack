@@ -1,6 +1,8 @@
 import { initProductCalculators } from "./product-calculators.js";
 import { initProductDetail } from "./product-detail.js";
 import { initProductValues } from "./product-values.js";
+import { initLightbox } from "./lightbox.js";
+import { initCartUi, openCartModal, showCartToast } from "./cart-ui.js";
 
 const initProductSectionCarousels = () => {
     document.querySelectorAll("[data-product-section]").forEach((section) => {
@@ -337,7 +339,7 @@ const initMobileScrollIndicators = () => {
             const maxScrollLeft = scrollWidth - clientWidth;
             const scrollRatio = scroller.scrollLeft / maxScrollLeft;
             const thumbLeft = scrollRatio * (trackWidth - thumbWidth);
-            
+
             thumb.style.width = thumbWidth + "px";
             if (!thumb.classList.contains("is-dragging")) {
                 thumb.style.left = thumbLeft + "px";
@@ -365,16 +367,16 @@ const initMobileScrollIndicators = () => {
         const onMouseMove = (e) => {
             if (!isDragging) return;
             e.preventDefault();
-            
+
             const trackWidth = track.clientWidth;
             const thumbWidth = thumb.clientWidth;
             const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
-            
+
             const deltaX = e.pageX - startX;
             const scrollRatio = deltaX / (trackWidth - thumbWidth);
-            
+
             scroller.scrollLeft = startScrollLeft + (scrollRatio * maxScrollLeft);
-            
+
             // Immediately update thumb position for smooth dragging
             const newThumbLeft = (scroller.scrollLeft / maxScrollLeft) * (trackWidth - thumbWidth);
             thumb.style.left = newThumbLeft + "px";
@@ -383,21 +385,21 @@ const initMobileScrollIndicators = () => {
         const onMouseUp = () => {
             if (!isDragging) return;
             isDragging = false;
-            thumb.style.transition = ""; 
+            thumb.style.transition = "";
             thumb.classList.remove("is-dragging");
             window.removeEventListener("mousemove", onMouseMove);
             window.removeEventListener("mouseup", onMouseUp);
         };
 
         thumb.addEventListener("mousedown", (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
             isDragging = true;
             startX = e.pageX;
             startScrollLeft = scroller.scrollLeft;
-            
-            thumb.style.transition = "none"; 
+
+            thumb.style.transition = "none";
             thumb.classList.add("is-dragging");
-            
+
             window.addEventListener("mousemove", onMouseMove);
             window.addEventListener("mouseup", onMouseUp);
         });
@@ -405,15 +407,15 @@ const initMobileScrollIndicators = () => {
         // Click track to jump
         track.addEventListener("click", (e) => {
             if (e.target === thumb) return;
-            
+
             const trackRect = track.getBoundingClientRect();
             const clickX = e.clientX - trackRect.left;
             const trackWidth = track.clientWidth;
             const thumbWidth = thumb.clientWidth;
-            
+
             const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
             const scrollRatio = (clickX - thumbWidth / 2) / (trackWidth - thumbWidth);
-            
+
             scroller.scrollTo({
                 left: Math.max(0, Math.min(scrollRatio * maxScrollLeft, maxScrollLeft)),
                 behavior: "smooth"
@@ -440,44 +442,17 @@ const initAddToCartButtons = () => {
 
         const productType = button.dataset.productType;
         const productId = parseInt(button.dataset.productId || "", 10);
-        const variantIdRaw = button.dataset.variantId;
-        const variantId = variantIdRaw ? parseInt(variantIdRaw, 10) : null;
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || "";
 
         if (!productType || !productId) {
-            alert("Thông tin sản phẩm không đầy đủ.");
+            showCartToast("Thông tin sản phẩm không đầy đủ.", "error");
             return;
         }
 
-        button.disabled = true;
-
-        fetch("/gio-hang/them", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": csrfToken,
-                Accept: "application/json",
-            },
-            body: JSON.stringify({
-                product_type: productType,
-                product_id: productId,
-                variant_id: variantId,
-                qty: 1,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === "success") {
-                    alert("Đã thêm vào giỏ hàng!");
-                    return;
-                }
-
-                alert(data.message || "Có lỗi xảy ra.");
-            })
-            .catch(() => alert("Lỗi kết nối. Vui lòng thử lại."))
-            .finally(() => {
-                button.disabled = false;
-            });
+        openCartModal({
+            productType,
+            productId,
+            productName: button.dataset.productName || "",
+        });
     });
 };
 
@@ -487,10 +462,12 @@ const initSharedScripts = () => {
     initCertificatesSwiper();
     initMobileFloatingActions();
     initMobileScrollIndicators();
+    initCartUi();
     initAddToCartButtons();
     initProductDetail();
     initProductCalculators();
     initProductValues();
+    initLightbox();
 };
 
 document.addEventListener("DOMContentLoaded", initSharedScripts);

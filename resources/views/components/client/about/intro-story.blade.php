@@ -96,9 +96,7 @@
     >
       {!! nl2br(e($firstTitle)) !!}
     </h3>
-    <p
-      class="text-textPrimary font-['Roboto'] text-[16px] font-medium leading-[28px] tracking-[0.32px] text-justify md:text-left mb-4 lg:max-w-md"
-    >
+    <p class="about-description text-justify md:text-left mb-4 lg:max-w-md">
       {{ $firstBody }}
     </p>
   </div>
@@ -123,9 +121,7 @@
     >
       <span>{!! nl2br(e($secondTitle)) !!}</span>
     </h3>
-    <p
-      class="text-textPrimary leading-[28px] text-justify md:text-left lg:max-w-md font-medium tracking-wide mb-4 md:mb-0"
-    >
+    <p class="about-description text-justify md:text-left lg:max-w-md mb-4 md:mb-0">
       {{ $secondBody }}
     </p>
   </div>

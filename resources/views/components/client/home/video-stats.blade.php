@@ -32,16 +32,10 @@
         @if ($trangChu && !empty($trangChu->nhung_con_so))
             <div class="grid grid-cols-5 gap-1 lg:gap-8" data-aos="fade-up" data-aos-delay="400">
                 @foreach ($trangChu->nhung_con_so as $conSo)
-                    @php
-                        preg_match('/^(\d+)(.*)$/', trim($conSo['head']), $matches);
-                        $target = $matches[1] ?? 0;
-                        $suffix = $matches[2] ?? '';
-                    @endphp
                     <div class="flex flex-col items-center lg:items-start">
                         <div
                             class="text-white lg:text-[#EFE4DE] text-[16px] leading-[40px] lg:text-[42px] lg:font-semibold lg:leading-[40px] mb-0 text-center lg:text-left">
-                            <span class="stat-number" data-target="{{ $target }}"
-                                @if ($suffix !== '') data-suffix="{{ $suffix }}" @endif>0{{ $suffix }}</span>
+                            <span>{{ trim($conSo['head']) }}</span>
                         </div>
                         <p
                             class="text-white lg:text-[#EFE4DE] font-light lg:font-semibold text-[11px] leading-[15px] lg:text-[20px] lg:leading-[27px] text-center lg:text-left">
@@ -55,68 +49,6 @@
 
         @push('scripts')
             <script>
-                (function() {
-                    const counters = document.querySelectorAll(".stat-number");
-                    if (!counters.length) return;
-
-                    const timers = new WeakMap();
-
-                    const reset = (el) => {
-                        if (timers.has(el)) {
-                            clearInterval(timers.get(el));
-                            timers.delete(el);
-                        }
-                        const suffix = el.getAttribute("data-suffix") || "";
-                        el.textContent = "0" + suffix;
-                    };
-
-                    const animate = (el) => {
-                        if (timers.has(el)) {
-                            clearInterval(timers.get(el));
-                            timers.delete(el);
-                        }
-
-                        const target = parseInt(el.getAttribute("data-target"), 10);
-                        const suffix = el.getAttribute("data-suffix") || "";
-                        const duration = 3000;
-                        const frameDuration = 1000 / 60;
-                        const totalFrames = Math.round(duration / frameDuration);
-                        let frame = 0;
-
-                        const easeOut = (t) => 1 - Math.pow(1 - t, 4);
-
-                        const id = setInterval(() => {
-                            frame++;
-                            const progress = easeOut(frame / totalFrames);
-                            const current = Math.round(progress * target);
-                            el.textContent = current + suffix;
-                            if (frame >= totalFrames) {
-                                el.textContent = target + suffix;
-                                clearInterval(id);
-                                timers.delete(el);
-                            }
-                        }, frameDuration);
-
-                        timers.set(el, id);
-                    };
-
-                    const observer = new IntersectionObserver(
-                        (entries) => {
-                            entries.forEach((entry) => {
-                                if (entry.isIntersecting) {
-                                    animate(entry.target);
-                                } else {
-                                    reset(entry.target);
-                                }
-                            });
-                        }, {
-                            threshold: 0.4
-                        },
-                    );
-
-                    counters.forEach((el) => observer.observe(el));
-                })();
-
                 (function() {
                     const videoTrigger = document.querySelector("[data-video-url]");
                     const videoModal = document.getElementById("youtube-video-modal");

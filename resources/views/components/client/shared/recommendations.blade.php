@@ -171,24 +171,17 @@
             }
 
             .recommendations-section .js-add-to-cart {
-                width: 122px !important;
-                height: 27px !important;
-                border-radius: 19px !important;
-                font-family: Archivo, sans-serif !important;
-                font-weight: 600 !important;
-                font-size: 16px !important;
-                line-height: 1 !important;
+                width: 32px !important;
+                height: 32px !important;
+                padding: 0 !important;
+                border-radius: 50% !important;
                 display: inline-flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                margin-top: 4px !important;
-                margin-left: 0 !important;
-                margin-right: auto !important;
+                margin-top: 0 !important;
+                margin-left: auto !important;
+                margin-right: 0 !important;
                 transition: all 0.3s ease !important;
-                text-transform: none !important;
-            }
-
-            .recommendations-section .js-add-to-cart {
                 background-color: transparent !important;
                 color: #C76E00 !important;
                 border: 1px solid #C76E00 !important;
@@ -201,6 +194,11 @@
             }
 
             @media (min-width: 768px) {
+                .recommendations-section .js-add-to-cart {
+                    width: 36px !important;
+                    height: 36px !important;
+                }
+
                 .mobile-compare-row {
                     height: 41px !important;
                     min-height: 41px !important;

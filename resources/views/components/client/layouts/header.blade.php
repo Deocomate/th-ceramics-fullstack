@@ -112,10 +112,7 @@
                         class="hidden absolute right-0 top-full mt-3 w-[360px] max-h-[70vh] overflow-y-auto rounded-sm border border-neutral-1 bg-white text-primary shadow-2xl z-[70]">
                     </div>
                 </div>
-                <a href="{{ route('client.cart.index') }}" class="hover:text-secondary transition-colors"
-                    aria-label="Cart">
-                    <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-5 h-5" />
-                </a>
+                <x-client.shared.mini-cart :count="$cartCount ?? 0" />
                 @auth
                     <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
                         class="hover:text-secondary transition-colors" aria-label="User">
@@ -160,10 +157,7 @@
                         class="hidden fixed right-[23px] top-[58px] w-[calc(100vw-46px)] max-h-[70vh] overflow-y-auto rounded-sm border border-neutral-1 bg-white text-primary shadow-2xl z-[70]">
                     </div>
                 </div>
-                <a href="{{ route('client.cart.index') }}" class="hover:text-secondary transition-colors"
-                    aria-label="Cart">
-                    <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-[18px] h-[18px]" />
-                </a>
+                <x-client.shared.mini-cart :count="$cartCount ?? 0" icon-class="w-[18px] h-[18px]" />
                 @auth
                     <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
                         class="hover:text-secondary transition-colors" aria-label="User">
@@ -190,10 +184,7 @@
                     <button type="button" data-search-menu-focus class="hover:text-secondary transition-colors" aria-label="Search">
                         <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
                     </button>
-                    <a href="{{ route('client.cart.index') }}" class="hover:text-secondary transition-colors"
-                        aria-label="Cart">
-                        <img src="{{ asset('assets/images/cart-2.svg') }}" alt="cart" class="w-5 h-5" />
-                    </a>
+                    <x-client.shared.mini-cart :count="$cartCount ?? 0" />
                     @auth
                         <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
                             class="hover:text-secondary transition-colors" aria-label="User">

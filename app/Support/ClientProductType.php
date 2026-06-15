@@ -88,6 +88,26 @@ final class ClientProductType
         return null;
     }
 
+    /** @return array{relation: string, pk: string}|null */
+    public static function variantRelationConfig(?string $productType): ?array
+    {
+        if (! $productType || ! isset(self::VARIANT_RELATIONS[$productType])) {
+            return null;
+        }
+
+        return self::VARIANT_RELATIONS[$productType];
+    }
+
+    public static function requiresVariantSelection(string $productType): bool
+    {
+        return in_array($productType, [
+            'phu_kien_ngoi_ct',
+            'lan_can_gom_su_ct',
+            'den_vuon_gom_su_ct',
+            'ngoi_hai_co_ct',
+        ], true);
+    }
+
     public static function resolveFirstVariantId(?object $product, ?string $productType): ?int
     {
         if (! $product || ! $productType || ! isset(self::VARIANT_RELATIONS[$productType])) {

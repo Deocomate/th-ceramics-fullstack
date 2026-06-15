@@ -88,11 +88,10 @@
                     <div class="relative">
                         <select id="roof-style"
                             class="w-full h-[26px] lg:h-[44px] px-2 lg:px-4 pr-6 lg:pr-10 border border-black/10 rounded-sm bg-transparent text-[10px] lg:text-[13px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
-                            <option value="" disabled selected>KIỂU MÁI</option>
                             @forelse ($roofTypes as $roofType)
-                                <option value="{{ $roofType }}">{{ $roofType }}</option>
+                                <option value="{{ $roofType }}" @selected($loop->first)>{{ $roofType }}</option>
                             @empty
-                                <option value="Mái gỗ">Mái gỗ</option>
+                                <option value="Mái gỗ" selected>Mái gỗ</option>
                                 <option value="Mái bê tông">Mái bê tông</option>
                             @endforelse
                         </select>
@@ -107,18 +106,18 @@
                     <div class="relative">
                         <select id="tile-type"
                             class="w-full h-[26px] lg:h-[44px] px-2 lg:px-4 pr-6 lg:pr-10 border border-black/10 rounded-sm bg-transparent text-[10px] lg:text-[13px] uppercase appearance-none outline-none focus:border-secondary transition-colors">
-                            <option value="" disabled selected>LOẠI NGÓI</option>
                             @forelse ($dinhMucItems as $dm)
                                 <option value="{{ $dm->roof_type }}::{{ $dm->tile_type }}"
                                     data-roof="{{ $dm->roof_type }}"
                                     data-tile="{{ $dm->tile_type }}"
                                     data-am="{{ $dm->ngoi_am }}"
                                     data-duong="{{ $dm->ngoi_duong }}"
-                                    data-diem="{{ $dm->diem }}">
+                                    data-diem="{{ $dm->diem }}"
+                                    @selected($loop->first)>
                                     {{ $dm->tile_type }}
                                 </option>
                             @empty
-                                <option value="Mái bê tông::15 cặp/m²" data-roof="Mái bê tông" data-tile="15 cặp/m²" data-am="15" data-duong="15" data-diem="3">15 cặp/m²</option>
+                                <option value="Mái bê tông::15 cặp/m²" data-roof="Mái bê tông" data-tile="15 cặp/m²" data-am="15" data-duong="15" data-diem="3" selected>15 cặp/m²</option>
                                 <option value="Mái bê tông::27 cặp/m²" data-roof="Mái bê tông" data-tile="27 cặp/m²" data-am="27" data-duong="27" data-diem="5">27 cặp/m²</option>
                                 <option value="Mái bê tông::43 cặp/m²" data-roof="Mái bê tông" data-tile="43 cặp/m²" data-am="43" data-duong="43" data-diem="6">43 cặp/m²</option>
                                 <option value="Mái bê tông::80 cặp/m²" data-roof="Mái bê tông" data-tile="80 cặp/m²" data-am="80" data-duong="80" data-diem="8">80 cặp/m²</option>
@@ -138,7 +137,7 @@
                     </div>
                 </div>
 
-                <div data-weight-calculator-areas>
+                <div class="space-y-6 lg:space-y-8" data-weight-calculator-areas>
                     <x-client.shared.shape-area-block :index="1" variant="weight" />
                 </div>
 

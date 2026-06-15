@@ -112,7 +112,7 @@
           {{ data_get($item, 'head', '') }}
         </h4>
         <p
-          class="text-textPrimary leading-relaxed text-justify md:text-center max-w-lg font-medium tracking-wide w-full"
+          class="about-description text-justify md:text-center max-w-lg w-full"
         >
           {{ data_get($item, 'body', '') }}
         </p>

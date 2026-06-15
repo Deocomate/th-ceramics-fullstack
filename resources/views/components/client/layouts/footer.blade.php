@@ -4,7 +4,7 @@
     $contactHotline = $globalContact->hotline ?? '0966 55 8808';
     $contactHotlineLink = preg_replace('/\D+/', '', $contactHotline) ?: '0966558808';
     $contactEmail = data_get($globalContact, 'email', 'gshaithanh@gmail.com');
-    $contactAddress = data_get($globalContact, 'address', '18 Phố Gốm – Giang Cao, Bát Tràng, Gia Lâm, Hà Nội');
+    $contactAddress = data_get($globalContact, 'address', '18 Phố Gốm – Giang Cao, Bát Tràng,<br> Gia Lâm, Hà Nội');
     $facebookLink = data_get($globalContact, 'facebook_link', '#');
     $youtubeLink = data_get($globalContact, 'youtube_link', '#');
     $pinterestLink = data_get($globalContact, 'pinterest_link', '#');
@@ -47,7 +47,7 @@
                             <span class="block">CÔNG TY TNHH SẢN XUẤT</span>
                             <span class="block">VÀ THƯƠNG MẠI THANH HẢI</span>
                         </p>
-                        <p class="font-medium break-words">{{ $contactAddress }}</p>
+                        <p class="font-medium break-words">{!! $contactAddress !!}</p>
                         <p class="font-medium break-words">{{ $contactHotline }}</p>
                         <p class="font-medium break-words">{{ $contactEmail }}</p>
                     </div>

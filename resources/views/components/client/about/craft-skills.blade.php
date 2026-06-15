@@ -84,7 +84,7 @@
     {{ $craftTitle }}
   </h2>
   <p
-    class="text-textPrimary leading-[28px] text-justify md:text-center mb-[30px] md:mb-24 max-w-2xl mx-auto font-medium tracking-[0.48px] md:tracking-wide"
+    class="about-description text-justify md:text-center mb-[30px] md:mb-24 max-w-2xl mx-auto"
     data-aos="fade-up"
   >
     {{ $craftBody }}
@@ -113,7 +113,7 @@
       <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-[20px] md:mb-6">
         {{ $luyenDatTitle }}
       </h3>
-      <p class="text-textPrimary leading-relaxed text-center font-medium tracking-wide">
+      <p class="about-description text-justify md:text-center">
         {{ $luyenDatBody }}
       </p>
     </div>
@@ -126,7 +126,7 @@
       @foreach($luyenDatItems as $item)
       <section class="w-full">
         <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-[20px] md:mb-6">{{ data_get($item, 'head') }}</h3>
-        <p class="text-textPrimary leading-relaxed text-left font-medium tracking-wide">{{ data_get($item, 'body') }}</p>
+        <p class="about-description text-justify md:text-left">{{ data_get($item, 'body') }}</p>
       </section>
       @endforeach
 
@@ -154,7 +154,7 @@
           />
         </div>
         <h3 class="text-2xl font-bold text-textPrimary mb-4">{{ data_get($item, 'head') }}</h3>
-        <p class="text-textPrimary leading-relaxed font-medium tracking-wide">{{ data_get($item, 'body') }}</p>
+        <p class="about-description text-justify">{{ data_get($item, 'body') }}</p>
       </section>
       @endforeach
     </div>
@@ -166,7 +166,7 @@
     >
       <article class="md:col-span-2 text-center">
         <h3 class="text-2xl md:text-3xl font-bold text-textPrimary mb-4">{{ $dunLoTitle }}</h3>
-        <p class="text-textPrimary leading-relaxed font-medium tracking-wide max-w-3xl mx-auto">{{ $dunLoBody }}</p>
+        <p class="about-description text-justify md:text-center max-w-3xl mx-auto">{{ $dunLoBody }}</p>
       </article>
 
       @foreach($dunLoImages->take(2) as $image)
