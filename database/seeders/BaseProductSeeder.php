@@ -61,8 +61,6 @@ trait BaseProductSeeder
             'Về mặt phong thủy kiến trúc, sản phẩm mang trong mình năng lượng của hành Thổ kết hợp với sức mạnh của hành Hỏa từ quá trình nung luyện. Sự kết hợp này tạo nên sự cân bằng âm dương hoàn hảo, thu hút tài lộc và may mắn.',
             'Trong kiến trúc đương đại, sản phẩm là sự giao thoa tinh tế giữa giá trị thẩm mỹ truyền thống hoài cổ và xu hướng thiết kế bền vững. Ứng dụng phù hợp trong công trình đình chùa, nhà thờ họ hay biệt thự nghỉ dưỡng hiện đại.',
         ];
-        shuffle($paragraphs);
-
         return array_slice($paragraphs, 0, 4);
     }
 

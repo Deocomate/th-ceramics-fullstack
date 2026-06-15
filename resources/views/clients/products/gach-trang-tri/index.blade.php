@@ -483,6 +483,9 @@
                 if (customSliderContainer) {
                     var wrapper = customSliderContainer.querySelector(".slider-inner");
                     var originalSlides = Array.from(customSliderContainer.querySelectorAll(".custom-project-slide"));
+                    if (originalSlides.length === 0) {
+                        return;
+                    }
                     var slides = [...originalSlides];
 
                     // We need at least 7 slides for a smooth circular loop transition

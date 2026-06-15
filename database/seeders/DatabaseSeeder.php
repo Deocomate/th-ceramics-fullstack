@@ -8,19 +8,19 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
+     *
+     * Order: home/content → users → dinh muc → page config → values → products → projects → about/news.
      */
     public function run(): void
     {
         $this->call([
-            HomeAndAboutUsSeeder::class,
+            HomeSeeder::class,
             GiaiThuongThanhTuuSeeder::class,
             UserSeeder::class,
             DinhMucSeeder::class,
             PageConfigSeeder::class,
-
             GiaTriVuotTroiSeeder::class,
 
-            // CÁC SEEDER THEO KẾ HOẠCH BÀI BẢN VÀ ĐẦY ĐỦ 100%:
             NgoiAmDuongSeeder::class,
             NgoiHaiSeeder::class,
             GachThongGioSeeder::class,
@@ -31,7 +31,6 @@ class DatabaseSeeder extends Seeder
             LinhVatPhongThuySeeder::class,
             DenGomSuSeeder::class,
 
-            // Các dữ liệu content khác
             DuAnSeeder::class,
             TrangDuAnSeeder::class,
             CatalogSeeder::class,
