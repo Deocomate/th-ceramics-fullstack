@@ -20,12 +20,8 @@
                     <div class="min-w-[900px] md:min-w-[1000px] w-max">
                         <!-- Row 1: Thẻ sản phẩm -->
                         <div class="flex gap-0 md:gap-[40px] mb-4 md:mb-[15px]">
-                            <!-- Desktop Sticky Left Placeholder -->
-                            <div class="hidden md:block w-[140px] shrink-0 sticky left-0 bg-background-secondary z-10"></div>
-
                             <div class="flex-grow flex gap-4 md:gap-[40px]">
-                                <!-- Mobile Sticky Left Placeholder (Đồng bộ khoảng cách xuất phát) -->
-                                <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible"></div>
+                                <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible"></div>
 
                                 @foreach ($items as $product)
                                     <x-client.shared.product-card href="{{ $product['url'] }}"
@@ -44,15 +40,12 @@
 
                         <!-- Row 2: So sánh Giá -->
                         <div class="flex gap-0 md:gap-[40px] border-t border-black/10 group mobile-compare-row">
-                            <div class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-center sticky left-0 bg-background-secondary z-10">
-                                <span class="compare-cell-text">Giá</span>
-                            </div>
-                            <div class="flex-grow flex gap-4 md:gap-[40px] items-center">
-                                <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
+                            <div class="flex-grow flex gap-4 md:gap-[40px]">
+                                <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
                                     <span class="mobile-compare-label">Giá</span>
                                 </div>
                                 @foreach ($items as $product)
-                                    <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] md:text-base text-primary/80 md:mr-auto">
+                                    <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] text-primary/80">
                                         {{ $product['price_display'] }}
                                     </div>
                                 @endforeach
@@ -61,15 +54,12 @@
 
                         <!-- Row 3: So sánh Màu sắc -->
                         <div class="flex gap-0 md:gap-[40px] border-t border-black/10 group mobile-compare-row">
-                            <div class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-center sticky left-0 bg-background-secondary z-10">
-                                <span class="compare-cell-text">Màu sắc</span>
-                            </div>
-                            <div class="flex-grow flex gap-4 md:gap-[40px] items-center">
-                                <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
+                            <div class="flex-grow flex gap-4 md:gap-[40px]">
+                                <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
                                     <span class="mobile-compare-label">Màu sắc</span>
                                 </div>
                                 @foreach ($items as $product)
-                                    <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] md:text-base text-primary/80 md:mr-auto">
+                                    <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] text-primary/80">
                                         {{ $product['color'] }}
                                     </div>
                                 @endforeach
@@ -78,15 +68,12 @@
 
                         <!-- Row 4: So sánh Kích thước -->
                         <div class="flex md:gap-[40px] border-y border-black/10 group mobile-compare-row">
-                            <div class="hidden md:flex w-[140px] shrink-0 text-base font-bold text-primary items-center sticky left-0 bg-background-secondary z-10">
-                                <span class="compare-cell-text">Kích thước</span>
-                            </div>
-                            <div class="flex-grow flex gap-4 md:gap-[40px] items-center">
-                                <div class="md:hidden w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
+                            <div class="flex-grow flex gap-4 md:gap-[40px]">
+                                <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
                                     <span class="mobile-compare-label">Kích thước</span>
                                 </div>
                                 @foreach ($items as $product)
-                                    <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] md:text-base text-primary/80 leading-relaxed md:mr-auto">
+                                    <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] text-primary/80 leading-relaxed">
                                         {{ $product['size'] }}
                                     </div>
                                 @endforeach
@@ -159,8 +146,8 @@
                 text-transform: capitalize !important;
                 font-family: Archivo, sans-serif !important;
                 font-weight: 600 !important;
-                font-size: 16px !important;
-                line-height: normal !important;
+                font-size: 11px !important;
+                line-height: 1.6 !important;
                 color: #2162A1 !important;
                 text-align: left !important;
                 display: block !important;
@@ -171,44 +158,19 @@
             }
 
             @media (min-width: 768px) {
-                .mobile-compare-row {
-                    height: 41px !important;
-                    min-height: 41px !important;
-                    align-items: center !important;
+                .recommendations-section h3 span {
+                    font-size: 16px !important;
+                    line-height: 1.55 !important;
                 }
 
-                .mobile-compare-row>div {
-                    height: 100% !important;
-                    align-items: center !important;
+                .recommendations-section .mobile-compare-label {
+                    font-size: 14px;
+                    line-height: 24px;
                 }
 
                 .recommendations-section .compare-cell-text {
-                    margin-top: 0 !important;
-                    margin-bottom: 0 !important;
-                    padding-top: 0 !important;
-                    padding-bottom: 0 !important;
-                    height: 100% !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: flex-start !important;
-                    color: #2E2F2A !important;
-                    font-family: Archivo, sans-serif !important;
-                    font-size: 16px !important;
-                    line-height: 40px !important;
-                }
-
-                /* Font weights for header and rows */
-                .recommendations-section .mobile-compare-row>div:first-child .compare-cell-text {
-                    font-weight: 600 !important;
-                }
-
-                .recommendations-section .mobile-compare-row:nth-child(1) .flex-grow .compare-cell-text,
-                .recommendations-section .mobile-compare-row:nth-child(2) .flex-grow .compare-cell-text {
-                    font-weight: 400 !important;
-                }
-
-                .recommendations-section .mobile-compare-row:nth-child(3) .flex-grow .compare-cell-text {
-                    font-weight: 300 !important;
+                    font-size: 16px;
+                    line-height: 1.5;
                 }
             }
         </style>
