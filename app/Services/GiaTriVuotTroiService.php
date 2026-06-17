@@ -10,7 +10,7 @@ class GiaTriVuotTroiService
 {
     public function getAll()
     {
-        return GiaTriVuotTroi::query()->latest()->get();
+        return GiaTriVuotTroi::query()->orderBy('gia_tri_vuot_troi_id')->get();
     }
 
     public function findById(int $id): GiaTriVuotTroi

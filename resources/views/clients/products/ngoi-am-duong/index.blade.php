@@ -125,7 +125,7 @@
 
     <!-- Các Component dùng chung của Layout Sản phẩm (Data binding) -->
     <!-- Truyền $giaTriVuotTroi vào component -->
-    <x-client.shared.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi" />
+    <x-client.shared.outstanding-value />
 
     <!-- Truyền $config->video vào component -->
     <x-client.shared.journey-video :video="$config->video" />

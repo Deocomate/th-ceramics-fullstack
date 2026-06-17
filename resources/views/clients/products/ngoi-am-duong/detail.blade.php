@@ -55,6 +55,8 @@
     productId="{{ $product->ngoi_am_duong_ct_id }}"
 />
 
+<x-client.shared.outstanding-value />
+
 <x-client.shared.journey-video :hide-title="true" />
 
 <!-- Flex Container for Mobile Reordering -->

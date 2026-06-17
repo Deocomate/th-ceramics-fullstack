@@ -329,6 +329,8 @@
         </div>
     </section>
 
+    <x-client.shared.outstanding-value />
+
     <x-client.shared.journey-video :hide-title="true" />
 
     <!-- Nâng tầm giá trị nghệ thuật Section -->

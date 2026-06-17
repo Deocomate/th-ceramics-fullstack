@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\PageContact;
 use App\Services\CartService;
+use App\Services\GiaTriVuotTroiService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -30,14 +31,18 @@ class AppServiceProvider extends ServiceProvider
 
         if (! Schema::hasTable('page_contact')) {
             View::share('globalContact', null);
+        } else {
+            $globalContact = Cache::rememberForever('global_contact', static function () {
+                return PageContact::first();
+            });
 
-            return;
+            View::share('globalContact', $globalContact);
         }
 
-        $globalContact = Cache::rememberForever('global_contact', static function () {
-            return PageContact::first();
-        });
-
-        View::share('globalContact', $globalContact);
+        if (Schema::hasTable('gia_tri_vuot_troi')) {
+            View::share('giaTriVuotTroi', app(GiaTriVuotTroiService::class)->getAll());
+        } else {
+            View::share('giaTriVuotTroi', collect());
+        }
     }
 }

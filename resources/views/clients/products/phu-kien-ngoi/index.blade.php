@@ -268,6 +268,8 @@
         </div>
     </section>
 
+    <x-client.shared.outstanding-value />
+
     <section class="w-full relative pb-[70px] md:pb-32 bg-background-secondary overflow-visible" data-aos="fade-up">
         <div class="absolute z-[2] lg:-top-[23%] lg:left-[11.5%] -left-[10%] w-[120%] lg:w-[77%] pointer-events-none"
             data-aos="fade-up-right">

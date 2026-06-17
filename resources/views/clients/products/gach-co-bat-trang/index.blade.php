@@ -232,7 +232,7 @@
 
     <x-client.shared.fabrication-process />
 
-    <x-client.shared.outstanding-value :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" />
+    <x-client.shared.outstanding-value />
     <x-client.shared.journey-video :hide-title="true" />
     <x-client.shared.works-simple :show-nav="true" />
 

@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Client\Shared;
 
+use App\Services\GiaTriVuotTroiService;
 use App\Support\AssetPath;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -13,9 +14,13 @@ class OutstandingValue extends Component
 
     public array $fallbackImages = ['value-01.png', 'value-02.png', 'value-03.png', 'value-04.png'];
 
-    public function __construct(mixed $giaTriVuotTroi = null)
-    {
-        $values = collect($giaTriVuotTroi)->filter()->values();
+    public function __construct(
+        GiaTriVuotTroiService $giaTriVuotTroiService,
+        mixed $giaTriVuotTroi = null,
+    ) {
+        $values = $giaTriVuotTroi !== null
+            ? collect($giaTriVuotTroi)->filter()->values()
+            : $giaTriVuotTroiService->getAll();
 
         if ($values->isEmpty()) {
             $values = collect([

@@ -73,6 +73,7 @@
 <x-client.products.ngoi-hai-van-mieu.calculator :image="$sizeImage" :label1="'Ngói trên mái gỗ'" :rate1="$dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_go ? $dinhMuc->first()->ngoi_tren_mai_go . ' viên/m²' : '125 viên/m²'" :label2="'Ngói trên mái bê tông'" :rate2="$dinhMuc->first() && $dinhMuc->first()->ngoi_tren_mai_be_tong ? $dinhMuc->first()->ngoi_tren_mai_be_tong . ' viên/m²' : '75 viên/m²'" />
 
 <x-client.shared.fabrication-process :images="$parentConfig?->images ?? []" />
+<x-client.shared.outstanding-value />
 <x-client.shared.journey-video :hide-title="true" />
 <x-client.shared.custom-design-process />
 <hr class="md:mb-16 mb-8" />

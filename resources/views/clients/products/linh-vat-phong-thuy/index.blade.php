@@ -140,6 +140,7 @@
         </section>
     @endif
 
+    <x-client.shared.outstanding-value />
     <x-client.shared.fabrication-process />
     <x-client.shared.journey-video :video="$config->video" :hide-title="true" />
     <x-client.shared.recommendations :related-products="$currentProducts->take(4)" route-name="client.products.linh-vat-phong-thuy.detail"

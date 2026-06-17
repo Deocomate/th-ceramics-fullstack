@@ -559,6 +559,7 @@
 </section>
 
 <div class="ngoi-hai-journey-scope">
+  <x-client.shared.outstanding-value />
   <x-client.shared.journey-video :video="$config->video ?? null" />
 </div>
 

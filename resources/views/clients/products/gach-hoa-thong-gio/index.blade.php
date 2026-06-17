@@ -210,7 +210,7 @@
     <x-client.products.gach-hoa-thong-gio.product-showcase :products="$products ?? null" />
     <x-client.products.gach-hoa-thong-gio.craft-journey-video :config="$config ?? null" />
     <x-client.products.gach-hoa-thong-gio.process-section :config="$config ?? null" />
-    <x-client.products.gach-hoa-thong-gio.outstanding-value-blocks :config="$config ?? null" />
+    <x-client.shared.outstanding-value />
     <x-client.products.gach-hoa-thong-gio.faq-section />
 
     @push('scripts')

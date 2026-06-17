@@ -293,6 +293,7 @@
     </section>
 
     <!-- HÀNH TRÌNH CHẾ TÁC VIDEO -->
+    <x-client.shared.outstanding-value />
     <div class="hidden md:block">
         <x-client.shared.journey-video :hide-title="false" />
     </div>

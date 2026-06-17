@@ -66,6 +66,7 @@ productId="{{ $product->gach_trang_tri_ct_id }}"
 
 <hr class="md:mb-16 mb-8" />
 
+<x-client.shared.outstanding-value />
 <x-client.shared.works-simple :show-nav="true" />
 <x-client.shared.recommendations
     :related-products="$relatedProducts"
