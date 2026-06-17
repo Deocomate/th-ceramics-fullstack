@@ -1,6 +1,7 @@
 import { initProductCalculators } from "./product-calculators.js";
 import { initProductDetail } from "./product-detail.js";
 import { initProductValues } from "./product-values.js";
+import { initWorksCarousels } from "./works-carousel.js";
 import { initLightbox } from "./lightbox.js";
 import { initCartUi, openCartModal, showCartToast } from "./cart-ui.js";
 
@@ -466,6 +467,7 @@ const initSharedScripts = () => {
     initProductDetail();
     initProductCalculators();
     initProductValues();
+    initWorksCarousels();
     initLightbox();
 };
 

@@ -19,10 +19,9 @@
                     data-scroll-indicator-init="true">
                     <div class="min-w-[900px] md:min-w-[1000px] w-max">
                         <!-- Row 1: Thẻ sản phẩm -->
-                        <div class="flex gap-0 md:gap-[40px] mb-4 md:mb-[15px]">
-                            <div class="flex-grow flex gap-4 md:gap-[40px]">
-                                <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible"></div>
-
+                        <div class="flex mb-4 md:mb-[15px]">
+                            <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible"></div>
+                            <div class="flex gap-4 md:gap-[40px]">
                                 @foreach ($items as $product)
                                     <x-client.shared.product-card href="{{ $product['url'] }}"
                                         image="{{ $product['image'] }}" title="{{ $product['name'] }}"
@@ -39,11 +38,11 @@
                         </div>
 
                         <!-- Row 2: So sánh Giá -->
-                        <div class="flex gap-0 md:gap-[40px] border-t border-black/10 group mobile-compare-row">
-                            <div class="flex-grow flex gap-4 md:gap-[40px]">
-                                <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
-                                    <span class="mobile-compare-label">Giá</span>
-                                </div>
+                        <div class="flex border-t border-black/10 group mobile-compare-row">
+                            <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
+                                <span class="mobile-compare-label">Giá</span>
+                            </div>
+                            <div class="flex gap-4 md:gap-[40px]">
                                 @foreach ($items as $product)
                                     <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] text-primary/80">
                                         {{ $product['price_display'] }}
@@ -53,11 +52,11 @@
                         </div>
 
                         <!-- Row 3: So sánh Màu sắc -->
-                        <div class="flex gap-0 md:gap-[40px] border-t border-black/10 group mobile-compare-row">
-                            <div class="flex-grow flex gap-4 md:gap-[40px]">
-                                <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
-                                    <span class="mobile-compare-label">Màu sắc</span>
-                                </div>
+                        <div class="flex border-t border-black/10 group mobile-compare-row">
+                            <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
+                                <span class="mobile-compare-label">Màu sắc</span>
+                            </div>
+                            <div class="flex gap-4 md:gap-[40px]">
                                 @foreach ($items as $product)
                                     <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] text-primary/80">
                                         {{ $product['color'] }}
@@ -67,11 +66,11 @@
                         </div>
 
                         <!-- Row 4: So sánh Kích thước -->
-                        <div class="flex md:gap-[40px] border-y border-black/10 group mobile-compare-row">
-                            <div class="flex-grow flex gap-4 md:gap-[40px]">
-                                <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
-                                    <span class="mobile-compare-label">Kích thước</span>
-                                </div>
+                        <div class="flex border-y border-black/10 group mobile-compare-row">
+                            <div class="w-0 h-full shrink-0 sticky left-0 z-20 overflow-visible">
+                                <span class="mobile-compare-label">Kích thước</span>
+                            </div>
+                            <div class="flex gap-4 md:gap-[40px]">
                                 @foreach ($items as $product)
                                     <div class="compare-cell-text w-[175px] md:w-[222px] shrink-0 text-[12px] text-primary/80 leading-relaxed">
                                         {{ $product['size'] }}
