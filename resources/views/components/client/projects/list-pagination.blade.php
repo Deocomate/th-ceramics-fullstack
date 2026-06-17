@@ -61,4 +61,4 @@
     'subtitle' => null,
     'description' => null,
     'items' => null,])
-<x-client.shared.custom-pagination :paginator="$projects->withQueryString()" />
+<x-client.shared.rounded-pagination :paginator="$projects->withQueryString()" />

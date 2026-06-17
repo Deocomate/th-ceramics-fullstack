@@ -35,6 +35,10 @@
               <p class="col-span-full text-primary/60">Chưa có bài viết liên quan.</p>
               @endforelse
             </div>
+
+            @if ($relatedNews && method_exists($relatedNews, 'lastPage') && $relatedNews->lastPage() > 1)
+              <x-client.shared.rounded-pagination :paginator="$relatedNews" />
+            @endif
         </div>
 
     </div>

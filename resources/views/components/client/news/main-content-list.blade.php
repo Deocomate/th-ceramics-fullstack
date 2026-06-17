@@ -21,7 +21,7 @@
         </div>
 
         @if ($news && method_exists($news, 'lastPage'))
-          <x-client.shared.custom-pagination :paginator="$news->withQueryString()" />
+          <x-client.shared.rounded-pagination :paginator="$news->withQueryString()" />
         @endif
       </div>
     @else
