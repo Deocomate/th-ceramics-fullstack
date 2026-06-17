@@ -37,7 +37,7 @@
             </div>
 
             @if ($relatedNews && method_exists($relatedNews, 'lastPage') && $relatedNews->lastPage() > 1)
-              <x-client.shared.rounded-pagination :paginator="$relatedNews" />
+              <x-client.shared.rounded-pagination :paginator="$relatedNews->withQueryString()" />
             @endif
         </div>
 

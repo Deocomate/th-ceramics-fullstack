@@ -126,6 +126,41 @@ test('deleted news category returns 404', function () {
         ->assertNotFound();
 });
 
+test('news detail paginates related articles in the same category', function () {
+    $category = DanhMucTinTuc::query()->create([
+        'ten_danh_muc' => 'Cong trinh du an',
+        'is_delete' => false,
+    ]);
+
+    $mainArticle = createNewsArticle($category, [
+        'tieu_de' => 'Bai chinh',
+        'slug' => 'bai-chinh',
+        'ngay_dang' => now(),
+    ]);
+
+    for ($i = 1; $i <= 10; $i++) {
+        createNewsArticle($category, [
+            'tieu_de' => 'Bai lien quan '.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
+            'slug' => 'bai-lien-quan-'.$i,
+            'ngay_dang' => now()->subMinutes($i),
+        ]);
+    }
+
+    $this->get(route('client.news.detail', $mainArticle->slug))
+        ->assertOk()
+        ->assertSee('Bài viết liên quan')
+        ->assertSee('aria-label="Pagination"', false)
+        ->assertSee('related_page=2', false);
+
+    $this->get(route('client.news.detail', [
+        'slug' => $mainArticle->slug,
+        'related_page' => 2,
+    ]))
+        ->assertOk()
+        ->assertSee('aria-label="Pagination"', false)
+        ->assertSee('Bai lien quan 10');
+});
+
 test('visited article appears in recent article history without duplicates', function () {
     $category = DanhMucTinTuc::query()->create([
         'ten_danh_muc' => 'Tin tuc',

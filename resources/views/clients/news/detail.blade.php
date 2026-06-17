@@ -5,7 +5,6 @@
     <x-client.news.detail-hero :article="$article ?? null" />
     <x-client.news.detail-content :article="$article ?? null" />
     <x-client.news.catalog-section :article="$article ?? null" />
-    <x-client.news.author-section />
     <x-client.news.detail-related :related-news="$relatedNews ?? null" />
     <x-client.shared.newsletter />
 

@@ -79,7 +79,7 @@ class NewsController extends Controller
             ->where('tin_tuc_id', '!=', $article->tin_tuc_id)
             ->whereIn('trang_thai', ['published', 'active'])
             ->latest('ngay_dang')
-            ->paginate(4, ['*'], 'related_page')
+            ->paginate(9, ['*'], 'related_page')
             ->withQueryString();
 
         $historyService->trackArticle($article->tin_tuc_id);

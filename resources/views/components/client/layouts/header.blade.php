@@ -80,37 +80,45 @@
                     </div>
                 </div>
 
-                <a href="{{ route('client.projects.index') }}"
-                    class="nav-link whitespace-nowrap shrink-0 text-[#FFFAF3] font-archivo font-bold text-[16px] leading-[18px] uppercase hover:text-secondary transition-colors"
-                    data-path="/du-an">Dự án</a>
-                <a href="{{ route('client.factory') }}"
-                    class="nav-link whitespace-nowrap shrink-0 text-[#FFFAF3] font-archivo font-bold text-[16px] leading-[18px] uppercase hover:text-secondary transition-colors"
-                    data-path="/xuong-san-xuat">Xưởng sản xuất</a>
-                <a href="{{ route('client.news.index') }}"
-                    class="nav-link whitespace-nowrap shrink-0 text-[#FFFAF3] font-archivo font-bold text-[16px] leading-[18px] uppercase hover:text-secondary transition-colors"
-                    data-path="/tin-tuc">Tin tức</a>
-                <a href="{{ route('client.contact') }}"
-                    class="nav-link whitespace-nowrap shrink-0 text-[#FFFAF3] font-archivo font-bold text-[16px] leading-[18px] uppercase hover:text-secondary transition-colors"
-                    data-path="/lien-he">liên hệ</a>
+                <div class="contents xl:flex items-center 2xl:gap-10 xl:gap-6 gap-6" data-nav-trailing>
+                    <a href="{{ route('client.projects.index') }}"
+                        class="nav-link whitespace-nowrap shrink-0 text-[#FFFAF3] font-archivo font-bold text-[16px] leading-[18px] uppercase hover:text-secondary transition-colors"
+                        data-path="/du-an">Dự án</a>
+                    <a href="{{ route('client.factory') }}"
+                        class="nav-link whitespace-nowrap shrink-0 text-[#FFFAF3] font-archivo font-bold text-[16px] leading-[18px] uppercase hover:text-secondary transition-colors"
+                        data-path="/xuong-san-xuat">Xưởng sản xuất</a>
+                    <a href="{{ route('client.news.index') }}"
+                        class="nav-link whitespace-nowrap shrink-0 text-[#FFFAF3] font-archivo font-bold text-[16px] leading-[18px] uppercase hover:text-secondary transition-colors"
+                        data-path="/tin-tuc">Tin tức</a>
+                    <a href="{{ route('client.contact') }}"
+                        class="nav-link whitespace-nowrap shrink-0 text-[#FFFAF3] font-archivo font-bold text-[16px] leading-[18px] uppercase hover:text-secondary transition-colors"
+                        data-path="/lien-he">liên hệ</a>
+                </div>
             </div>
 
             <!-- Desktop Icons -->
             <div class="hidden xl:flex items-center gap-6">
                 <div class="relative flex items-center" data-expandable-search>
-                    <input
-                        type="search"
-                        placeholder="Tìm kiếm sản phẩm"
-                        autocomplete="off"
-                        data-search-input
-                        data-open-classes="w-48 opacity-100 pointer-events-auto"
-                        class="w-0 opacity-0 pointer-events-none rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white placeholder:text-white/60 outline-none transition-all duration-300 focus:border-secondary"
-                    />
-                    <button type="button" data-search-toggle class="hover:text-secondary transition-colors" aria-label="Search">
+                    {{-- Pill: collapsed by default, expands left on open --}}
+                    <div data-search-pill
+                        data-open-classes="w-[500px] max-w-[42vw] opacity-100 pointer-events-auto"
+                        class="relative flex items-center h-[44px] w-0 max-w-0 opacity-0 pointer-events-none overflow-hidden rounded-[42px] border-2 border-[#ab6520] bg-[#43443f] backdrop-blur-[5px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] transition-all duration-300">
+                        <input type="search" autocomplete="off" data-search-input
+                            placeholder="Nhập nội dung tìm kiếm..."
+                            class="min-w-0 w-full bg-transparent border-0 outline-none pl-6 pr-12 text-[18px] text-white placeholder:italic placeholder:font-extralight placeholder:text-[18px] placeholder:text-[#b7b8b3]" />
+                        <button type="button" data-search-submit aria-label="Tìm kiếm"
+                            class="absolute right-4 flex items-center justify-center hover:opacity-80 transition-opacity">
+                            <img src="{{ asset('assets/images/search.svg') }}" alt="" class="w-5 h-5" />
+                        </button>
+                        <div data-search-dropdown
+                            class="hidden absolute left-0 top-full mt-3 w-full max-h-[70vh] overflow-y-auto rounded-sm border border-neutral-1 bg-white text-primary shadow-2xl z-[70]"></div>
+                    </div>
+
+                    {{-- Standalone trigger icon (shown when collapsed) --}}
+                    <button type="button" data-search-toggle aria-label="Mở tìm kiếm"
+                        class="hover:text-secondary transition-colors">
                         <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
                     </button>
-                    <div data-search-dropdown
-                        class="hidden absolute right-0 top-full mt-3 w-[360px] max-h-[70vh] overflow-y-auto rounded-sm border border-neutral-1 bg-white text-primary shadow-2xl z-[70]">
-                    </div>
                 </div>
                 <x-client.shared.mini-cart :count="$cartCount ?? 0" />
                 @auth
@@ -389,10 +397,21 @@
                 const input = root.querySelector("[data-search-input]");
                 if (!input) return;
 
-                const openClasses = input.dataset.openClasses || "w-48 opacity-100 pointer-events-auto";
+                const target = root.querySelector("[data-search-pill]") || input;
+                const openClasses = target.dataset.openClasses || "w-48 opacity-100 pointer-events-auto";
                 root.dataset.searchOpen = "true";
-                input.classList.remove("w-0", "opacity-0", "pointer-events-none");
-                swapClasses(input, openClasses, true);
+                target.classList.remove("w-0", "max-w-0", "opacity-0", "pointer-events-none");
+                swapClasses(target, openClasses, true);
+                root.querySelector("[data-search-toggle]")?.classList.add("hidden");
+                document.querySelector("[data-nav-trailing]")?.classList.add("!hidden");
+                
+                // Remove overflow-hidden after transition to allow dropdown to show
+                setTimeout(() => {
+                    if (root.dataset.searchOpen === "true") {
+                        target.classList.remove("overflow-hidden");
+                    }
+                }, 300);
+                
                 input.focus();
             };
 
@@ -401,12 +420,19 @@
                 const dropdown = root.querySelector("[data-search-dropdown]");
                 if (!input) return;
 
-                const openClasses = input.dataset.openClasses || "w-48 opacity-100 pointer-events-auto";
+                const target = root.querySelector("[data-search-pill]") || input;
+                const openClasses = target.dataset.openClasses || "w-48 opacity-100 pointer-events-auto";
                 root.dataset.searchOpen = "false";
-                swapClasses(input, openClasses, false);
-                input.classList.add("w-0", "opacity-0", "pointer-events-none");
+                
+                // Add overflow-hidden immediately when closing to hide content during transition
+                target.classList.add("overflow-hidden");
+                
+                swapClasses(target, openClasses, false);
+                target.classList.add("w-0", "max-w-0", "opacity-0", "pointer-events-none");
                 input.value = "";
                 dropdown?.classList.add("hidden");
+                root.querySelector("[data-search-toggle]")?.classList.remove("hidden");
+                document.querySelector("[data-nav-trailing]")?.classList.remove("!hidden");
             };
 
             const bindSearchInput = (root, dropdown, input) => {
@@ -467,12 +493,18 @@
                 const input = root.querySelector("[data-search-input]");
                 const toggle = root.querySelector("[data-search-toggle]");
                 const dropdown = root.querySelector("[data-search-dropdown]");
+                const submit = root.querySelector("[data-search-submit]");
 
                 if (!input || !toggle || !dropdown) return;
 
                 toggle.addEventListener("click", (event) => {
                     event.preventDefault();
                     openSearch(root);
+                });
+
+                submit?.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    input.focus();
                 });
 
                 input.addEventListener("keydown", (event) => {
