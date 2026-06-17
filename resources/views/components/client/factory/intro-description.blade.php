@@ -251,6 +251,7 @@
         .factory-intro-section .info-p {
             font-size: 16px;
             font-weight: 200;
+            font-family: Archivo, sans-serif;
             text-align: left;
             line-height: 24px;
             margin-bottom: 16px;
@@ -258,6 +259,10 @@
 
         @media (min-width: 768px) {
             .factory-intro-section .info-p {
+                color: #101010;
+                font-size: 16px;
+                font-family: Archivo, sans-serif;
+                font-weight: 200;
                 text-align: justify;
                 line-height: 36px;
                 margin-bottom: 0px;
@@ -276,12 +281,17 @@
             list-style-type: decimal;
             font-size: 16px;
             font-weight: 200;
+            font-family: Archivo, sans-serif;
             text-align: left;
             line-height: 24px;
         }
 
         @media (min-width: 768px) {
             .factory-intro-section .info-list {
+                color: #101010;
+                font-size: 16px;
+                font-family: Archivo, sans-serif;
+                font-weight: 200;
                 text-align: justify;
                 line-height: 36px;
             }
@@ -303,6 +313,15 @@
         .factory-intro-section .info-list strong {
             font-weight: bold;
             color: #2E2F2A;
+        }
+
+        @media (min-width: 768px) {
+
+            .factory-intro-section .info-list li::marker,
+            .factory-intro-section .info-list strong {
+                font-weight: 200;
+                color: #101010;
+            }
         }
 
         /* Dividers (Mobile only) */

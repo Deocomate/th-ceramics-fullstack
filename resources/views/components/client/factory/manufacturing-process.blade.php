@@ -116,7 +116,7 @@
         <h3 class="text-lg md:text-[20px] font-bold uppercase mb-6">
           {!! $formatFactoryTitle($factory->process_title, 'QUY TRÌNH "KHOA HỌC - NGĂN NẮP - TÁCH BIỆT"') !!}
         </h3>
-        <div class="text-[15px]/[1.6] md:text-base/9 text-primary space-y-6 md:space-y-2 text-justify">
+        <div class="factory-desc-body text-[15px]/[1.6] md:text-base/9 text-primary space-y-6 md:space-y-2 text-justify">
           @foreach($processBlocks as $block)
             @if(($block['type'] ?? null) === 'paragraph' && !empty($block['content']))
               <p>{!! nl2br(e($block['content'])) !!}</p>
@@ -216,7 +216,7 @@
         <h3 class="text-[15px] md:text-base font-bold uppercase mb-8 md:mb-4">
           {!! $formatFactoryTitle($factory->process_bottom_title, 'SỨC MẠNH CỦA SỰ KẾT HỢP: MÁY MÓC HIỆN ĐẠI & BÀN TAY NGHỆ NHÂN') !!}
         </h3>
-        <div class="text-[15px]/[1.6] md:text-base/9 text-primary text-justify">
+        <div class="factory-desc-body text-[15px]/[1.6] md:text-base/9 text-primary text-justify">
           @foreach($processBottomBlocks as $block)
             @if(($block['type'] ?? null) === 'paragraph' && !empty($block['content']))
               <p class="mb-6 last:mb-0">{!! nl2br(e($block['content'])) !!}</p>
@@ -257,6 +257,27 @@
     </div>
   </div>
 </section>
+
+@push('styles')
+<style>
+  @media (min-width: 768px) {
+    .factory-desc-body,
+    .factory-desc-body p,
+    .factory-desc-body li {
+      color: #101010;
+      font-size: 16px;
+      font-family: Archivo, sans-serif;
+      font-weight: 200;
+    }
+
+    .factory-desc-body strong,
+    .factory-desc-body li::marker {
+      font-weight: 200 !important;
+      color: #101010;
+    }
+  }
+</style>
+@endpush
 
 @push('scripts')
 <script>
