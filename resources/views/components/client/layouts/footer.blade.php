@@ -17,7 +17,7 @@
         <div class="hidden md:block absolute inset-0"
             style="
         background-image: url('{{ asset('assets/images/footer-image-3.png') }}');
-        background-size: 100% 448px;
+        background-size: auto 448px;
         background-position: top center;
         background-repeat: repeat-x;
       "
