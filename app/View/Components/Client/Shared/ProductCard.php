@@ -19,6 +19,8 @@ class ProductCard extends Component
 
     public string $addToCartButtonClasses;
 
+    public string $consultationButtonClasses;
+
     public bool $showAddToCartLabel;
 
     public bool $addToCartAlignStart;
@@ -68,6 +70,8 @@ class ProductCard extends Component
         $this->addToCartButtonClasses = $this->showAddToCartLabel
             ? 'inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-secondary text-secondary text-[11px] md:text-sm font-semibold hover:bg-secondary hover:text-white transition-all'
             : 'inline-flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-full border border-secondary text-secondary hover:bg-secondary hover:text-white transition-all';
+
+        $this->consultationButtonClasses = 'inline-flex items-center justify-center gap-2 w-full md:w-auto px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-secondary text-secondary text-[11px] md:text-sm font-semibold hover:bg-secondary hover:text-white transition-all whitespace-nowrap';
     }
 
     public function render(): View|Closure|string

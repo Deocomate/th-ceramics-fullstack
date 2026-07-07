@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureEcommerceEnabled;
 use App\Http\Middleware\RoleMiddleware;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +23,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'verified' => EnsureEmailIsVerified::class,
+            'ecommerce' => EnsureEcommerceEnabled::class,
+        ]);
+
+        $middleware->priority([
+            EnsureEcommerceEnabled::class,
+            Authenticate::class,
+            EnsureEmailIsVerified::class,
         ]);
 
         // Redirect unauthenticated users based on route prefix

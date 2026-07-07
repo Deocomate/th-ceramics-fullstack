@@ -95,6 +95,16 @@
         </button>
       </div>
 
+      @if (!$isEcommerceEnabled)
+      <button type="button"
+          data-open-consultation
+          data-product-type="{{ $productType ?? '' }}"
+          data-product-id="{{ $productId ?? '' }}"
+          data-product-name="{{ strip_tags(str_replace(["\r", "\n"], ' ', $titleText)) }}"
+          class="w-full md:w-auto bg-[#C16A00] hover:bg-secondary cursor-pointer text-[#EFE4DE] px-8 py-4 font-semibold md:transition-colors md:shadow-md rounded-[2px] flex items-center justify-center text-[14px] md:text-sm tracking-[0.28px] md:tracking-normal font-archivo md:leading-[18px] md:ml-4">
+          LIÊN HỆ ĐẶT HÀNG
+      </button>
+      @else
       <button type="button"
           data-detail-add-to-cart
           @disabled(! $showButton)
@@ -105,6 +115,7 @@
               LIÊN HỆ ĐẶT HÀNG
           @endif
       </button>
+      @endif
     </div>
 
     <input type="hidden" data-detail-quantity-input name="qty" value="1">

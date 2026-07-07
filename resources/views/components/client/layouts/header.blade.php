@@ -120,9 +120,11 @@
                         <img src="{{ asset('assets/images/search.svg') }}" alt="search" class="w-5 h-5" />
                     </button>
                 </div>
+                @if ($isEcommerceEnabled)
                 <x-client.shared.mini-cart :count="$cartCount ?? 0" />
+                @endif
                 @auth
-                    <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
+                    <a href="{{ ($isEcommerceEnabled ?? true) ? route('client.customer-service.show', 'trang-thai-don-hang') : route('client.auth.profile') }}"
                         class="hover:text-secondary transition-colors" aria-label="User">
                         <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-5 h-5" />
                     </a>
@@ -149,9 +151,11 @@
             </a>
 
             <div class="absolute right-[23px] flex items-center gap-[14px]">
+                @if ($isEcommerceEnabled)
                 <x-client.shared.mini-cart :count="$cartCount ?? 0" icon-class="w-[18px] h-[18px]" />
+                @endif
                 @auth
-                    <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
+                    <a href="{{ ($isEcommerceEnabled ?? true) ? route('client.customer-service.show', 'trang-thai-don-hang') : route('client.auth.profile') }}"
                         class="hover:text-secondary transition-colors" aria-label="User">
                         <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-[18px] h-[18px]" />
                     </a>
@@ -173,9 +177,11 @@
                     <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="h-[90px] w-[90px]" />
                 </a>
                 <div class="flex items-center gap-5">
-                    <x-client.shared.mini-cart :count="$cartCount ?? 0" />
+                    @if ($isEcommerceEnabled)
+                <x-client.shared.mini-cart :count="$cartCount ?? 0" />
+                @endif
                     @auth
-                        <a href="{{ route('client.customer-service.show', 'trang-thai-don-hang') }}"
+                        <a href="{{ ($isEcommerceEnabled ?? true) ? route('client.customer-service.show', 'trang-thai-don-hang') : route('client.auth.profile') }}"
                             class="hover:text-secondary transition-colors" aria-label="User">
                             <img src="{{ asset('assets/images/user.svg') }}" alt="user" class="w-5 h-5" />
                         </a>
@@ -404,14 +410,14 @@
                 swapClasses(target, openClasses, true);
                 root.querySelector("[data-search-toggle]")?.classList.add("hidden");
                 document.querySelector("[data-nav-trailing]")?.classList.add("!hidden");
-                
+
                 // Remove overflow-hidden after transition to allow dropdown to show
                 setTimeout(() => {
                     if (root.dataset.searchOpen === "true") {
                         target.classList.remove("overflow-hidden");
                     }
                 }, 300);
-                
+
                 input.focus();
             };
 
@@ -423,10 +429,10 @@
                 const target = root.querySelector("[data-search-pill]") || input;
                 const openClasses = target.dataset.openClasses || "w-48 opacity-100 pointer-events-auto";
                 root.dataset.searchOpen = "false";
-                
+
                 // Add overflow-hidden immediately when closing to hide content during transition
                 target.classList.add("overflow-hidden");
-                
+
                 swapClasses(target, openClasses, false);
                 target.classList.add("w-0", "max-w-0", "opacity-0", "pointer-events-none");
                 input.value = "";

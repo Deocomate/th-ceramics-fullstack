@@ -81,10 +81,12 @@
         <nav class="flex flex-col lg:border-t border-gray-300 text-sm">
             <!-- First 5 items -->
             <div id="sidebar-items-initial" class="flex flex-col">
+                @if ($isEcommerceEnabled)
                 <a href="{{ route('client.dich-vu.trang-thai-don-hang') }}"
                     class="py-4 border-b border-gray-300 transition-colors hover:underline font-bold @if ($activeOrder ?? false) text-primary decoration-primary underline underline-offset-4 @else text-primary @endif">
                     Trạng thái đơn hàng
                 </a>
+                @endif
                 <a href="{{ route('client.auth.profile') }}"
                     class="py-4 border-b border-gray-300 transition-colors hover:underline font-bold @if ($activeAccount ?? false) text-primary decoration-primary underline underline-offset-4 @else text-primary @endif">
                     Tài khoản của tôi

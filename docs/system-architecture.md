@@ -72,7 +72,8 @@ Two route files loaded under a single `web` middleware group in `bootstrap/app.p
 - **Default web middleware**: CSRF, sessions, etc. (Laravel defaults)
 - **`auth` middleware**: Guest routes (login) redirect authenticated users to dashboard; protected routes redirect unauthenticated users to admin login
 - **`role:superadmin`**: Restricts user management routes to superadmin only
-- **`throttle` middleware**: Applied to client login (6 req/min) and contact form submission (3 req/min) to prevent brute-force and spam
+- **`throttle` middleware**: Applied to client login (6 req/min), contact form (3 req/min), and consultation requests (5 req/min)
+- **`ecommerce` middleware** (`EnsureEcommerceEnabled`): When `trang_chu.is_ecommerce_enabled` is false, blocks cart/checkout/order-tracking routes server-side (redirect for web, JSON 403 for AJAX). Flag is cached under `site_ecommerce_enabled` and shared to all views as `$isEcommerceEnabled` via `AppServiceProvider`.
 - Guest/Auth redirects configured in `bootstrap/app.php`
 
 ### 3. Controller Layer

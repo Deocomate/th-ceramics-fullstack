@@ -23,6 +23,7 @@ class TrangChuService
                 'nhung_con_so' => [],
                 'showroom_images' => [],
                 'showroom_noidung' => null,
+                'is_ecommerce_enabled' => true,
             ]);
         }
 
@@ -45,6 +46,9 @@ class TrangChuService
             }
             if (array_key_exists('showroom_noidung', $data)) {
                 $fillable['showroom_noidung'] = $data['showroom_noidung'];
+            }
+            if (array_key_exists('is_ecommerce_enabled', $data)) {
+                $fillable['is_ecommerce_enabled'] = (bool) $data['is_ecommerce_enabled'];
             }
 
             if (isset($data['loi_tri_an'])) {

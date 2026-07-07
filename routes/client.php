@@ -3,6 +3,7 @@
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\ConsultationController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\CustomerServiceController;
 use App\Http\Controllers\Client\DichVuKhachHang\BaoMatThongTinController;
@@ -57,6 +58,9 @@ Route::name('client.')->group(function () {
     Route::get('/xuong-san-xuat', [FactoryController::class, 'index'])->name('factory');
     Route::get('/lien-he', [ContactController::class, 'index'])->name('contact');
     Route::post('/lien-he', [ContactController::class, 'submit'])->middleware('throttle:3,1')->name('contact.submit');
+    Route::post('/yeu-cau-tu-van', [ConsultationController::class, 'store'])
+        ->middleware('throttle:5,1')
+        ->name('consultation.store');
     Route::get('/cau-hoi-thuong-gap', [FaqController::class, 'index'])->name('faq');
     Route::get('/tim-kiem-nhanh', GlobalSearchController::class)->name('search.quick');
 
@@ -76,20 +80,24 @@ Route::name('client.')->group(function () {
     });
 
     // Giỏ hàng / Thanh toán
-    Route::get('/gio-hang', [CartController::class, 'cart'])->name('cart.index');
-    Route::get('/gio-hang/san-pham-options', [CartController::class, 'productOptions'])->name('cart.product-options');
-    Route::get('/gio-hang/mini', [CartController::class, 'mini'])->name('cart.mini');
-    Route::get('/thanh-toan', [CartController::class, 'checkout'])->middleware(['auth', 'verified'])->name('cart.checkout');
-    Route::post('/gio-hang/them', [CartController::class, 'add'])->name('cart.add');
-    Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('cart.update');
-    Route::post('/gio-hang/xoa', [CartController::class, 'remove'])->name('cart.remove');
-    Route::post('/thanh-toan/xu-ly', [CartController::class, 'processCheckout'])->middleware(['auth', 'verified'])->name('cart.checkout.process');
-    Route::post('/thanh-toan/ap-dung-ma', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
-    Route::post('/thanh-toan/go-ma', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
+    Route::middleware('ecommerce')->group(function () {
+        Route::get('/gio-hang', [CartController::class, 'cart'])->name('cart.index');
+        Route::get('/gio-hang/san-pham-options', [CartController::class, 'productOptions'])->name('cart.product-options');
+        Route::get('/gio-hang/mini', [CartController::class, 'mini'])->name('cart.mini');
+        Route::get('/thanh-toan', [CartController::class, 'checkout'])->middleware(['auth', 'verified'])->name('cart.checkout');
+        Route::post('/gio-hang/them', [CartController::class, 'add'])->name('cart.add');
+        Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('cart.update');
+        Route::post('/gio-hang/xoa', [CartController::class, 'remove'])->name('cart.remove');
+        Route::post('/thanh-toan/xu-ly', [CartController::class, 'processCheckout'])->middleware(['auth', 'verified'])->name('cart.checkout.process');
+        Route::post('/thanh-toan/ap-dung-ma', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
+        Route::post('/thanh-toan/go-ma', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
+    });
 
     // Chính sách & Dịch vụ khách hàng — route tĩnh phải khai báo TRƯỚC catch-all `/{page}`
     Route::prefix('dich-vu')->name('dich-vu.')->group(function () {
-        Route::get('/trang-thai-don-hang', [TrangThaiDonHangController::class, 'index'])->name('trang-thai-don-hang');
+        Route::get('/trang-thai-don-hang', [TrangThaiDonHangController::class, 'index'])
+            ->middleware('ecommerce')
+            ->name('trang-thai-don-hang');
         Route::get('/tai-catalog', [CatalogController::class, 'index'])->name('tai-catalog');
         Route::get('/tai-catalog/doc/{id}', [CatalogController::class, 'read'])->name('tai-catalog.read');
         Route::get('/quy-trinh-dat-hang', [QuyTrinhDatHangController::class, 'index'])->name('quy-trinh-dat-hang');

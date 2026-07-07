@@ -88,6 +88,12 @@
     </div>
     @endif
 
+    @if(session('error'))
+    <div class="bg-red-50 border-b border-red-200 text-red-800 px-4 py-3 text-center text-sm font-archivo">
+        {{ session('error') }}
+    </div>
+    @endif
+
     <main @if($dataPage) data-page="{{ $dataPage }}" @endif
           class="flex-grow {{ $mainClass ?? 'bg-white' }}">
         {{ $slot }}
@@ -97,6 +103,9 @@
 
     <x-client.shared.cart-toast />
     <x-client.shared.cart-modal />
+    @unless ($isEcommerceEnabled ?? true)
+        <x-client.shared.consultation-modal />
+    @endunless
 
     <!-- Global Lightbox -->
     <div id="global-lightbox" class="fixed inset-0 z-[9999] bg-[#0c0c0b]/95 backdrop-blur-md flex flex-col justify-between opacity-0 pointer-events-none transition-all duration-300 ease-out" aria-hidden="true">

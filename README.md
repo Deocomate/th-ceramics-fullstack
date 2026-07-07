@@ -110,6 +110,7 @@ routes/
 - **JSON-LD structured data**: Product schema markup on detail pages for search engines
 - **Dynamic pages**: Home, About, Factory, Contact, FAQ, Projects, Customer Service all pull from DB
 - **Session-based cart**: AJAX controls, COD checkout, coupon/discount system
+- **Showcase mode toggle**: Admin can disable e-commerce (`is_ecommerce_enabled` on `trang_chu`); site switches to B2B catalog with consultation popup and server-blocked cart routes
 - **Order management**: Admin order lifecycle + client order tracking with email notifications
 - **Client authentication**: Login, register, forgot/reset password, Google OAuth (Socialite)
 - **Database queue**: Email dispatch (ShouldQueue mailables) via `jobs` table, no Redis needed

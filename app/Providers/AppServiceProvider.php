@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\PageContact;
+use App\Models\TrangChu;
 use App\Services\CartService;
 use App\Services\GiaTriVuotTroiService;
 use Illuminate\Support\Facades\Cache;
@@ -18,6 +19,18 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+    }
+
+    public static function resolveIsEcommerceEnabled(): bool
+    {
+        if (! Schema::hasTable('trang_chu') || ! Schema::hasColumn('trang_chu', 'is_ecommerce_enabled')) {
+            return true;
+        }
+
+        return (bool) Cache::rememberForever(
+            'site_ecommerce_enabled',
+            static fn () => (bool) (TrangChu::query()->value('is_ecommerce_enabled') ?? true),
+        );
     }
 
     /**
@@ -38,6 +51,10 @@ class AppServiceProvider extends ServiceProvider
 
             View::share('globalContact', $globalContact);
         }
+
+        View::composer('*', function ($view): void {
+            $view->with('isEcommerceEnabled', static::resolveIsEcommerceEnabled());
+        });
 
         if (Schema::hasTable('gia_tri_vuot_troi')) {
             View::share('giaTriVuotTroi', app(GiaTriVuotTroiService::class)->getAll());

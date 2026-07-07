@@ -18,6 +18,27 @@
             </div>
         @endif
 
+        <!-- E-commerce mode toggle -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Chế độ bán hàng</h2>
+            </div>
+            <div class="p-6">
+                <input type="hidden" name="is_ecommerce_enabled" value="0">
+                <label class="flex items-start gap-4 cursor-pointer">
+                    <input type="checkbox" name="is_ecommerce_enabled" value="1"
+                        class="mt-1 w-5 h-5 text-[#A31D1D] border-gray-300 rounded focus:ring-[#A31D1D]"
+                        @checked(old('is_ecommerce_enabled', $trangChu->is_ecommerce_enabled ?? true))>
+                    <div>
+                        <span class="text-sm font-semibold text-gray-800">Chế độ bán hàng trực tuyến (Giỏ hàng &amp; Thanh toán)</span>
+                        <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+                            Khi tắt, website chuyển sang chế độ trưng bày B2B: ẩn giỏ hàng, chặn thanh toán, và nút sản phẩm mở form yêu cầu tư vấn / báo giá.
+                        </p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
         <!-- 1. Banner Trang Chủ -->
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
@@ -219,11 +240,11 @@
             const maxSizeBytes = maxSizeMB * 1024 * 1024;
             const files = Array.from(input.files);
             const oversizedFiles = files.filter(file => file.size > maxSizeBytes);
-            
+
             if (oversizedFiles.length > 0) {
                 const fileNames = oversizedFiles.map(file => `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`).join('\n');
                 alert(`Lỗi: Các ảnh sau đây vượt quá dung lượng tối đa cho phép (${maxSizeMB}MB):\n\n${fileNames}\n\nVui lòng chọn ảnh khác có dung lượng nhỏ hơn.`);
-                
+
                 // Clear the input
                 input.value = "";
                 return false;
@@ -262,7 +283,7 @@
         function renderPreviews(input, container, objectFit) {
             container.innerHTML = '';
             const files = Array.from(input.files);
-            
+
             if (files.length > 0) {
                 container.className = 'mt-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 bg-gray-50 border border-gray-200 border-dashed rounded-lg';
                 files.forEach((file, index) => {
@@ -291,20 +312,20 @@
         function removePendingFile(inputId, containerId, indexToRemove, objectFit) {
             const input = document.getElementById(inputId);
             const container = document.getElementById(containerId);
-            
+
             const dt = new DataTransfer();
             const files = Array.from(input.files);
-            
+
             // Push lại các file không bị xoá
             files.forEach((file, index) => {
                 if (index !== indexToRemove) {
                     dt.items.add(file);
                 }
             });
-            
+
             // Ghi đè lại input files
             input.files = dt.files;
-            
+
             // Render lại giao diện
             renderPreviews(input, container, objectFit);
         }

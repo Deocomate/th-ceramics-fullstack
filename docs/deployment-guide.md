@@ -175,7 +175,7 @@ server {
 
 ## Queue Worker
 
-The application uses `database` queue driver. Run a persistent queue worker:
+The application uses `database` queue driver. Run a persistent queue worker (required for order emails, contact form, and consultation request notifications):
 
 ```bash
 # Using Supervisor (/etc/supervisor/conf.d/th-ceramics-worker.conf)
@@ -263,3 +263,4 @@ See `docs/authentication-setup.md` for:
 | 403 on admin routes | Verify user role in database; check RoleMiddleware configuration |
 | Database connection errors | Verify DB credentials in .env; ensure MariaDB is running |
 | Queue jobs not processing | Confirm queue worker is running; check supervisor logs |
+| E-commerce toggle not reflecting on site | Run `php artisan cache:clear` if using a non-database cache store; `TrangChu` save auto-busts `site_ecommerce_enabled` when using the default cache driver |
