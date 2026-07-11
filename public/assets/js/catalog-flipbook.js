@@ -9,6 +9,7 @@
   const ZOOM_MIN = 1.0;
   const ZOOM_MAX = 2.0;
   const ZOOM_STEP = 0.25;
+  const RENDER_SCALE_CAP = 2; // cap devicePixelRatio contribution
 
   let currentZoom = ZOOM_MIN;
   let panX = 0;
@@ -102,32 +103,43 @@
     return String(entry.pdfPageNumber);
   }
 
+  function getRenderMultiplier() {
+    const dpr = Math.min(window.devicePixelRatio || 1, RENDER_SCALE_CAP);
+    return dpr * ZOOM_MAX; // ensures max zoom (200%) still shows native-res detail
+  }
+
   function renderPageToCanvas(page, canvas, entry, flipW, flipH) {
+    const mult = getRenderMultiplier();
+    const bufferW = Math.round(flipW * mult);
+    const bufferH = Math.round(flipH * mult);
+
     const ctx = canvas.getContext('2d');
-    canvas.width = flipW;
-    canvas.height = flipH;
+    canvas.width = bufferW;
+    canvas.height = bufferH;
+    canvas.style.width = flipW + 'px';
+    canvas.style.height = flipH + 'px';
     ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, flipW, flipH);
+    ctx.fillRect(0, 0, bufferW, bufferH);
 
     const { side, pdfWidth, pdfHeight } = entry;
     const isSpread = side === 'left' || side === 'right';
     const contentW = isSpread ? pdfWidth / 2 : pdfWidth;
     const contentH = pdfHeight;
-    const renderScale = Math.min(flipW / contentW, flipH / contentH);
+    const renderScale = Math.min(bufferW / contentW, bufferH / contentH);
     const viewport = page.getViewport({ scale: renderScale });
     const renderedH = viewport.height;
-    const offsetY = (flipH - renderedH) / 2;
+    const offsetY = (bufferH - renderedH) / 2;
 
     let offsetX = 0;
 
     if (side === 'full') {
-      offsetX = (flipW - viewport.width) / 2;
+      offsetX = (bufferW - viewport.width) / 2;
     } else if (side === 'left') {
       const halfRenderedW = (pdfWidth / 2) * renderScale;
-      offsetX = (flipW - halfRenderedW) / 2;
+      offsetX = (bufferW - halfRenderedW) / 2;
     } else if (side === 'right') {
       const halfRenderedW = (pdfWidth / 2) * renderScale;
-      offsetX = -(pdfWidth / 2) * renderScale + (flipW - halfRenderedW) / 2;
+      offsetX = -(pdfWidth / 2) * renderScale + (bufferW - halfRenderedW) / 2;
     }
 
     return page.render({

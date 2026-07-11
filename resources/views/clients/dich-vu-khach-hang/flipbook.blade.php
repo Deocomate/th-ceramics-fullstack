@@ -13,7 +13,8 @@
     *, *::before, *::after { box-sizing: border-box; }
 
     #flipbook-viewport {
-      transition: overflow 0.2s ease;
+      overflow: visible;
+      padding: 24px;
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE/Edge */
     }
@@ -23,6 +24,7 @@
     }
 
     #flipbook-viewport.is-zoomed {
+      overflow: hidden;
       cursor: grab;
     }
 
@@ -51,8 +53,6 @@
 
     .my-page canvas {
       display: block;
-      width: 100%;
-      height: auto;
     }
 
     .my-page .page-loading {
@@ -105,7 +105,7 @@
       <i data-lucide="chevron-left" class="w-5 h-5"></i>
     </button>
 
-    <div id="flipbook-viewport" class="w-full h-full relative overflow-hidden flex items-center justify-center">
+    <div id="flipbook-viewport" class="w-full h-full relative flex items-center justify-center">
       <div id="flipbook-zoom-wrap" class="relative">
         <div id="flipbook" class="shadow-2xl shadow-stone-400/40 rounded-sm"></div>
       </div>
