@@ -1,5 +1,13 @@
 # Project Changelog
 
+## 0.5.7 (2026-07-11)
+
+### Added
+- **Catalog AJAX Upload & Real-time Progress Bar**: Migrated catalog store and update actions to support AJAX requests. Added client-side size and extension pre-validation. Created a dynamic progress bar that shows upload progress in real-time, disables submit buttons, and displays spinners to prevent double submission.
+- **Inline Validation Error Feedback**: Server-side validation errors (422) are returned as JSON and displayed inline without closing the edit modal or losing form states. General failures are handled and outputted inside the modal/form.
+- **Infrastructure Guidelines**: Documented maximum request body size (`client_max_body_size 220M`) and FastCGI timeouts (`fastcgi_read_timeout 300s`) for Nginx, as well as PHP-FPM upload limits and timeout parameters (`upload_max_filesize = 220M`, `post_max_size = 220M`, `max_execution_time = 300`, `max_input_time = 300`) in `docs/deployment-guide.md` to support uploads up to 200MB.
+- **Eloquent Factory & Automated Testing**: Added `HasFactory` trait to the `Catalog` model, created `CatalogFactory`, and implemented Pest feature tests in `CatalogUploadTest` verifying AJAX store, update, validation limits, and file deletion.
+
 ## 0.5.6 (2026-05-15)
 
 ### Added

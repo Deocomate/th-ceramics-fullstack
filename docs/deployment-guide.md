@@ -128,6 +128,9 @@ server {
     add_header X-Content-Type-Options "nosniff";
     add_header X-XSS-Protection "1; mode=block";
 
+    # Configure maximum upload size (Laravel validation limit: 200MB)
+    client_max_body_size 220M;
+
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
@@ -136,6 +139,9 @@ server {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
         fastcgi_param APP_ENV production;
+
+        # Increase read timeout for large catalog uploads
+        fastcgi_read_timeout 300s;
     }
 
     location ~ /\.(?!well-known).* {
@@ -148,6 +154,25 @@ server {
         add_header Cache-Control "public, no-transform";
     }
 }
+```
+
+### PHP-FPM / php.ini Settings
+
+For large catalog file uploads (which can reach up to 200MB), the following PHP configuration changes are required in `php.ini` (e.g. `/etc/php/8.2/fpm/php.ini`):
+
+```ini
+# Increase upload limits to support files up to 220MB (accounting for headers/metadata)
+upload_max_filesize = 220M
+post_max_size = 220M
+
+# Increase timeout durations to prevent uploads on slow connections from terminating
+max_execution_time = 300
+max_input_time = 300
+```
+
+Remember to restart the PHP-FPM service after saving changes:
+```bash
+sudo systemctl restart php8.2-fpm
 ```
 
 ### Apache

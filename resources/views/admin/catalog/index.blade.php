@@ -26,7 +26,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     THÊM CATALOG MỚI
                 </h3>
-                <form method="POST" action="{{ route('admin.catalog.store') }}" enctype="multipart/form-data">
+                <form id="createForm" method="POST" action="{{ route('admin.catalog.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                         <div class="lg:col-span-1">
@@ -36,27 +36,42 @@
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Chọn ảnh</span>
                                 </div>
-                                <input type="file" name="anh_dai_dien" accept="image/*" required onchange="previewImage(event, 'preview-new-catalog')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <input type="file" name="anh_dai_dien" accept="image/*" required onchange="previewImage(event, 'preview-new-catalog'); validateFileInput(this, 'err-create-anh_dai_dien', 5, ['jpg', 'jpeg', 'png', 'webp'])" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                             </div>
+                            <div id="err-create-anh_dai_dien" class="text-xs text-red-600 mt-2 hidden"></div>
                         </div>
                         <div class="lg:col-span-3 flex flex-col gap-5">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Tiêu đề (Tùy chọn)</label>
                                 <input type="text" name="tieu_de" placeholder="VD: Catalog Gạch Ngói 2024..." class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-[#A31D1D] focus:ring-1 focus:ring-[#A31D1D] outline-none transition-all">
+                                <div id="err-create-tieu_de" class="text-xs text-red-600 mt-2 hidden"></div>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">File Catalog (PDF, DOCX, ZIP...) <span class="text-red-500">*</span></label>
                                 <div class="relative">
-                                    <input type="file" name="file" accept=".pdf,.doc,.docx,.zip,.rar" required class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white transition-all">
+                                    <input type="file" name="file" accept=".pdf,.doc,.docx,.zip,.rar" required onchange="validateFileInput(this, 'err-create-file', 200, ['pdf', 'doc', 'docx', 'zip', 'rar'])" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white transition-all">
                                 </div>
-                                <p class="text-xs text-gray-500 mt-2">Dung lượng tối đa: 20MB.</p>
+                                <p class="text-xs text-gray-500 mt-2">Dung lượng tối đa: 200MB.</p>
+                                <div id="err-create-file" class="text-xs text-red-600 mt-2 hidden"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-6 flex justify-end pt-4 border-t border-blue-100">
-                        <button type="submit" class="px-6 py-2.5 flex items-center gap-2 text-sm font-bold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm">
-                            Thêm Catalog
-                        </button>
+                    <div class="mt-6 flex flex-col gap-4 pt-4 border-t border-blue-100">
+                        <div id="create-progress-container" class="hidden w-full">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div id="create-progress-bar" class="bg-blue-600 h-2 rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1 flex justify-between">
+                                <span>Đang tải lên...</span>
+                                <span id="create-progress-text">0%</span>
+                            </p>
+                        </div>
+                        <div id="err-create-general" class="text-xs text-red-600 hidden"></div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-6 py-2.5 flex items-center gap-2 text-sm font-bold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm">
+                                Thêm Catalog
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -131,25 +146,40 @@
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Đổi ảnh</span>
                                 </div>
-                                <input type="file" name="anh_dai_dien" accept="image/*" onchange="previewImage(event, 'preview-edit-img')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <input type="file" name="anh_dai_dien" accept="image/*" onchange="previewImage(event, 'preview-edit-img'); validateFileInput(this, 'err-edit-anh_dai_dien', 5, ['jpg', 'jpeg', 'png', 'webp'])" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                             </div>
+                            <div id="err-edit-anh_dai_dien" class="text-xs text-red-600 mt-2 hidden"></div>
                         </div>
                         <div class="md:col-span-2 space-y-5">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Tiêu đề (Tùy chọn)</label>
                                 <input type="text" id="edit_name" name="tieu_de" class="w-full px-4 py-2.5 text-sm border rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">
+                                <div id="err-edit-tieu_de" class="text-xs text-red-600 mt-2 hidden"></div>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Đổi File Mới (Tùy chọn)</label>
-                                <input type="file" name="file" accept=".pdf,.doc,.docx,.zip,.rar" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white transition-all">
-                                <p class="text-xs text-gray-500 mt-2">Dung lượng tối đa 20MB. Để trống nếu không muốn thay đổi file cũ.</p>
+                                <input type="file" name="file" accept=".pdf,.doc,.docx,.zip,.rar" onchange="validateFileInput(this, 'err-edit-file', 200, ['pdf', 'doc', 'docx', 'zip', 'rar'])" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white transition-all">
+                                <p class="text-xs text-gray-500 mt-2">Dung lượng tối đa 200MB. Để trống nếu không muốn thay đổi file cũ.</p>
+                                <div id="err-edit-file" class="text-xs text-red-600 mt-2 hidden"></div>
                                 <div class="mt-2 text-sm" id="edit_file_link"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-8 flex justify-end gap-3 pt-5 border-t border-gray-100">
-                        <button type="button" onclick="closeEditModal()" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy bỏ</button>
-                        <button type="submit" class="px-8 py-2.5 text-sm font-bold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm">Lưu thay đổi</button>
+                    <div class="mt-8 flex flex-col gap-4 pt-5 border-t border-gray-100">
+                        <div id="edit-progress-container" class="hidden w-full">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div id="edit-progress-bar" class="bg-blue-600 h-2 rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1 flex justify-between">
+                                <span>Đang tải lên...</span>
+                                <span id="edit-progress-text">0%</span>
+                            </p>
+                        </div>
+                        <div id="err-edit-general" class="text-xs text-red-600 hidden"></div>
+                        <div class="flex justify-end gap-3">
+                            <button type="button" onclick="closeEditModal()" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy bỏ</button>
+                            <button type="submit" class="px-8 py-2.5 text-sm font-bold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm">Lưu thay đổi</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -187,10 +217,253 @@
             }
         }
 
+        function validateFileInput(inputEl, errorElId, maxMB, allowedExtensions) {
+            if (!inputEl) return true;
+            const file = inputEl.files[0];
+            const errorEl = document.getElementById(errorElId);
+            if (errorEl) {
+                errorEl.textContent = '';
+                errorEl.classList.add('hidden');
+            }
+
+            if (!file) return true;
+
+            const extension = file.name.split('.').pop().toLowerCase();
+            if (!allowedExtensions.includes(extension)) {
+                if (errorEl) {
+                    if (inputEl.name === 'anh_dai_dien' && (extension === 'heic' || extension === 'heif')) {
+                        errorEl.textContent = 'Định dạng ảnh không hỗ trợ (vd HEIC từ iPhone). Vui lòng đổi sang JPG, PNG hoặc WEBP trước khi tải lên.';
+                    } else {
+                        errorEl.textContent = `Định dạng file không hợp lệ. Chỉ chấp nhận các đuôi: ${allowedExtensions.join(', ')}.`;
+                    }
+                    errorEl.classList.remove('hidden');
+                }
+                inputEl.value = '';
+                return false;
+            }
+
+            const sizeInMB = file.size / (1024 * 1024);
+            if (sizeInMB > maxMB) {
+                if (errorEl) {
+                    errorEl.textContent = `Dung lượng file vượt quá giới hạn cho phép là ${maxMB}MB (File của bạn là ${sizeInMB.toFixed(2)}MB).`;
+                    errorEl.classList.remove('hidden');
+                }
+                inputEl.value = '';
+                return false;
+            }
+
+            return true;
+        }
+
+        function submitCatalogForm(formEl, progressContainerId, progressBarId, progressTextId, submitBtnEl, errorContainerIds, onSuccess) {
+            const formData = new FormData(formEl);
+            
+            // Clear previous error messages
+            Object.values(errorContainerIds).forEach(id => {
+                const errEl = document.getElementById(id);
+                if (errEl) {
+                    errEl.textContent = '';
+                    errEl.classList.add('hidden');
+                }
+            });
+
+            const progressContainer = document.getElementById(progressContainerId);
+            const progressBar = document.getElementById(progressBarId);
+            const progressText = document.getElementById(progressTextId);
+            
+            // Show progress bar
+            if (progressContainer) {
+                progressContainer.classList.remove('hidden');
+                if (progressBar) progressBar.style.width = '0%';
+                if (progressText) progressText.textContent = '0%';
+            }
+
+            // Disable submit button
+            const originalBtnText = submitBtnEl.innerHTML;
+            submitBtnEl.disabled = true;
+            submitBtnEl.classList.add('opacity-50', 'cursor-not-allowed');
+            submitBtnEl.innerHTML = `<svg class="animate-spin h-5 w-5 text-white inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg> Đang xử lý...`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open(formEl.method.toUpperCase(), formEl.action);
+            
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+            xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    if (progressBar) progressBar.style.width = percent + '%';
+                    if (progressText) progressText.textContent = percent + '%';
+                }
+            };
+
+            xhr.onload = function() {
+                submitBtnEl.disabled = false;
+                submitBtnEl.classList.remove('opacity-50', 'cursor-not-allowed');
+                submitBtnEl.innerHTML = originalBtnText;
+
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    let response = {};
+                    try {
+                        response = JSON.parse(xhr.responseText);
+                    } catch (err) {}
+                    onSuccess(response);
+                } else {
+                    if (progressContainer) progressContainer.classList.add('hidden');
+
+                    if (xhr.status === 422) {
+                        let response = {};
+                        try {
+                            response = JSON.parse(xhr.responseText);
+                        } catch (err) {}
+                        
+                        if (response.errors) {
+                            Object.entries(response.errors).forEach(([field, messages]) => {
+                                const errId = errorContainerIds[field];
+                                if (errId) {
+                                    const errEl = document.getElementById(errId);
+                                    if (errEl) {
+                                        errEl.textContent = messages.join(' ');
+                                        errEl.classList.remove('hidden');
+                                    }
+                                }
+                            });
+                        }
+                    } else if (xhr.status === 413) {
+                        const generalErrEl = document.getElementById(errorContainerIds['general']);
+                        if (generalErrEl) {
+                            generalErrEl.textContent = 'Dung lượng file vượt quá cấu hình tối đa của máy chủ (Lỗi 413 - Content Too Large). Vui lòng cấu hình tăng upload_max_filesize và post_max_size trong php.ini (đối với php artisan serve) hoặc client_max_body_size trong Nginx.';
+                            generalErrEl.classList.remove('hidden');
+                        }
+                    } else {
+                        let response = {};
+                        try {
+                            response = JSON.parse(xhr.responseText);
+                        } catch (err) {}
+                        const errorMsg = response.message || 'Không thể lưu, vui lòng thử lại.';
+                        const generalErrEl = document.getElementById(errorContainerIds['general']);
+                        if (generalErrEl) {
+                            generalErrEl.textContent = errorMsg;
+                            generalErrEl.classList.remove('hidden');
+                        }
+                    }
+                }
+            };
+
+            xhr.onerror = function() {
+                submitBtnEl.disabled = false;
+                submitBtnEl.classList.remove('opacity-50', 'cursor-not-allowed');
+                submitBtnEl.innerHTML = originalBtnText;
+                if (progressContainer) progressContainer.classList.add('hidden');
+                
+                const generalErrEl = document.getElementById(errorContainerIds['general']);
+                if (generalErrEl) {
+                    generalErrEl.textContent = 'Lỗi kết nối mạng, vui lòng kiểm tra lại.';
+                    generalErrEl.classList.remove('hidden');
+                }
+            };
+
+            xhr.send(formData);
+        }
+
+        // Hook up Create Form
+        document.getElementById('createForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const imgInput = this.querySelector('input[name="anh_dai_dien"]');
+            const fileInput = this.querySelector('input[name="file"]');
+            
+            if (!validateFileInput(imgInput, 'err-create-anh_dai_dien', 5, ['jpg', 'jpeg', 'png', 'webp'])) {
+                return;
+            }
+            if (!validateFileInput(fileInput, 'err-create-file', 200, ['pdf', 'doc', 'docx', 'zip', 'rar'])) {
+                return;
+            }
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const errorIds = {
+                'tieu_de': 'err-create-tieu_de',
+                'anh_dai_dien': 'err-create-anh_dai_dien',
+                'file': 'err-create-file',
+                'general': 'err-create-general'
+            };
+
+            submitCatalogForm(
+                this, 
+                'create-progress-container', 
+                'create-progress-bar', 
+                'create-progress-text', 
+                submitBtn, 
+                errorIds, 
+                function(response) {
+                    document.getElementById('preview-new-catalog').src = "https://placehold.co/600x800?text=Chon+Anh";
+                    document.getElementById('createForm').reset();
+                    location.reload();
+                }
+            );
+        });
+
+        // Hook up Edit Form
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const imgInput = this.querySelector('input[name="anh_dai_dien"]');
+            const fileInput = this.querySelector('input[name="file"]');
+            
+            if (!validateFileInput(imgInput, 'err-edit-anh_dai_dien', 5, ['jpg', 'jpeg', 'png', 'webp'])) {
+                return;
+            }
+            if (!validateFileInput(fileInput, 'err-edit-file', 200, ['pdf', 'doc', 'docx', 'zip', 'rar'])) {
+                return;
+            }
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const errorIds = {
+                'tieu_de': 'err-edit-tieu_de',
+                'anh_dai_dien': 'err-edit-anh_dai_dien',
+                'file': 'err-edit-file',
+                'general': 'err-edit-general'
+            };
+
+            submitCatalogForm(
+                this, 
+                'edit-progress-container', 
+                'edit-progress-bar', 
+                'edit-progress-text', 
+                submitBtn, 
+                errorIds, 
+                function(response) {
+                    closeEditModal();
+                    location.reload();
+                }
+            );
+        });
+
         const editModal = document.getElementById('editModal');
         const editModalInner = editModal.querySelector('.bg-white');
         
         function openEditModal(btnElement, actionUrl) {
+            // Reset edit form fields and errors
+            document.getElementById('editForm').reset();
+            const errorsToHide = ['err-edit-tieu_de', 'err-edit-anh_dai_dien', 'err-edit-file', 'err-edit-general'];
+            errorsToHide.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.textContent = '';
+                    el.classList.add('hidden');
+                }
+            });
+            const progressContainer = document.getElementById('edit-progress-container');
+            if (progressContainer) progressContainer.classList.add('hidden');
+            const progressBar = document.getElementById('edit-progress-bar');
+            if (progressBar) progressBar.style.width = '0%';
+            const progressText = document.getElementById('edit-progress-text');
+            if (progressText) progressText.textContent = '0%';
+
             document.getElementById('editForm').action = actionUrl;
             document.getElementById('edit_name').value = btnElement.getAttribute('data-name');
             document.getElementById('preview-edit-img').src = btnElement.getAttribute('data-img');
