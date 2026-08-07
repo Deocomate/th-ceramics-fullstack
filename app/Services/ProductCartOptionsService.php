@@ -244,16 +244,6 @@ class ProductCartOptionsService
 
     private function firstImage(mixed $images): ?string
     {
-        if (is_string($images)) {
-            $decoded = json_decode($images, true);
-
-            return is_array($decoded) ? ($decoded[0] ?? null) : $images;
-        }
-
-        if (is_array($images)) {
-            return $images[0] ?? null;
-        }
-
-        return null;
+        return \App\Support\ProductGallery::firstImagePath($images);
     }
 }

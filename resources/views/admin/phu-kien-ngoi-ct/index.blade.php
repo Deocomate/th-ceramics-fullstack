@@ -37,7 +37,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-4">
                                 <div class="w-16 h-16 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0 {{ $product->is_delete ? 'opacity-50 grayscale' : '' }}">
-                                    @php $thumb = is_array($product->images) ? ($product->images[0] ?? null) : null; @endphp
+                                    @php $thumb = \App\Support\ProductGallery::firstImagePath($product->images); @endphp
                                     @if($thumb)
                                         <img src="{{ \App\Support\AssetPath::url($thumb) }}" class="w-full h-full object-contain" alt="{{ $product->name }}">
                                     @else

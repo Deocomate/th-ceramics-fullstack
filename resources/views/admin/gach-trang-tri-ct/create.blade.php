@@ -97,35 +97,13 @@
                 </div>
             </div>
 
-            <!-- CHỌN ẢNH SẢN PHẨM (MULTIPLE) -->
             <hr class="border-gray-100 my-8">
-            <div class="flex flex-col h-full border border-gray-200 rounded-xl p-6 bg-gray-50/50">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Hình ảnh sản phẩm <span
-                        class="text-red-500">*</span></label>
-                <p class="text-xs text-gray-500 mb-4">Chọn 1 hoặc nhiều ảnh chi tiết của sản phẩm (Ảnh đầu tiên sẽ làm
-                    ảnh bìa).</p>
-                <div class="relative mb-4">
-                    <input type="file" id="multipleImagesInput" name="images[]" multiple required accept="image/*"
-                        class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white"
-                        onchange="handleMultipleFiles(event)">
-                </div>
-                @error('images')
-                    <p class="mb-4 text-xs text-red-600">{{ $message }}</p>
-                @enderror
-                <div
-                    class="h-[250px] bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner flex flex-col">
-                    <div id="multiple-preview-container" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-3">
-                        <div id="empty-preview-state"
-                            class="col-span-full h-full min-h-[180px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium gap-2">
-                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span>Chưa có ảnh nào</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('admin.partials.product-gallery-manager', [
+                'mode' => 'create',
+                'section' => 'form',
+                'uploadField' => 'images[]',
+                'videoField' => 'video_urls[]',
+            ])
 
             <div class="pt-6 mt-8 flex justify-end gap-3 border-t border-gray-100">
                 <a href="{{ route('admin.gach-trang-tri-ct.index') }}"
@@ -172,60 +150,7 @@
         addDesBlock('');
 
             // Logic Upload nhiều ảnh
-            let selectedFiles = [];
-            const multipleImagesInput = document.getElementById('multipleImagesInput');
-            const previewContainer = document.getElementById('multiple-preview-container');
-            const emptyState = document.getElementById('empty-preview-state');
 
-            function handleMultipleFiles(event) {
-                const files = Array.from(event.target.files);
-                if (files.length > 0) {
-                    selectedFiles = selectedFiles.concat(files);
-                    updateFileInput();
-                    renderPreviews();
-                }
-            }
-
-            function renderPreviews() {
-                const existingPreviews = previewContainer.querySelectorAll('.image-preview-item');
-                existingPreviews.forEach(item => item.remove());
-
-                if (selectedFiles.length === 0) {
-                    emptyState.style.display = 'flex';
-                } else {
-                    emptyState.style.display = 'none';
-                    selectedFiles.forEach((file, index) => {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const div = document.createElement('div');
-                            div.className =
-                                'image-preview-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100';
-                            div.innerHTML = `
-                            <img src="${e.target.result}" class="w-full h-full object-contain">
-                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <button type="button" onclick="removeFile(${index})" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors shadow-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                                </button>
-                            </div>
-                        `;
-                            previewContainer.appendChild(div);
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                }
-            }
-
-            function removeFile(index) {
-                selectedFiles.splice(index, 1);
-                updateFileInput();
-                renderPreviews();
-            }
-
-            function updateFileInput() {
-                const dataTransfer = new DataTransfer();
-                selectedFiles.forEach(file => dataTransfer.items.add(file));
-                multipleImagesInput.files = dataTransfer.files;
-            }
         </script>
     @endpush
 </x-admin.layouts.app>

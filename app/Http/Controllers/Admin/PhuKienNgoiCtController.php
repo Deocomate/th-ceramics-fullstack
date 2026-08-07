@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PhuKienNgoiCt;
+use App\Rules\YoutubeUrl;
 use App\Services\PhuKienNgoiCtService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -74,7 +75,17 @@ class PhuKienNgoiCtController extends Controller
 
     public function destroyImage(Request $request, int $id)
     {
-        $request->validate(['image_path' => ['required', 'string']]);
+        $request->validate([
+            'image_path' => ['nullable', 'required_without:video_url', 'string'],
+            'video_url' => ['nullable', 'required_without:image_path', 'string', 'max:500'],
+        ]);
+
+        if ($request->filled('video_url')) {
+            $this->service->removeVideoFromJson($id, $request->input('video_url'));
+
+            return back()->with('success', 'Đã xóa video khỏi sản phẩm.');
+        }
+
         $this->service->removeImageFromJson($id, $request->input('image_path'));
 
         return back()->with('success', 'Đã xóa ảnh khỏi sản phẩm.');
@@ -94,6 +105,8 @@ class PhuKienNgoiCtController extends Controller
             $create ? 'images' : 'new_images' => [$create ? 'required' : 'nullable', 'array'],
             ($create ? 'images' : 'new_images').'.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            $create ? 'video_urls' : 'new_video_urls' => ['nullable', 'array'],
+            ($create ? 'video_urls' : 'new_video_urls').'.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
         ]) + ['category_type' => $fallbackCategoryType ?? $request->input('category_type')];
     }
 

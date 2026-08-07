@@ -87,9 +87,16 @@
         <button type="button" class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors" data-detail-quantity-decrease>
           -
         </button>
-        <div class="w-12 h-12 flex items-center justify-center rounded-full text-[16px] md:text-[#101010] font-normal shadow-[0px_1px_2px_rgba(0,0,0,0.05)] md:shadow-sm outline outline-1 outline-black/40 outline-offset-[-1px] md:outline-none md:border md:border-black/40 bg-transparent font-archivo md:leading-[23px]" data-detail-quantity-display>
-          1
-        </div>
+        <input
+          type="number"
+          name="qty"
+          value="1"
+          min="1"
+          inputmode="numeric"
+          aria-label="Số lượng"
+          data-detail-quantity-input
+          class="h-12 min-w-12 px-2.5 text-center rounded-[2px] text-[16px] md:text-[#101010] font-normal shadow-[0px_1px_2px_rgba(0,0,0,0.05)] md:shadow-sm outline outline-1 outline-black/40 outline-offset-[-1px] md:outline-none md:border md:border-black/40 bg-transparent font-archivo md:leading-[23px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
         <button type="button" class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors" data-detail-quantity-increase>
           +
         </button>
@@ -117,8 +124,6 @@
       </button>
       @endif
     </div>
-
-    <input type="hidden" data-detail-quantity-input name="qty" value="1">
 
     <div class="hidden md:flex flex-col gap-5 mt-2 order-[8] md:order-[none]">
       <div class="flex items-center gap-5">

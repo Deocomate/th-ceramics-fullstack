@@ -86,7 +86,7 @@
           <div class="grid grid-cols-2 gap-4">
             @foreach($chunk as $product)
               @php
-                $productImage = \App\Support\AssetPath::url(collect($product->images ?? [])->first(), 'assets/images/ngoi-01.jpg');
+                $productImage = \App\Support\AssetPath::url(\App\Support\ProductGallery::firstImagePath($product->images ?? []), 'assets/images/ngoi-01.jpg');
                 $productPrice = (float) ($product->price ?? 0);
               @endphp
               <x-client.shared.product-card
@@ -120,7 +120,7 @@
   >
     @foreach($featuredProducts as $product)
       @php
-        $productImage = \App\Support\AssetPath::url(collect($product->images ?? [])->first(), 'assets/images/ngoi-01.jpg');
+        $productImage = \App\Support\AssetPath::url(\App\Support\ProductGallery::firstImagePath($product->images ?? []), 'assets/images/ngoi-01.jpg');
         $productPrice = (float) ($product->price ?? 0);
       @endphp
       <x-client.shared.product-card

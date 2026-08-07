@@ -93,12 +93,13 @@
                     <input type="hidden" name="product_type" value="linh_vat_phong_thuy_ct">
 
                     <div class="flex items-center gap-[16px] md:gap-4 text-[#2E2F2A] md:text-primary pl-0.5 md:pl-0">
-                        <button type="button" onclick="this.nextElementSibling.stepDown()"
+                        <button type="button" onclick="const i=this.nextElementSibling;i.stepDown();i.dispatchEvent(new Event('input'))"
                             class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors">-</button>
                         <input type="number" name="quantity" value="1" min="1"
-                            class="w-12 h-12 flex items-center justify-center text-center rounded-full text-[16px] md:text-base font-normal shadow-[0px_1px_2px_rgba(0,0,0,0.05)] md:shadow-sm outline outline-1 outline-black/40 outline-offset-[-1px] md:outline-none md:border md:border-black/40 bg-transparent"
-                            style="-moz-appearance: textfield;">
-                        <button type="button" onclick="this.previousElementSibling.stepUp()"
+                            oninput="(function(el){const d=Math.max(1,String(el.value||'').length);el.style.width=(Math.max(3,d)+2.5)+'ch';})(this)"
+                            class="h-12 min-w-12 px-2.5 text-center rounded-[2px] text-[16px] md:text-base font-normal shadow-[0px_1px_2px_rgba(0,0,0,0.05)] md:shadow-sm outline outline-1 outline-black/40 outline-offset-[-1px] md:outline-none md:border md:border-black/40 bg-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            style="width: 5.5ch;">
+                        <button type="button" onclick="const i=this.previousElementSibling;i.stepUp();i.dispatchEvent(new Event('input'))"
                             class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors">+</button>
                     </div>
 
@@ -319,7 +320,7 @@
                                         @php
                                             $relatedImg =
                                                 !empty($related->images) && is_array($related->images)
-                                                    ? $related->images[0]
+                                                    ? \App\Support\ProductGallery::firstImagePath($related->images)
                                                     : null;
                                         @endphp
                                         <x-client.shared.product-card

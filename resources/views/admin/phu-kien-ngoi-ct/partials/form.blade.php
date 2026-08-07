@@ -51,17 +51,22 @@
 </div>
 
 <hr class="border-gray-100 my-8">
-<div class="flex flex-col h-full border border-gray-200 rounded-xl p-6 bg-gray-50/50">
-    <label class="block text-sm font-semibold text-gray-700 mb-2">{{ $isEdit ? 'Thêm hình ảnh mới' : 'Hình ảnh sản phẩm' }} @unless($isEdit)<span class="text-red-500">*</span>@endunless</label>
-    <input type="file" id="multipleImagesInput" name="{{ $isEdit ? 'new_images[]' : 'images[]' }}" multiple {{ $isEdit ? '' : 'required' }} accept="image/*" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white" onchange="handleMultipleFiles(event)">
-    @error('images') <p class="mt-2 text-xs text-red-600">{{ $message }}</p> @enderror
-    @error('new_images') <p class="mt-2 text-xs text-red-600">{{ $message }}</p> @enderror
-    <div class="mt-4 h-[180px] bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner">
-        <div id="multiple-preview-container" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-3">
-            <div id="empty-preview-state" class="col-span-full min-h-[100px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium">Chưa chọn ảnh nào</div>
-        </div>
-    </div>
-</div>
+
+@if($isEdit)
+    @include('admin.partials.product-gallery-manager', [
+        'mode' => 'edit',
+        'section' => 'form',
+        'uploadField' => 'new_images[]',
+        'videoField' => 'new_video_urls[]',
+    ])
+@else
+    @include('admin.partials.product-gallery-manager', [
+        'mode' => 'create',
+        'section' => 'form',
+        'uploadField' => 'images[]',
+        'videoField' => 'video_urls[]',
+    ])
+@endif
 
 @push('scripts')
 <script>
@@ -92,42 +97,5 @@
     (Array.isArray(existingDes) && existingDes.length ? existingDes : ['']).forEach(item => addDesBlock(item, false));
     (Array.isArray(existingSizeDes) && existingSizeDes.length ? existingSizeDes : ['']).forEach(item => addSizeDesBlock(item, false));
 
-    let selectedFiles = [];
-    const multipleImagesInput = document.getElementById('multipleImagesInput');
-    const previewContainer = document.getElementById('multiple-preview-container');
-    const emptyState = document.getElementById('empty-preview-state');
-
-    function handleMultipleFiles(event) {
-        const files = Array.from(event.target.files);
-        if (files.length > 0) {
-            selectedFiles = selectedFiles.concat(files);
-            updateFileInput();
-            renderPreviews();
-        }
-    }
-    function renderPreviews() {
-        previewContainer.querySelectorAll('.image-preview-item').forEach(item => item.remove());
-        emptyState.style.display = selectedFiles.length === 0 ? 'flex' : 'none';
-        selectedFiles.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const div = document.createElement('div');
-                div.className = 'image-preview-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100';
-                div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain"><button type="button" onclick="removeFile(${index})" class="absolute top-1 right-1 w-6 h-6 bg-red-600 text-white rounded-full text-xs">x</button>`;
-                previewContainer.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-    function removeFile(index) {
-        selectedFiles.splice(index, 1);
-        updateFileInput();
-        renderPreviews();
-    }
-    function updateFileInput() {
-        const dataTransfer = new DataTransfer();
-        selectedFiles.forEach(file => dataTransfer.items.add(file));
-        multipleImagesInput.files = dataTransfer.files;
-    }
 </script>
 @endpush

@@ -4,17 +4,23 @@ namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\NgoiAmDuongCt;
+use App\Services\Concerns\ManagesProductGalleryMedia;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class NgoiAmDuongCtService
 {
+    use ManagesProductGalleryMedia;
+
+    private const IMAGE_DIRECTORY = 'ngoi_am_duong_ct/images';
+
+    private const SIZE_DIRECTORY = 'ngoi_am_duong_ct/sizes';
+
     public function __construct(
         private readonly GlobalProductCodeService $globalCodeService
     ) {}
 
-    // Sửa hàm getAll để nhận tham số status
     public function getAll(string $status = 'active')
     {
         $query = NgoiAmDuongCt::query()->latest();
@@ -24,7 +30,6 @@ class NgoiAmDuongCtService
         } elseif ($status === 'deleted') {
             $query->where('is_delete', 1);
         }
-        // Nếu $status === 'all' thì lấy cả hai
 
         return $query->get();
     }
@@ -48,21 +53,20 @@ class NgoiAmDuongCtService
                 'price' => $data['price'],
                 'size' => $data['size'] ?? null,
                 'des' => ! empty($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
-                'is_delete' => 0, // Mặc định là active
+                'is_delete' => 0,
             ];
 
             $images = [];
             if (! empty($data['images']) && is_array($data['images'])) {
-                foreach ($data['images'] as $file) {
-                    if ($file instanceof UploadedFile) {
-                        $images[] = FileUploadHelper::upload($file, 'ngoi_am_duong_ct/images');
-                    }
-                }
+                $images = $this->storeGalleryImages($data['images'], self::IMAGE_DIRECTORY);
+            }
+            if (! empty($data['video_urls']) && is_array($data['video_urls'])) {
+                $images = $this->appendGalleryVideos($images, $data['video_urls']);
             }
             $fillable['images'] = $images;
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], 'ngoi_am_duong_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], self::SIZE_DIRECTORY);
             }
 
             return NgoiAmDuongCt::create($fillable);
@@ -88,17 +92,13 @@ class NgoiAmDuongCtService
             ];
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, 'ngoi_am_duong_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, self::SIZE_DIRECTORY);
             }
 
-            if (! empty($data['new_images']) && is_array($data['new_images'])) {
-                $currentImages = is_array($model->images) ? $model->images : [];
-                foreach ($data['new_images'] as $file) {
-                    if ($file instanceof UploadedFile) {
-                        $currentImages[] = FileUploadHelper::upload($file, 'ngoi_am_duong_ct/images');
-                    }
-                }
-                $fillable['images'] = $currentImages;
+            $currentImages = is_array($model->images) ? $model->images : [];
+            $merged = $this->mergeGalleryUpdates($currentImages, $data, self::IMAGE_DIRECTORY);
+            if ($merged !== null) {
+                $fillable['images'] = $merged;
             }
 
             $model->update($fillable);
@@ -108,14 +108,12 @@ class NgoiAmDuongCtService
         });
     }
 
-    // SỬA: Thay vì xóa cứng, update is_delete = 1
     public function deleteProduct(int $id): void
     {
         $model = $this->findById($id);
         $model->update(['is_delete' => 1]);
     }
 
-    // THÊM: Khôi phục sản phẩm
     public function restoreProduct(int $id): void
     {
         $model = $this->findById($id);
@@ -124,16 +122,11 @@ class NgoiAmDuongCtService
 
     public function removeImageFromJson(int $id, string $imagePathToRemove): NgoiAmDuongCt
     {
-        $model = $this->findById($id);
+        return $this->removeGalleryImage($this->findById($id), $imagePathToRemove);
+    }
 
-        $currentImages = is_array($model->images) ? $model->images : [];
-        $newImages = array_filter($currentImages, fn ($path) => $path !== $imagePathToRemove);
-
-        $model->update(['images' => empty($newImages) ? null : array_values($newImages)]);
-        FileUploadHelper::delete($imagePathToRemove);
-
-        $model->refresh();
-
-        return $model;
+    public function removeVideoFromJson(int $id, string $videoUrl): NgoiAmDuongCt
+    {
+        return $this->removeGalleryVideo($this->findById($id), $videoUrl);
     }
 }

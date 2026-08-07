@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\DenVuonGomSuCt;
+use App\Services\Concerns\ManagesProductGalleryMedia;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -11,6 +12,12 @@ use Illuminate\Support\Facades\DB;
 
 class DenVuonGomSuCtService
 {
+    use ManagesProductGalleryMedia;
+
+    private const IMAGE_DIRECTORY = 'den_vuon_gom_su_ct/images';
+
+    private const SIZE_DIRECTORY = 'den_vuon_gom_su_ct/sizes';
+
     public function getAll(string $status = 'active')
     {
         $query = DenVuonGomSuCt::query()
@@ -97,15 +104,14 @@ class DenVuonGomSuCtService
             ];
             $images = [];
             if (! empty($data['images']) && is_array($data['images'])) {
-                foreach ($data['images'] as $file) {
-                    if ($file instanceof UploadedFile) {
-                        $images[] = FileUploadHelper::upload($file, 'den_vuon_gom_su_ct/images');
-                    }
-                }
+                $images = $this->storeGalleryImages($data['images'], self::IMAGE_DIRECTORY);
+            }
+            if (! empty($data['video_urls']) && is_array($data['video_urls'])) {
+                $images = $this->appendGalleryVideos($images, $data['video_urls']);
             }
             $fillable['images'] = $images;
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], 'den_vuon_gom_su_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], self::SIZE_DIRECTORY);
             }
 
             return DenVuonGomSuCt::create($fillable);
@@ -123,16 +129,12 @@ class DenVuonGomSuCtService
                 'size_des' => isset($data['size_des']) ? array_values(array_filter(array_map('trim', $data['size_des']))) : null,
             ];
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, 'den_vuon_gom_su_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, self::SIZE_DIRECTORY);
             }
-            if (! empty($data['new_images']) && is_array($data['new_images'])) {
-                $currentImages = is_array($model->images) ? $model->images : [];
-                foreach ($data['new_images'] as $file) {
-                    if ($file instanceof UploadedFile) {
-                        $currentImages[] = FileUploadHelper::upload($file, 'den_vuon_gom_su_ct/images');
-                    }
-                }
-                $fillable['images'] = $currentImages;
+            $currentImages = is_array($model->images) ? $model->images : [];
+            $merged = $this->mergeGalleryUpdates($currentImages, $data, self::IMAGE_DIRECTORY);
+            if ($merged !== null) {
+                $fillable['images'] = $merged;
             }
             $model->update($fillable);
 
@@ -149,12 +151,13 @@ class DenVuonGomSuCtService
         }
     }
 
-    public function removeImageFromJson(int $id, string $imagePath): void
+    public function removeImageFromJson(int $id, string $imagePath): DenVuonGomSuCt
     {
-        $model = $this->findById($id);
-        $currentImages = is_array($model->images) ? $model->images : [];
-        $newImages = array_filter($currentImages, fn ($path) => $path !== $imagePath);
-        $model->update(['images' => empty($newImages) ? null : array_values($newImages)]);
-        FileUploadHelper::delete($imagePath);
+        return $this->removeGalleryImage($this->findById($id), $imagePath);
+    }
+
+    public function removeVideoFromJson(int $id, string $videoUrl): DenVuonGomSuCt
+    {
+        return $this->removeGalleryVideo($this->findById($id), $videoUrl);
     }
 }

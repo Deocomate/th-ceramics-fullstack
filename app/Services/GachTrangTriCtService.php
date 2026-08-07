@@ -4,12 +4,19 @@ namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\GachTrangTriCt;
+use App\Services\Concerns\ManagesProductGalleryMedia;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class GachTrangTriCtService
 {
+    use ManagesProductGalleryMedia;
+
+    private const IMAGE_DIRECTORY = 'gach_trang_tri_ct/images';
+
+    private const SIZE_DIRECTORY = 'gach_trang_tri_ct/sizes';
+
     public function __construct(private readonly GlobalProductCodeService $globalCodeService) {}
 
     public function getAll(string $status = 'active')
@@ -49,16 +56,15 @@ class GachTrangTriCtService
 
             $images = [];
             if (! empty($data['images']) && is_array($data['images'])) {
-                foreach ($data['images'] as $file) {
-                    if ($file instanceof UploadedFile) {
-                        $images[] = FileUploadHelper::upload($file, 'gach_trang_tri_ct/images');
-                    }
-                }
+                $images = $this->storeGalleryImages($data['images'], self::IMAGE_DIRECTORY);
+            }
+            if (! empty($data['video_urls']) && is_array($data['video_urls'])) {
+                $images = $this->appendGalleryVideos($images, $data['video_urls']);
             }
             $fillable['images'] = $images;
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], 'gach_trang_tri_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], self::SIZE_DIRECTORY);
             }
 
             return GachTrangTriCt::create($fillable);
@@ -84,17 +90,13 @@ class GachTrangTriCtService
             ];
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, 'gach_trang_tri_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, self::SIZE_DIRECTORY);
             }
 
-            if (! empty($data['new_images']) && is_array($data['new_images'])) {
-                $currentImages = is_array($model->images) ? $model->images : [];
-                foreach ($data['new_images'] as $file) {
-                    if ($file instanceof UploadedFile) {
-                        $currentImages[] = FileUploadHelper::upload($file, 'gach_trang_tri_ct/images');
-                    }
-                }
-                $fillable['images'] = $currentImages;
+            $currentImages = is_array($model->images) ? $model->images : [];
+            $merged = $this->mergeGalleryUpdates($currentImages, $data, self::IMAGE_DIRECTORY);
+            if ($merged !== null) {
+                $fillable['images'] = $merged;
             }
 
             $model->update($fillable);
@@ -111,13 +113,11 @@ class GachTrangTriCtService
 
     public function removeImageFromJson(int $id, string $imagePathToRemove): GachTrangTriCt
     {
-        $model = $this->findById($id);
-        $currentImages = is_array($model->images) ? $model->images : [];
+        return $this->removeGalleryImage($this->findById($id), $imagePathToRemove);
+    }
 
-        $newImages = array_filter($currentImages, fn ($path) => $path !== $imagePathToRemove);
-        $model->update(['images' => empty($newImages) ? null : array_values($newImages)]);
-        FileUploadHelper::delete($imagePathToRemove);
-
-        return $model->fresh();
+    public function removeVideoFromJson(int $id, string $videoUrl): GachTrangTriCt
+    {
+        return $this->removeGalleryVideo($this->findById($id), $videoUrl);
     }
 }

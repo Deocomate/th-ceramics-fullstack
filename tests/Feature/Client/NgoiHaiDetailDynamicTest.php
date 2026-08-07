@@ -38,7 +38,7 @@ function createNgoiHaiVanMieuProduct(array $overrides = []): NgoiHaiVanMieuCt
     ], $overrides));
 }
 
-test('ngoi hai van mieu detail renders dynamic banner gallery variants calculator fabrication and compare table', function () {
+test('ngoi hai van mieu detail renders dynamic gallery variants calculator fabrication and compare table', function () {
     $product = createNgoiHaiVanMieuProduct();
 
     MauSacNgoiHaiVanMieuCt::query()->create([
@@ -74,7 +74,6 @@ test('ngoi hai van mieu detail renders dynamic banner gallery variants calculato
 
     $this->get(route('client.products.ngoi-hai-van-mieu.detail', $product->ngoi_hai_van_mieu_ct_id))
         ->assertOk()
-        ->assertSee('storage/ngoi-hai/banner-detail.jpg', false)
         ->assertSee('storage/ngoi-hai/product-main.jpg', false)
         ->assertSee('NHVM-BLUE')
         ->assertSee('675.000 đ/m²')

@@ -22,6 +22,49 @@ const sameUrl = (left, right) => {
     }
 };
 
+const pauseYoutubeIframes = (root) => {
+    root.querySelectorAll("[data-product-video-iframe]").forEach((iframe) => {
+        if (!iframe.contentWindow) {
+            return;
+        }
+
+        try {
+            iframe.contentWindow.postMessage(
+                JSON.stringify({ event: "command", func: "pauseVideo", args: [] }),
+                "*"
+            );
+        } catch (error) {
+            // Ignore cross-origin postMessage failures.
+        }
+    });
+};
+
+const activateGalleryVideoSlide = (mainSwiperElement, activeIndex) => {
+    const slides = Array.from(mainSwiperElement.querySelectorAll(".swiper-slide"));
+
+    slides.forEach((slide, index) => {
+        const iframe = slide.querySelector("[data-product-video-iframe]");
+
+        if (!iframe) {
+            return;
+        }
+
+        const embedSrc = iframe.dataset.embedSrc || "";
+
+        if (index === activeIndex) {
+            if (embedSrc && iframe.getAttribute("src") !== embedSrc) {
+                iframe.setAttribute("src", embedSrc);
+            }
+
+            return;
+        }
+
+        if (iframe.getAttribute("src")) {
+            iframe.setAttribute("src", "");
+        }
+    });
+};
+
 const initProductGallery = (container) => {
     if (container.dataset.productGalleryInitialized === "true") {
         return;
@@ -49,6 +92,15 @@ const initProductGallery = (container) => {
     const options = {
         slidesPerView: 1,
         spaceBetween: 0,
+        on: {
+            init(swiper) {
+                activateGalleryVideoSlide(mainSwiperElement, swiper.activeIndex);
+            },
+            slideChange(swiper) {
+                pauseYoutubeIframes(mainSwiperElement);
+                activateGalleryVideoSlide(mainSwiperElement, swiper.activeIndex);
+            },
+        },
     };
 
     if (paginationElement) {
@@ -81,6 +133,10 @@ const switchGalleryToImage = (container, imageUrl) => {
 
     const slides = Array.from(mainSwiperElement.querySelectorAll(".swiper-slide"));
     const targetIndex = slides.findIndex((slide) => {
+        if (slide.dataset.galleryType === "video") {
+            return false;
+        }
+
         const image = slide.querySelector("img");
 
         return sameUrl(image?.currentSrc || image?.src, imageUrl);
@@ -91,17 +147,22 @@ const switchGalleryToImage = (container, imageUrl) => {
     }
 };
 
+const syncQuantityInputWidth = (input) => {
+    if (!input) {
+        return;
+    }
+
+    const digits = Math.max(1, String(input.value ?? "").length);
+    input.style.width = `${Math.max(3, digits) + 2.5}ch`;
+};
+
 const setQuantity = (container, value) => {
     const quantity = Math.max(1, Number.parseInt(value || 1, 10) || 1);
-    const display = container.querySelector("[data-detail-quantity-display]");
     const input = container.querySelector("[data-detail-quantity-input]");
-
-    if (display) {
-        display.textContent = quantity;
-    }
 
     if (input) {
         input.value = quantity;
+        syncQuantityInputWidth(input);
     }
 
     return quantity;
@@ -206,11 +267,24 @@ const initProductDetailContainer = (container) => {
         }
     });
 
-    container.querySelector("[data-detail-quantity-input]")?.addEventListener("input", (event) => {
+    const quantityInput = container.querySelector("[data-detail-quantity-input]");
+    syncQuantityInputWidth(quantityInput);
+
+    quantityInput?.addEventListener("keydown", (event) => {
+        if (["e", "E", "+", "-", "."].includes(event.key)) {
+            event.preventDefault();
+        }
+    });
+
+    quantityInput?.addEventListener("input", (event) => {
+        syncQuantityInputWidth(event.target);
+    });
+
+    quantityInput?.addEventListener("change", (event) => {
         setQuantity(container, event.target.value);
     });
 
-    container.querySelector("[data-detail-quantity-input]")?.addEventListener("change", (event) => {
+    quantityInput?.addEventListener("blur", (event) => {
         setQuantity(container, event.target.value);
     });
 };

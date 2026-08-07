@@ -116,7 +116,7 @@
                     @foreach ($currentProducts->take(5) as $product)
                         @php
                             $productImage = \App\Support\AssetPath::url(
-                                collect($product->images ?? [])->first(),
+                                \App\Support\ProductGallery::firstImagePath($product->images ?? []),
                                 'assets/images/ngoi-01.jpg',
                             );
                             $delay = 100 + $loop->index * 100;

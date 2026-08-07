@@ -33,7 +33,7 @@
                     @forelse ($products->take(4) as $product)
                         <x-client.shared.product-card
                             href="{{ route('client.products.lan-can-gom-su.detail', $product->lan_can_gom_su_ct_id) }}"
-                            image="{{ !empty($product->images) ? asset('storage/' . $product->images[0]) : asset('assets/images/lan-can-02.jpg') }}"
+                            image="{{ !empty($product->images) ? \App\Support\AssetPath::url(\App\Support\ProductGallery::firstImagePath($product->images)) : asset('assets/images/lan-can-02.jpg') }}"
                             title="{{ $product->name }}"
                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                             code="MSP: {{ $product->display_code }}"

@@ -4,11 +4,18 @@ namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\NgoiHaiCoCt;
+use App\Services\Concerns\ManagesProductGalleryMedia;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
 class NgoiHaiCoCtService
 {
+    use ManagesProductGalleryMedia;
+
+    private const IMAGE_DIRECTORY = 'ngoi_hai_co_ct/images';
+
+    private const SIZE_DIRECTORY = 'ngoi_hai_co_ct/sizes';
+
     public function getAll(string $status = 'active')
     {
         $query = NgoiHaiCoCt::query()->withCount(['mauSacs' => function ($q) {
@@ -42,16 +49,15 @@ class NgoiHaiCoCtService
 
             $images = [];
             if (! empty($data['images']) && is_array($data['images'])) {
-                foreach ($data['images'] as $file) {
-                    if ($file instanceof UploadedFile) {
-                        $images[] = FileUploadHelper::upload($file, 'ngoi_hai_co_ct/images');
-                    }
-                }
+                $images = $this->storeGalleryImages($data['images'], self::IMAGE_DIRECTORY);
+            }
+            if (! empty($data['video_urls']) && is_array($data['video_urls'])) {
+                $images = $this->appendGalleryVideos($images, $data['video_urls']);
             }
             $fillable['images'] = $images;
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], 'ngoi_hai_co_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], self::SIZE_DIRECTORY);
             }
 
             return NgoiHaiCoCt::query()->create($fillable);
@@ -72,17 +78,13 @@ class NgoiHaiCoCtService
             ];
 
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
-                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, 'ngoi_hai_co_ct/sizes');
+                $fillable['size_image'] = FileUploadHelper::replace($data['size_image'], $model->size_image, self::SIZE_DIRECTORY);
             }
 
-            if (! empty($data['new_images']) && is_array($data['new_images'])) {
-                $currentImages = is_array($model->images) ? $model->images : [];
-                foreach ($data['new_images'] as $file) {
-                    if ($file instanceof UploadedFile) {
-                        $currentImages[] = FileUploadHelper::upload($file, 'ngoi_hai_co_ct/images');
-                    }
-                }
-                $fillable['images'] = $currentImages;
+            $currentImages = is_array($model->images) ? $model->images : [];
+            $merged = $this->mergeGalleryUpdates($currentImages, $data, self::IMAGE_DIRECTORY);
+            if ($merged !== null) {
+                $fillable['images'] = $merged;
             }
 
             $model->fill($fillable)->save();
@@ -104,14 +106,11 @@ class NgoiHaiCoCtService
 
     public function removeImageFromJson(int $id, string $imagePathToRemove): NgoiHaiCoCt
     {
-        /** @var NgoiHaiCoCt $model */
-        $model = $this->findById($id);
-        $currentImages = is_array($model->images) ? $model->images : [];
-        $newImages = array_filter($currentImages, fn ($path) => $path !== $imagePathToRemove);
+        return $this->removeGalleryImage($this->findById($id), $imagePathToRemove);
+    }
 
-        $model->fill(['images' => empty($newImages) ? null : array_values($newImages)])->save();
-        FileUploadHelper::delete($imagePathToRemove);
-
-        return $model->fresh();
+    public function removeVideoFromJson(int $id, string $videoUrl): NgoiHaiCoCt
+    {
+        return $this->removeGalleryVideo($this->findById($id), $videoUrl);
     }
 }

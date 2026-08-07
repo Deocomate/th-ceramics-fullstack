@@ -10,7 +10,7 @@
     if (!function_exists('getProductImageUrl')) {
         function getProductImageUrl($product)
         {
-            $productImage = !empty($product->images) ? $product->images[0] : null;
+            $productImage = \App\Support\ProductGallery::firstImagePath($product->images ?? []);
             return $productImage
                 ? (Str::startsWith($productImage, 'assets/')
                     ? asset($productImage)

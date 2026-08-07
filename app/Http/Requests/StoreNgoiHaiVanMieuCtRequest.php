@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\ValidatesProductGalleryMedia;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreNgoiHaiVanMieuCtRequest extends FormRequest
 {
+    use ValidatesProductGalleryMedia;
     public function authorize(): bool
     {
         return true;
@@ -13,7 +15,7 @@ class StoreNgoiHaiVanMieuCtRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        return array_merge([
             'name' => ['required', 'string', 'max:255'],
             'color' => ['nullable', 'string', 'max:100'],
             'size' => ['nullable', 'string', 'max:255'],
@@ -22,12 +24,12 @@ class StoreNgoiHaiVanMieuCtRequest extends FormRequest
             'images' => ['required', 'array', 'min:1'],
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ];
+        ], $this->galleryStoreRules());
     }
 
     public function messages(): array
     {
-        return [
+        return array_merge([
             'name.required' => 'Tên sản phẩm là bắt buộc.',
             'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
             'images.required' => 'Vui lòng tải lên ít nhất một hình ảnh sản phẩm.',
@@ -39,6 +41,6 @@ class StoreNgoiHaiVanMieuCtRequest extends FormRequest
             'size_image.mimes' => 'Ảnh kích thước phải có định dạng: jpg, jpeg, png, webp.',
             'size_image.max' => 'Ảnh kích thước không được vượt quá 5MB.',
             'des.*.max' => 'Mỗi dòng mô tả không được vượt quá 500 ký tự.',
-        ];
+        ], $this->galleryMediaMessages());
     }
 }

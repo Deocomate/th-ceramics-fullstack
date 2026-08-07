@@ -14,7 +14,6 @@ use App\Models\PhanLoaiPhuKienNgoiCt;
 use App\Models\PhuKienNgoiCt;
 use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -221,27 +220,7 @@ class GlobalSearchController extends Controller
 
     private function imageCandidate($images): ?string
     {
-        if (is_string($images)) {
-            $decoded = json_decode($images, true);
-
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $images = $decoded;
-            } else {
-                return $images;
-            }
-        }
-
-        if ($images instanceof EloquentCollection) {
-            $images = $images->all();
-        }
-
-        if (is_array($images)) {
-            return collect($images)
-                ->filter(fn ($image) => is_string($image) && trim($image) !== '')
-                ->first();
-        }
-
-        return null;
+        return \App\Support\ProductGallery::firstImagePath($images);
     }
 
     private function likeKeyword(string $keyword): string

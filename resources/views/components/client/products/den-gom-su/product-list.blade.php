@@ -81,7 +81,7 @@
         <div class="grid grid-cols-2 gap-4">
           @foreach($chunk as $product)
           @php
-            $firstImage = collect($product->images ?? [])->first();
+            $firstImage = \App\Support\ProductGallery::firstImagePath($product->images ?? []);
             $imageUrl = \App\Support\AssetPath::url($firstImage, 'assets/images/ngoi-01.jpg');
           @endphp
           <x-client.shared.product-card
@@ -124,7 +124,7 @@
   >
     @forelse($items as $product)
     @php
-      $firstImage = collect($product->images ?? [])->first();
+      $firstImage = \App\Support\ProductGallery::firstImagePath($product->images ?? []);
       $imageUrl = \App\Support\AssetPath::url($firstImage, 'assets/images/ngoi-01.jpg');
     @endphp
     <x-client.shared.product-card

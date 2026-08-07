@@ -197,7 +197,7 @@
                                     @foreach ($section['products'] as $product)
                                         @php
                                             $productImage = is_array($product->images)
-                                                ? $product->images[0] ?? null
+                                                ? \App\Support\ProductGallery::firstImagePath($product->images)
                                                 : null;
                                         @endphp
                                         <div class="swiper-slide !h-auto">

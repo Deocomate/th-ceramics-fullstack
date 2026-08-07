@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\DenVuonGomSuCtService;
+use App\Rules\YoutubeUrl;
 use Illuminate\Http\Request;
 
 class DenVuonGomSuCtController extends Controller
@@ -31,6 +32,8 @@ class DenVuonGomSuCtController extends Controller
             'size_des' => ['nullable', 'array'], 'size_des.*' => ['nullable', 'string', 'max:500'],
             'images' => ['required', 'array'], 'images.*' => ['image', 'max:5120'],
             'size_image' => ['nullable', 'image', 'max:5120'],
+            'video_urls' => ['nullable', 'array'],
+            'video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
         ]);
         $this->service->create($data);
 
@@ -52,6 +55,8 @@ class DenVuonGomSuCtController extends Controller
             'size_des' => ['nullable', 'array'], 'size_des.*' => ['nullable', 'string', 'max:500'],
             'new_images' => ['nullable', 'array'], 'new_images.*' => ['image', 'max:5120'],
             'size_image' => ['nullable', 'image', 'max:5120'],
+            'new_video_urls' => ['nullable', 'array'],
+            'new_video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
         ]);
         $this->service->update($id, $data);
 
@@ -74,6 +79,17 @@ class DenVuonGomSuCtController extends Controller
 
     public function destroyImage(Request $request, int $id)
     {
+        $request->validate([
+            'image_path' => ['nullable', 'required_without:video_url', 'string'],
+            'video_url' => ['nullable', 'required_without:image_path', 'string', 'max:500'],
+        ]);
+
+        if ($request->filled('video_url')) {
+            $this->service->removeVideoFromJson($id, $request->input('video_url'));
+
+            return back()->with('success', 'Đã xóa video khỏi sản phẩm.');
+        }
+
         $this->service->removeImageFromJson($id, $request->input('image_path'));
 
         return back()->with('success', 'Đã xóa ảnh khỏi sản phẩm.');

@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\ValidatesProductGalleryMedia;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateGachTrangTriCtRequest extends FormRequest
 {
+    use ValidatesProductGalleryMedia;
     public function authorize(): bool
     {
         return true;
@@ -13,7 +15,7 @@ class UpdateGachTrangTriCtRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        return array_merge([
             'code' => ['required', 'string', 'max:50'],
             'name' => ['required', 'string', 'max:255'],
             'color' => ['nullable', 'string', 'max:100'],
@@ -24,12 +26,12 @@ class UpdateGachTrangTriCtRequest extends FormRequest
             'new_images' => ['nullable', 'array'],
             'new_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ];
+        ], $this->galleryUpdateRules());
     }
 
     public function messages(): array
     {
-        return [
+        return array_merge([
             'code.required' => 'Mã sản phẩm là bắt buộc.',
             'code.max' => 'Mã sản phẩm không được vượt quá 50 ký tự.',
             'name.required' => 'Tên sản phẩm là bắt buộc.',
@@ -40,6 +42,7 @@ class UpdateGachTrangTriCtRequest extends FormRequest
             'new_images.*.max' => 'Mỗi hình ảnh không được vượt quá 5MB.',
             'size_image.image' => 'Ảnh kích thước phải là định dạng hình ảnh.',
             'size_image.max' => 'Ảnh kích thước không được vượt quá 5MB.',
-        ];
+            'des.*.max' => 'Mỗi dòng mô tả không được vượt quá 500 ký tự.',
+        ], $this->galleryMediaMessages());
     }
 }

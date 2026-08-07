@@ -135,7 +135,7 @@
                                     @foreach ($chunk as $item)
                                         <x-client.shared.product-card
                                             href="{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}"
-                                            image="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-01.jpg') }}"
+                                            image="{{ $item->images ? \App\Support\AssetPath::url(\App\Support\ProductGallery::firstImagePath($item->images)) : asset('assets/images/lan-can-01.jpg') }}"
                                             title="{{ $item->name }}"
                                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                                             code="MSP: {{ $item->display_code }}" price="{{ $item->display_price }}"
@@ -231,7 +231,7 @@
                                     @foreach ($chunk as $item)
                                         <x-client.shared.product-card
                                             href="{{ route('client.products.lan-can-gom-su.detail', $item->lan_can_gom_su_ct_id) }}"
-                                            image="{{ $item->images ? asset('storage/' . $item->images[0]) : asset('assets/images/lan-can-02.jpg') }}"
+                                            image="{{ $item->images ? \App\Support\AssetPath::url(\App\Support\ProductGallery::firstImagePath($item->images)) : asset('assets/images/lan-can-02.jpg') }}"
                                             title="{{ $item->name }}"
                                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                                             code="MSP: {{ $item->display_code }}" price="{{ $item->display_price }}"
@@ -286,7 +286,7 @@
                     @foreach ($gridProducts as $product)
                         @php
                             $productImage = \App\Support\AssetPath::url(
-                                collect($product->images ?? [])->first(),
+                                \App\Support\ProductGallery::firstImagePath($product->images ?? []),
                                 'assets/images/lan-can-01.jpg',
                             );
                             $delay = 100 + $loop->index * 100;

@@ -16,7 +16,7 @@
                     $routeName && $productId && \Illuminate\Support\Facades\Route::has($routeName)
                         ? route($routeName, $productId)
                         : '#';
-                $firstImage = collect($product->images ?? [])->first();
+                $firstImage = \App\Support\ProductGallery::firstImagePath($product->images ?? []);
                 $imageUrl = \App\Support\AssetPath::url($firstImage, 'assets/images/ngoi-01.jpg');
                 $price = (float) ($product->price ?? 0);
                 $priceText = $product->display_price ?? ($price > 0 ? 'Giá: ' . number_format($price, 0, ',', '.') . 'đ' : 'Giá: Liên hệ');

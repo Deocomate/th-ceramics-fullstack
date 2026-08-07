@@ -63,7 +63,17 @@ class NgoiHaiVanMieuCtController extends Controller
 
     public function destroyImage(Request $request, int $id)
     {
-        $request->validate(['image_path' => ['required', 'string']]);
+        $request->validate([
+            'image_path' => ['nullable', 'required_without:video_url', 'string'],
+            'video_url' => ['nullable', 'required_without:image_path', 'string', 'max:500'],
+        ]);
+
+        if ($request->filled('video_url')) {
+            $this->service->removeVideoFromJson($id, $request->input('video_url'));
+
+            return back()->with('success', 'Đã xóa video khỏi sản phẩm.');
+        }
+
         $this->service->removeImageFromJson($id, $request->input('image_path'));
 
         return back()->with('success', 'Đã xóa ảnh khỏi sản phẩm.');

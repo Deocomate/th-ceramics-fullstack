@@ -133,10 +133,10 @@
                 <div class="flex items-center gap-[16px] md:gap-4 text-[#2E2F2A] md:text-primary pl-0.5 md:pl-0">
                     <button type="button" onclick="updateQty(-1)"
                         class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors">-</button>
-                    <div id="quantity-display"
-                        class="w-12 h-12 flex items-center justify-center rounded-full text-[16px] md:text-base font-normal shadow-[0px_1px_2px_rgba(0,0,0,0.05)] md:shadow-sm outline outline-1 outline-black/40 outline-offset-[-1px] md:outline-none md:border md:border-black/40 bg-transparent">
-                        1
-                    </div>
+                    <input type="number" id="quantity-display" name="qty_display" value="1" min="1"
+                        inputmode="numeric" aria-label="Số lượng"
+                        oninput="syncQtyWidth(this)" onchange="syncQtyFromInput()" onblur="syncQtyFromInput()"
+                        class="h-12 min-w-12 px-2.5 text-center rounded-[2px] text-[16px] md:text-base font-normal shadow-[0px_1px_2px_rgba(0,0,0,0.05)] md:shadow-sm outline outline-1 outline-black/40 outline-offset-[-1px] md:outline-none md:border md:border-black/40 bg-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     <button type="button" onclick="updateQty(1)"
                         class="w-6 h-6 flex items-center justify-center text-[20px] md:text-xl focus:outline-none md:hover:text-secondary transition-colors">+</button>
                 </div>
@@ -281,14 +281,32 @@
             });
 
             // Xử lý Thay đổi Số lượng
+            function syncQtyWidth(el) {
+                const digits = Math.max(1, String(el.value ?? '').length);
+                el.style.width = `${Math.max(3, digits) + 2.5}ch`;
+            }
+
             function updateQty(delta) {
                 const display = document.getElementById('quantity-display');
                 const input = document.getElementById('cart-quantity');
-                let val = parseInt(input.value) + delta;
+                let val = (parseInt(input.value, 10) || 1) + delta;
                 if (val < 1) val = 1;
-                display.textContent = val;
+                display.value = val;
                 input.value = val;
+                syncQtyWidth(display);
             }
+
+            function syncQtyFromInput() {
+                const display = document.getElementById('quantity-display');
+                const input = document.getElementById('cart-quantity');
+                let val = parseInt(display.value, 10);
+                if (isNaN(val) || val < 1) val = 1;
+                display.value = val;
+                input.value = val;
+                syncQtyWidth(display);
+            }
+
+            syncQtyWidth(document.getElementById('quantity-display'));
 
             // Xử lý Thêm Vào Giỏ Hàng (AJAX POST)
             function submitCart() {

@@ -104,25 +104,13 @@
                 </div>
             </div>
 
-            <!-- CHỌN ẢNH SẢN PHẨM CHUNG -->
             <hr class="border-gray-100 my-8">
-            <div class="flex flex-col h-full border rounded-xl p-6 bg-gray-50/50 {{ $errors->has('images') || $errors->has('images.*') ? 'border-red-300 bg-red-50/30' : 'border-gray-200' }}">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Hình ảnh sản phẩm <span class="text-red-500">*</span></label>
-                <div class="relative mb-4">
-                    <input type="file" id="multipleImagesInput" name="images[]" multiple required accept="image/*"
-                        class="w-full text-sm border rounded-lg p-1.5 cursor-pointer bg-white {{ $errors->has('images') || $errors->has('images.*') ? 'border-red-500' : 'border-gray-300' }}" onchange="handleMultipleFiles(event)">
-                </div>
-                @error('images') <p class="mb-4 text-xs text-red-600 font-bold">{{ $message }}</p> @enderror
-                @error('images.*') <p class="mb-4 text-xs text-red-600 font-bold">{{ $message }}</p> @enderror
-                
-                <div class="h-[250px] bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner flex flex-col">
-                    <div id="multiple-preview-container" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-3">
-                        <div id="empty-preview-state" class="col-span-full h-full min-h-[180px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium gap-2">
-                            <span>Chưa có ảnh nào</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('admin.partials.product-gallery-manager', [
+                'mode' => 'create',
+                'section' => 'form',
+                'uploadField' => 'images[]',
+                'videoField' => 'video_urls[]',
+            ])
 
             <div class="pt-6 mt-8 flex justify-end gap-3 border-t border-gray-100">
                 <a href="{{ route('admin.gach-co-bat-trang-ct.index') }}" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy</a>
@@ -178,59 +166,6 @@
                 addDesBlock('', false);
             }
 
-            let selectedFiles =[];
-            const multipleImagesInput = document.getElementById('multipleImagesInput');
-            const previewContainer = document.getElementById('multiple-preview-container');
-            const emptyState = document.getElementById('empty-preview-state');
-
-            function handleMultipleFiles(event) {
-                const files = Array.from(event.target.files);
-                if (files.length > 0) {
-                    selectedFiles = selectedFiles.concat(files);
-                    updateFileInput();
-                    renderPreviews();
-                }
-            }
-
-            function renderPreviews() {
-                const existingPreviews = previewContainer.querySelectorAll('.image-preview-item');
-                existingPreviews.forEach(item => item.remove());
-
-                if (selectedFiles.length === 0) {
-                    emptyState.style.display = 'flex';
-                } else {
-                    emptyState.style.display = 'none';
-                    selectedFiles.forEach((file, index) => {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const div = document.createElement('div');
-                            div.className = 'image-preview-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100';
-                            div.innerHTML = `
-                            <img src="${e.target.result}" class="w-full h-full object-contain">
-                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <button type="button" onclick="removeFile(${index})" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors shadow-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                                </button>
-                            </div>
-                        `;
-                            previewContainer.appendChild(div);
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                }
-            }
-
-            function removeFile(index) {
-                selectedFiles.splice(index, 1);
-                updateFileInput();
-                renderPreviews();
-            }
-
-            function updateFileInput() {
-                const dataTransfer = new DataTransfer();
-                selectedFiles.forEach(file => dataTransfer.items.add(file));
-                multipleImagesInput.files = dataTransfer.files;
-            }
         </script>
     @endpush
 </x-admin.layouts.app>

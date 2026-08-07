@@ -69,7 +69,7 @@
   >
     @foreach($products as $product)
       @php
-        $productImage = (!empty($product->images) && is_array($product->images)) ? $product->images[0] : null;
+        $productImage = \App\Support\ProductGallery::firstImagePath($product->images ?? []);
         $imageUrl = $productImage ? asset('storage/' . $productImage) : asset('assets/images/ngoi-01.jpg');
       @endphp
       <x-client.shared.product-card
