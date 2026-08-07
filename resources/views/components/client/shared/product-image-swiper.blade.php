@@ -24,18 +24,34 @@
             @foreach($mediaItems as $index => $item)
                 @if(($item['type'] ?? '') === 'video')
                     <div class="swiper-slide w-full h-full {{ $mainBg }}" data-gallery-type="video">
-                        <div class="relative w-full h-full bg-black">
-                            <iframe
-                                class="absolute inset-0 w-full h-full"
-                                data-product-video-iframe
-                                data-embed-src="{{ $item['embed_url'] }}"
-                                title="Video sản phẩm {{ $index + 1 }}"
-                                src=""
-                                frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowfullscreen
-                                referrerpolicy="strict-origin-when-cross-origin"
-                            ></iframe>
+                        <div
+                            class="relative w-full h-full bg-black"
+                            data-product-video-shell
+                            data-embed-src="{{ $item['embed_url'] }}"
+                            data-video-thumb="{{ $item['thumb_url'] }}"
+                        >
+                            <button
+                                type="button"
+                                data-product-video-play
+                                class="absolute inset-0 z-10 w-full h-full cursor-pointer group/video"
+                                aria-label="Phát video sản phẩm {{ $index + 1 }}"
+                            >
+                                <img
+                                    src="{{ $item['thumb_url'] }}"
+                                    alt="Video sản phẩm {{ $index + 1 }}"
+                                    class="w-full h-full object-cover"
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer"
+                                />
+                                <span class="absolute inset-0 bg-black/25 transition-colors group-hover/video:bg-black/35"></span>
+                                <span class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="w-16 h-16 rounded-full bg-[#A31D1D] shadow-lg flex items-center justify-center">
+                                        <svg class="w-7 h-7 text-white ml-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </span>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 @else
@@ -56,8 +72,8 @@
         <div class="swiper-wrapper">
             @foreach($mediaItems as $index => $item)
                 @if(($item['type'] ?? '') === 'video')
-                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm hover:opacity-80 transition-opacity {{ $thumbBg ?: 'bg-white' }} relative" data-gallery-type="video">
-                        <img src="{{ $item['thumb_url'] }}" alt="Video thu nhỏ {{ $index + 1 }}" class="w-full h-full {{ $thumbImgClass }}" />
+                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }} relative" data-gallery-type="video">
+                        <img src="{{ $item['thumb_url'] }}" alt="Video thu nhỏ {{ $index + 1 }}" class="w-full h-full {{ $thumbImgClass }}" loading="lazy" referrerpolicy="no-referrer" />
                         <span class="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <span class="w-8 h-8 rounded-full bg-black/60 flex items-center justify-center">
                                 <svg class="w-4 h-4 text-white ml-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -67,7 +83,7 @@
                         </span>
                     </div>
                 @else
-                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm hover:opacity-80 transition-opacity {{ $thumbBg ?: 'bg-white' }}" data-gallery-type="image">
+                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }}" data-gallery-type="image">
                         <img src="{{ \App\Support\AssetPath::url($item['path'] ?? null, 'assets/images/gach-bat-detail-1.png') }}" alt="Ảnh thu nhỏ {{ $index + 1 }}" class="w-full h-full {{ $thumbImgClass }}" />
                     </div>
                 @endif
@@ -78,18 +94,28 @@
 
 @push('styles')
     <style>
-        @media (min-width: 768px) {
-            .product-thumb-swiper .swiper-wrapper {
-                display: flex !important;
-                transform: none !important;
-                justify-content: flex-start !important;
-                gap: 20px !important;
-            }
-            .product-thumb-swiper .swiper-slide {
-                width: calc((100% - 6 * 20px) / 7) !important;
-                margin-right: 0 !important;
-                flex-shrink: 0 !important;
-            }
+        .product-main-swiper [data-product-video-shell] iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            z-index: 20;
+        }
+
+        .product-thumb-swiper .swiper-slide {
+            opacity: 0.55;
+            box-sizing: border-box;
+        }
+
+        .product-thumb-swiper .swiper-slide:hover {
+            opacity: 0.85;
+        }
+
+        .product-thumb-swiper .swiper-slide-thumb-active {
+            opacity: 1;
+            outline: 2px solid #A31D1D;
+            outline-offset: 2px;
         }
     </style>
 @endpush

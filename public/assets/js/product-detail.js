@@ -22,47 +22,80 @@ const sameUrl = (left, right) => {
     }
 };
 
-const pauseYoutubeIframes = (root) => {
-    root.querySelectorAll("[data-product-video-iframe]").forEach((iframe) => {
-        if (!iframe.contentWindow) {
-            return;
-        }
+const withAutoplay = (embedSrc) => {
+    if (!embedSrc) {
+        return "";
+    }
 
-        try {
-            iframe.contentWindow.postMessage(
-                JSON.stringify({ event: "command", func: "pauseVideo", args: [] }),
-                "*"
-            );
-        } catch (error) {
-            // Ignore cross-origin postMessage failures.
-        }
-    });
+    try {
+        const url = new URL(embedSrc, window.location.href);
+        url.searchParams.set("autoplay", "1");
+        url.searchParams.set("enablejsapi", "1");
+        url.searchParams.set("playsinline", "1");
+        url.searchParams.set("rel", "0");
+        return url.toString();
+    } catch (error) {
+        const joiner = embedSrc.includes("?") ? "&" : "?";
+        return `${embedSrc}${joiner}autoplay=1`;
+    }
 };
 
-const activateGalleryVideoSlide = (mainSwiperElement, activeIndex) => {
-    const slides = Array.from(mainSwiperElement.querySelectorAll(".swiper-slide"));
+const resetVideoShell = (shell) => {
+    if (!shell) {
+        return;
+    }
 
-    slides.forEach((slide, index) => {
-        const iframe = slide.querySelector("[data-product-video-iframe]");
+    shell.querySelectorAll("[data-product-video-iframe]").forEach((iframe) => iframe.remove());
 
-        if (!iframe) {
-            return;
-        }
+    const playButton = shell.querySelector("[data-product-video-play]");
+    if (playButton) {
+        playButton.classList.remove("hidden");
+    }
+};
 
-        const embedSrc = iframe.dataset.embedSrc || "";
+const resetAllVideoShells = (root) => {
+    root.querySelectorAll("[data-product-video-shell]").forEach((shell) => resetVideoShell(shell));
+};
 
-        if (index === activeIndex) {
-            if (embedSrc && iframe.getAttribute("src") !== embedSrc) {
-                iframe.setAttribute("src", embedSrc);
-            }
+const mountVideoIframe = (shell, { autoplay = true } = {}) => {
+    if (!shell) {
+        return;
+    }
 
-            return;
-        }
+    const embedSrc = shell.dataset.embedSrc || "";
+    if (!embedSrc) {
+        return;
+    }
 
-        if (iframe.getAttribute("src")) {
-            iframe.setAttribute("src", "");
-        }
-    });
+    resetVideoShell(shell);
+
+    const playButton = shell.querySelector("[data-product-video-play]");
+    if (playButton) {
+        playButton.classList.add("hidden");
+    }
+
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("data-product-video-iframe", "");
+    iframe.setAttribute("title", "Video sản phẩm");
+    iframe.setAttribute("allowfullscreen", "");
+    iframe.setAttribute(
+        "allow",
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    );
+    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    iframe.src = autoplay ? withAutoplay(embedSrc) : embedSrc;
+    shell.appendChild(iframe);
+};
+
+const focusThumbSlide = (thumbSwiper, index) => {
+    if (!thumbSwiper || thumbSwiper.destroyed) {
+        return;
+    }
+
+    const target = Math.max(0, Math.min(index, thumbSwiper.slides.length - 1));
+    // Keep active thumb near the center of the visible rail when possible.
+    const offset = Math.floor((thumbSwiper.params.slidesPerView || 1) / 2);
+    thumbSwiper.slideTo(Math.max(0, target - offset), 280);
 };
 
 const initProductGallery = (container) => {
@@ -82,23 +115,31 @@ const initProductGallery = (container) => {
 
     const thumbSwiper = thumbSwiperElement
         ? new window.Swiper(thumbSwiperElement, {
-              spaceBetween: 20,
-              slidesPerView: 7,
-              freeMode: true,
+              spaceBetween: 16,
+              slidesPerView: 5,
               watchSlidesProgress: true,
+              slideToClickedSlide: true,
+              centerInsufficientSlides: true,
+              watchOverflow: true,
+              breakpoints: {
+                  1024: {
+                      slidesPerView: 7,
+                      spaceBetween: 16,
+                  },
+              },
           })
         : null;
 
     const options = {
         slidesPerView: 1,
         spaceBetween: 0,
+        observer: true,
+        observeParents: true,
         on: {
-            init(swiper) {
-                activateGalleryVideoSlide(mainSwiperElement, swiper.activeIndex);
-            },
             slideChange(swiper) {
-                pauseYoutubeIframes(mainSwiperElement);
-                activateGalleryVideoSlide(mainSwiperElement, swiper.activeIndex);
+                // Swiper transform + YouTube iframe = màn đen; unmount khi rời slide.
+                resetAllVideoShells(mainSwiperElement);
+                focusThumbSlide(thumbSwiper, swiper.activeIndex);
             },
         },
     };
@@ -116,7 +157,61 @@ const initProductGallery = (container) => {
         };
     }
 
-    new window.Swiper(mainSwiperElement, options);
+    const mainSwiper = new window.Swiper(mainSwiperElement, options);
+    focusThumbSlide(thumbSwiper, mainSwiper.activeIndex);
+};
+
+const bindProductVideoPlayDelegation = () => {
+    if (document.body.dataset.productVideoPlayBound === "true") {
+        return;
+    }
+
+    document.body.dataset.productVideoPlayBound = "true";
+
+    document.addEventListener("click", (event) => {
+        const playButton = event.target.closest("[data-product-video-play]");
+
+        if (!playButton) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const shell = playButton.closest("[data-product-video-shell]");
+        const mainSwiperElement = playButton.closest("[data-product-main-swiper]");
+
+        if (mainSwiperElement) {
+            resetAllVideoShells(mainSwiperElement);
+        }
+
+        mountVideoIframe(shell, { autoplay: true });
+    });
+};
+
+const initStandaloneProductGalleries = () => {
+    const bindLegacyResets = () => {
+        document.querySelectorAll("[data-product-main-swiper]").forEach((mainSwiperElement) => {
+            if (mainSwiperElement.closest("[data-product-detail-container]")) {
+                return;
+            }
+
+            if (mainSwiperElement.dataset.videoResetBound === "true") {
+                return;
+            }
+
+            const swiper = mainSwiperElement.swiper;
+            if (!swiper || typeof swiper.on !== "function") {
+                return;
+            }
+
+            mainSwiperElement.dataset.videoResetBound = "true";
+            swiper.on("slideChange", () => resetAllVideoShells(mainSwiperElement));
+        });
+    };
+
+    bindLegacyResets();
+    window.setTimeout(bindLegacyResets, 400);
 };
 
 const switchGalleryToImage = (container, imageUrl) => {
@@ -290,7 +385,9 @@ const initProductDetailContainer = (container) => {
 };
 
 const initProductDetail = () => {
+    bindProductVideoPlayDelegation();
     document.querySelectorAll("[data-product-detail-container]").forEach(initProductDetailContainer);
+    initStandaloneProductGalleries();
 };
 
 export { initProductDetail };

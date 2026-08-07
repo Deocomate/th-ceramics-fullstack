@@ -152,18 +152,19 @@
 
 @push('styles')
     <style>
-        @media (min-width: 768px) {
-            .product-thumb-swiper .swiper-wrapper {
-                display: flex !important;
-                transform: none !important;
-                justify-content: flex-start !important;
-                gap: 20px !important;
-            }
-            .product-thumb-swiper .swiper-slide {
-                width: calc((100% - 6 * 20px) / 7) !important;
-                margin-right: 0 !important;
-                flex-shrink: 0 !important;
-            }
+        .product-thumb-swiper .swiper-slide {
+            opacity: 0.55;
+            box-sizing: border-box;
+        }
+
+        .product-thumb-swiper .swiper-slide:hover {
+            opacity: 0.85;
+        }
+
+        .product-thumb-swiper .swiper-slide-thumb-active {
+            opacity: 1;
+            outline: 2px solid #A31D1D;
+            outline-offset: 2px;
         }
     </style>
 @endpush

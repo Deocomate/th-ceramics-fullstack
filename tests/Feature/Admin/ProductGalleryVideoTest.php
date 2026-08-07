@@ -98,7 +98,8 @@ test('product detail renders youtube gallery embeds', function () {
     $this->get(route('client.products.ngoi-am-duong.detail', $product->ngoi_am_duong_ct_id))
         ->assertOk()
         ->assertSee('data-gallery-type="video"', false)
-        ->assertSee('https://www.youtube.com/embed/Win12rIicBI?enablejsapi=1', false)
+        ->assertSee('data-product-video-play', false)
+        ->assertSee('https://www.youtube.com/embed/Win12rIicBI?', false)
         ->assertSee('https://img.youtube.com/vi/Win12rIicBI/hqdefault.jpg', false);
 });
 

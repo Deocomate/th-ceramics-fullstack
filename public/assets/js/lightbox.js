@@ -24,8 +24,9 @@ function openLightbox(swiperEl, clickedImg) {
     const lightbox = document.getElementById('global-lightbox');
     if (!lightbox) return;
 
-    // 1. Gather slides from the target swiper (excluding Swiper duplicates)
-    const slides = Array.from(swiperEl.querySelectorAll('.swiper-slide:not(.swiper-slide-duplicate)'));
+    // 1. Gather slides from the target swiper (excluding Swiper duplicates / video posters)
+    const slides = Array.from(swiperEl.querySelectorAll('.swiper-slide:not(.swiper-slide-duplicate)'))
+        .filter((slide) => slide.dataset.galleryType !== 'video');
     const images = slides.map(slide => {
         const img = slide.querySelector('img');
         const textEl = slide.querySelector('p, .caption, [data-lightbox-desc]');
@@ -41,13 +42,13 @@ function openLightbox(swiperEl, clickedImg) {
     // 2. Determine index of the clicked slide
     const clickedSlide = clickedImg.closest('.swiper-slide');
     let clickedIndex = 0;
-    
+
     if (clickedSlide && clickedSlide.hasAttribute('data-swiper-slide-index')) {
         clickedIndex = parseInt(clickedSlide.getAttribute('data-swiper-slide-index'), 10);
     } else if (clickedSlide) {
         clickedIndex = slides.indexOf(clickedSlide);
     }
-    
+
     if (clickedIndex < 0 || clickedIndex >= images.length) {
         const clickedSrc = clickedImg.getAttribute('src') || clickedImg.src;
         clickedIndex = images.findIndex(item => item.src === clickedSrc);
@@ -120,15 +121,30 @@ function closeLightbox() {
 }
 
 const initLightbox = () => {
-    // 1. Delegate click events on Swiper slides
-    document.addEventListener('click', (event) => {
+    // Double-click opens lightbox so single click can still change slides / play video.
+    document.addEventListener('dblclick', (event) => {
+        if (event.target.closest('[data-product-video-play], [data-product-video-iframe], [data-product-video-shell]')) {
+            return;
+        }
+
         const slide = event.target.closest('.swiper-slide');
         if (!slide) return;
 
-        // Skip logo/partner sliders and the lightbox itself
+        // Skip logo/partner/thumb sliders and the lightbox itself
         const swiperEl = slide.closest('.swiper');
         if (!swiperEl) return;
-        if (swiperEl.classList.contains('partner-swiper') || swiperEl.classList.contains('global-lightbox-swiper')) return;
+        if (
+            swiperEl.classList.contains('partner-swiper') ||
+            swiperEl.classList.contains('global-lightbox-swiper') ||
+            swiperEl.classList.contains('product-thumb-swiper') ||
+            swiperEl.hasAttribute('data-product-thumb-swiper')
+        ) {
+            return;
+        }
+
+        if (slide.dataset.galleryType === 'video') {
+            return;
+        }
 
         const img = slide.querySelector('img');
         if (!img) return;
@@ -140,19 +156,18 @@ const initLightbox = () => {
             const isImgHref = /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(href);
             const isDummyHref = href.startsWith('#') || href.startsWith('javascript:');
             const isLightboxLink = link.classList.contains('glightbox');
-            
+
             if (isLightboxLink) {
                 // Let GLightbox handle it natively to prevent duplicate lightbox overlays
                 return;
             }
-            
+
             if (!isImgHref && !isDummyHref) {
                 // Let normal page navigation happen
                 return;
             }
         }
 
-        // Prevent default and open the global lightbox
         event.preventDefault();
         openLightbox(swiperEl, img);
     });
@@ -172,7 +187,7 @@ const initLightbox = () => {
             // Close if clicking outside the image and navigation controls
             const isImg = event.target.tagName === 'IMG';
             const isNav = event.target.closest('.global-lightbox-next') || event.target.closest('.global-lightbox-prev');
-            
+
             if (!isImg && !isNav) {
                 closeLightbox();
             }

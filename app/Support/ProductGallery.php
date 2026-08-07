@@ -56,9 +56,16 @@ class ProductGallery
         return null;
     }
 
-    public static function embedUrl(string $id): string
+    public static function embedUrl(string $id, array $params = []): string
     {
-        return 'https://www.youtube.com/embed/'.$id.'?enablejsapi=1';
+        $query = array_merge([
+            'enablejsapi' => '1',
+            'rel' => '0',
+            'playsinline' => '1',
+            'modestbranding' => '1',
+        ], $params);
+
+        return 'https://www.youtube.com/embed/'.$id.'?'.http_build_query($query);
     }
 
     public static function thumbUrl(string $id): string

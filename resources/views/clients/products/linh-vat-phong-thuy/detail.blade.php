@@ -412,16 +412,18 @@
             document.addEventListener('DOMContentLoaded', function() {
                 // Main Product Gallery Swiper
                 const thumbSwiper = new Swiper('.product-thumb-swiper', {
-                    spaceBetween: 20,
-                    slidesPerView: 'auto',
-                    freeMode: true,
+                    spaceBetween: 16,
+                    slidesPerView: 4,
                     watchSlidesProgress: true,
+                    slideToClickedSlide: true,
+                    centerInsufficientSlides: true,
+                    watchOverflow: true,
                     breakpoints: {
                         768: {
-                            slidesPerView: 4
+                            slidesPerView: 5
                         },
                         1024: {
-                            slidesPerView: 5
+                            slidesPerView: 7
                         }
                     }
                 });
@@ -438,6 +440,12 @@
                     effect: 'fade',
                     fadeEffect: {
                         crossFade: true
+                    },
+                    on: {
+                        slideChange(swiper) {
+                            const offset = Math.floor((thumbSwiper.params.slidesPerView || 1) / 2);
+                            thumbSwiper.slideTo(Math.max(0, swiper.activeIndex - offset), 280);
+                        }
                     }
                 });
 

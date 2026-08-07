@@ -241,12 +241,20 @@
             document.addEventListener("DOMContentLoaded", function() {
                 // Khởi tạo Swiper Image Gallery
                 var thumbSwiper = new Swiper(".product-thumb-swiper", {
-                    spaceBetween: 20,
-                    slidesPerView: 'auto',
-                    freeMode: true,
+                    spaceBetween: 16,
+                    slidesPerView: 5,
                     watchSlidesProgress: true,
+                    slideToClickedSlide: true,
+                    centerInsufficientSlides: true,
+                    watchOverflow: true,
+                    breakpoints: {
+                        1024: {
+                            slidesPerView: 7,
+                            spaceBetween: 16,
+                        },
+                    },
                 });
-                new Swiper(".product-main-swiper", {
+                var mainSwiper = new Swiper(".product-main-swiper", {
                     slidesPerView: 1,
                     spaceBetween: 0,
                     pagination: {
@@ -255,6 +263,12 @@
                     },
                     thumbs: {
                         swiper: thumbSwiper,
+                    },
+                    on: {
+                        slideChange: function (swiper) {
+                            var offset = Math.floor((thumbSwiper.params.slidesPerView || 1) / 2);
+                            thumbSwiper.slideTo(Math.max(0, swiper.activeIndex - offset), 280);
+                        },
                     },
                 });
 
