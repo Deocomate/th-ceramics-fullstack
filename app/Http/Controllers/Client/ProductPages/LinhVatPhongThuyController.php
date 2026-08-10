@@ -45,8 +45,11 @@ class LinhVatPhongThuyController extends Controller
             ->where('linh_vat_phong_thuy_ct_id', '!=', $id)
             ->take(4);
 
+        $config = \App\Models\LinhVatPhongThuy::query()->first();
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+
         return view('clients.products.linh-vat-phong-thuy.detail', compact(
-            'product', 'relatedProducts'
+            'product', 'relatedProducts', 'config', 'journeyVideo'
         ));
     }
 }

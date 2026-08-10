@@ -37,6 +37,17 @@ trait ManagesProductGalleryMedia
         return ProductGallery::appendVideoUrls($current, $urls);
     }
 
+    protected function normalizeJourneyVideo(mixed $video): ?string
+    {
+        if (! is_string($video)) {
+            return null;
+        }
+
+        $trimmed = trim($video);
+
+        return $trimmed !== '' ? $trimmed : null;
+    }
+
     protected function removeGalleryImage(Model $model, string $imagePath, string $imagesAttribute = 'images'): Model
     {
         $current = is_array($model->{$imagesAttribute}) ? $model->{$imagesAttribute} : [];

@@ -99,8 +99,66 @@ test('product detail renders youtube gallery embeds', function () {
         ->assertOk()
         ->assertSee('data-gallery-type="video"', false)
         ->assertSee('data-product-video-play', false)
+        ->assertSee('data-product-main-prev', false)
+        ->assertSee('data-product-main-next', false)
         ->assertSee('https://www.youtube.com/embed/Win12rIicBI?', false)
-        ->assertSee('https://img.youtube.com/vi/Win12rIicBI/hqdefault.jpg', false);
+        ->assertSee('vq=hd1080', false)
+        ->assertSee('controls=0', false)
+        ->assertSee('https://img.youtube.com/vi/Win12rIicBI/maxresdefault.jpg', false)
+        ->assertSee('border-color: #C76E00', false);
+});
+
+test('admin can save product journey video separately from gallery', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct(['ngoi_am_duong_ct/images/cover.png']);
+
+    $this->put(route('admin.ngoi-am-duong-ct.update', $product->ngoi_am_duong_ct_id), [
+        'code' => $product->code,
+        'name' => $product->name,
+        'color' => $product->color,
+        'price' => $product->price,
+        'size' => $product->size,
+        'video' => 'https://www.youtube.com/watch?v=1E6KuLVe07M',
+    ])->assertRedirect();
+
+    $product->refresh();
+
+    expect($product->video)->toBe('https://www.youtube.com/watch?v=1E6KuLVe07M')
+        ->and($product->images)->toBe(['ngoi_am_duong_ct/images/cover.png']);
+});
+
+test('product detail journey video prefers product url then parent config', function () {
+    $parent = \App\Models\NgoiAmDuong::query()->first();
+    if (! $parent) {
+        $parent = \App\Models\NgoiAmDuong::query()->create([
+            'thumbnail_main' => 'seeders/products/cover.png',
+            'thumbnail1' => 'seeders/products/cover.png',
+            'thumbnail2' => 'seeders/products/cover.png',
+            'video' => 'https://www.youtube.com/embed/Win12rIicBI',
+        ]);
+    } else {
+        $parent->update(['video' => 'https://www.youtube.com/embed/Win12rIicBI']);
+    }
+
+    $withProductVideo = makeNgoiAmDuongProduct();
+    $withProductVideo->update(['video' => 'https://www.youtube.com/watch?v=1E6KuLVe07M']);
+
+    $this->get(route('client.products.ngoi-am-duong.detail', $withProductVideo->ngoi_am_duong_ct_id))
+        ->assertOk()
+        ->assertSee('data-inline-video-shell', false)
+        ->assertSee('data-inline-video-play', false)
+        ->assertSee('1E6KuLVe07M', false)
+        ->assertSee('h-[480px]', false);
+
+    $fallbackProduct = makeNgoiAmDuongProduct();
+    $fallbackProduct->update(['video' => null]);
+
+    $this->get(route('client.products.ngoi-am-duong.detail', $fallbackProduct->ngoi_am_duong_ct_id))
+        ->assertOk()
+        ->assertSee('data-inline-video-shell', false)
+        ->assertSee('Win12rIicBI', false);
 });
 
 test('cart options use first image path when gallery starts with video', function () {

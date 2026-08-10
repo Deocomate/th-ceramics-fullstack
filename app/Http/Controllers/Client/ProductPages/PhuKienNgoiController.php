@@ -81,8 +81,10 @@ class PhuKienNgoiController extends Controller
             ->take(4)
             ->get();
 
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $pageConfig);
+
         return view($view, compact(
-            'product', 'type', 'phanLoais', 'relatedProducts', 'pageConfig'
+            'product', 'type', 'phanLoais', 'relatedProducts', 'pageConfig', 'journeyVideo'
         ));
     }
 }

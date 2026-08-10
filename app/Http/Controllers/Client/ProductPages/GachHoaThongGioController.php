@@ -49,8 +49,11 @@ class GachHoaThongGioController extends Controller
             ->where('gach_hoa_thong_gio_ct_id', '!=', $id)
             ->take(4);
 
+        $config = \App\Models\GachHoaThongGio::query()->first();
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+
         return view('clients.products.gach-hoa-thong-gio.detail', compact(
-            'product', 'dinhMuc', 'relatedProducts'
+            'product', 'dinhMuc', 'relatedProducts', 'config', 'journeyVideo'
         ));
     }
 }

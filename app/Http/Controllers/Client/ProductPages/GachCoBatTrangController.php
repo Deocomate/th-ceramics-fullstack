@@ -66,8 +66,11 @@ class GachCoBatTrangController extends Controller
             ->where('gach_co_bat_trang_ct_id', '!=', $id)
             ->take(4);
 
+        $config = \App\Models\GachCoBatTrang::query()->first();
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+
         return view('clients.products.gach-co-bat-trang.detail', compact(
-            'product', 'dinhMuc', 'relatedProducts'
+            'product', 'dinhMuc', 'relatedProducts', 'config', 'journeyVideo'
         ));
     }
 }

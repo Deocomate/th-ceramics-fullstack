@@ -53,7 +53,7 @@
 
 <x-client.shared.fabrication-process :images="$parentConfig?->images ?? []" />
 <x-client.shared.outstanding-value />
-<x-client.shared.journey-video :hide-title="true" />
+<x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="true" />
 <x-client.shared.custom-design-process />
 <hr class="md:mb-16 mb-8" />
 <x-client.shared.works-simple :show-nav="true" />

@@ -12,7 +12,8 @@ class NgoiHaiCoCt extends Model
     protected $primaryKey = 'ngoi_hai_co_ct_id';
 
     protected $fillable = [
-        'name', 'color', 'images', 'des', 'size', 'size_image', 'is_delete',
+        'name', 'color', 'images',
+        'video', 'des', 'size', 'size_image', 'is_delete',
     ];
 
     protected $attributes = [

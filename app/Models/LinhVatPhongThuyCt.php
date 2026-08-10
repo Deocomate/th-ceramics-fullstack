@@ -15,6 +15,7 @@ class LinhVatPhongThuyCt extends Model
         'name',
         'color',
         'images',
+        'video',
         'price',
         'des',
         'size',

@@ -42,6 +42,7 @@ class GachCoBatTrangCtController extends Controller
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'video_urls' => ['nullable', 'array'],
             'video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
         ]);
@@ -79,6 +80,7 @@ class GachCoBatTrangCtController extends Controller
             'new_images' => ['nullable', 'array'],
             'new_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'size_image' => ['nullable', 'image', 'max:5120'],
+            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'new_video_urls' => ['nullable', 'array'],
             'new_video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
         ]);

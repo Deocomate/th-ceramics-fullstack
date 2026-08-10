@@ -23,6 +23,7 @@ class PhuKienNgoiCt extends Model
         'legacy_id',
         'color',
         'images',
+        'video',
         'des',
         'size',
         'size_image',

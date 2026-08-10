@@ -11,7 +11,8 @@ class LanCanGomSuCt extends Model
 
     protected $primaryKey = 'lan_can_gom_su_ct_id';
 
-    protected $fillable = ['name', 'color', 'images', 'des', 'size', 'size_image', 'size_des', 'is_delete'];
+    protected $fillable = ['name', 'color', 'images',
+        'video', 'des', 'size', 'size_image', 'size_des', 'is_delete'];
 
     protected $attributes = ['color' => 'Tự chọn'];
 

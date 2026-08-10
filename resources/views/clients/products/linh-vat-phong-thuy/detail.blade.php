@@ -296,7 +296,7 @@
     <!-- HÀNH TRÌNH CHẾ TÁC VIDEO -->
     <x-client.shared.outstanding-value />
     <div class="hidden md:block">
-        <x-client.shared.journey-video :hide-title="false" />
+        <x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="false" />
     </div>
 
     <!-- BẢNG SO SÁNH / CÓ THỂ BẠN QUAN TÂM -->

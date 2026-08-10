@@ -15,7 +15,8 @@ class DenVuonGomSuCt extends Model
 
     protected $primaryKey = 'den_vuon_gom_su_ct_id';
 
-    protected $fillable = ['name', 'color', 'category_type', 'images', 'des', 'size', 'size_image', 'size_des', 'is_delete'];
+    protected $fillable = ['name', 'color', 'category_type', 'images',
+        'video', 'des', 'size', 'size_image', 'size_des', 'is_delete'];
 
     protected $attributes = ['color' => 'Tự chọn'];
 

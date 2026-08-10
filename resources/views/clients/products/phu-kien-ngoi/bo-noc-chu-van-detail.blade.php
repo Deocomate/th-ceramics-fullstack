@@ -74,7 +74,7 @@
   </section>
 
   <x-client.shared.outstanding-value />
-  <x-client.shared.journey-video />
+  <x-client.shared.journey-video :video="$journeyVideo ?? null" />
   <x-client.shared.works />
   <x-client.shared.recommendations
     :related-products="$relatedProducts"

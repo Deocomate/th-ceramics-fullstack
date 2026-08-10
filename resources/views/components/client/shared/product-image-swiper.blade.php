@@ -28,6 +28,7 @@
                             class="relative w-full h-full bg-black"
                             data-product-video-shell
                             data-embed-src="{{ $item['embed_url'] }}"
+                            data-youtube-id="{{ $item['youtube_id'] }}"
                             data-video-thumb="{{ $item['thumb_url'] }}"
                         >
                             <button
@@ -52,6 +53,7 @@
                                     </span>
                                 </span>
                             </button>
+                            <div data-yt-player-host class="absolute inset-0 z-20 w-full h-full bg-black hidden"></div>
                         </div>
                     </div>
                 @else
@@ -62,17 +64,38 @@
                 @endif
             @endforeach
         </div>
+
+        <button
+            type="button"
+            class="product-main-prev absolute left-2 md:left-3 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/90 border border-black/10 shadow-md flex items-center justify-center text-primary hover:bg-white hover:border-secondary transition-all focus:outline-none"
+            data-product-main-prev
+            aria-label="Ảnh trước"
+        >
+            <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <button
+            type="button"
+            class="product-main-next absolute right-2 md:right-3 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/90 border border-black/10 shadow-md flex items-center justify-center text-primary hover:bg-white hover:border-secondary transition-all focus:outline-none"
+            data-product-main-next
+            aria-label="Ảnh tiếp theo"
+        >
+            <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
     </div>
 
     <div class="md:hidden flex justify-center mt-5">
         <div class="product-main-pagination flex justify-center gap-[7px]" data-product-main-pagination></div>
     </div>
 
-    <div class="hidden md:block w-full overflow-hidden swiper product-thumb-swiper" data-product-thumb-swiper>
+    <div class="hidden md:block w-full overflow-x-hidden overflow-y-visible py-1 swiper product-thumb-swiper" data-product-thumb-swiper>
         <div class="swiper-wrapper">
             @foreach($mediaItems as $index => $item)
                 @if(($item['type'] ?? '') === 'video')
-                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }} relative" data-gallery-type="video">
+                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }} relative border-2 border-transparent box-border" data-gallery-type="video">
                         <img src="{{ $item['thumb_url'] }}" alt="Video thu nhỏ {{ $index + 1 }}" class="w-full h-full {{ $thumbImgClass }}" loading="lazy" referrerpolicy="no-referrer" />
                         <span class="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <span class="w-8 h-8 rounded-full bg-black/60 flex items-center justify-center">
@@ -83,7 +106,7 @@
                         </span>
                     </div>
                 @else
-                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }}" data-gallery-type="image">
+                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }} border-2 border-transparent box-border" data-gallery-type="image">
                         <img src="{{ \App\Support\AssetPath::url($item['path'] ?? null, 'assets/images/gach-bat-detail-1.png') }}" alt="Ảnh thu nhỏ {{ $index + 1 }}" class="w-full h-full {{ $thumbImgClass }}" />
                     </div>
                 @endif
@@ -94,7 +117,8 @@
 
 @push('styles')
     <style>
-        .product-main-swiper [data-product-video-shell] iframe {
+        .product-main-swiper [data-product-video-shell] iframe,
+        .product-main-swiper [data-yt-player-host] iframe {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -106,6 +130,7 @@
         .product-thumb-swiper .swiper-slide {
             opacity: 0.55;
             box-sizing: border-box;
+            border: 2px solid transparent;
         }
 
         .product-thumb-swiper .swiper-slide:hover {
@@ -114,8 +139,13 @@
 
         .product-thumb-swiper .swiper-slide-thumb-active {
             opacity: 1;
-            outline: 2px solid #A31D1D;
-            outline-offset: 2px;
+            border-color: #C76E00;
+        }
+
+        .product-main-swiper .swiper-button-disabled {
+            opacity: 0.35;
+            cursor: default;
+            pointer-events: none;
         }
     </style>
 @endpush

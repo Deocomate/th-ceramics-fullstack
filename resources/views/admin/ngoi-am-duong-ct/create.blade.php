@@ -86,6 +86,7 @@
 
             <!-- CHỌN ẢNH SẢN PHẨM CHUNG -->
             <hr class="border-gray-100 my-8">
+            @include('admin.partials.product-journey-video-field')
             @include('admin.partials.product-gallery-manager', [
                 'mode' => 'create',
                 'section' => 'form',

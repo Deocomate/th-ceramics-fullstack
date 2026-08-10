@@ -105,6 +105,7 @@ class PhuKienNgoiCtController extends Controller
             $create ? 'images' : 'new_images' => [$create ? 'required' : 'nullable', 'array'],
             ($create ? 'images' : 'new_images').'.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             $create ? 'video_urls' : 'new_video_urls' => ['nullable', 'array'],
             ($create ? 'video_urls' : 'new_video_urls').'.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
         ]) + ['category_type' => $fallbackCategoryType ?? $request->input('category_type')];

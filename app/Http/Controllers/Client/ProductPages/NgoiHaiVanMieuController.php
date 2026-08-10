@@ -44,8 +44,8 @@ class NgoiHaiVanMieuController extends Controller
 
     public function detail($id, ViewHistoryService $historyService)
     {
+        $parentConfig = \App\Models\NgoiHaiVanMieu::query()->first();
         $product = $this->ngoiHaiVanMieuCtService->findById($id);
-        $parentConfig = $this->ngoiHaiVanMieuService->getFirstRecord();
 
         if ($product->is_delete == 1) {
             abort(404);
@@ -67,6 +67,7 @@ class NgoiHaiVanMieuController extends Controller
         $productType = 'ngoi_hai_van_mieu_ct';
         $productPkField = 'ngoi_hai_van_mieu_ct_id';
         $variantPkField = 'mau_sac_ngoi_hai_van_mieu_ct_id';
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $parentConfig);
 
         return view('clients.products.ngoi-hai-van-mieu.detail', compact(
             'product',
@@ -79,14 +80,15 @@ class NgoiHaiVanMieuController extends Controller
             'detailRouteName',
             'productType',
             'productPkField',
-            'variantPkField'
+            'variantPkField',
+            'journeyVideo'
         ));
     }
 
     public function detailNgoiHaiCo($id, ViewHistoryService $historyService)
     {
         $product = $this->ngoiHaiCoCtService->findById($id);
-        $parentConfig = $this->ngoiHaiVanMieuService->getFirstRecord();
+        $parentConfig = \App\Models\NgoiHaiVanMieu::query()->first();
 
         if ($product->is_delete == 1) {
             abort(404);
@@ -106,6 +108,7 @@ class NgoiHaiVanMieuController extends Controller
         $productType = 'ngoi_hai_co_ct';
         $productPkField = 'ngoi_hai_co_ct_id';
         $variantPkField = 'mau_sac_ngoi_hai_co_ct_id';
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $parentConfig);
 
         return view('clients.products.ngoi-hai-van-mieu.detail', compact(
             'product',
@@ -118,7 +121,8 @@ class NgoiHaiVanMieuController extends Controller
             'detailRouteName',
             'productType',
             'productPkField',
-            'variantPkField'
+            'variantPkField',
+            'journeyVideo'
         ));
     }
 }

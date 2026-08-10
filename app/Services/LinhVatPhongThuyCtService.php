@@ -53,6 +53,7 @@ class LinhVatPhongThuyCtService
                 'des' => ! empty($data['des']) ? array_values(array_filter(array_map('trim', $data['des']))) : null,
                 'size_des' => ! empty($data['size_des']) ? array_values(array_filter(array_map('trim', $data['size_des']))) : null,
                 'is_delete' => 0,
+                'video' => $this->normalizeJourneyVideo($data['video'] ?? null),
             ];
 
             $images = [];
@@ -96,6 +97,8 @@ class LinhVatPhongThuyCtService
             }
 
             $currentImages = is_array($model->images) ? $model->images : [];
+            $fillable['video'] = $this->normalizeJourneyVideo($data['video'] ?? null);
+
             $merged = $this->mergeGalleryUpdates($currentImages, $data, self::IMAGE_DIRECTORY);
             if ($merged !== null) {
                 $fillable['images'] = $merged;

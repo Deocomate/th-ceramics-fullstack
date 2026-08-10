@@ -63,14 +63,34 @@ class ProductGallery
             'rel' => '0',
             'playsinline' => '1',
             'modestbranding' => '1',
+            // Minimal YouTube chrome — play video only.
+            'controls' => '0',
+            'fs' => '0',
+            'iv_load_policy' => '3',
+            'cc_load_policy' => '0',
+            'disablekb' => '1',
+            // Best-effort forced HD; client IFrame API also re-asserts hd1080.
+            'vq' => 'hd1080',
+            'hd' => '1',
         ], $params);
+
+        if (! array_key_exists('origin', $query)) {
+            try {
+                $appUrl = config('app.url');
+                if (filled($appUrl)) {
+                    $query['origin'] = rtrim((string) $appUrl, '/');
+                }
+            } catch (\Throwable) {
+                // Unit tests may run without the Laravel container.
+            }
+        }
 
         return 'https://www.youtube.com/embed/'.$id.'?'.http_build_query($query);
     }
 
     public static function thumbUrl(string $id): string
     {
-        return 'https://img.youtube.com/vi/'.$id.'/hqdefault.jpg';
+        return 'https://img.youtube.com/vi/'.$id.'/maxresdefault.jpg';
     }
 
     /**

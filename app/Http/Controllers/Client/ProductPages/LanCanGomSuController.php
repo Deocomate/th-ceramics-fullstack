@@ -32,6 +32,9 @@ class LanCanGomSuController extends Controller
 
         $historyService->trackProduct('lan_can_gom_su_ct', (int) $product->lan_can_gom_su_ct_id);
 
-        return view('clients.products.lan-can-gom-su.detail', compact('product'));
+        $config = \App\Models\LanCanGomXu::query()->first();
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+
+        return view('clients.products.lan-can-gom-su.detail', compact('product', 'config', 'journeyVideo'));
     }
 }

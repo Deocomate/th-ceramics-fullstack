@@ -49,7 +49,9 @@ class DenGomSuController extends Controller
             $product->category_type,
             4
         );
+        $config = \App\Models\DenGomSu::query()->first();
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
 
-        return view('clients.products.den-gom-su.detail', compact('product', 'relatedProducts'));
+        return view('clients.products.den-gom-su.detail', compact('product', 'relatedProducts', 'config', 'journeyVideo'));
     }
 }

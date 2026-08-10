@@ -227,7 +227,7 @@
     <x-client.shared.outstanding-value />
 
     <!-- Hành Trình Chế Tác -->
-    <x-client.shared.journey-video :video="null" />
+    <x-client.shared.journey-video :video="$journeyVideo ?? null" />
 
     <!-- CÓ THỂ BẠN QUAN TÂM -->
     <x-client.shared.recommendations :related-products="$relatedProducts" route-name="client.products.lan-can-gom-su.detail"

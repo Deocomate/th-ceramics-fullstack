@@ -32,6 +32,7 @@ class DenVuonGomSuCtController extends Controller
             'size_des' => ['nullable', 'array'], 'size_des.*' => ['nullable', 'string', 'max:500'],
             'images' => ['required', 'array'], 'images.*' => ['image', 'max:5120'],
             'size_image' => ['nullable', 'image', 'max:5120'],
+            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'video_urls' => ['nullable', 'array'],
             'video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
         ]);
@@ -55,6 +56,7 @@ class DenVuonGomSuCtController extends Controller
             'size_des' => ['nullable', 'array'], 'size_des.*' => ['nullable', 'string', 'max:500'],
             'new_images' => ['nullable', 'array'], 'new_images.*' => ['image', 'max:5120'],
             'size_image' => ['nullable', 'image', 'max:5120'],
+            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'new_video_urls' => ['nullable', 'array'],
             'new_video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
         ]);

@@ -36,7 +36,7 @@ productId="{{ $product->gach_trang_tri_ct_id }}"
         <x-client.shared.fabrication-process />
     </div>
     <div class="order-1 md:order-none">
-        <x-client.shared.journey-video :hide-title="true" />
+        <x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="true" />
     </div>
 </div>
 

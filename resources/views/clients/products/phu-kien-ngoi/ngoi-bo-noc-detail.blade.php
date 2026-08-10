@@ -79,7 +79,7 @@
 
   <x-client.shared.works-simple :show-nav="true" />
   <x-client.shared.outstanding-value />
-  <x-client.shared.journey-video />
+  <x-client.shared.journey-video :video="$journeyVideo ?? null" />
   <x-client.shared.recommendations
     :related-products="$relatedProducts"
     route-name="client.products.phu-kien-ngoi.detail"

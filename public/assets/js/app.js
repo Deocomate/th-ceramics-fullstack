@@ -5,6 +5,7 @@ import { initWorksCarousels } from "./works-carousel.js";
 import { initLightbox } from "./lightbox.js";
 import { initCartUi, openCartModal, showCartToast } from "./cart-ui.js";
 import { initConsultationModal } from "./consultation-modal.js";
+import { initInlineVideoShells } from "./youtube-embed.js";
 
 const initProductSectionCarousels = () => {
     document.querySelectorAll("[data-product-section]").forEach((section) => {
@@ -466,6 +467,7 @@ const initSharedScripts = () => {
     initCartUi();
     initConsultationModal();
     initAddToCartButtons();
+    initInlineVideoShells();
     initProductDetail();
     initProductCalculators();
     initProductValues();

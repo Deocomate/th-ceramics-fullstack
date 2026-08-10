@@ -155,6 +155,7 @@
         .product-thumb-swiper .swiper-slide {
             opacity: 0.55;
             box-sizing: border-box;
+            border: 2px solid transparent;
         }
 
         .product-thumb-swiper .swiper-slide:hover {
@@ -163,8 +164,7 @@
 
         .product-thumb-swiper .swiper-slide-thumb-active {
             opacity: 1;
-            outline: 2px solid #A31D1D;
-            outline-offset: 2px;
+            border-color: #C76E00;
         }
     </style>
 @endpush

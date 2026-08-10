@@ -12,7 +12,8 @@ class NgoiHaiVanMieuCt extends Model
     protected $primaryKey = 'ngoi_hai_van_mieu_ct_id';
 
     protected $fillable = [
-        'name', 'color', 'images', 'price', 'des', 'mau_sac_id', 'size', 'size_image', 'is_delete',
+        'name', 'color', 'images',
+        'video', 'price', 'des', 'mau_sac_id', 'size', 'size_image', 'is_delete',
     ];
 
     protected $attributes = [

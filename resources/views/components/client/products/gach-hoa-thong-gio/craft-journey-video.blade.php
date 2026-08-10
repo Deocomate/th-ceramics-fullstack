@@ -20,11 +20,8 @@
         ? (\Illuminate\Support\Str::startsWith($videoThumbnail, 'assets/') ? asset($videoThumbnail) : asset('storage/' . $videoThumbnail))
         : asset('assets/images/gach-hoa-value.png');
       $videoUrl = $config->video_url ?? null;
-      $videoEmbedUrl = $videoUrl;
-
-      if (!empty($videoUrl) && preg_match('~(?:youtube\.com/(?:watch\?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_-]{6,})~', $videoUrl, $matches)) {
-        $videoEmbedUrl = 'https://www.youtube.com/embed/' . $matches[1];
-      }
+      $youtubeId = !empty($videoUrl) ? \App\Support\ProductGallery::extractYoutubeId($videoUrl) : null;
+      $videoEmbedUrl = $youtubeId ? \App\Support\ProductGallery::embedUrl($youtubeId) : null;
     @endphp
     <a
       href="{{ $videoThumbnailUrl }}"
@@ -38,19 +35,35 @@
         class="w-full h-full object-cover brightness-80 hover:brightness-100 transition-all duration-300"
       />
     </a>
-    @if(!empty($videoEmbedUrl))
+    @if(!empty($youtubeId) && !empty($videoEmbedUrl))
     <div
-      class="relative w-full aspect-[4/3] overflow-hidden"
+      class="relative w-full aspect-[4/3] overflow-hidden bg-black"
       data-aos="fade-left"
       data-aos-delay="200"
+      data-inline-video-shell
+      data-youtube-id="{{ $youtubeId }}"
+      data-embed-src="{{ $videoEmbedUrl }}"
     >
-      <iframe
-        src="{{ $videoEmbedUrl }}"
-        class="w-full h-full"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
+      <button
+        type="button"
+        data-inline-video-play
+        class="absolute inset-0 z-10 w-full h-full cursor-pointer group"
+        aria-label="Phát video hành trình chế tác"
+      >
+        <img
+          src="{{ asset('assets/images/video-placeholder-02.png') }}"
+          alt="Video placeholder"
+          class="w-full h-full object-cover brightness-80 group-hover:brightness-[0.6] transition-all duration-300"
+        />
+        <span class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span class="w-16 h-16 lg:w-20 lg:h-20 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-white/50 transition-all duration-300">
+            <svg class="w-8 h-8 lg:w-10 lg:h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
+          </span>
+        </span>
+      </button>
+      <div data-yt-player-host class="absolute inset-0 z-20 w-full h-full bg-black hidden"></div>
     </div>
     @else
     <div
@@ -63,7 +76,6 @@
         alt="Video placeholder"
         class="w-full h-full object-cover brightness-80 group-hover:brightness-[0.6] transition-all duration-300"
       />
-      <!-- Play Button -->
       <div class="absolute inset-0 flex items-center justify-center">
         <div
           class="w-16 h-16 lg:w-20 lg:h-20 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-white/50 transition-all duration-300"

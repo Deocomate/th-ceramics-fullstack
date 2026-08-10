@@ -30,9 +30,12 @@ test('normalizes legacy string images and video objects', function () {
         ->and($items[0]['path'])->toBe('seeders/products/a.png')
         ->and($items[1]['type'])->toBe('video')
         ->and($items[1]['youtube_id'])->toBe('Win12rIicBI')
-        ->and($items[1]['thumb_url'])->toBe('https://img.youtube.com/vi/Win12rIicBI/hqdefault.jpg')
+        ->and($items[1]['thumb_url'])->toBe('https://img.youtube.com/vi/Win12rIicBI/maxresdefault.jpg')
         ->and($items[1]['embed_url'])->toStartWith('https://www.youtube.com/embed/Win12rIicBI?')
-        ->and($items[1]['embed_url'])->toContain('enablejsapi=1');
+        ->and($items[1]['embed_url'])->toContain('enablejsapi=1')
+        ->and($items[1]['embed_url'])->toContain('vq=hd1080')
+        ->and($items[1]['embed_url'])->toContain('controls=0')
+        ->and($items[1]['embed_url'])->toContain('modestbranding=1');
 });
 
 test('firstImagePath skips video items', function () {

@@ -16,6 +16,7 @@ class GachCoBatTrangCt extends Model
         'color',
         'category_type',
         'images',
+        'video',
         'price',
         'des',
         'size',

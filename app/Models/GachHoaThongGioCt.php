@@ -15,6 +15,7 @@ class GachHoaThongGioCt extends Model
         'name',
         'color',
         'images',
+        'video',
         'price',
         'des',
         'size',

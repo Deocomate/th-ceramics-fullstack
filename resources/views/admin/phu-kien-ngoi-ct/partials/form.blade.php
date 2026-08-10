@@ -53,6 +53,7 @@
 <hr class="border-gray-100 my-8">
 
 @if($isEdit)
+    @include('admin.partials.product-journey-video-field')
     @include('admin.partials.product-gallery-manager', [
         'mode' => 'edit',
         'section' => 'form',
@@ -60,6 +61,7 @@
         'videoField' => 'new_video_urls[]',
     ])
 @else
+    @include('admin.partials.product-journey-video-field')
     @include('admin.partials.product-gallery-manager', [
         'mode' => 'create',
         'section' => 'form',

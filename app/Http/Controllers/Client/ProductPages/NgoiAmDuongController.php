@@ -76,12 +76,17 @@ class NgoiAmDuongController extends Controller
             ->where('ngoi_am_duong_ct_id', '!=', $id)
             ->take(4);
 
+        $config = \App\Models\NgoiAmDuong::query()->first();
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+
         // Trả data về View
         return view('clients.products.ngoi-am-duong.detail', compact(
             'product',
             'colors',
             'dinhMuc',
-            'relatedProducts'
+            'relatedProducts',
+            'config',
+            'journeyVideo'
         ));
     }
 }

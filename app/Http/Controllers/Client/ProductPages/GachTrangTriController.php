@@ -51,8 +51,11 @@ class GachTrangTriController extends Controller
             ->where('gach_trang_tri_ct_id', '!=', $id)
             ->take(4);
 
+        $config = \App\Models\GachTrangTri::query()->first();
+        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+
         return view('clients.products.gach-trang-tri.detail', compact(
-            'product', 'dinhMuc', 'relatedProducts'
+            'product', 'dinhMuc', 'relatedProducts', 'config', 'journeyVideo'
         ));
     }
 }

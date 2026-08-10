@@ -1,4 +1,9 @@
 import { addToCart, dispatchCartUpdated, showCartToast } from "./cart-ui.js";
+import {
+    extractYoutubeId,
+    mountInlineVideoShell,
+    resetInlineVideoShell,
+} from "./youtube-embed.js";
 
 const formatPrice = (raw) => {
     const value = Number.parseFloat(raw || "0");
@@ -22,36 +27,7 @@ const sameUrl = (left, right) => {
     }
 };
 
-const withAutoplay = (embedSrc) => {
-    if (!embedSrc) {
-        return "";
-    }
-
-    try {
-        const url = new URL(embedSrc, window.location.href);
-        url.searchParams.set("autoplay", "1");
-        url.searchParams.set("enablejsapi", "1");
-        url.searchParams.set("playsinline", "1");
-        url.searchParams.set("rel", "0");
-        return url.toString();
-    } catch (error) {
-        const joiner = embedSrc.includes("?") ? "&" : "?";
-        return `${embedSrc}${joiner}autoplay=1`;
-    }
-};
-
-const resetVideoShell = (shell) => {
-    if (!shell) {
-        return;
-    }
-
-    shell.querySelectorAll("[data-product-video-iframe]").forEach((iframe) => iframe.remove());
-
-    const playButton = shell.querySelector("[data-product-video-play]");
-    if (playButton) {
-        playButton.classList.remove("hidden");
-    }
-};
+const resetVideoShell = (shell) => resetInlineVideoShell(shell);
 
 const resetAllVideoShells = (root) => {
     root.querySelectorAll("[data-product-video-shell]").forEach((shell) => resetVideoShell(shell));
@@ -59,32 +35,31 @@ const resetAllVideoShells = (root) => {
 
 const mountVideoIframe = (shell, { autoplay = true } = {}) => {
     if (!shell) {
+        return Promise.resolve(null);
+    }
+
+    if (!shell.dataset.youtubeId && shell.dataset.embedSrc) {
+        const id = extractYoutubeId(shell.dataset.embedSrc);
+        if (id) {
+            shell.dataset.youtubeId = id;
+        }
+    }
+
+    return mountInlineVideoShell(shell, { autoplay });
+};
+
+const mountActiveVideoSlide = (mainSwiperElement, swiper) => {
+    if (!mainSwiperElement || !swiper) {
         return;
     }
 
-    const embedSrc = shell.dataset.embedSrc || "";
-    if (!embedSrc) {
+    const activeSlide = swiper.slides?.[swiper.activeIndex];
+    if (!activeSlide || activeSlide.dataset.galleryType !== "video") {
         return;
     }
 
-    resetVideoShell(shell);
-
-    const playButton = shell.querySelector("[data-product-video-play]");
-    if (playButton) {
-        playButton.classList.add("hidden");
-    }
-
-    const iframe = document.createElement("iframe");
-    iframe.setAttribute("data-product-video-iframe", "");
-    iframe.setAttribute("title", "Video sản phẩm");
-    iframe.setAttribute("allowfullscreen", "");
-    iframe.setAttribute(
-        "allow",
-        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    );
-    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
-    iframe.src = autoplay ? withAutoplay(embedSrc) : embedSrc;
-    shell.appendChild(iframe);
+    const shell = activeSlide.querySelector("[data-product-video-shell]");
+    mountVideoIframe(shell, { autoplay: true });
 };
 
 const focusThumbSlide = (thumbSwiper, index) => {
@@ -106,6 +81,8 @@ const initProductGallery = (container) => {
     const mainSwiperElement = container.querySelector("[data-product-main-swiper]");
     const thumbSwiperElement = container.querySelector("[data-product-thumb-swiper]");
     const paginationElement = container.querySelector("[data-product-main-pagination]");
+    const prevButton = container.querySelector("[data-product-main-prev]");
+    const nextButton = container.querySelector("[data-product-main-next]");
 
     if (!mainSwiperElement || typeof window.Swiper !== "function") {
         return;
@@ -140,6 +117,7 @@ const initProductGallery = (container) => {
                 // Swiper transform + YouTube iframe = màn đen; unmount khi rời slide.
                 resetAllVideoShells(mainSwiperElement);
                 focusThumbSlide(thumbSwiper, swiper.activeIndex);
+                mountActiveVideoSlide(mainSwiperElement, swiper);
             },
         },
     };
@@ -151,6 +129,13 @@ const initProductGallery = (container) => {
         };
     }
 
+    if (prevButton || nextButton) {
+        options.navigation = {
+            prevEl: prevButton,
+            nextEl: nextButton,
+        };
+    }
+
     if (thumbSwiper) {
         options.thumbs = {
             swiper: thumbSwiper,
@@ -159,6 +144,7 @@ const initProductGallery = (container) => {
 
     const mainSwiper = new window.Swiper(mainSwiperElement, options);
     focusThumbSlide(thumbSwiper, mainSwiper.activeIndex);
+    mountActiveVideoSlide(mainSwiperElement, mainSwiper);
 };
 
 const bindProductVideoPlayDelegation = () => {
@@ -206,7 +192,11 @@ const initStandaloneProductGalleries = () => {
             }
 
             mainSwiperElement.dataset.videoResetBound = "true";
-            swiper.on("slideChange", () => resetAllVideoShells(mainSwiperElement));
+            swiper.on("slideChange", () => {
+                resetAllVideoShells(mainSwiperElement);
+                mountActiveVideoSlide(mainSwiperElement, swiper);
+            });
+            mountActiveVideoSlide(mainSwiperElement, swiper);
         });
     };
 

@@ -15,6 +15,7 @@ class GachTrangTriCt extends Model
         'name',
         'color',
         'images',
+        'video',
         'price',
         'des',
         'size',

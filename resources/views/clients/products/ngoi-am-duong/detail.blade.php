@@ -35,7 +35,7 @@
 
 <x-client.shared.outstanding-value />
 
-<x-client.shared.journey-video :hide-title="true" />
+<x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="true" />
 
 <!-- Flex Container for Mobile Reordering -->
 <div class="flex flex-col w-full">
