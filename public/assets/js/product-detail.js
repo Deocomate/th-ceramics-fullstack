@@ -73,6 +73,87 @@ const focusThumbSlide = (thumbSwiper, index) => {
     thumbSwiper.slideTo(Math.max(0, target - offset), 280);
 };
 
+const getHorizontalThird = (event, element) => {
+    const rect = element.getBoundingClientRect();
+    if (rect.width <= 0) {
+        return "middle";
+    }
+
+    const x = event.clientX - rect.left;
+    const third = rect.width / 3;
+
+    if (x < third) {
+        return "left";
+    }
+
+    if (x >= third * 2) {
+        return "right";
+    }
+
+    return "middle";
+};
+
+const bindGalleryClickZones = (mainSwiperElement, mainSwiper) => {
+    if (!mainSwiperElement || !mainSwiper || mainSwiperElement.dataset.clickZonesBound === "true") {
+        return;
+    }
+
+    mainSwiperElement.dataset.clickZonesBound = "true";
+
+    mainSwiperElement.addEventListener("mousemove", (event) => {
+        if (event.target.closest("[data-product-main-prev], [data-product-main-next]")) {
+            mainSwiperElement.style.cursor = "";
+            return;
+        }
+
+        const zone = getHorizontalThird(event, mainSwiperElement);
+        if (zone === "left") {
+            mainSwiperElement.style.cursor = "w-resize";
+        } else if (zone === "right") {
+            mainSwiperElement.style.cursor = "e-resize";
+        } else {
+            mainSwiperElement.style.cursor = "zoom-in";
+        }
+    });
+
+    mainSwiperElement.addEventListener("mouseleave", () => {
+        mainSwiperElement.style.cursor = "";
+    });
+
+    mainSwiperElement.addEventListener("click", (event) => {
+        if (event.target.closest("[data-product-main-prev], [data-product-main-next]")) {
+            return;
+        }
+
+        if (event.target.closest("[data-yt-timeline], [data-yt-player-host]")) {
+            const zone = getHorizontalThird(event, mainSwiperElement);
+            if (zone === "left") {
+                event.preventDefault();
+                event.stopPropagation();
+                mainSwiper.slidePrev();
+            } else if (zone === "right") {
+                event.preventDefault();
+                event.stopPropagation();
+                mainSwiper.slideNext();
+            }
+            return;
+        }
+
+        const zone = getHorizontalThird(event, mainSwiperElement);
+        if (zone === "left") {
+            event.preventDefault();
+            mainSwiper.slidePrev();
+            return;
+        }
+
+        if (zone === "right") {
+            event.preventDefault();
+            mainSwiper.slideNext();
+        }
+        // Middle third: single click does nothing (dblclick opens lightbox).
+    });
+};
+
 const initProductGallery = (container) => {
     if (container.dataset.productGalleryInitialized === "true") {
         return;
@@ -145,6 +226,7 @@ const initProductGallery = (container) => {
     const mainSwiper = new window.Swiper(mainSwiperElement, options);
     focusThumbSlide(thumbSwiper, mainSwiper.activeIndex);
     mountActiveVideoSlide(mainSwiperElement, mainSwiper);
+    bindGalleryClickZones(mainSwiperElement, mainSwiper);
 };
 
 const bindProductVideoPlayDelegation = () => {
@@ -161,11 +243,31 @@ const bindProductVideoPlayDelegation = () => {
             return;
         }
 
+        const mainSwiperElement = playButton.closest("[data-product-main-swiper]");
+        if (mainSwiperElement?.swiper) {
+            const rect = mainSwiperElement.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const third = rect.width / 3;
+
+            if (x < third) {
+                event.preventDefault();
+                event.stopPropagation();
+                mainSwiperElement.swiper.slidePrev();
+                return;
+            }
+
+            if (x >= third * 2) {
+                event.preventDefault();
+                event.stopPropagation();
+                mainSwiperElement.swiper.slideNext();
+                return;
+            }
+        }
+
         event.preventDefault();
         event.stopPropagation();
 
         const shell = playButton.closest("[data-product-video-shell]");
-        const mainSwiperElement = playButton.closest("[data-product-main-swiper]");
 
         if (mainSwiperElement) {
             resetAllVideoShells(mainSwiperElement);
@@ -197,6 +299,7 @@ const initStandaloneProductGalleries = () => {
                 mountActiveVideoSlide(mainSwiperElement, swiper);
             });
             mountActiveVideoSlide(mainSwiperElement, swiper);
+            bindGalleryClickZones(mainSwiperElement, swiper);
         });
     };
 

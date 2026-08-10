@@ -59,7 +59,7 @@
                 @else
                     <div class="swiper-slide w-full h-full {{ $mainBg }}" data-gallery-type="image">
                         <img src="{{ \App\Support\AssetPath::url($item['path'] ?? null, 'assets/images/gach-bat-detail-1.png') }}" alt="Ảnh sản phẩm {{ $index + 1 }}"
-                            class="w-full h-full {{ $mainImgClass }} object-center transition-transform duration-500 group-hover:scale-110" />
+                            class="w-full h-full {{ $mainImgClass }} object-center" />
                     </div>
                 @endif
             @endforeach
@@ -95,7 +95,7 @@
         <div class="swiper-wrapper">
             @foreach($mediaItems as $index => $item)
                 @if(($item['type'] ?? '') === 'video')
-                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }} relative border-2 border-transparent box-border" data-gallery-type="video">
+                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }} relative" data-gallery-type="video">
                         <img src="{{ $item['thumb_url'] }}" alt="Video thu nhỏ {{ $index + 1 }}" class="w-full h-full {{ $thumbImgClass }}" loading="lazy" referrerpolicy="no-referrer" />
                         <span class="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <span class="w-8 h-8 rounded-full bg-black/60 flex items-center justify-center">
@@ -106,7 +106,7 @@
                         </span>
                     </div>
                 @else
-                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }} border-2 border-transparent box-border" data-gallery-type="image">
+                    <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }}" data-gallery-type="image">
                         <img src="{{ \App\Support\AssetPath::url($item['path'] ?? null, 'assets/images/gach-bat-detail-1.png') }}" alt="Ảnh thu nhỏ {{ $index + 1 }}" class="w-full h-full {{ $thumbImgClass }}" />
                     </div>
                 @endif
@@ -130,7 +130,6 @@
         .product-thumb-swiper .swiper-slide {
             opacity: 0.55;
             box-sizing: border-box;
-            border: 2px solid transparent;
         }
 
         .product-thumb-swiper .swiper-slide:hover {
@@ -139,7 +138,6 @@
 
         .product-thumb-swiper .swiper-slide-thumb-active {
             opacity: 1;
-            border-color: #C76E00;
         }
 
         .product-main-swiper .swiper-button-disabled {

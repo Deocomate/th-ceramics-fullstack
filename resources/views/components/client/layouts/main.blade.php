@@ -63,7 +63,6 @@
     @stack('styles')
     <style>
         .awards-swiper .swiper-slide,
-        .product-main-swiper .swiper-slide,
         .showroomSwiper .swiper-slide,
         .showroomSwiper2 .swiper-slide,
         .detail2-gallery-swiper .swiper-slide,
@@ -74,6 +73,10 @@
         .projects-slider .swiper-slide,
         .product-collage-swiper .swiper-slide {
             cursor: zoom-in;
+        }
+
+        .product-main-swiper {
+            cursor: default;
         }
     </style>
 </head>

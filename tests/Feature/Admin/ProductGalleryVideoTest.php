@@ -104,8 +104,7 @@ test('product detail renders youtube gallery embeds', function () {
         ->assertSee('https://www.youtube.com/embed/Win12rIicBI?', false)
         ->assertSee('vq=hd1080', false)
         ->assertSee('controls=0', false)
-        ->assertSee('https://img.youtube.com/vi/Win12rIicBI/maxresdefault.jpg', false)
-        ->assertSee('border-color: #C76E00', false);
+        ->assertSee('https://img.youtube.com/vi/Win12rIicBI/maxresdefault.jpg', false);
 });
 
 test('admin can save product journey video separately from gallery', function () {

@@ -123,7 +123,7 @@ function closeLightbox() {
 const initLightbox = () => {
     // Double-click opens lightbox so single click can still change slides / play video.
     document.addEventListener('dblclick', (event) => {
-        if (event.target.closest('[data-product-video-play], [data-product-video-iframe], [data-product-video-shell]')) {
+        if (event.target.closest('[data-product-video-play], [data-product-video-iframe], [data-product-video-shell], [data-yt-player-host], [data-yt-timeline]')) {
             return;
         }
 
@@ -144,6 +144,16 @@ const initLightbox = () => {
 
         if (slide.dataset.galleryType === 'video') {
             return;
+        }
+
+        // Product main gallery: only middle third opens lightbox.
+        if (swiperEl.classList.contains('product-main-swiper') || swiperEl.hasAttribute('data-product-main-swiper')) {
+            const rect = swiperEl.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const third = rect.width / 3;
+            if (x < third || x >= third * 2) {
+                return;
+            }
         }
 
         const img = slide.querySelector('img');
