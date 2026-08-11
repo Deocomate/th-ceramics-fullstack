@@ -334,7 +334,7 @@
     const uploadDropzone = document.getElementById('gallery-upload-dropzone');
     const uploadHint = document.getElementById('gallery-upload-hint');
     const formUploadStatus = document.getElementById('gallery-form-upload-status');
-    // Edit pages include this partial twice (form then library). @once scripts see the first
+    // Edit pages include this partial twice (form then library). @@once scripts see the first
     // include (no uploadUrl) — resolve endpoint from #gallery-library-root at click time.
     const editUsesAjaxUpload = {{ $mode === 'edit' ? 'true' : 'false' }};
 
