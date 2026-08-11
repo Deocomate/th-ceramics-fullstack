@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
+use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGachTrangTriCtRequest;
 use App\Http\Requests\UpdateGachTrangTriCtRequest;
@@ -13,6 +14,7 @@ use InvalidArgumentException;
 class GachTrangTriCtController extends Controller
 {
     use DestroysProductGalleryMedia;
+    use UploadsProductGalleryMedia;
 
     public function __construct(private readonly GachTrangTriCtService $service) {}
 
@@ -81,4 +83,21 @@ class GachTrangTriCtController extends Controller
         );
     }
 
+
+    public function storeImages(Request $request, int $id)
+    {
+        return $this->storeGalleryImagesResponse(
+            $request,
+            fn (array $files) => $this->service->appendImagesToGallery($id, $files)
+        );
+    }
+
+    public function reorderGallery(Request $request, int $id)
+    {
+        return $this->reorderGalleryResponse(
+            $request,
+            fn (array $tokens) => $this->service->reorderGalleryItems($id, $tokens),
+            fn (string $imagePath) => $this->service->promoteCoverImage($id, $imagePath)
+        );
+    }
 }

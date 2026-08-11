@@ -98,3 +98,37 @@ test('removeImagePaths and removeVideoUrls remove multiple items in one pass', f
 
     expect($updated)->toBe(['keep.png']);
 });
+
+test('promoteImageToCover moves path to front', function () {
+    $gallery = [
+        'first.png',
+        'second.png',
+        ['type' => 'video', 'url' => 'https://www.youtube.com/watch?v=Win12rIicBI'],
+    ];
+
+    expect(ProductGallery::promoteImageToCover($gallery, 'second.png'))->toBe([
+        'second.png',
+        'first.png',
+        ['type' => 'video', 'url' => 'https://www.youtube.com/watch?v=Win12rIicBI'],
+    ]);
+});
+
+test('reorderMedia applies token order', function () {
+    $gallery = [
+        'a.png',
+        'b.png',
+        ['type' => 'video', 'url' => 'https://www.youtube.com/watch?v=Win12rIicBI'],
+    ];
+
+    $reordered = ProductGallery::reorderMedia($gallery, [
+        'video:https://www.youtube.com/watch?v=Win12rIicBI',
+        'image:b.png',
+        'image:a.png',
+    ]);
+
+    expect($reordered)->toBe([
+        ['type' => 'video', 'url' => 'https://www.youtube.com/watch?v=Win12rIicBI'],
+        'b.png',
+        'a.png',
+    ]);
+});

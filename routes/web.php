@@ -114,6 +114,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}/restore', [NgoiAmDuongCtController::class, 'restore'])->name('restore');
 
             Route::delete('/{id}/image', [NgoiAmDuongCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [NgoiAmDuongCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [NgoiAmDuongCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
 
         // 1.2 Màu sắc Ngói Âm Dương
@@ -149,6 +151,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [NgoiHaiCoCtController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [NgoiHaiCoCtController::class, 'restore'])->name('restore');
             Route::delete('/{id}/image', [NgoiHaiCoCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [NgoiHaiCoCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [NgoiHaiCoCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
 
         // 2.2 Màu sắc Ngói Hài Cổ
@@ -178,6 +182,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [NgoiHaiVanMieuCtController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [NgoiHaiVanMieuCtController::class, 'restore'])->name('restore');
             Route::delete('/{id}/image', [NgoiHaiVanMieuCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [NgoiHaiVanMieuCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [NgoiHaiVanMieuCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
 
         // 2.5 Màu sắc Ngói Hài Văn Miếu
@@ -221,6 +227,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [GachHoaThongGioCtController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [GachHoaThongGioCtController::class, 'restore'])->name('restore');
             Route::delete('/{id}/image', [GachHoaThongGioCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [GachHoaThongGioCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [GachHoaThongGioCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
 
         // 3.2 Định mức Gạch Hoa Thông Gió
@@ -241,6 +249,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [GachTrangTriCtController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [GachTrangTriCtController::class, 'restore'])->name('restore');
             Route::delete('/{id}/image', [GachTrangTriCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [GachTrangTriCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [GachTrangTriCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
 
         // 3.4 Định mức Gạch Trang Trí
@@ -268,6 +278,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [PhuKienNgoiCtController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [PhuKienNgoiCtController::class, 'restore'])->name('restore');
             Route::delete('/{id}/image', [PhuKienNgoiCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [PhuKienNgoiCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [PhuKienNgoiCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
 
         // 4.2 Phân loại Phụ Kiện Ngói
@@ -296,6 +308,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [GachCoBatTrangCtController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [GachCoBatTrangCtController::class, 'restore'])->name('restore');
             Route::delete('/{id}/image', [GachCoBatTrangCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [GachCoBatTrangCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [GachCoBatTrangCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
 
         // 5.2 Định mức Gạch Cổ Bát Tràng
@@ -341,6 +355,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [LinhVatPhongThuyCtController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [LinhVatPhongThuyCtController::class, 'restore'])->name('restore');
             Route::delete('/{id}/image', [LinhVatPhongThuyCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [LinhVatPhongThuyCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [LinhVatPhongThuyCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
 
         // 9. Đèn Gốm Sứ
@@ -360,6 +376,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [LanCanGomSuCtController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [LanCanGomSuCtController::class, 'restore'])->name('restore');
             Route::delete('/{id}/image', [LanCanGomSuCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [LanCanGomSuCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [LanCanGomSuCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
         Route::prefix('phan-loai-lan-can-gom-su-ct')->name('phan-loai-lan-can-gom-su-ct.')->group(function () {
             Route::get('/', [PhanLoaiLanCanGomSuCtController::class, 'index'])->name('index');
@@ -379,6 +397,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [DenVuonGomSuCtController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [DenVuonGomSuCtController::class, 'restore'])->name('restore');
             Route::delete('/{id}/image', [DenVuonGomSuCtController::class, 'destroyImage'])->name('image.destroy');
+            Route::post('/{id}/images', [DenVuonGomSuCtController::class, 'storeImages'])->name('image.store');
+            Route::put('/{id}/gallery-order', [DenVuonGomSuCtController::class, 'reorderGallery'])->name('gallery.reorder');
         });
         Route::prefix('phan-loai-den-vuon-gom-su-ct')->name('phan-loai-den-vuon-gom-su-ct.')->group(function () {
             Route::get('/', [PhanLoaiDenVuonGomSuCtController::class, 'index'])->name('index');

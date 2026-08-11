@@ -5,6 +5,7 @@ namespace App\Services\Concerns;
 use App\Helpers\FileUploadHelper;
 use App\Support\ProductGallery;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
 
 trait ManagesProductGalleryMedia
 {
@@ -15,6 +16,31 @@ trait ManagesProductGalleryMedia
     protected function storeGalleryImages(array $files, string $directory): array
     {
         return ProductGallery::appendUploadedImages([], $files, $directory);
+    }
+
+    /**
+     * Build gallery from optional cover + gallery images + video URLs (create flow).
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<int, mixed>
+     */
+    protected function composeGalleryPayload(array $data, string $directory): array
+    {
+        $images = [];
+
+        if (! empty($data['cover_image']) && $data['cover_image'] instanceof UploadedFile) {
+            $images[] = FileUploadHelper::upload($data['cover_image'], $directory);
+        }
+
+        if (! empty($data['images']) && is_array($data['images'])) {
+            $images = $this->appendGalleryImages($images, $data['images'], $directory);
+        }
+
+        if (! empty($data['video_urls']) && is_array($data['video_urls'])) {
+            $images = $this->appendGalleryVideos($images, $data['video_urls']);
+        }
+
+        return $images;
     }
 
     /**
@@ -89,6 +115,61 @@ trait ManagesProductGalleryMedia
     }
 
     /**
+     * @param  array<int, mixed>  $files
+     */
+    protected function appendImagesToGalleryModel(
+        Model $model,
+        array $files,
+        string $directory,
+        string $imagesAttribute = 'images'
+    ): Model {
+        $current = is_array($model->{$imagesAttribute}) ? $model->{$imagesAttribute} : [];
+        $updated = $this->appendGalleryImages($current, $files, $directory);
+
+        $model->update([
+            $imagesAttribute => empty($updated) ? null : $updated,
+        ]);
+        $model->refresh();
+
+        return $model;
+    }
+
+    /**
+     * @param  array<int, mixed>  $tokens
+     */
+    protected function reorderGalleryModel(
+        Model $model,
+        array $tokens,
+        string $imagesAttribute = 'images'
+    ): Model {
+        $current = is_array($model->{$imagesAttribute}) ? $model->{$imagesAttribute} : [];
+        $updated = ProductGallery::reorderMedia($current, $tokens);
+
+        $model->update([
+            $imagesAttribute => empty($updated) ? null : $updated,
+        ]);
+        $model->refresh();
+
+        return $model;
+    }
+
+    protected function promoteCoverOnModel(
+        Model $model,
+        string $imagePath,
+        string $imagesAttribute = 'images'
+    ): Model {
+        $current = is_array($model->{$imagesAttribute}) ? $model->{$imagesAttribute} : [];
+        $updated = ProductGallery::promoteImageToCover($current, $imagePath);
+
+        $model->update([
+            $imagesAttribute => empty($updated) ? null : $updated,
+        ]);
+        $model->refresh();
+
+        return $model;
+    }
+
+    /**
      * @param  array<int, mixed>  $current
      * @param  array<string, mixed>  $data
      * @return array<int, mixed>|null
@@ -97,6 +178,25 @@ trait ManagesProductGalleryMedia
     {
         $updated = $current;
         $changed = false;
+
+        if (! empty($data['cover_image']) && $data['cover_image'] instanceof UploadedFile) {
+            $oldCover = ProductGallery::firstImagePath($updated);
+            $newCoverPath = FileUploadHelper::upload($data['cover_image'], $imageDirectory);
+
+            if ($oldCover) {
+                $updated = ProductGallery::removeImagePath($updated, $oldCover);
+                FileUploadHelper::delete($oldCover);
+            }
+
+            array_unshift($updated, $newCoverPath);
+            $updated = array_values($updated);
+            $changed = true;
+        }
+
+        if (! empty($data['gallery_order']) && is_array($data['gallery_order'])) {
+            $updated = ProductGallery::reorderMedia($updated, $data['gallery_order']);
+            $changed = true;
+        }
 
         if (! empty($data['new_images']) && is_array($data['new_images'])) {
             $updated = $this->appendGalleryImages($updated, $data['new_images'], $imageDirectory);

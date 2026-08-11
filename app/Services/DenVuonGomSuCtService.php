@@ -103,14 +103,7 @@ class DenVuonGomSuCtService
                 'is_delete' => 0,
                 'video' => $this->normalizeJourneyVideo($data['video'] ?? null),
             ];
-            $images = [];
-            if (! empty($data['images']) && is_array($data['images'])) {
-                $images = $this->storeGalleryImages($data['images'], self::IMAGE_DIRECTORY);
-            }
-            if (! empty($data['video_urls']) && is_array($data['video_urls'])) {
-                $images = $this->appendGalleryVideos($images, $data['video_urls']);
-            }
-            $fillable['images'] = $images;
+            $fillable['images'] = $this->composeGalleryPayload($data, self::IMAGE_DIRECTORY);
             if (isset($data['size_image']) && $data['size_image'] instanceof UploadedFile) {
                 $fillable['size_image'] = FileUploadHelper::upload($data['size_image'], self::SIZE_DIRECTORY);
             }
@@ -171,5 +164,20 @@ class DenVuonGomSuCtService
     public function removeGalleryItemsFromJson(int $id, array $imagePaths = [], array $videoUrls = []): DenVuonGomSuCt
     {
         return $this->removeGalleryItems($this->findById($id), $imagePaths, $videoUrls);
+    }
+
+    public function appendImagesToGallery(int $id, array $files)
+    {
+        return $this->appendImagesToGalleryModel($this->findById($id), $files, self::IMAGE_DIRECTORY);
+    }
+
+    public function reorderGalleryItems(int $id, array $tokens)
+    {
+        return $this->reorderGalleryModel($this->findById($id), $tokens);
+    }
+
+    public function promoteCoverImage(int $id, string $imagePath)
+    {
+        return $this->promoteCoverOnModel($this->findById($id), $imagePath);
     }
 }

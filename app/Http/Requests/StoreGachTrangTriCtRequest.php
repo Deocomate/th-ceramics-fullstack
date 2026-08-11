@@ -23,10 +23,9 @@ class StoreGachTrangTriCtRequest extends FormRequest
             'size' => ['nullable', 'string', 'max:255'],
             'des' => ['nullable', 'array'],
             'des.*' => ['nullable', 'string', 'max:500'],
-            'images' => ['required', 'array', 'min:1'],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+
             'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ], $this->galleryStoreRules());
+        ], $this->galleryImageStoreRules(), $this->galleryStoreRules());
     }
 
     public function messages(): array

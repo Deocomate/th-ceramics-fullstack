@@ -39,6 +39,97 @@ class ProductGallery
         return is_array($item) ? ($item['path'] ?? null) : null;
     }
 
+    /**
+     * Stable token for reorder payloads: "image:{path}" or "video:{url}".
+     */
+    public static function mediaToken(mixed $item): ?string
+    {
+        $normalized = self::normalizeItem($item);
+        if ($normalized === null) {
+            return null;
+        }
+
+        if (($normalized['type'] ?? null) === self::TYPE_VIDEO) {
+            $url = (string) ($normalized['url'] ?? '');
+
+            return $url !== '' ? 'video:'.$url : null;
+        }
+
+        $path = (string) ($normalized['path'] ?? '');
+
+        return $path !== '' ? 'image:'.$path : null;
+    }
+
+    /**
+     * Move an existing image path to the front (cover position).
+     *
+     * @param  array<int, mixed>  $current
+     * @return array<int, mixed>
+     */
+    public static function promoteImageToCover(array $current, string $path): array
+    {
+        $path = trim($path);
+        if ($path === '') {
+            return array_values($current);
+        }
+
+        $coverItem = null;
+        $rest = [];
+
+        foreach ($current as $item) {
+            $normalized = self::normalizeItem($item);
+            if ($normalized !== null
+                && ($normalized['type'] ?? null) === self::TYPE_IMAGE
+                && ($normalized['path'] ?? null) === $path
+                && $coverItem === null
+            ) {
+                $coverItem = is_string($item) ? $path : $item;
+                continue;
+            }
+            $rest[] = $item;
+        }
+
+        if ($coverItem === null) {
+            return array_values($current);
+        }
+
+        return array_values(array_merge([$coverItem], $rest));
+    }
+
+    /**
+     * Reorder raw gallery items by media tokens. Unknown tokens ignored; leftovers appended.
+     *
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $tokens
+     * @return array<int, mixed>
+     */
+    public static function reorderMedia(array $current, array $tokens): array
+    {
+        $map = [];
+        foreach ($current as $item) {
+            $token = self::mediaToken($item);
+            if ($token === null || array_key_exists($token, $map)) {
+                continue;
+            }
+            $map[$token] = $item;
+        }
+
+        $ordered = [];
+        foreach ($tokens as $token) {
+            if (! is_string($token) || $token === '' || ! array_key_exists($token, $map)) {
+                continue;
+            }
+            $ordered[] = $map[$token];
+            unset($map[$token]);
+        }
+
+        foreach ($map as $item) {
+            $ordered[] = $item;
+        }
+
+        return array_values($ordered);
+    }
+
     public static function extractYoutubeId(?string $url): ?string
     {
         if ($url === null || trim($url) === '') {

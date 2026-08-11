@@ -252,3 +252,75 @@ test('creating product can include gallery videos with images', function () {
         ->and($product->images[1]['type'])->toBe('video')
         ->and($product->images[1]['url'])->toBe('https://youtu.be/Win12rIicBI');
 });
+
+test('admin can create product with dedicated cover image', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $this->post(route('admin.ngoi-am-duong-ct.store'), [
+        'code' => 'NAD-COVER-001',
+        'name' => 'Ngói cover test',
+        'color' => 'Men đỏ',
+        'price' => 30000,
+        'size' => '20x20',
+        'cover_image' => galleryFakeImage('cover-only.png'),
+        'images' => [galleryFakeImage('detail.png')],
+    ])->assertRedirect(route('admin.ngoi-am-duong-ct.index'));
+
+    $product = NgoiAmDuongCt::query()->where('code', 'NAD-COVER-001')->firstOrFail();
+
+    expect($product->images)->toHaveCount(2)
+        ->and($product->images[0])->toBeString()
+        ->and(ProductGallery::firstImagePath($product->images))->toBe($product->images[0]);
+});
+
+test('admin ajax can append gallery images in batch', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct(['ngoi_am_duong_ct/images/cover.png']);
+
+    $this->withHeaders([
+        'Accept' => 'application/json',
+        'X-Requested-With' => 'XMLHttpRequest',
+    ])->post(route('admin.ngoi-am-duong-ct.image.store', $product->ngoi_am_duong_ct_id), [
+        'images' => [galleryFakeImage('batch-a.png'), galleryFakeImage('batch-b.png')],
+    ])->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('remaining_count', 3);
+
+    $product->refresh();
+    expect($product->images)->toHaveCount(3)
+        ->and(ProductGallery::firstImagePath($product->images))->toBe('ngoi_am_duong_ct/images/cover.png');
+});
+
+test('admin ajax can reorder gallery and set cover', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct([
+        'ngoi_am_duong_ct/images/a.png',
+        'ngoi_am_duong_ct/images/b.png',
+        ['type' => 'video', 'url' => 'https://www.youtube.com/watch?v=Win12rIicBI'],
+    ]);
+
+    $this->putJson(route('admin.ngoi-am-duong-ct.gallery.reorder', $product->ngoi_am_duong_ct_id), [
+        'items' => [
+            'image:ngoi_am_duong_ct/images/b.png',
+            'image:ngoi_am_duong_ct/images/a.png',
+            'video:https://www.youtube.com/watch?v=Win12rIicBI',
+        ],
+    ])->assertOk()
+        ->assertJsonPath('cover_path', 'ngoi_am_duong_ct/images/b.png');
+
+    $product->refresh();
+    expect($product->images[0])->toBe('ngoi_am_duong_ct/images/b.png');
+
+    $this->putJson(route('admin.ngoi-am-duong-ct.gallery.reorder', $product->ngoi_am_duong_ct_id), [
+        'cover_path' => 'ngoi_am_duong_ct/images/a.png',
+    ])->assertOk()
+        ->assertJsonPath('cover_path', 'ngoi_am_duong_ct/images/a.png');
+
+    $product->refresh();
+    expect(ProductGallery::firstImagePath($product->images))->toBe('ngoi_am_duong_ct/images/a.png');
+});

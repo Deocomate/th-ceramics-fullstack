@@ -21,10 +21,9 @@ class UpdateNgoiHaiCoCtRequest extends FormRequest
             'size' => ['nullable', 'string', 'max:255'],
             'des' => ['nullable', 'array'],
             'des.*' => ['nullable', 'string', 'max:500'],
-            'new_images' => ['nullable', 'array'],
-            'new_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+
             'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ], $this->galleryUpdateRules());
+        ], $this->galleryImageUpdateRules(), $this->galleryUpdateRules());
     }
 
     public function messages(): array

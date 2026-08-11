@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
+use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
 use App\Http\Controllers\Controller;
 use App\Models\PhuKienNgoiCt;
 use App\Rules\YoutubeUrl;
@@ -13,6 +14,7 @@ use Illuminate\Validation\Rule;
 class PhuKienNgoiCtController extends Controller
 {
     use DestroysProductGalleryMedia;
+    use UploadsProductGalleryMedia;
 
     public function __construct(private readonly PhuKienNgoiCtService $service) {}
 
@@ -96,8 +98,15 @@ class PhuKienNgoiCtController extends Controller
             'des.*' => ['nullable', 'string', 'max:500'],
             'size_des' => ['nullable', 'array'],
             'size_des.*' => ['nullable', 'string', 'max:500'],
-            $create ? 'images' : 'new_images' => [$create ? 'required' : 'nullable', 'array'],
+            $create ? 'images' : 'new_images' => $create
+                ? ['nullable', 'required_without:cover_image', 'array', 'min:1']
+                : ['nullable', 'array'],
             ($create ? 'images' : 'new_images').'.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'cover_image' => $create
+                ? ['nullable', 'required_without:images', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']
+                : ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'gallery_order' => ['nullable', 'array'],
+            'gallery_order.*' => ['string'],
             'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             $create ? 'video_urls' : 'new_video_urls' => ['nullable', 'array'],
@@ -110,5 +119,22 @@ class PhuKienNgoiCtController extends Controller
         $categoryType = $request->query('category_type', PhuKienNgoiCt::TYPE_BO_NOC);
 
         return $categoryType === PhuKienNgoiCt::TYPE_CHU_VAN ? PhuKienNgoiCt::TYPE_CHU_VAN : PhuKienNgoiCt::TYPE_BO_NOC;
+    }
+
+    public function storeImages(Request $request, int $id)
+    {
+        return $this->storeGalleryImagesResponse(
+            $request,
+            fn (array $files) => $this->service->appendImagesToGallery($id, $files)
+        );
+    }
+
+    public function reorderGallery(Request $request, int $id)
+    {
+        return $this->reorderGalleryResponse(
+            $request,
+            fn (array $tokens) => $this->service->reorderGalleryItems($id, $tokens),
+            fn (string $imagePath) => $this->service->promoteCoverImage($id, $imagePath)
+        );
     }
 }

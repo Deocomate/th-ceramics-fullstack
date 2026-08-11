@@ -26,5 +26,7 @@
         'section' => 'library',
         'images' => $product->images ?? [],
         'destroyUrl' => route('admin.phu-kien-ngoi-ct.image.destroy', $product->phu_kien_ngoi_ct_id),
+        'uploadUrl' => route('admin.phu-kien-ngoi-ct.image.store', $product->phu_kien_ngoi_ct_id),
+        'reorderUrl' => route('admin.phu-kien-ngoi-ct.gallery.reorder', $product->phu_kien_ngoi_ct_id),
     ])
 </x-admin.layouts.app>

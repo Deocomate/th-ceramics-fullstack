@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
+use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
 use App\Http\Controllers\Controller;
 use App\Services\LinhVatPhongThuyCtService;
 use App\Rules\YoutubeUrl;
@@ -12,6 +13,7 @@ use InvalidArgumentException;
 class LinhVatPhongThuyCtController extends Controller
 {
     use DestroysProductGalleryMedia;
+    use UploadsProductGalleryMedia;
 
     public function __construct(private readonly LinhVatPhongThuyCtService $service) {}
 
@@ -40,8 +42,9 @@ class LinhVatPhongThuyCtController extends Controller
             'des.*' => ['nullable', 'string', 'max:500'],
             'size_des' => ['nullable', 'array'],
             'size_des.*' => ['nullable', 'string', 'max:500'],
-            'images' => ['nullable', 'array'],
+            'images' => ['nullable', 'required_without:cover_image', 'array', 'min:1'],
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'cover_image' => ['nullable', 'required_without:images', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'video_urls' => ['nullable', 'array'],
@@ -79,6 +82,9 @@ class LinhVatPhongThuyCtController extends Controller
             'size_des.*' => ['nullable', 'string', 'max:500'],
             'new_images' => ['nullable', 'array'],
             'new_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'gallery_order' => ['nullable', 'array'],
+            'gallery_order.*' => ['string'],
             'size_image' => ['nullable', 'image', 'max:5120'],
             'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'new_video_urls' => ['nullable', 'array'],
@@ -116,4 +122,21 @@ class LinhVatPhongThuyCtController extends Controller
         );
     }
 
+
+    public function storeImages(Request $request, int $id)
+    {
+        return $this->storeGalleryImagesResponse(
+            $request,
+            fn (array $files) => $this->service->appendImagesToGallery($id, $files)
+        );
+    }
+
+    public function reorderGallery(Request $request, int $id)
+    {
+        return $this->reorderGalleryResponse(
+            $request,
+            fn (array $tokens) => $this->service->reorderGalleryItems($id, $tokens),
+            fn (string $imagePath) => $this->service->promoteCoverImage($id, $imagePath)
+        );
+    }
 }
