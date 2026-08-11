@@ -163,4 +163,13 @@ class DenVuonGomSuCtService
     {
         return $this->removeGalleryVideo($this->findById($id), $videoUrl);
     }
+
+    /**
+     * @param  array<int, string>  $imagePaths
+     * @param  array<int, string>  $videoUrls
+     */
+    public function removeGalleryItemsFromJson(int $id, array $imagePaths = [], array $videoUrls = []): DenVuonGomSuCt
+    {
+        return $this->removeGalleryItems($this->findById($id), $imagePaths, $videoUrls);
+    }
 }

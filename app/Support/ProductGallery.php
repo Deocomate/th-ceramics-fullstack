@@ -158,6 +158,22 @@ class ProductGallery
 
     /**
      * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $paths
+     * @return array<int, mixed>
+     */
+    public static function removeImagePaths(array $current, array $paths): array
+    {
+        foreach ($paths as $path) {
+            if (is_string($path) && $path !== '') {
+                $current = self::removeImagePath($current, $path);
+            }
+        }
+
+        return array_values($current);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
      * @return array<int, mixed>
      */
     public static function removeVideoUrl(array $current, string $url): array
@@ -182,6 +198,22 @@ class ProductGallery
         });
 
         return array_values($filtered);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $urls
+     * @return array<int, mixed>
+     */
+    public static function removeVideoUrls(array $current, array $urls): array
+    {
+        foreach ($urls as $url) {
+            if (is_string($url) && $url !== '') {
+                $current = self::removeVideoUrl($current, $url);
+            }
+        }
+
+        return array_values($current);
     }
 
     /**

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreNgoiAmDuongCtRequest;
 use App\Http\Requests\UpdateNgoiAmDuongCtRequest;
 use App\Services\NgoiAmDuongCtService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,6 +15,8 @@ use InvalidArgumentException;
 
 class NgoiAmDuongCtController extends Controller
 {
+    use DestroysProductGalleryMedia;
+
     public function __construct(
         private readonly NgoiAmDuongCtService $service
     ) {}
@@ -74,21 +78,11 @@ class NgoiAmDuongCtController extends Controller
         return back()->with('success', 'Khôi phục sản phẩm thành công.');
     }
 
-    public function destroyImage(Request $request, int $id): RedirectResponse
+    public function destroyImage(Request $request, int $id): RedirectResponse|JsonResponse
     {
-        $request->validate([
-            'image_path' => ['nullable', 'required_without:video_url', 'string'],
-            'video_url' => ['nullable', 'required_without:image_path', 'string', 'max:500'],
-        ]);
-
-        if ($request->filled('video_url')) {
-            $this->service->removeVideoFromJson($id, $request->input('video_url'));
-
-            return back()->with('success', 'Đã xóa video khỏi sản phẩm.');
-        }
-
-        $this->service->removeImageFromJson($id, $request->input('image_path'));
-
-        return back()->with('success', 'Đã xóa ảnh khỏi sản phẩm.');
+        return $this->destroyGalleryMediaResponse(
+            $request,
+            fn (array $imagePaths, array $videoUrls) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls)
+        );
     }
 }

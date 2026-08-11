@@ -89,6 +89,64 @@ test('admin can delete gallery video without removing images', function () {
     expect($product->images)->toBe(['ngoi_am_duong_ct/images/cover.png']);
 });
 
+test('admin ajax can delete a single gallery image without redirect', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct([
+        'ngoi_am_duong_ct/images/cover.png',
+        'ngoi_am_duong_ct/images/detail.png',
+    ]);
+
+    $this->deleteJson(route('admin.ngoi-am-duong-ct.image.destroy', $product->ngoi_am_duong_ct_id), [
+        'image_path' => 'ngoi_am_duong_ct/images/detail.png',
+    ])->assertOk()
+        ->assertJson([
+            'success' => true,
+            'remaining_count' => 1,
+        ]);
+
+    $product->refresh();
+
+    expect($product->images)->toBe(['ngoi_am_duong_ct/images/cover.png']);
+});
+
+test('admin ajax can bulk delete gallery images and videos', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct([
+        'ngoi_am_duong_ct/images/keep.png',
+        'ngoi_am_duong_ct/images/remove-a.png',
+        'ngoi_am_duong_ct/images/remove-b.png',
+        ['type' => 'video', 'url' => 'https://www.youtube.com/watch?v=Win12rIicBI'],
+        ['type' => 'video', 'url' => 'https://youtu.be/OtherVideoId1'],
+    ]);
+
+    $this->deleteJson(route('admin.ngoi-am-duong-ct.image.destroy', $product->ngoi_am_duong_ct_id), [
+        'image_paths' => [
+            'ngoi_am_duong_ct/images/remove-a.png',
+            'ngoi_am_duong_ct/images/remove-b.png',
+        ],
+        'video_urls' => [
+            'https://www.youtube.com/watch?v=Win12rIicBI',
+        ],
+    ])->assertOk()
+        ->assertJson([
+            'success' => true,
+            'remaining_count' => 2,
+        ]);
+
+    $product->refresh();
+
+    expect($product->images)->toHaveCount(2)
+        ->and($product->images[0])->toBe('ngoi_am_duong_ct/images/keep.png')
+        ->and($product->images[1])->toBe([
+            'type' => 'video',
+            'url' => 'https://youtu.be/OtherVideoId1',
+        ]);
+});
+
 test('product detail renders youtube gallery embeds', function () {
     $product = makeNgoiAmDuongProduct([
         'assets/images/ngoi-01.jpg',

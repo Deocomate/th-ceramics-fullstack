@@ -39,12 +39,20 @@
         @endif
     </label>
     @if($mode === 'create')
-        <p class="text-xs text-gray-500 mb-4">Chọn 1 hoặc nhiều ảnh chi tiết (ảnh đầu tiên làm ảnh bìa nếu chưa có video đứng trước).</p>
+        <p class="text-xs text-gray-500 mb-4">Chọn hoặc kéo thả 1 hoặc nhiều ảnh (ảnh đầu tiên làm ảnh bìa nếu chưa có video đứng trước).</p>
+    @else
+        <p class="text-xs text-gray-500 mb-4">Chọn hoặc kéo thả nhiều ảnh cùng lúc.</p>
     @endif
-    <div class="relative mb-4">
+
+    <div id="gallery-upload-dropzone"
+        class="relative mb-4 border-2 border-dashed border-gray-300 rounded-xl bg-white p-4 transition-colors hover:border-[#A31D1D]/hover:bg-red-50/30">
         <input type="file" id="multipleImagesInput" name="{{ $uploadField }}" multiple accept="image/*"
-            class="w-full text-sm border rounded-lg p-1.5 cursor-pointer bg-white {{ $errors->has($uploadErrorKey) || $errors->has($uploadErrorKey.'.*') ? 'border-red-500' : 'border-gray-300' }}"
+            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             onchange="handleMultipleFiles(event)">
+        <div class="pointer-events-none text-center py-6 text-xs text-gray-400 font-medium">
+            <p class="text-sm text-gray-600 mb-1">Kéo thả nhiều ảnh vào đây</p>
+            <p>hoặc bấm để chọn từ máy</p>
+        </div>
     </div>
     @error($uploadErrorKey) <p class="mb-4 text-xs text-red-600 font-bold">{{ $message }}</p> @enderror
     @error($uploadErrorKey.'.*') <p class="mb-4 text-xs text-red-600 font-bold">{{ $message }}</p> @enderror
@@ -73,19 +81,23 @@
     </div>
     @error($videoErrorKey.'.*') <p class="mb-3 text-xs text-red-600 font-bold">{{ $message }}</p> @enderror
 
-    <div id="gallery-youtube-preview-shell" class="mb-4 aspect-video max-w-md rounded-xl overflow-hidden border border-gray-200 bg-gray-100 hidden">
-        <iframe id="gallery-youtube-preview" src="" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+    <div id="gallery-youtube-preview-shell" class="mb-4 aspect-video max-w-2xl rounded-xl overflow-hidden border border-gray-200 bg-gray-100 hidden">
+        <iframe id="gallery-youtube-preview" src="" class="w-full h-full" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
     </div>
 
-    <div id="gallery-video-urls-container" class="space-y-2">
+    <div id="gallery-video-urls-container" class="space-y-4">
         @foreach($oldVideoUrls as $oldUrl)
             @php $oldId = is_string($oldUrl) ? \App\Support\ProductGallery::extractYoutubeId($oldUrl) : null; @endphp
             @if(is_string($oldUrl) && $oldUrl !== '' && $oldId)
-                <div class="gallery-video-url-item flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-3 py-2">
+                <div class="gallery-video-url-item border border-gray-200 rounded-xl overflow-hidden bg-white">
                     <input type="hidden" name="{{ $videoField }}" value="{{ $oldUrl }}">
-                    <img src="{{ \App\Support\ProductGallery::thumbUrl($oldId) }}" alt="" class="w-14 h-10 object-cover rounded">
-                    <span class="flex-1 text-xs text-blue-700 truncate">{{ $oldUrl }}</span>
-                    <button type="button" onclick="this.closest('.gallery-video-url-item').remove()" class="text-red-500 hover:text-red-700 text-xs font-bold">Xóa</button>
+                    <div class="aspect-video bg-gray-100">
+                        <iframe src="{{ \App\Support\ProductGallery::embedUrl($oldId) }}" class="w-full h-full" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                    </div>
+                    <div class="flex items-center gap-3 px-3 py-2 border-t border-gray-100">
+                        <span class="flex-1 text-xs text-blue-700 truncate">{{ $oldUrl }}</span>
+                        <button type="button" onclick="this.closest('.gallery-video-url-item').remove(); window.syncGalleryVideoEmptyState && window.syncGalleryVideoEmptyState();" class="text-red-500 hover:text-red-700 text-xs font-bold">Xóa</button>
+                    </div>
                 </div>
             @endif
         @endforeach
@@ -95,48 +107,67 @@
 @endif
 
 @if($showLibrary)
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
-        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-            <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Thư viện media hiện tại</h2>
-            <span class="text-xs font-medium text-gray-500">Đang có {{ $mediaItems->count() }} mục</span>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8" id="gallery-library-root" data-destroy-url="{{ $destroyUrl }}">
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Thư viện media hiện tại</h2>
+                <span id="gallery-library-count" class="text-xs font-medium text-gray-500">Đang có {{ $mediaItems->count() }} mục</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <label class="inline-flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
+                    <input type="checkbox" id="gallery-select-all" class="rounded border-gray-300 text-[#A31D1D] focus:ring-[#A31D1D]" onchange="toggleSelectAllGalleryItems(this.checked)">
+                    Chọn tất cả
+                </label>
+                <button type="button" id="gallery-bulk-delete-btn" disabled onclick="openBulkDeleteGalleryModal()"
+                    class="px-3 py-1.5 text-xs font-bold rounded-lg text-white bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                    Xóa đã chọn (<span id="gallery-selected-count">0</span>)
+                </button>
+            </div>
         </div>
         <div class="p-6">
-            @if($mediaItems->isNotEmpty())
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    @foreach($mediaItems as $item)
-                        <div class="relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100">
-                            @if(($item['type'] ?? '') === 'video')
-                                <img src="{{ $item['thumb_url'] }}" class="w-full h-full object-cover" alt="Video">
-                                <span class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <span class="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center">
-                                        <svg class="w-5 h-5 text-white ml-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                                    </span>
-                                </span>
-                                <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">Video</div>
-                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                                    <button type="button" onclick="openDeleteGalleryModal(null, @js($item['url']))" class="px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm">
-                                        Xóa video
-                                    </button>
-                                </div>
-                            @else
-                                <img src="{{ asset('storage/' . ($item['path'] ?? '')) }}" class="w-full h-full object-contain" alt="Ảnh">
-                                @if(($item['path'] ?? null) === $coverPath)
-                                    <div class="absolute top-2 left-2 bg-[#A31D1D] text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">
-                                        Ảnh bìa
-                                    </div>
-                                @endif
-                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                                    <button type="button" onclick="openDeleteGalleryModal(@js($item['path']), null)" class="px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm">
-                                        Xóa ảnh này
-                                    </button>
-                                </div>
-                            @endif
+            <div id="gallery-library-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 {{ $mediaItems->isEmpty() ? 'hidden' : '' }}">
+                @foreach($mediaItems as $item)
+                    @if(($item['type'] ?? '') === 'video')
+                        <div class="gallery-library-item relative group rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100"
+                            data-media-type="video"
+                            data-video-url="{{ $item['url'] }}">
+                            <div class="absolute top-2 left-2 z-20 flex items-center gap-2">
+                                <input type="checkbox" class="gallery-item-checkbox w-4 h-4 rounded border-gray-300 text-[#A31D1D] focus:ring-[#A31D1D] bg-white/90"
+                                    onchange="syncGallerySelectionState()">
+                                <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">Video</span>
+                            </div>
+                            <div class="aspect-video bg-black">
+                                <iframe src="{{ $item['embed_url'] }}" class="w-full h-full" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 px-3 py-2 bg-white border-t border-gray-100">
+                                <span class="text-[11px] text-gray-500 truncate">{{ $item['url'] }}</span>
+                                <button type="button" onclick="openDeleteGalleryModal(null, @js($item['url']))" class="shrink-0 px-2.5 py-1 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors">
+                                    Xóa
+                                </button>
+                            </div>
                         </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-500 text-sm text-center py-6">Sản phẩm này chưa có hình ảnh hoặc video nào.</p>
-            @endif
+                    @else
+                        <div class="gallery-library-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100"
+                            data-media-type="image"
+                            data-image-path="{{ $item['path'] ?? '' }}">
+                            <div class="absolute top-2 left-2 z-20 flex items-center gap-2">
+                                <input type="checkbox" class="gallery-item-checkbox w-4 h-4 rounded border-gray-300 text-[#A31D1D] focus:ring-[#A31D1D] bg-white/90"
+                                    onchange="syncGallerySelectionState()">
+                                @if(($item['path'] ?? null) === $coverPath)
+                                    <span class="bg-[#A31D1D] text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">Ảnh bìa</span>
+                                @endif
+                            </div>
+                            <img src="{{ asset('storage/' . ($item['path'] ?? '')) }}" class="w-full h-full object-contain" alt="Ảnh">
+                            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                <button type="button" onclick="openDeleteGalleryModal(@js($item['path']), null)" class="px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm">
+                                    Xóa ảnh này
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+            <p id="gallery-library-empty" class="text-gray-500 text-sm text-center py-6 {{ $mediaItems->isNotEmpty() ? 'hidden' : '' }}">Sản phẩm này chưa có hình ảnh hoặc video nào.</p>
         </div>
     </div>
 
@@ -149,12 +180,9 @@
             <p id="deleteGalleryModalMessage" class="text-sm text-gray-500 mb-6">Mục này sẽ bị xóa khỏi thư viện media của sản phẩm.</p>
             <div class="flex justify-center gap-3">
                 <button type="button" onclick="closeDeleteGalleryModal()" class="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy</button>
-                <form id="deleteGalleryForm" method="POST" action="{{ $destroyUrl }}" class="flex-1">
-                    @csrf @method('DELETE')
-                    <input type="hidden" name="image_path" id="deleteGalleryImagePath" value="">
-                    <input type="hidden" name="video_url" id="deleteGalleryVideoUrl" value="">
-                    <button type="submit" class="w-full px-4 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm">Có, Xóa</button>
-                </form>
+                <button type="button" id="confirmDeleteGalleryBtn" onclick="confirmDeleteGalleryItems()" class="flex-1 px-4 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm">
+                    Có, Xóa
+                </button>
             </div>
         </div>
     </div>
@@ -185,10 +213,16 @@
         }
     };
 
+    window.syncGalleryVideoEmptyState = function() {
+        const container = document.getElementById('gallery-video-urls-container');
+        const empty = document.getElementById('gallery-video-empty');
+        if (!empty || !container) return;
+        empty.classList.toggle('hidden', !!container.querySelector('.gallery-video-url-item'));
+    };
+
     window.addGalleryVideoUrl = function() {
         const input = document.getElementById('gallery-video-url-input');
         const container = document.getElementById('gallery-video-urls-container');
-        const empty = document.getElementById('gallery-video-empty');
         if (!input || !container) return;
 
         const url = (input.value || '').trim();
@@ -203,21 +237,23 @@
             || 'new_video_urls[]';
 
         const div = document.createElement('div');
-        div.className = 'gallery-video-url-item flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-3 py-2';
+        div.className = 'gallery-video-url-item border border-gray-200 rounded-xl overflow-hidden bg-white';
         div.innerHTML = `
             <input type="hidden" name="${fieldName}" value="${url.replace(/"/g, '&quot;')}">
-            <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg" alt="" class="w-14 h-10 object-cover rounded">
-            <span class="flex-1 text-xs text-blue-700 truncate">${url.replace(/</g, '&lt;')}</span>
-            <button type="button" class="text-red-500 hover:text-red-700 text-xs font-bold">Xóa</button>
+            <div class="aspect-video bg-gray-100">
+                <iframe src="https://www.youtube.com/embed/${id}" class="w-full h-full" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+            </div>
+            <div class="flex items-center gap-3 px-3 py-2 border-t border-gray-100">
+                <span class="flex-1 text-xs text-blue-700 truncate">${url.replace(/</g, '&lt;')}</span>
+                <button type="button" class="text-red-500 hover:text-red-700 text-xs font-bold">Xóa</button>
+            </div>
         `;
         div.querySelector('button').addEventListener('click', () => {
             div.remove();
-            if (empty && !container.querySelector('.gallery-video-url-item')) {
-                empty.classList.remove('hidden');
-            }
+            window.syncGalleryVideoEmptyState();
         });
         container.appendChild(div);
-        if (empty) empty.classList.add('hidden');
+        window.syncGalleryVideoEmptyState();
         input.value = '';
         window.previewGalleryYoutube('');
     };
@@ -226,15 +262,47 @@
     const multipleImagesInput = document.getElementById('multipleImagesInput');
     const previewContainer = document.getElementById('multiple-preview-container');
     const emptyState = document.getElementById('empty-preview-state');
+    const uploadDropzone = document.getElementById('gallery-upload-dropzone');
 
     window.handleMultipleFiles = function(event) {
-        const files = Array.from(event.target.files || []);
+        const files = Array.from(event.target.files || []).filter((file) => file.type.startsWith('image/'));
         if (files.length > 0) {
             selectedFiles = selectedFiles.concat(files);
             updateFileInput();
             renderPreviews();
         }
     };
+
+    function appendDroppedFiles(fileList) {
+        const files = Array.from(fileList || []).filter((file) => file.type.startsWith('image/'));
+        if (files.length === 0) return;
+        selectedFiles = selectedFiles.concat(files);
+        updateFileInput();
+        renderPreviews();
+    }
+
+    if (uploadDropzone) {
+        ['dragenter', 'dragover'].forEach((evt) => {
+            uploadDropzone.addEventListener(evt, (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                uploadDropzone.classList.add('border-[#A31D1D]', 'bg-red-50');
+            }, true);
+        });
+        uploadDropzone.addEventListener('dragleave', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!uploadDropzone.contains(event.relatedTarget)) {
+                uploadDropzone.classList.remove('border-[#A31D1D]', 'bg-red-50');
+            }
+        }, true);
+        uploadDropzone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            uploadDropzone.classList.remove('border-[#A31D1D]', 'bg-red-50');
+            appendDroppedFiles(event.dataTransfer?.files);
+        }, true);
+    }
 
     function renderPreviews() {
         if (!previewContainer || !emptyState) return;
@@ -278,22 +346,111 @@
         multipleImagesInput.files = dataTransfer.files;
     }
 
+    let pendingDelete = { imagePaths: [], videoUrls: [], elements: [] };
+
+    function csrfToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    }
+
+    function destroyUrl() {
+        return document.getElementById('gallery-library-root')?.dataset.destroyUrl || '';
+    }
+
+    function getSelectedLibraryItems() {
+        return Array.from(document.querySelectorAll('.gallery-library-item')).filter((el) => {
+            const checkbox = el.querySelector('.gallery-item-checkbox');
+            return checkbox && checkbox.checked;
+        });
+    }
+
+    window.syncGallerySelectionState = function() {
+        const selected = getSelectedLibraryItems();
+        const countEl = document.getElementById('gallery-selected-count');
+        const bulkBtn = document.getElementById('gallery-bulk-delete-btn');
+        const selectAll = document.getElementById('gallery-select-all');
+        const all = document.querySelectorAll('.gallery-library-item .gallery-item-checkbox');
+
+        if (countEl) countEl.textContent = String(selected.length);
+        if (bulkBtn) bulkBtn.disabled = selected.length === 0;
+        if (selectAll && all.length) {
+            selectAll.checked = selected.length === all.length;
+            selectAll.indeterminate = selected.length > 0 && selected.length < all.length;
+        }
+    };
+
+    window.toggleSelectAllGalleryItems = function(checked) {
+        document.querySelectorAll('.gallery-library-item .gallery-item-checkbox').forEach((cb) => {
+            cb.checked = !!checked;
+        });
+        window.syncGallerySelectionState();
+    };
+
+    function updateLibraryCount(remaining) {
+        const countEl = document.getElementById('gallery-library-count');
+        if (countEl && typeof remaining === 'number') {
+            countEl.textContent = `Đang có ${remaining} mục`;
+        }
+        const empty = document.getElementById('gallery-library-empty');
+        const grid = document.getElementById('gallery-library-grid');
+        const left = document.querySelectorAll('.gallery-library-item').length;
+        if (empty) empty.classList.toggle('hidden', left > 0);
+        if (grid && left === 0) grid.classList.add('hidden');
+    }
+
     window.openDeleteGalleryModal = function(imagePath, videoUrl) {
         const modal = document.getElementById('deleteGalleryModal');
         if (!modal) return;
-        const imageInput = document.getElementById('deleteGalleryImagePath');
-        const videoInput = document.getElementById('deleteGalleryVideoUrl');
         const message = document.getElementById('deleteGalleryModalMessage');
         const inner = modal.querySelector('.bg-white');
 
-        if (imageInput) imageInput.value = imagePath || '';
-        if (videoInput) videoInput.value = videoUrl || '';
+        const elements = Array.from(document.querySelectorAll('.gallery-library-item')).filter((el) => {
+            if (imagePath && el.dataset.imagePath === imagePath) return true;
+            if (videoUrl && el.dataset.videoUrl === videoUrl) return true;
+            return false;
+        });
+
+        pendingDelete = {
+            imagePaths: imagePath ? [imagePath] : [],
+            videoUrls: videoUrl ? [videoUrl] : [],
+            elements,
+        };
+
         if (message) {
             message.textContent = videoUrl
                 ? 'Video này sẽ bị xóa khỏi thư viện media của sản phẩm.'
                 : 'Ảnh này sẽ bị xóa khỏi danh sách ảnh của sản phẩm.';
         }
 
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        void modal.offsetWidth;
+        modal.classList.remove('opacity-0');
+        inner?.classList.remove('scale-95');
+    };
+
+    window.openBulkDeleteGalleryModal = function() {
+        const selected = getSelectedLibraryItems();
+        if (!selected.length) return;
+
+        const imagePaths = [];
+        const videoUrls = [];
+        selected.forEach((el) => {
+            if (el.dataset.mediaType === 'video' && el.dataset.videoUrl) {
+                videoUrls.push(el.dataset.videoUrl);
+            } else if (el.dataset.imagePath) {
+                imagePaths.push(el.dataset.imagePath);
+            }
+        });
+
+        pendingDelete = { imagePaths, videoUrls, elements: selected };
+
+        const modal = document.getElementById('deleteGalleryModal');
+        const message = document.getElementById('deleteGalleryModalMessage');
+        const inner = modal?.querySelector('.bg-white');
+        if (message) {
+            message.textContent = `Bạn sắp xóa ${selected.length} mục khỏi thư viện media. Thao tác không thể hoàn tác.`;
+        }
+        if (!modal) return;
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         void modal.offsetWidth;
@@ -311,6 +468,68 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }, 300);
+        pendingDelete = { imagePaths: [], videoUrls: [], elements: [] };
+    };
+
+    window.confirmDeleteGalleryItems = async function() {
+        const url = destroyUrl();
+        if (!url) {
+            alert('Không tìm thấy URL xóa media.');
+            return;
+        }
+
+        const { imagePaths, videoUrls, elements } = pendingDelete;
+        if (!imagePaths.length && !videoUrls.length) {
+            window.closeDeleteGalleryModal();
+            return;
+        }
+
+        const btn = document.getElementById('confirmDeleteGalleryBtn');
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Đang xóa...';
+        }
+
+        const body = new URLSearchParams();
+        imagePaths.forEach((path) => body.append('image_paths[]', path));
+        videoUrls.forEach((videoUrl) => body.append('video_urls[]', videoUrl));
+        if (imagePaths.length === 1 && videoUrls.length === 0) {
+            body.append('image_path', imagePaths[0]);
+        }
+        if (videoUrls.length === 1 && imagePaths.length === 0) {
+            body.append('video_url', videoUrls[0]);
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken(),
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: body.toString(),
+            });
+
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const msg = data.message || data.errors?.image_path?.[0] || 'Xóa media thất bại.';
+                throw new Error(msg);
+            }
+
+            elements.forEach((el) => el.remove());
+            updateLibraryCount(data.remaining_count);
+            window.syncGallerySelectionState();
+            window.closeDeleteGalleryModal();
+        } catch (error) {
+            alert(error?.message || 'Xóa media thất bại.');
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Có, Xóa';
+            }
+        }
     };
 
     window.openDeleteImageModal = function(imagePath) {
@@ -318,6 +537,8 @@
     };
     window.closeDeleteImageModal = window.closeDeleteGalleryModal;
     window.removeFile = window.removeGalleryFile;
+
+    window.syncGallerySelectionState();
 </script>
 @endpush
 @endonce

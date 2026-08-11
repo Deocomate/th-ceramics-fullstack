@@ -50,27 +50,38 @@ trait ManagesProductGalleryMedia
 
     protected function removeGalleryImage(Model $model, string $imagePath, string $imagesAttribute = 'images'): Model
     {
-        $current = is_array($model->{$imagesAttribute}) ? $model->{$imagesAttribute} : [];
-        $updated = ProductGallery::removeImagePath($current, $imagePath);
-
-        $model->update([
-            $imagesAttribute => empty($updated) ? null : $updated,
-        ]);
-
-        FileUploadHelper::delete($imagePath);
-        $model->refresh();
-
-        return $model;
+        return $this->removeGalleryItems($model, [$imagePath], [], $imagesAttribute);
     }
 
     protected function removeGalleryVideo(Model $model, string $videoUrl, string $imagesAttribute = 'images'): Model
     {
+        return $this->removeGalleryItems($model, [], [$videoUrl], $imagesAttribute);
+    }
+
+    /**
+     * @param  array<int, mixed>  $imagePaths
+     * @param  array<int, mixed>  $videoUrls
+     */
+    protected function removeGalleryItems(
+        Model $model,
+        array $imagePaths = [],
+        array $videoUrls = [],
+        string $imagesAttribute = 'images'
+    ): Model {
         $current = is_array($model->{$imagesAttribute}) ? $model->{$imagesAttribute} : [];
-        $updated = ProductGallery::removeVideoUrl($current, $videoUrl);
+        $paths = array_values(array_filter($imagePaths, fn ($path) => is_string($path) && $path !== ''));
+        $urls = array_values(array_filter($videoUrls, fn ($url) => is_string($url) && $url !== ''));
+
+        $updated = ProductGallery::removeImagePaths($current, $paths);
+        $updated = ProductGallery::removeVideoUrls($updated, $urls);
 
         $model->update([
             $imagesAttribute => empty($updated) ? null : $updated,
         ]);
+
+        foreach ($paths as $path) {
+            FileUploadHelper::delete($path);
+        }
 
         $model->refresh();
 

@@ -80,3 +80,21 @@ test('removeImagePath and removeVideoUrl preserve other items', function () {
     expect($afterVideo)->toHaveCount(2)
         ->and($afterVideo[1]['url'])->toBe('https://youtu.be/OtherVideoId1');
 });
+
+test('removeImagePaths and removeVideoUrls remove multiple items in one pass', function () {
+    $gallery = [
+        'keep.png',
+        'remove-a.png',
+        'remove-b.png',
+        ['type' => 'video', 'url' => 'https://www.youtube.com/watch?v=Win12rIicBI'],
+        ['type' => 'video', 'url' => 'https://youtu.be/OtherVideoId1'],
+    ];
+
+    $updated = ProductGallery::removeImagePaths($gallery, ['remove-a.png', 'remove-b.png']);
+    $updated = ProductGallery::removeVideoUrls($updated, [
+        'https://www.youtube.com/embed/Win12rIicBI',
+        'https://youtu.be/OtherVideoId1',
+    ]);
+
+    expect($updated)->toBe(['keep.png']);
+});
