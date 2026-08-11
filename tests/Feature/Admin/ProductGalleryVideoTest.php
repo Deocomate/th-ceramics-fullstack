@@ -15,6 +15,15 @@ function galleryFakeImage(string $name): UploadedFile
     );
 }
 
+function galleryFakeWebp(string $name = 'batch.webp'): UploadedFile
+{
+    // Minimal valid 1×1 lossy WebP
+    return UploadedFile::fake()->createWithContent(
+        $name,
+        base64_decode('UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=')
+    );
+}
+
 function makeNgoiAmDuongProduct(array $images = ['seeders/products/cover.png']): NgoiAmDuongCt
 {
     return NgoiAmDuongCt::query()->create([
@@ -292,6 +301,25 @@ test('admin ajax can append gallery images in batch', function () {
     $product->refresh();
     expect($product->images)->toHaveCount(3)
         ->and(ProductGallery::firstImagePath($product->images))->toBe('ngoi_am_duong_ct/images/cover.png');
+});
+
+test('admin ajax can append webp gallery images', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct(['ngoi_am_duong_ct/images/cover.png']);
+
+    $this->withHeaders([
+        'Accept' => 'application/json',
+        'X-Requested-With' => 'XMLHttpRequest',
+    ])->post(route('admin.ngoi-am-duong-ct.image.store', $product->ngoi_am_duong_ct_id), [
+        'images' => [galleryFakeWebp('tile-a.webp'), galleryFakeWebp('tile-b.webp')],
+    ])->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('remaining_count', 3);
+
+    $product->refresh();
+    expect($product->images)->toHaveCount(3);
 });
 
 test('admin ajax can reorder gallery and set cover', function () {

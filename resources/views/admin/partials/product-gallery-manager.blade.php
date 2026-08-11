@@ -58,19 +58,19 @@
     </div>
 </div>
 
-{{-- Gallery images (create: form submit; edit form: optional small adds still via new_images) --}}
+{{-- Gallery images: create submits via form; edit uploads via AJAX only (avoids multipart/DataTransfer webp failures) --}}
 <div class="flex flex-col h-full border rounded-xl p-6 bg-gray-50/50 {{ $errors->has($uploadErrorKey) || $errors->has($uploadErrorKey.'.*') ? 'border-red-300 bg-red-50/30' : 'border-gray-200' }}">
     <label class="block text-sm font-semibold text-gray-700 mb-2">
         @if($mode === 'create')
             Ảnh gallery (chi tiết)
         @else
-            Thêm ảnh gallery (tùy chọn)
+            Thêm ảnh gallery
         @endif
     </label>
     <p class="text-xs text-gray-500 mb-4">
         Chỉ jpg/jpeg/png/webp · tối đa 5MB/ảnh.
         @if($mode === 'edit')
-            Khuyến nghị thêm nhiều ảnh ở thư viện bên dưới (upload theo lô, không reload).
+            Upload ngay vào thư viện (theo lô, không gửi kèm form Lưu — tránh lỗi webp khi lưu form).
         @else
             Có thể chọn nhiều ảnh; nếu chưa có ảnh bìa riêng thì ảnh đầu tiên sẽ làm ảnh bìa.
         @endif
@@ -78,7 +78,10 @@
 
     <div id="gallery-upload-dropzone"
         class="relative mb-4 border-2 border-dashed border-gray-300 rounded-xl bg-white p-4 transition-colors hover:border-[#A31D1D] hover:bg-red-50/30">
-        <input type="file" id="multipleImagesInput" name="{{ $uploadField }}" multiple accept="{{ $acceptAttr }}"
+        {{-- Edit: no name= so files never ride the main form POST (fixes "new_images.N failed to upload" with webp). --}}
+        <input type="file" id="multipleImagesInput"
+            @if($mode === 'create') name="{{ $uploadField }}" @endif
+            multiple accept="{{ $acceptAttr }}"
             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             onchange="handleMultipleFiles(event)">
         <div class="pointer-events-none text-center py-6 text-xs text-gray-400 font-medium">
@@ -87,13 +90,14 @@
         </div>
     </div>
     <p id="gallery-upload-hint" class="mb-3 text-xs text-amber-700 hidden"></p>
+    <p id="gallery-form-upload-status" class="mb-3 text-xs text-gray-500 hidden"></p>
     @error($uploadErrorKey) <p class="mb-4 text-xs text-red-600 font-bold">{{ $message }}</p> @enderror
     @error($uploadErrorKey.'.*') <p class="mb-4 text-xs text-red-600 font-bold">{{ $message }}</p> @enderror
 
     <div class="{{ $mode === 'create' ? 'h-[220px]' : 'h-[160px]' }} bg-white border border-gray-200 rounded-xl p-4 overflow-y-auto shadow-inner flex flex-col">
         <div id="multiple-preview-container" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-3">
             <div id="empty-preview-state" class="col-span-full min-h-[100px] flex flex-col items-center justify-center text-center text-gray-400 text-xs font-medium gap-2">
-                <span>Chưa chọn ảnh gallery</span>
+                <span>@if($mode === 'edit') Chọn ảnh để upload ngay @else Chưa chọn ảnh gallery @endif</span>
             </div>
         </div>
     </div>
@@ -322,23 +326,101 @@
         }, true);
     }
 
-    /* ---- Form multi preview ---- */
+    /* ---- Form multi preview (create) / AJAX upload (edit) ---- */
     let selectedFiles = [];
     const multipleImagesInput = document.getElementById('multipleImagesInput');
     const previewContainer = document.getElementById('multiple-preview-container');
     const emptyState = document.getElementById('empty-preview-state');
     const uploadDropzone = document.getElementById('gallery-upload-dropzone');
     const uploadHint = document.getElementById('gallery-upload-hint');
+    const formUploadStatus = document.getElementById('gallery-form-upload-status');
+    // Edit pages include this partial twice (form then library). @once scripts see the first
+    // include (no uploadUrl) — resolve endpoint from #gallery-library-root at click time.
+    const editUsesAjaxUpload = {{ $mode === 'edit' ? 'true' : 'false' }};
+
+    function resolveGalleryAjaxUploadUrl() {
+        return document.getElementById('gallery-library-root')?.dataset?.uploadUrl || '';
+    }
+
+    async function uploadFilesViaAjax(fileList, statusEl) {
+        const endpoint = resolveGalleryAjaxUploadUrl();
+        const files = filterImageFiles(fileList, statusEl || uploadHint);
+        if (!files.length) return;
+        if (!endpoint) {
+            if (statusEl) {
+                statusEl.textContent = 'Thiếu URL upload. Tải lại trang rồi thử lại.';
+                statusEl.classList.remove('hidden', 'text-gray-500');
+                statusEl.classList.add('text-red-600');
+            }
+            return;
+        }
+        if (statusEl) {
+            statusEl.textContent = 'Đang upload ' + files.length + ' ảnh…';
+            statusEl.classList.remove('hidden');
+            statusEl.classList.remove('text-red-600');
+            statusEl.classList.add('text-gray-500');
+        }
+        const batches = [];
+        for (let i = 0; i < files.length; i += BATCH_SIZE) {
+            batches.push(files.slice(i, i + BATCH_SIZE));
+        }
+        let uploaded = 0;
+        try {
+            for (const batch of batches) {
+                const fd = new FormData();
+                batch.forEach((f) => fd.append('images[]', f, f.name));
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken(),
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: fd,
+                    credentials: 'same-origin',
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    const msg = data.message
+                        || (data.errors && Object.values(data.errors).flat().join(' '))
+                        || ('Upload thất bại (HTTP ' + res.status + ').');
+                    throw new Error(msg);
+                }
+                uploaded += batch.length;
+                if (statusEl) statusEl.textContent = 'Đã upload ' + uploaded + '/' + files.length + ' ảnh…';
+            }
+            window.location.reload();
+        } catch (err) {
+            if (statusEl) {
+                statusEl.textContent = err.message || 'Upload thất bại.';
+                statusEl.classList.remove('text-gray-500');
+                statusEl.classList.add('text-red-600');
+            } else {
+                alert(err.message || 'Upload thất bại.');
+            }
+        }
+    }
 
     window.handleMultipleFiles = function(event) {
-        const files = filterImageFiles(event.target.files, uploadHint);
+        const input = event.target;
+        if (editUsesAjaxUpload) {
+            uploadFilesViaAjax(input.files, formUploadStatus).finally(() => { input.value = ''; });
+            return;
+        }
+        const files = filterImageFiles(input.files, uploadHint);
         if (!files.length) return;
         const total = files.reduce((s, f) => s + f.size, 0) + selectedFiles.reduce((s, f) => s + f.size, 0);
         if (files.length + selectedFiles.length > 50 || total > WARN_TOTAL_BYTES) {
             if (uploadHint) {
-                uploadHint.textContent = 'Cảnh báo: đang chọn rất nhiều / dung lượng lớn. Nếu lưu form thất bại, hãy thêm bớt ảnh hoặc dùng upload theo lô ở trang chỉnh sửa.';
+                uploadHint.textContent = 'Cảnh báo: đang chọn rất nhiều / dung lượng lớn. Nên thêm dần theo lô nhỏ hơn.';
                 uploadHint.classList.remove('hidden');
             }
+        }
+        // Keep native FileList when possible — DataTransfer rebuilds can break webp on form submit.
+        if (selectedFiles.length === 0 && files.length === Array.from(input.files || []).filter(isAllowedImage).length) {
+            selectedFiles = files.slice();
+            renderPreviews();
+            return;
         }
         selectedFiles = selectedFiles.concat(files);
         updateFileInput();
@@ -346,6 +428,10 @@
     };
 
     function appendDroppedFiles(fileList) {
+        if (editUsesAjaxUpload) {
+            uploadFilesViaAjax(fileList, formUploadStatus);
+            return;
+        }
         const files = filterImageFiles(fileList, uploadHint);
         if (!files.length) return;
         selectedFiles = selectedFiles.concat(files);
@@ -397,7 +483,7 @@
     };
 
     function updateFileInput() {
-        if (!multipleImagesInput) return;
+        if (!multipleImagesInput || editUsesAjaxUpload) return;
         const dataTransfer = new DataTransfer();
         selectedFiles.forEach((file) => dataTransfer.items.add(file));
         multipleImagesInput.files = dataTransfer.files;

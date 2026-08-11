@@ -17,11 +17,12 @@ trait UploadsProductGalleryMedia
     {
         $validated = $request->validate([
             'images' => ['required', 'array', 'min:1', 'max:10'],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'images.*' => ['file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ], [
             'images.required' => 'Vui lòng chọn ít nhất một ảnh.',
             'images.max' => 'Mỗi lần chỉ tải tối đa 10 ảnh.',
-            'images.*.image' => 'File tải lên phải là định dạng hình ảnh.',
+            'images.*.file' => 'File tải lên phải là file hợp lệ.',
+            'images.*.uploaded' => 'Một ảnh tải lên thất bại (thường do file quá lớn hoặc lỗi webp). Thử lại từng ảnh hoặc chuyển sang jpg/png.',
             'images.*.mimes' => 'Hình ảnh phải có định dạng: jpg, jpeg, png, webp.',
             'images.*.max' => 'Mỗi hình ảnh không được vượt quá 5MB.',
         ]);

@@ -12,9 +12,9 @@ trait ValidatesProductGalleryMedia
     protected function galleryImageStoreRules(): array
     {
         return [
-            'cover_image' => ['nullable', 'required_without:images', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'cover_image' => ['nullable', 'required_without:images', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'images' => ['nullable', 'required_without:cover_image', 'array', 'min:1'],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'images.*' => ['file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 
@@ -24,9 +24,9 @@ trait ValidatesProductGalleryMedia
     protected function galleryImageUpdateRules(): array
     {
         return [
-            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'cover_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'new_images' => ['nullable', 'array'],
-            'new_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'new_images.*' => ['file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'gallery_order' => ['nullable', 'array'],
             'gallery_order.*' => ['string'],
         ];
@@ -63,15 +63,18 @@ trait ValidatesProductGalleryMedia
     {
         return [
             'cover_image.required_without' => 'Vui lòng tải ảnh bìa hoặc ít nhất một ảnh gallery.',
-            'cover_image.image' => 'Ảnh bìa phải là định dạng hình ảnh.',
+            'cover_image.file' => 'Ảnh bìa phải là file hợp lệ.',
+            'cover_image.uploaded' => 'Ảnh bìa tải lên thất bại. Thử file nhỏ hơn hoặc định dạng jpg/png/webp.',
             'cover_image.mimes' => 'Ảnh bìa phải có định dạng: jpg, jpeg, png, webp.',
             'cover_image.max' => 'Ảnh bìa không được vượt quá 5MB.',
             'images.required_without' => 'Vui lòng tải ảnh bìa hoặc ít nhất một ảnh gallery.',
             'images.min' => 'Vui lòng tải lên ít nhất một hình ảnh sản phẩm.',
-            'images.*.image' => 'File tải lên phải là định dạng hình ảnh.',
+            'images.*.file' => 'File tải lên phải là file hợp lệ.',
+            'images.*.uploaded' => 'Một ảnh gallery tải lên thất bại. Dùng upload theo lô trên trang chỉnh sửa (khuyến nghị cho webp).',
             'images.*.mimes' => 'Hình ảnh phải có định dạng: jpg, jpeg, png, webp.',
             'images.*.max' => 'Mỗi hình ảnh không được vượt quá 5MB.',
-            'new_images.*.image' => 'File tải lên phải là định dạng hình ảnh.',
+            'new_images.*.file' => 'File tải lên phải là file hợp lệ.',
+            'new_images.*.uploaded' => 'Một ảnh gallery tải lên thất bại. Hãy thêm ảnh qua vùng upload (AJAX), không gửi kèm nút Lưu Thay Đổi.',
             'new_images.*.mimes' => 'Hình ảnh phải có định dạng: jpg, jpeg, png, webp.',
             'new_images.*.max' => 'Mỗi hình ảnh không được vượt quá 5MB.',
         ];
