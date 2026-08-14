@@ -57,7 +57,7 @@ php artisan storage:link
 php artisan serve
 
 # If uploading many gallery images locally, raise PHP limits:
-# php -d max_file_uploads=100 -d post_max_size=128M -d upload_max_filesize=10M artisan serve
+# php -d max_file_uploads=100 -d post_max_size=128M -d upload_max_filesize=64M artisan serve
 # (public/.user.ini applies on Apache/Nginx php-fpm)
 
 # Listen to the queue (required for database queue driver)

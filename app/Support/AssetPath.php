@@ -11,7 +11,7 @@ class AssetPath
         $candidate = self::normalize($path) ?: self::normalize($fallback);
 
         if ($candidate === '') {
-            return asset('');
+            return self::assetUrl('');
         }
 
         if (Str::startsWith($candidate, ['http://', 'https://'])) {
@@ -19,10 +19,23 @@ class AssetPath
         }
 
         if (Str::startsWith($candidate, 'assets/')) {
-            return asset($candidate);
+            return self::assetUrl($candidate);
         }
 
-        return asset('storage/'.ltrim($candidate, '/'));
+        return self::assetUrl('storage/'.ltrim($candidate, '/'));
+    }
+
+    private static function assetUrl(string $path): string
+    {
+        try {
+            if (function_exists('app') && app()->bound('url')) {
+                return asset($path);
+            }
+        } catch (\Throwable) {
+            // Unit tests and CLI without a fully booted URL generator.
+        }
+
+        return '/'.ltrim($path, '/');
     }
 
     private static function normalize(mixed $path): string

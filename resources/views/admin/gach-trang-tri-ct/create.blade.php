@@ -7,6 +7,8 @@
             class="p-6">
             @csrf
 
+            <x-admin.shared.product-ct-tabs>
+            <x-slot:info>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- CỘT THÔNG TIN CHUNG -->
                 <div class="lg:col-span-2 space-y-5">
@@ -97,14 +99,16 @@
                 </div>
             </div>
 
-            <hr class="border-gray-100 my-8">
             @include('admin.partials.product-journey-video-field')
+            </x-slot:info>
+            <x-slot:media>
             @include('admin.partials.product-gallery-manager', [
                 'mode' => 'create',
-                'section' => 'form',
                 'uploadField' => 'images[]',
                 'videoField' => 'video_urls[]',
             ])
+            </x-slot:media>
+            </x-admin.shared.product-ct-tabs>
 
             <div class="pt-6 mt-8 flex justify-end gap-3 border-t border-gray-100">
                 <a href="{{ route('admin.gach-trang-tri-ct.index') }}"

@@ -132,3 +132,42 @@ test('reorderMedia applies token order', function () {
         'a.png',
     ]);
 });
+
+test('normalizes uploaded file videos separately from youtube', function () {
+    $items = ProductGallery::normalize([
+        'cover.png',
+        ['type' => 'video', 'source' => 'file', 'path' => 'ngoi_am_duong_ct/videos/clip.mp4'],
+        ['type' => 'video', 'url' => 'https://youtu.be/Win12rIicBI'],
+    ]);
+
+    expect($items)->toHaveCount(3)
+        ->and($items[1]['type'])->toBe('video')
+        ->and($items[1]['source'])->toBe('file')
+        ->and($items[1]['path'])->toBe('ngoi_am_duong_ct/videos/clip.mp4')
+        ->and($items[1]['display_url'])->toContain('clip.mp4')
+        ->and($items[2]['source'])->toBe('youtube')
+        ->and($items[2]['youtube_id'])->toBe('Win12rIicBI');
+});
+
+test('file video tokens and removal leave youtube items intact', function () {
+    $gallery = [
+        'cover.png',
+        ['type' => 'video', 'source' => 'file', 'path' => 'ngoi_am_duong_ct/videos/clip.mp4'],
+        ['type' => 'video', 'url' => 'https://www.youtube.com/watch?v=Win12rIicBI'],
+    ];
+
+    expect(ProductGallery::mediaToken($gallery[1]))->toBe('video-file:ngoi_am_duong_ct/videos/clip.mp4');
+
+    $updated = ProductGallery::removeVideoPath($gallery, 'ngoi_am_duong_ct/videos/clip.mp4');
+
+    expect($updated)->toHaveCount(2)
+        ->and($updated[0])->toBe('cover.png')
+        ->and($updated[1]['url'])->toBe('https://www.youtube.com/watch?v=Win12rIicBI');
+});
+
+test('video directory is derived from the image directory', function () {
+    expect(ProductGallery::videoDirectoryFromImageDirectory('ngoi_am_duong_ct/images'))
+        ->toBe('ngoi_am_duong_ct/videos')
+        ->and(ProductGallery::videoDirectoryFromImageDirectory('custom/folder'))
+        ->toBe('custom/folder/videos');
+});

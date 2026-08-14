@@ -7,6 +7,8 @@
         </div>
         <form method="POST" action="{{ route('admin.lan-can-gom-su-ct.update', $product->lan_can_gom_su_ct_id) }}" enctype="multipart/form-data" class="p-6">
             @csrf @method('PUT')
+            <x-admin.shared.product-ct-tabs>
+            <x-slot:info>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- CỘT THÔNG TIN CHUNG -->
                 <div class="lg:col-span-2 space-y-5">
@@ -71,14 +73,18 @@
                 </div>
             </div>
 
-            <hr class="border-gray-100 my-8">
             @include('admin.partials.product-journey-video-field')
+            </x-slot:info>
+            <x-slot:media>
             @include('admin.partials.product-gallery-manager', [
                 'mode' => 'edit',
-                'section' => 'form',
-                'uploadField' => 'new_images[]',
-                'videoField' => 'new_video_urls[]',
+                'images' => $product->images ?? [],
+                'destroyUrl' => route('admin.lan-can-gom-su-ct.image.destroy', $product->lan_can_gom_su_ct_id),
+                'uploadUrl' => route('admin.lan-can-gom-su-ct.image.store', $product->lan_can_gom_su_ct_id),
+                'reorderUrl' => route('admin.lan-can-gom-su-ct.gallery.reorder', $product->lan_can_gom_su_ct_id),
             ])
+            </x-slot:media>
+            </x-admin.shared.product-ct-tabs>
 
             <div class="pt-6 mt-8 flex justify-end gap-3 border-t border-gray-100">
                 <a href="{{ route('admin.lan-can-gom-su-ct.index') }}" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy bỏ</a>
@@ -89,14 +95,6 @@
         </form>
     </div>
 
-    @include('admin.partials.product-gallery-manager', [
-        'mode' => 'edit',
-        'section' => 'library',
-        'images' => $product->images ?? [],
-        'destroyUrl' => route('admin.lan-can-gom-su-ct.image.destroy', $product->lan_can_gom_su_ct_id),
-        'uploadUrl' => route('admin.lan-can-gom-su-ct.image.store', $product->lan_can_gom_su_ct_id),
-        'reorderUrl' => route('admin.lan-can-gom-su-ct.gallery.reorder', $product->lan_can_gom_su_ct_id),
-    ])
 
     @push('scripts')
     <script>

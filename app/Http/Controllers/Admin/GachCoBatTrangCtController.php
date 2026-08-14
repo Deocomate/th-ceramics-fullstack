@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
 use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
 use App\Http\Controllers\Controller;
-use App\Services\GachCoBatTrangCtService;
 use App\Rules\YoutubeUrl;
+use App\Services\GachCoBatTrangCtService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use InvalidArgumentException;
@@ -51,6 +51,8 @@ class GachCoBatTrangCtController extends Controller
             'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'video_urls' => ['nullable', 'array'],
             'video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
+            'videos' => ['nullable', 'array'],
+            'videos.*' => ['file', 'mimes:mp4,webm', 'max:51200'],
         ]);
 
         try {
@@ -92,6 +94,8 @@ class GachCoBatTrangCtController extends Controller
             'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'new_video_urls' => ['nullable', 'array'],
             'new_video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
+            'new_videos' => ['nullable', 'array'],
+            'new_videos.*' => ['file', 'mimes:mp4,webm', 'max:51200'],
         ]);
 
         try {
@@ -121,16 +125,15 @@ class GachCoBatTrangCtController extends Controller
     {
         return $this->destroyGalleryMediaResponse(
             $request,
-            fn (array $imagePaths, array $videoUrls) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls)
+            fn (array $imagePaths, array $videoUrls, array $videoPaths = []) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls, $videoPaths)
         );
     }
-
 
     public function storeImages(Request $request, int $id)
     {
         return $this->storeGalleryImagesResponse(
             $request,
-            fn (array $files) => $this->service->appendImagesToGallery($id, $files)
+            fn (array $images, array $videoUrls, array $videoFiles) => $this->service->appendMediaToGallery($id, $images, $videoUrls, $videoFiles)
         );
     }
 

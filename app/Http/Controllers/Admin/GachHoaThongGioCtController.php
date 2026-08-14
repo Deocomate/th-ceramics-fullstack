@@ -79,16 +79,15 @@ class GachHoaThongGioCtController extends Controller
     {
         return $this->destroyGalleryMediaResponse(
             $request,
-            fn (array $imagePaths, array $videoUrls) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls)
+            fn (array $imagePaths, array $videoUrls, array $videoPaths = []) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls, $videoPaths)
         );
     }
-
 
     public function storeImages(Request $request, int $id)
     {
         return $this->storeGalleryImagesResponse(
             $request,
-            fn (array $files) => $this->service->appendImagesToGallery($id, $files)
+            fn (array $images, array $videoUrls, array $videoFiles) => $this->service->appendMediaToGallery($id, $images, $videoUrls, $videoFiles)
         );
     }
 

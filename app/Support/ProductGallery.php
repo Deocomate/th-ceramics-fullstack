@@ -12,6 +12,10 @@ class ProductGallery
 
     public const TYPE_VIDEO = 'video';
 
+    public const SOURCE_YOUTUBE = 'youtube';
+
+    public const SOURCE_FILE = 'file';
+
     /**
      * @return Collection<int, array{type: string, path?: string, url?: string, youtube_id?: string|null, thumb_url?: string|null, embed_url?: string|null}>
      */
@@ -40,7 +44,7 @@ class ProductGallery
     }
 
     /**
-     * Stable token for reorder payloads: "image:{path}" or "video:{url}".
+     * Stable token for reorder payloads: "image:{path}", "video:{url}", or "video-file:{path}".
      */
     public static function mediaToken(mixed $item): ?string
     {
@@ -50,6 +54,12 @@ class ProductGallery
         }
 
         if (($normalized['type'] ?? null) === self::TYPE_VIDEO) {
+            if (($normalized['source'] ?? null) === self::SOURCE_FILE) {
+                $path = (string) ($normalized['path'] ?? '');
+
+                return $path !== '' ? 'video-file:'.$path : null;
+            }
+
             $url = (string) ($normalized['url'] ?? '');
 
             return $url !== '' ? 'video:'.$url : null;
@@ -58,6 +68,21 @@ class ProductGallery
         $path = (string) ($normalized['path'] ?? '');
 
         return $path !== '' ? 'image:'.$path : null;
+    }
+
+    public static function isFileVideo(array $item): bool
+    {
+        return ($item['type'] ?? null) === self::TYPE_VIDEO
+            && ($item['source'] ?? null) === self::SOURCE_FILE;
+    }
+
+    public static function videoDirectoryFromImageDirectory(string $imageDirectory): string
+    {
+        if (str_ends_with($imageDirectory, '/images')) {
+            return substr($imageDirectory, 0, -7).'/videos';
+        }
+
+        return rtrim($imageDirectory, '/').'/videos';
     }
 
     /**
@@ -84,6 +109,7 @@ class ProductGallery
                 && $coverItem === null
             ) {
                 $coverItem = is_string($item) ? $path : $item;
+
                 continue;
             }
             $rest[] = $item;
@@ -228,6 +254,26 @@ class ProductGallery
 
     /**
      * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $files
+     * @return array<int, mixed>
+     */
+    public static function appendUploadedVideos(array $current, array $files, string $directory): array
+    {
+        foreach ($files as $file) {
+            if ($file instanceof UploadedFile) {
+                $current[] = [
+                    'type' => self::TYPE_VIDEO,
+                    'source' => self::SOURCE_FILE,
+                    'path' => FileUploadHelper::upload($file, $directory),
+                ];
+            }
+        }
+
+        return array_values($current);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
      * @return array<int, mixed>
      */
     public static function removeImagePath(array $current, string $path): array
@@ -308,7 +354,46 @@ class ProductGallery
     }
 
     /**
-     * @return array{type: string, path?: string, url?: string, youtube_id?: string|null, thumb_url?: string|null, display_url?: string|null}|null
+     * @param  array<int, mixed>  $current
+     * @return array<int, mixed>
+     */
+    public static function removeVideoPath(array $current, string $path): array
+    {
+        $path = trim($path);
+        if ($path === '') {
+            return array_values($current);
+        }
+
+        $filtered = array_filter($current, function (mixed $item) use ($path) {
+            $normalized = self::normalizeItem($item);
+            if ($normalized === null || ! self::isFileVideo($normalized)) {
+                return true;
+            }
+
+            return ($normalized['path'] ?? null) !== $path;
+        });
+
+        return array_values($filtered);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $paths
+     * @return array<int, mixed>
+     */
+    public static function removeVideoPaths(array $current, array $paths): array
+    {
+        foreach ($paths as $path) {
+            if (is_string($path) && $path !== '') {
+                $current = self::removeVideoPath($current, $path);
+            }
+        }
+
+        return array_values($current);
+    }
+
+    /**
+     * @return array{type: string, source?: string, path?: string, url?: string, youtube_id?: string|null, thumb_url?: string|null, embed_url?: string|null, display_url?: string|null}|null
      */
     private static function normalizeItem(mixed $item): ?array
     {
@@ -329,6 +414,21 @@ class ProductGallery
         }
 
         $type = $item['type'] ?? null;
+        $source = $item['source'] ?? null;
+
+        if ($type === self::TYPE_VIDEO && ($source === self::SOURCE_FILE || (isset($item['path']) && ! isset($item['url'])))) {
+            $path = trim((string) ($item['path'] ?? ''));
+            if ($path === '') {
+                return null;
+            }
+
+            return [
+                'type' => self::TYPE_VIDEO,
+                'source' => self::SOURCE_FILE,
+                'path' => $path,
+                'display_url' => AssetPath::url($path),
+            ];
+        }
 
         if ($type === self::TYPE_VIDEO || (isset($item['url']) && ! isset($item['path']))) {
             $url = trim((string) ($item['url'] ?? ''));
@@ -339,6 +439,7 @@ class ProductGallery
 
             return [
                 'type' => self::TYPE_VIDEO,
+                'source' => self::SOURCE_YOUTUBE,
                 'url' => $url,
                 'youtube_id' => $youtubeId,
                 'thumb_url' => self::thumbUrl($youtubeId),

@@ -114,14 +114,19 @@ class NgoiHaiCoCtService
      * @param  array<int, string>  $imagePaths
      * @param  array<int, string>  $videoUrls
      */
-    public function removeGalleryItemsFromJson(int $id, array $imagePaths = [], array $videoUrls = []): NgoiHaiCoCt
+    public function removeGalleryItemsFromJson(int $id, array $imagePaths = [], array $videoUrls = [], array $videoPaths = []): NgoiHaiCoCt
     {
-        return $this->removeGalleryItems($this->findById($id), $imagePaths, $videoUrls);
+        return $this->removeGalleryItems($this->findById($id), $imagePaths, $videoUrls, $videoPaths);
     }
 
     public function appendImagesToGallery(int $id, array $files)
     {
         return $this->appendImagesToGalleryModel($this->findById($id), $files, self::IMAGE_DIRECTORY);
+    }
+
+    public function appendMediaToGallery(int $id, array $images = [], array $videoUrls = [], array $videoFiles = [])
+    {
+        return $this->appendMediaToGalleryModel($this->findById($id), $images, $videoUrls, $videoFiles, self::IMAGE_DIRECTORY);
     }
 
     public function reorderGalleryItems(int $id, array $tokens)

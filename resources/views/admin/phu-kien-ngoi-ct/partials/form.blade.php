@@ -2,6 +2,8 @@
     $isEdit = isset($product) && $product;
 @endphp
 
+<x-admin.shared.product-ct-tabs>
+<x-slot:info>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <div class="lg:col-span-2 space-y-5">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -50,25 +52,26 @@
     </div>
 </div>
 
-<hr class="border-gray-100 my-8">
-
+@include('admin.partials.product-journey-video-field')
+</x-slot:info>
+<x-slot:media>
 @if($isEdit)
-    @include('admin.partials.product-journey-video-field')
     @include('admin.partials.product-gallery-manager', [
         'mode' => 'edit',
-        'section' => 'form',
-        'uploadField' => 'new_images[]',
-        'videoField' => 'new_video_urls[]',
+        'images' => $product->images ?? [],
+        'destroyUrl' => $destroyUrl ?? '',
+        'uploadUrl' => $uploadUrl ?? '',
+        'reorderUrl' => $reorderUrl ?? '',
     ])
 @else
-    @include('admin.partials.product-journey-video-field')
     @include('admin.partials.product-gallery-manager', [
         'mode' => 'create',
-        'section' => 'form',
         'uploadField' => 'images[]',
         'videoField' => 'video_urls[]',
     ])
 @endif
+</x-slot:media>
+</x-admin.shared.product-ct-tabs>
 
 @push('scripts')
 <script>

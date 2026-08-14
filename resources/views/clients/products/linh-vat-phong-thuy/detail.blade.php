@@ -410,45 +410,6 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Main Product Gallery Swiper
-                const thumbSwiper = new Swiper('.product-thumb-swiper', {
-                    spaceBetween: 16,
-                    slidesPerView: 4,
-                    watchSlidesProgress: true,
-                    slideToClickedSlide: true,
-                    centerInsufficientSlides: true,
-                    watchOverflow: true,
-                    breakpoints: {
-                        768: {
-                            slidesPerView: 5
-                        },
-                        1024: {
-                            slidesPerView: 7
-                        }
-                    }
-                });
-
-                const mainSwiper = new Swiper('.product-main-swiper', {
-                    spaceBetween: 10,
-                    pagination: {
-                        el: '.product-main-pagination',
-                        clickable: true,
-                    },
-                    thumbs: {
-                        swiper: thumbSwiper
-                    },
-                    effect: 'fade',
-                    fadeEffect: {
-                        crossFade: true
-                    },
-                    on: {
-                        slideChange(swiper) {
-                            const offset = Math.floor((thumbSwiper.params.slidesPerView || 1) / 2);
-                            thumbSwiper.slideTo(Math.max(0, swiper.activeIndex - offset), 280);
-                        }
-                    }
-                });
-
                 // Projects (Works) Swiper
                 new Swiper('.projects-slider', {
                     slidesPerView: 1.2,

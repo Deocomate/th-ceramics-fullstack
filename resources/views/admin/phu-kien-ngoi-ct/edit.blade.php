@@ -12,7 +12,13 @@
             @method('PUT')
             <input type="hidden" name="category_type" value="{{ $categoryType }}">
 
-            @include('admin.phu-kien-ngoi-ct.partials.form', ['product' => $product, 'categoryType' => $categoryType])
+            @include('admin.phu-kien-ngoi-ct.partials.form', [
+                'product' => $product,
+                'categoryType' => $categoryType,
+                'destroyUrl' => route('admin.phu-kien-ngoi-ct.image.destroy', $product->phu_kien_ngoi_ct_id),
+                'uploadUrl' => route('admin.phu-kien-ngoi-ct.image.store', $product->phu_kien_ngoi_ct_id),
+                'reorderUrl' => route('admin.phu-kien-ngoi-ct.gallery.reorder', $product->phu_kien_ngoi_ct_id),
+            ])
 
             <div class="pt-6 mt-8 flex justify-end gap-3 border-t border-gray-100">
                 <a href="{{ route('admin.phu-kien-ngoi-ct.index', ['category_type' => $categoryType]) }}" class="px-6 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy bỏ</a>
@@ -20,13 +26,4 @@
             </div>
         </form>
     </div>
-
-    @include('admin.partials.product-gallery-manager', [
-        'mode' => 'edit',
-        'section' => 'library',
-        'images' => $product->images ?? [],
-        'destroyUrl' => route('admin.phu-kien-ngoi-ct.image.destroy', $product->phu_kien_ngoi_ct_id),
-        'uploadUrl' => route('admin.phu-kien-ngoi-ct.image.store', $product->phu_kien_ngoi_ct_id),
-        'reorderUrl' => route('admin.phu-kien-ngoi-ct.gallery.reorder', $product->phu_kien_ngoi_ct_id),
-    ])
 </x-admin.layouts.app>

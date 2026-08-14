@@ -27,15 +27,72 @@ const sameUrl = (left, right) => {
     }
 };
 
-const resetVideoShell = (shell) => resetInlineVideoShell(shell);
+const resetFileVideoShell = (shell) => {
+    const host = shell.querySelector("[data-file-player-host]");
+    if (host) {
+        host.querySelectorAll("video").forEach((video) => {
+            video.pause();
+            video.removeAttribute("src");
+            video.load();
+        });
+        host.innerHTML = "";
+        host.classList.add("hidden");
+    }
 
-const resetAllVideoShells = (root) => {
-    root.querySelectorAll("[data-product-video-shell]").forEach((shell) => resetVideoShell(shell));
+    const playButton = shell.querySelector("[data-product-video-play]");
+    if (playButton) {
+        playButton.classList.remove("hidden");
+    }
+};
+
+const resetVideoShell = (shell) => {
+    resetInlineVideoShell(shell);
+    resetFileVideoShell(shell);
+};
+
+const mountFileVideo = (shell, { autoplay = true } = {}) => {
+    if (!shell?.dataset.videoSrc) {
+        return Promise.resolve(null);
+    }
+
+    resetVideoShell(shell);
+
+    const playButton = shell.querySelector("[data-product-video-play]");
+    if (playButton) {
+        playButton.classList.add("hidden");
+    }
+
+    let host = shell.querySelector("[data-file-player-host]");
+    if (!host) {
+        host = document.createElement("div");
+        host.setAttribute("data-file-player-host", "");
+        host.className = "absolute inset-0 z-20 w-full h-full bg-black";
+        shell.appendChild(host);
+    }
+
+    const video = document.createElement("video");
+    video.src = shell.dataset.videoSrc;
+    video.controls = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.className = "w-full h-full object-cover";
+    host.appendChild(video);
+    host.classList.remove("hidden");
+
+    if (autoplay) {
+        video.play().catch(() => {});
+    }
+
+    return Promise.resolve(video);
 };
 
 const mountVideoIframe = (shell, { autoplay = true } = {}) => {
     if (!shell) {
         return Promise.resolve(null);
+    }
+
+    if (shell.dataset.videoSrc) {
+        return mountFileVideo(shell, { autoplay });
     }
 
     if (!shell.dataset.youtubeId && shell.dataset.embedSrc) {
@@ -46,6 +103,10 @@ const mountVideoIframe = (shell, { autoplay = true } = {}) => {
     }
 
     return mountInlineVideoShell(shell, { autoplay });
+};
+
+const resetAllVideoShells = (root) => {
+    root.querySelectorAll("[data-product-video-shell]").forEach((shell) => resetVideoShell(shell));
 };
 
 const mountActiveVideoSlide = (mainSwiperElement, swiper) => {

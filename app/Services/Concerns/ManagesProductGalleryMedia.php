@@ -40,6 +40,15 @@ trait ManagesProductGalleryMedia
             $images = $this->appendGalleryVideos($images, $data['video_urls']);
         }
 
+        $videoFiles = $data['videos'] ?? $data['new_videos'] ?? null;
+        if (! empty($videoFiles) && is_array($videoFiles)) {
+            $images = ProductGallery::appendUploadedVideos(
+                $images,
+                $videoFiles,
+                ProductGallery::videoDirectoryFromImageDirectory($directory)
+            );
+        }
+
         return $images;
     }
 
@@ -76,36 +85,44 @@ trait ManagesProductGalleryMedia
 
     protected function removeGalleryImage(Model $model, string $imagePath, string $imagesAttribute = 'images'): Model
     {
-        return $this->removeGalleryItems($model, [$imagePath], [], $imagesAttribute);
+        return $this->removeGalleryItems($model, [$imagePath], [], [], $imagesAttribute);
     }
 
     protected function removeGalleryVideo(Model $model, string $videoUrl, string $imagesAttribute = 'images'): Model
     {
-        return $this->removeGalleryItems($model, [], [$videoUrl], $imagesAttribute);
+        return $this->removeGalleryItems($model, [], [$videoUrl], [], $imagesAttribute);
     }
 
     /**
      * @param  array<int, mixed>  $imagePaths
      * @param  array<int, mixed>  $videoUrls
+     * @param  array<int, mixed>  $videoPaths
      */
     protected function removeGalleryItems(
         Model $model,
         array $imagePaths = [],
         array $videoUrls = [],
+        array $videoPaths = [],
         string $imagesAttribute = 'images'
     ): Model {
         $current = is_array($model->{$imagesAttribute}) ? $model->{$imagesAttribute} : [];
         $paths = array_values(array_filter($imagePaths, fn ($path) => is_string($path) && $path !== ''));
         $urls = array_values(array_filter($videoUrls, fn ($url) => is_string($url) && $url !== ''));
+        $filePaths = array_values(array_filter($videoPaths, fn ($path) => is_string($path) && $path !== ''));
 
         $updated = ProductGallery::removeImagePaths($current, $paths);
         $updated = ProductGallery::removeVideoUrls($updated, $urls);
+        $updated = ProductGallery::removeVideoPaths($updated, $filePaths);
 
         $model->update([
             $imagesAttribute => empty($updated) ? null : $updated,
         ]);
 
         foreach ($paths as $path) {
+            FileUploadHelper::delete($path);
+        }
+
+        foreach ($filePaths as $path) {
             FileUploadHelper::delete($path);
         }
 
@@ -128,6 +145,45 @@ trait ManagesProductGalleryMedia
 
         $model->update([
             $imagesAttribute => empty($updated) ? null : $updated,
+        ]);
+        $model->refresh();
+
+        return $model;
+    }
+
+    /**
+     * @param  array<int, mixed>  $imageFiles
+     * @param  array<int, mixed>  $videoUrls
+     * @param  array<int, mixed>  $videoFiles
+     */
+    protected function appendMediaToGalleryModel(
+        Model $model,
+        array $imageFiles,
+        array $videoUrls,
+        array $videoFiles,
+        string $directory,
+        string $imagesAttribute = 'images'
+    ): Model {
+        $current = is_array($model->{$imagesAttribute}) ? $model->{$imagesAttribute} : [];
+
+        if ($imageFiles !== []) {
+            $current = $this->appendGalleryImages($current, $imageFiles, $directory);
+        }
+
+        if ($videoUrls !== []) {
+            $current = $this->appendGalleryVideos($current, $videoUrls);
+        }
+
+        if ($videoFiles !== []) {
+            $current = ProductGallery::appendUploadedVideos(
+                $current,
+                $videoFiles,
+                ProductGallery::videoDirectoryFromImageDirectory($directory)
+            );
+        }
+
+        $model->update([
+            $imagesAttribute => empty($current) ? null : $current,
         ]);
         $model->refresh();
 
@@ -206,6 +262,16 @@ trait ManagesProductGalleryMedia
         $videoUrls = $data['new_video_urls'] ?? $data['video_urls'] ?? null;
         if (! empty($videoUrls) && is_array($videoUrls)) {
             $updated = $this->appendGalleryVideos($updated, $videoUrls);
+            $changed = true;
+        }
+
+        $videoFiles = $data['new_videos'] ?? $data['videos'] ?? null;
+        if (! empty($videoFiles) && is_array($videoFiles)) {
+            $updated = ProductGallery::appendUploadedVideos(
+                $updated,
+                $videoFiles,
+                ProductGallery::videoDirectoryFromImageDirectory($imageDirectory)
+            );
             $changed = true;
         }
 

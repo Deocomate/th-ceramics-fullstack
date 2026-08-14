@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\NgoiAmDuong;
 use App\Models\NgoiAmDuongCt;
 use App\Models\User;
 use App\Services\ProductCartOptionsService;
@@ -196,9 +197,9 @@ test('admin can save product journey video separately from gallery', function ()
 });
 
 test('product detail journey video prefers product url then parent config', function () {
-    $parent = \App\Models\NgoiAmDuong::query()->first();
+    $parent = NgoiAmDuong::query()->first();
     if (! $parent) {
-        $parent = \App\Models\NgoiAmDuong::query()->create([
+        $parent = NgoiAmDuong::query()->create([
             'thumbnail_main' => 'seeders/products/cover.png',
             'thumbnail1' => 'seeders/products/cover.png',
             'thumbnail2' => 'seeders/products/cover.png',
@@ -260,6 +261,28 @@ test('creating product can include gallery videos with images', function () {
     expect($product->images)->toHaveCount(2)
         ->and($product->images[1]['type'])->toBe('video')
         ->and($product->images[1]['url'])->toBe('https://youtu.be/Win12rIicBI');
+});
+
+test('creating product can include an uploaded gallery video file', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $this->post(route('admin.ngoi-am-duong-ct.store'), [
+        'code' => 'NAD-VIDEO-FILE-001',
+        'name' => 'Ngói store with file video',
+        'color' => 'Men đỏ',
+        'price' => 30000,
+        'size' => '20x20',
+        'images' => [galleryFakeImage('store-cover.png')],
+        'videos' => [UploadedFile::fake()->create('clip.webm', 120, 'video/webm')],
+    ])->assertRedirect(route('admin.ngoi-am-duong-ct.index'));
+
+    $product = NgoiAmDuongCt::query()->where('code', 'NAD-VIDEO-FILE-001')->firstOrFail();
+
+    expect($product->images)->toHaveCount(2)
+        ->and($product->images[1]['type'])->toBe('video')
+        ->and($product->images[1]['source'])->toBe('file')
+        ->and($product->images[1]['path'])->toContain('ngoi_am_duong_ct/videos/');
 });
 
 test('admin can create product with dedicated cover image', function () {
@@ -351,4 +374,114 @@ test('admin ajax can reorder gallery and set cover', function () {
 
     $product->refresh();
     expect(ProductGallery::firstImagePath($product->images))->toBe('ngoi_am_duong_ct/images/a.png');
+});
+
+test('admin ajax can append youtube url without waiting for form save', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct(['ngoi_am_duong_ct/images/cover.png']);
+
+    $this->withHeaders([
+        'Accept' => 'application/json',
+        'X-Requested-With' => 'XMLHttpRequest',
+    ])->post(route('admin.ngoi-am-duong-ct.image.store', $product->ngoi_am_duong_ct_id), [
+        'video_urls' => ['https://www.youtube.com/watch?v=Win12rIicBI'],
+    ])->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('remaining_count', 2);
+
+    $product->refresh();
+    expect($product->images[1])->toBe([
+        'type' => 'video',
+        'url' => 'https://www.youtube.com/watch?v=Win12rIicBI',
+    ]);
+});
+
+test('admin ajax can append an uploaded gallery video file', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct(['ngoi_am_duong_ct/images/cover.png']);
+    $video = UploadedFile::fake()->create('clip.mp4', 200, 'video/mp4');
+
+    $this->withHeaders([
+        'Accept' => 'application/json',
+        'X-Requested-With' => 'XMLHttpRequest',
+    ])->post(route('admin.ngoi-am-duong-ct.image.store', $product->ngoi_am_duong_ct_id), [
+        'videos' => [$video],
+    ])->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('remaining_count', 2);
+
+    $product->refresh();
+    expect($product->images)->toHaveCount(2)
+        ->and($product->images[1]['type'])->toBe('video')
+        ->and($product->images[1]['source'])->toBe('file')
+        ->and($product->images[1]['path'])->toContain('ngoi_am_duong_ct/videos/');
+});
+
+test('admin ajax rejects non video files for gallery video upload', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct();
+
+    $this->withHeaders([
+        'Accept' => 'application/json',
+        'X-Requested-With' => 'XMLHttpRequest',
+    ])->post(route('admin.ngoi-am-duong-ct.image.store', $product->ngoi_am_duong_ct_id), [
+        'videos' => [UploadedFile::fake()->create('notes.txt', 10, 'text/plain')],
+    ])->assertStatus(422);
+});
+
+test('admin ajax rejects gallery video files larger than 50mb', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct();
+
+    $this->withHeaders([
+        'Accept' => 'application/json',
+        'X-Requested-With' => 'XMLHttpRequest',
+    ])->post(route('admin.ngoi-am-duong-ct.image.store', $product->ngoi_am_duong_ct_id), [
+        'videos' => [UploadedFile::fake()->create('huge.mp4', 51201, 'video/mp4')],
+    ])->assertStatus(422);
+});
+
+test('admin ajax can delete an uploaded gallery video file', function () {
+    Storage::fake('public');
+    $this->actingAs(User::factory()->create());
+
+    Storage::disk('public')->put('ngoi_am_duong_ct/videos/clip.mp4', 'fake-video');
+
+    $product = makeNgoiAmDuongProduct([
+        'ngoi_am_duong_ct/images/cover.png',
+        ['type' => 'video', 'source' => 'file', 'path' => 'ngoi_am_duong_ct/videos/clip.mp4'],
+    ]);
+
+    $this->deleteJson(route('admin.ngoi-am-duong-ct.image.destroy', $product->ngoi_am_duong_ct_id), [
+        'video_path' => 'ngoi_am_duong_ct/videos/clip.mp4',
+    ])->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('remaining_count', 1);
+
+    $product->refresh();
+    expect($product->images)->toBe(['ngoi_am_duong_ct/images/cover.png']);
+    Storage::disk('public')->assertMissing('ngoi_am_duong_ct/videos/clip.mp4');
+});
+
+test('product detail renders uploaded file videos with html5 source', function () {
+    $product = makeNgoiAmDuongProduct([
+        'assets/images/ngoi-01.jpg',
+        ['type' => 'video', 'source' => 'file', 'path' => 'ngoi_am_duong_ct/videos/clip.mp4'],
+    ]);
+
+    $this->get(route('client.products.ngoi-am-duong.detail', $product->ngoi_am_duong_ct_id))
+        ->assertOk()
+        ->assertSee('data-gallery-type="video"', false)
+        ->assertSee('data-video-src=', false)
+        ->assertSee('data-file-player-host', false)
+        ->assertSee('ngoi_am_duong_ct/videos/clip.mp4', false)
+        ->assertDontSee('data-youtube-id="clip"', false);
 });

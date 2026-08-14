@@ -123,7 +123,7 @@ function closeLightbox() {
 const initLightbox = () => {
     // Double-click opens lightbox so single click can still change slides / play video.
     document.addEventListener('dblclick', (event) => {
-        if (event.target.closest('[data-product-video-play], [data-product-video-iframe], [data-product-video-shell], [data-yt-player-host], [data-yt-timeline]')) {
+        if (event.target.closest('[data-product-video-play], [data-product-video-iframe], [data-product-video-shell], [data-yt-player-host], [data-file-player-host], [data-yt-timeline]')) {
             return;
         }
 

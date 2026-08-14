@@ -38,6 +38,8 @@ trait ValidatesProductGalleryMedia
     protected function galleryStoreRules(): array
     {
         return [
+            'videos' => ['nullable', 'array'],
+            'videos.*' => ['file', 'mimes:mp4,webm', 'max:51200'],
             'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'video_urls' => ['nullable', 'array'],
             'video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
@@ -53,6 +55,8 @@ trait ValidatesProductGalleryMedia
             'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
             'new_video_urls' => ['nullable', 'array'],
             'new_video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
+            'new_videos' => ['nullable', 'array'],
+            'new_videos.*' => ['file', 'mimes:mp4,webm', 'max:51200'],
         ];
     }
 
@@ -92,6 +96,10 @@ trait ValidatesProductGalleryMedia
             'video_urls.*.max' => 'Link YouTube không được vượt quá 500 ký tự.',
             'new_video_urls.*.url' => 'Link YouTube không hợp lệ.',
             'new_video_urls.*.max' => 'Link YouTube không được vượt quá 500 ký tự.',
+            'videos.*.mimes' => 'Video phải có định dạng mp4 hoặc webm.',
+            'videos.*.max' => 'Mỗi video không được vượt quá 50MB.',
+            'new_videos.*.mimes' => 'Video phải có định dạng mp4 hoặc webm.',
+            'new_videos.*.max' => 'Mỗi video không được vượt quá 50MB.',
         ]);
     }
 }

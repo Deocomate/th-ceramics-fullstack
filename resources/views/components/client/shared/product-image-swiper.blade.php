@@ -19,17 +19,23 @@
 @endphp
 
 <div class="flex flex-col md:gap-5 lg:col-span-3">
-    <div class="w-full aspect-square bg-white md:shadow-lg relative overflow-hidden group swiper product-main-swiper" data-product-main-swiper>
+    <div class="relative w-full aspect-square bg-white md:shadow-lg overflow-hidden">
+    <div class="absolute inset-0 swiper product-main-swiper group" data-product-main-swiper>
         <div class="swiper-wrapper">
             @foreach($mediaItems as $index => $item)
                 @if(($item['type'] ?? '') === 'video')
+                    @php $isFileVideo = \App\Support\ProductGallery::isFileVideo($item); @endphp
                     <div class="swiper-slide w-full h-full {{ $mainBg }}" data-gallery-type="video">
                         <div
                             class="relative w-full h-full bg-black"
                             data-product-video-shell
-                            data-embed-src="{{ $item['embed_url'] }}"
-                            data-youtube-id="{{ $item['youtube_id'] }}"
-                            data-video-thumb="{{ $item['thumb_url'] }}"
+                            @if($isFileVideo)
+                                data-video-src="{{ $item['display_url'] ?? '' }}"
+                            @else
+                                data-embed-src="{{ $item['embed_url'] ?? '' }}"
+                                data-youtube-id="{{ $item['youtube_id'] ?? '' }}"
+                                data-video-thumb="{{ $item['thumb_url'] ?? '' }}"
+                            @endif
                         >
                             <button
                                 type="button"
@@ -37,13 +43,17 @@
                                 class="absolute inset-0 z-10 w-full h-full cursor-pointer group/video"
                                 aria-label="Phát video sản phẩm {{ $index + 1 }}"
                             >
-                                <img
-                                    src="{{ $item['thumb_url'] }}"
-                                    alt="Video sản phẩm {{ $index + 1 }}"
-                                    class="w-full h-full object-cover"
-                                    loading="lazy"
-                                    referrerpolicy="no-referrer"
-                                />
+                                @if($isFileVideo)
+                                    <video src="{{ $item['display_url'] ?? '' }}" class="w-full h-full object-cover" muted preload="metadata" playsinline></video>
+                                @else
+                                    <img
+                                        src="{{ $item['thumb_url'] }}"
+                                        alt="Video sản phẩm {{ $index + 1 }}"
+                                        class="w-full h-full object-cover"
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer"
+                                    />
+                                @endif
                                 <span class="absolute inset-0 bg-black/25 transition-colors group-hover/video:bg-black/35"></span>
                                 <span class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                     <span class="w-16 h-16 rounded-full bg-[#A31D1D] shadow-lg flex items-center justify-center">
@@ -53,7 +63,11 @@
                                     </span>
                                 </span>
                             </button>
-                            <div data-yt-player-host class="absolute inset-0 z-20 w-full h-full bg-black hidden"></div>
+                            @if($isFileVideo)
+                                <div data-file-player-host class="absolute inset-0 z-20 w-full h-full bg-black hidden"></div>
+                            @else
+                                <div data-yt-player-host class="absolute inset-0 z-20 w-full h-full bg-black hidden"></div>
+                            @endif
                         </div>
                     </div>
                 @else
@@ -86,6 +100,7 @@
             </svg>
         </button>
     </div>
+    </div>
 
     <div class="md:hidden flex justify-center mt-5">
         <div class="product-main-pagination flex justify-center gap-[7px]" data-product-main-pagination></div>
@@ -95,8 +110,13 @@
         <div class="swiper-wrapper">
             @foreach($mediaItems as $index => $item)
                 @if(($item['type'] ?? '') === 'video')
+                    @php $isFileVideo = \App\Support\ProductGallery::isFileVideo($item); @endphp
                     <div class="swiper-slide aspect-square cursor-pointer shadow-sm transition-all duration-200 {{ $thumbBg ?: 'bg-white' }} relative" data-gallery-type="video">
-                        <img src="{{ $item['thumb_url'] }}" alt="Video thu nhỏ {{ $index + 1 }}" class="w-full h-full {{ $thumbImgClass }}" loading="lazy" referrerpolicy="no-referrer" />
+                        @if($isFileVideo)
+                            <video src="{{ $item['display_url'] ?? '' }}" class="w-full h-full {{ $thumbImgClass }} object-cover" muted preload="metadata" playsinline></video>
+                        @else
+                            <img src="{{ $item['thumb_url'] }}" alt="Video thu nhỏ {{ $index + 1 }}" class="w-full h-full {{ $thumbImgClass }}" loading="lazy" referrerpolicy="no-referrer" />
+                        @endif
                         <span class="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <span class="w-8 h-8 rounded-full bg-black/60 flex items-center justify-center">
                                 <svg class="w-4 h-4 text-white ml-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -117,14 +137,34 @@
 
 @push('styles')
     <style>
+        .product-main-swiper,
+        .product-main-swiper .swiper-wrapper,
+        .product-main-swiper .swiper-slide {
+            width: 100%;
+            height: 100%;
+        }
+
+        .product-main-swiper .swiper-slide > img,
+        .product-main-swiper .swiper-slide > [data-product-video-shell],
+        .product-main-swiper [data-product-video-shell] > img,
+        .product-main-swiper [data-product-video-shell] video,
+        .product-main-swiper [data-product-video-play] img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
         .product-main-swiper [data-product-video-shell] iframe,
-        .product-main-swiper [data-yt-player-host] iframe {
+        .product-main-swiper [data-yt-player-host] iframe,
+        .product-main-swiper [data-file-player-host] video {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
             border: 0;
             z-index: 20;
+            object-fit: cover;
         }
 
         .product-thumb-swiper .swiper-slide {

@@ -8,9 +8,12 @@
     $contactHotline = data_get($globalContact ?? null, 'hotline', '0966 55 8808');
     $zaloLink = data_get($globalContact ?? null, 'zalo_link', 'https://zalo.me/0966558808');
 
-    $jsonLdImages = array_map(function ($img) {
-        return str_contains($img, 'assets/') ? asset($img) : asset('storage/' . $img);
-    }, $images);
+    $jsonLdImages = \App\Support\ProductGallery::normalize($images)
+        ->where('type', 'image')
+        ->map(fn ($item) => \App\Support\AssetPath::url($item['path'] ?? null))
+        ->filter()
+        ->values()
+        ->all();
     $jsonLdDesc = \Illuminate\Support\Str::limit(strip_tags(implode(', ', $product->des ?? [])), 300);
 
     // Lấy danh sách sản phẩm liên quan cho section "Có thể bạn quan tâm"
@@ -239,39 +242,6 @@
     @push('scripts')
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                // Khởi tạo Swiper Image Gallery
-                var thumbSwiper = new Swiper(".product-thumb-swiper", {
-                    spaceBetween: 16,
-                    slidesPerView: 5,
-                    watchSlidesProgress: true,
-                    slideToClickedSlide: true,
-                    centerInsufficientSlides: true,
-                    watchOverflow: true,
-                    breakpoints: {
-                        1024: {
-                            slidesPerView: 7,
-                            spaceBetween: 16,
-                        },
-                    },
-                });
-                var mainSwiper = new Swiper(".product-main-swiper", {
-                    slidesPerView: 1,
-                    spaceBetween: 0,
-                    pagination: {
-                        el: ".product-main-pagination",
-                        clickable: true,
-                    },
-                    thumbs: {
-                        swiper: thumbSwiper,
-                    },
-                    on: {
-                        slideChange: function (swiper) {
-                            var offset = Math.floor((thumbSwiper.params.slidesPerView || 1) / 2);
-                            thumbSwiper.slideTo(Math.max(0, swiper.activeIndex - offset), 280);
-                        },
-                    },
-                });
-
                 // Xử lý nút Biến thể / Phân loại
                 const variantBtns = document.querySelectorAll('.variant-btn');
                 const skuEl = document.getElementById('dynamic-sku');
