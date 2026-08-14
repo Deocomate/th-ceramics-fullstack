@@ -170,7 +170,8 @@
         </div>
     </div>
 
-    <div class="fixed right-3 bottom-20 sm:right-4 sm:bottom-24 md:right-8 md:bottom-8 z-[60] flex flex-col items-center gap-3"
+    <div class="fixed right-3 bottom-20 z-[60] flex flex-col items-center gap-3 transition-[bottom] duration-300 sm:right-4 sm:bottom-24 md:right-8 md:bottom-8"
+        data-quick-actions
         aria-label="Hành động nhanh">
         <button type="button" data-back-to-top aria-label="Lên đầu trang"
             class="w-12 h-12 rounded-full bg-secondary text-white shadow-lg ring-1 ring-black/10 flex items-center justify-center transition-all duration-300 active:scale-95 md:hover:scale-105 opacity-0 translate-y-2 pointer-events-none">

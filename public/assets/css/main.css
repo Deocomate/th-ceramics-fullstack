@@ -356,9 +356,35 @@
   z-index: 90;
 }
 
+@media (min-width: 640px) {
+  [data-weight-calculator-bar] {
+    bottom: 6rem;
+  }
+}
+
 @media (min-width: 768px) {
   [data-weight-calculator-bar] {
     bottom: 2rem;
+  }
+}
+
+/*
+  Keep Zalo / back-to-top above the weight bar. :has() works before JS
+  and drops the FABs back when the bar is dismissed ([hidden]).
+*/
+html:has([data-weight-calculator-bar]:not([hidden])) [data-quick-actions] {
+  bottom: 9.5rem;
+}
+
+@media (min-width: 640px) {
+  html:has([data-weight-calculator-bar]:not([hidden])) [data-quick-actions] {
+    bottom: 10.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  html:has([data-weight-calculator-bar]:not([hidden])) [data-quick-actions] {
+    bottom: 6.5rem;
   }
 }
 
