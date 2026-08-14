@@ -7,6 +7,7 @@ use App\Services\ProductCartOptionsService;
 use App\Support\ProductGallery;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 function galleryFakeImage(string $name): UploadedFile
 {
@@ -419,6 +420,47 @@ test('admin ajax can append an uploaded gallery video file', function () {
         ->and($product->images[1]['type'])->toBe('video')
         ->and($product->images[1]['source'])->toBe('file')
         ->and($product->images[1]['path'])->toContain('ngoi_am_duong_ct/videos/');
+});
+
+test('admin ajax can upload a gallery video in chunks', function () {
+    Storage::fake('public');
+    Storage::fake('local');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct(['ngoi_am_duong_ct/images/cover.png']);
+    $contents = str_repeat('V', 1500 * 1024);
+    $chunkSize = 1024 * 1024;
+    $chunks = str_split($contents, $chunkSize);
+    $uploadId = (string) Str::uuid();
+
+    foreach ($chunks as $index => $part) {
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])->post(route('admin.ngoi-am-duong-ct.image.store', $product->ngoi_am_duong_ct_id), [
+            'chunk' => UploadedFile::fake()->createWithContent('part-'.$index.'.bin', $part),
+            'upload_id' => $uploadId,
+            'chunk_index' => $index,
+            'total_chunks' => count($chunks),
+            'kind' => 'video',
+            'original_name' => 'clip.mp4',
+        ]);
+
+        if ($index < count($chunks) - 1) {
+            $response->assertOk()->assertJsonMissingPath('items');
+
+            continue;
+        }
+
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('remaining_count', 2);
+    }
+
+    $product->refresh();
+    expect($product->images)->toHaveCount(2)
+        ->and($product->images[1]['type'])->toBe('video')
+        ->and($product->images[1]['source'])->toBe('file');
 });
 
 test('admin ajax rejects non video files for gallery video upload', function () {

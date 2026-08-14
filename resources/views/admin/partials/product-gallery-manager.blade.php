@@ -136,7 +136,7 @@
 
         <div class="flex flex-col border rounded-xl p-6 bg-gray-50/50 {{ $errors->has($videoFileErrorKey) || $errors->has($videoFileErrorKey.'.*') ? 'border-red-300 bg-red-50/30' : 'border-gray-200' }}">
             <label class="block text-sm font-semibold text-gray-700 mb-2">Upload video (mp4 / webm)</label>
-            <p class="text-xs text-gray-500 mb-4">Tối đa 50MB/file. Phát trực tiếp trên trang chi tiết sản phẩm.</p>
+            <p class="text-xs text-gray-500 mb-4">Tối đa 50MB/file. Phát trực tiếp trên trang chi tiết sản phẩm.@if(! $isEdit) File lớn: lưu sản phẩm trước, rồi tải video trên trang sửa.@endif</p>
 
             <div id="gallery-video-file-dropzone"
                 class="relative border-2 border-dashed border-gray-300 rounded-xl bg-white p-4 transition-colors hover:border-[#A31D1D] hover:bg-red-50/30">
@@ -288,7 +288,7 @@
     const ALLOWED_IMAGE_MIME = ['image/jpeg', 'image/png', 'image/webp'];
     const ALLOWED_VIDEO_EXT = ['mp4', 'webm'];
     const ALLOWED_VIDEO_MIME = ['video/mp4', 'video/webm'];
-    const BATCH_SIZE = 10;
+    const CHUNK_SIZE = 1024 * 1024;
     const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
     const editUsesAjaxUpload = {{ $isEdit ? 'true' : 'false' }};
     let galleryUploadBusy = false;
@@ -428,6 +428,7 @@
             xhr.setRequestHeader('Accept', 'application/json');
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.withCredentials = true;
+            xhr.timeout = 120000;
 
             xhr.upload.onprogress = (event) => {
                 if (!event.lengthComputable) return;
@@ -439,7 +440,12 @@
 
             xhr.onload = () => {
                 let data = {};
-                try { data = JSON.parse(xhr.responseText || '{}'); } catch (_) {}
+                const raw = xhr.responseText || '';
+                try { data = JSON.parse(raw); } catch (_) {}
+                if (xhr.status === 413 || /POST data is too large/i.test(raw + (data.message || ''))) {
+                    reject(new Error('File vượt quá giới hạn máy chủ. Hệ thống sẽ tải theo từng phần — hãy thử lại.'));
+                    return;
+                }
                 if (xhr.status < 200 || xhr.status >= 300) {
                     reject(new Error(
                         data.message
@@ -449,17 +455,63 @@
                     return;
                 }
                 if (data.items) renderLibraryFromItems(data.items, data.cover_path);
-                if (statusEl) {
-                    statusEl.textContent = data.message || 'Đã thêm vào thư viện.';
+                if (statusEl && data.message) {
+                    statusEl.textContent = data.message;
                     statusEl.classList.remove('hidden', 'text-red-600');
                     statusEl.classList.add('text-gray-500');
                 }
                 resolve(data);
             };
+            xhr.ontimeout = () => reject(new Error('Hết thời gian tải lên. Kiểm tra mạng rồi thử lại.'));
             xhr.onerror = () => reject(new Error('Mất kết nối khi tải lên.'));
             xhr.onabort = () => reject(new Error('Đã hủy tải lên.'));
             xhr.send(body);
         });
+    }
+
+    function newGalleryUploadId() {
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+            return window.crypto.randomUUID();
+        }
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    async function uploadFileInChunks(file, kind, dropzone, statusEl, label) {
+        const totalChunks = Math.max(1, Math.ceil(file.size / CHUNK_SIZE));
+        const uploadId = newGalleryUploadId();
+        let lastData = null;
+        for (let index = 0; index < totalChunks; index++) {
+            const blob = file.slice(index * CHUNK_SIZE, (index + 1) * CHUNK_SIZE);
+            const fd = new FormData();
+            fd.append('chunk', blob, file.name);
+            fd.append('upload_id', uploadId);
+            fd.append('chunk_index', String(index));
+            fd.append('total_chunks', String(totalChunks));
+            fd.append('kind', kind);
+            fd.append('original_name', file.name);
+            lastData = await postGalleryFormData(fd, statusEl, {
+                onProgress(percent) {
+                    const overall = Math.round(((index + (percent / 100)) / totalChunks) * 100);
+                    showGalleryProgress(dropzone, {
+                        percent: overall,
+                        label: percent >= 100 && index === totalChunks - 1
+                            ? ('Đang xử lý ' + file.name + '…')
+                            : (label + ' · phần ' + (index + 1) + '/' + totalChunks),
+                    });
+                },
+            });
+            showGalleryProgress(dropzone, {
+                percent: Math.round(((index + 1) / totalChunks) * 100),
+                label: (index === totalChunks - 1)
+                    ? ('Đang xử lý ' + file.name + '…')
+                    : (label + ' · phần ' + (index + 1) + '/' + totalChunks),
+            });
+        }
+        return lastData;
     }
 
     async function uploadFilesViaAjax(fileList, statusEl) {
@@ -481,24 +533,11 @@
         }
         showGalleryProgress(uploadDropzone, { percent: 0, label: 'Đang tải ' + files.length + ' ảnh…' });
         try {
-            for (let i = 0; i < files.length; i += BATCH_SIZE) {
-                const batch = files.slice(i, i + BATCH_SIZE);
-                const doneBefore = i;
-                const fd = new FormData();
-                batch.forEach((f) => fd.append('images[]', f, f.name));
-                await postGalleryFormData(fd, statusEl, {
-                    onProgress(percent) {
-                        const finished = doneBefore + (percent / 100) * batch.length;
-                        const overall = Math.round((finished / files.length) * 100);
-                        showGalleryProgress(uploadDropzone, {
-                            percent: overall,
-                            label: percent >= 100
-                                ? ('Đang xử lý ảnh ' + Math.min(i + batch.length, files.length) + '/' + files.length + '…')
-                                : ('Đang tải ảnh ' + Math.min(i + batch.length, files.length) + '/' + files.length),
-                        });
-                    },
-                });
-                if (statusEl) statusEl.textContent = 'Đã upload ' + Math.min(i + BATCH_SIZE, files.length) + '/' + files.length + ' ảnh…';
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const prefix = files.length > 1 ? ('Ảnh ' + (i + 1) + '/' + files.length + ' · ') : '';
+                await uploadFileInChunks(file, 'image', uploadDropzone, statusEl, prefix + file.name);
+                if (statusEl) statusEl.textContent = 'Đã upload ' + (i + 1) + '/' + files.length + ' ảnh…';
             }
             showGalleryProgress(uploadDropzone, { percent: 100, label: 'Đã thêm ảnh vào thư viện.' });
             window.setTimeout(() => hideGalleryProgress(uploadDropzone), 700);
@@ -661,8 +700,6 @@
             try {
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
-                    const fd = new FormData();
-                    fd.append('videos[]', file, file.name);
                     const prefix = files.length > 1
                         ? ('Video ' + (i + 1) + '/' + files.length + ' · ')
                         : '';
@@ -675,16 +712,13 @@
                         percent: 0,
                         label: prefix + file.name + ' (' + formatUploadBytes(file.size) + ')',
                     });
-                    await postGalleryFormData(fd, status, {
-                        onProgress(percent) {
-                            showGalleryProgress(dropzone, {
-                                percent,
-                                label: percent >= 100
-                                    ? (prefix + 'Đang xử lý ' + file.name + '…')
-                                    : (prefix + file.name + ' (' + formatUploadBytes(file.size) + ')'),
-                            });
-                        },
-                    });
+                    await uploadFileInChunks(
+                        file,
+                        'video',
+                        dropzone,
+                        status,
+                        prefix + file.name + ' (' + formatUploadBytes(file.size) + ')'
+                    );
                 }
                 showGalleryProgress(dropzone, { percent: 100, label: 'Đã thêm video vào thư viện.' });
                 window.setTimeout(() => hideGalleryProgress(dropzone), 700);

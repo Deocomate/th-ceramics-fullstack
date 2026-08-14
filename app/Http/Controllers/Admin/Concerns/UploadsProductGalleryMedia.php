@@ -13,11 +13,17 @@ use Illuminate\Validation\ValidationException;
 
 trait UploadsProductGalleryMedia
 {
+    use StoresChunkedGalleryUploads;
+
     /**
      * @param  callable(array<int, mixed> $images, array<int, string> $videoUrls, array<int, mixed> $videoFiles): Model  $appender
      */
     protected function storeGalleryImagesResponse(Request $request, callable $appender): JsonResponse
     {
+        if ($request->hasFile('chunk')) {
+            return $this->storeGalleryChunkResponse($request, $appender);
+        }
+
         $validated = $request->validate([
             'images' => ['nullable', 'array', 'max:10'],
             'images.*' => ['file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
