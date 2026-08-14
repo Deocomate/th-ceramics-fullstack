@@ -11,24 +11,28 @@
     $activeRate = (float) ($resolvedRate ?? 25);
 @endphp
 
-<!-- Gach va cac loai khac Quantity Calculator -->
-<section class="w-full pb-0 md:pb-16 lg:pb-20 bg-background-secondary" data-aos="fade-up" data-quantity-calculator data-default-rate="{{ $activeRate }}">
+<!-- Gach va cac loai khac: bang kich thuoc -->
+<section id="bang-kich-thuoc" class="w-full pb-8 md:pb-16 lg:pb-20 bg-background-secondary" data-aos="fade-up">
     <div class="w-[85%] max-w-[1320px] mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 lg:gap-32 items-start mt-0">
-            <div class="flex flex-col items-center">
-                <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-6 md:mb-12 uppercase text-center md:tracking-normal">
-                    KÍCH THƯỚC
-                </h2>
-                <div class="w-full max-w-[500px] flex justify-center">
-                    <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
-                        alt="Kích thước sản phẩm" class="w-full h-auto object-contain px-4 md:px-0" />
-                </div>
+        <div class="flex flex-col items-center">
+            <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-6 md:mb-12 uppercase text-center md:tracking-normal">
+                KÍCH THƯỚC
+            </h2>
+            <div class="w-full max-w-[500px] flex justify-center">
+                <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
+                    alt="Kích thước sản phẩm" class="w-full h-auto object-contain px-4 md:px-0" />
             </div>
+        </div>
+    </div>
+</section>
 
-            <div class="flex flex-col mt-4 md:mt-0">
-                <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-8 md:mb-12 uppercase text-center lg:text-center md:tracking-normal w-[85%] mx-auto md:w-full">
-                    CÁCH TÍNH KHỐI LƯỢNG
-                </h2>
+<!-- Gach va cac loai khac: cach tinh khoi luong -->
+<section id="cach-tinh-khoi-luong" class="w-full pb-0 md:pb-16 lg:pb-20 bg-background-secondary" data-aos="fade-up" data-quantity-calculator data-default-rate="{{ $activeRate }}">
+    <div class="w-[85%] max-w-[1320px] mx-auto">
+        <div class="flex flex-col mt-4 md:mt-0 max-w-[720px] mx-auto">
+            <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-8 md:mb-12 uppercase text-center lg:text-center md:tracking-normal w-[85%] mx-auto md:w-full">
+                CÁCH TÍNH KHỐI LƯỢNG
+            </h2>
 
                 <div class="space-y-4 md:space-y-6 w-[90%] md:w-full mx-auto md:mx-0" id="calculator-fields-container">
                     <div class="flex flex-row md:flex-row gap-4 md:gap-6 items-end justify-center md:justify-start area-block" data-area-block>
@@ -151,5 +155,4 @@
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>

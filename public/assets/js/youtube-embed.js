@@ -201,7 +201,31 @@ const bindTimeline = (player, track, progress) => {
     };
 };
 
-const mountYoutubePlayer = async (host, idOrUrl, { autoplay = true } = {}) => {
+const needsMutedAutoplay = () => {
+    if (typeof window.matchMedia !== "function") {
+        return true;
+    }
+
+    return window.matchMedia("(hover: none)").matches || window.matchMedia("(pointer: coarse)").matches;
+};
+
+const isYoutubeActivelyPlaying = (player) => {
+    const state = player?.getPlayerState?.();
+    return state === window.YT?.PlayerState?.PLAYING || state === window.YT?.PlayerState?.BUFFERING;
+};
+
+const createUnmuteButton = (root) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.setAttribute("data-yt-unmute", "");
+    button.className = "yt-clean-player__unmute";
+    button.hidden = true;
+    button.textContent = "Bật tiếng";
+    root.appendChild(button);
+    return button;
+};
+
+const mountYoutubePlayer = async (host, idOrUrl, { autoplay = true, mutedFallback = false } = {}) => {
     const videoId = extractYoutubeId(idOrUrl);
     if (!host || !videoId) {
         return null;
@@ -222,8 +246,10 @@ const mountYoutubePlayer = async (host, idOrUrl, { autoplay = true } = {}) => {
     root.appendChild(frame);
 
     const { track, progress } = createTimelineUi(root);
+    const unmuteButton = createUnmuteButton(root);
     host.appendChild(root);
 
+    const muteForPolicy = Boolean(autoplay && mutedFallback && needsMutedAutoplay());
     const YT = await loadYoutubeApi();
 
     return new Promise((resolve) => {
@@ -235,6 +261,7 @@ const mountYoutubePlayer = async (host, idOrUrl, { autoplay = true } = {}) => {
             videoId,
             playerVars: {
                 autoplay: autoplay ? 1 : 0,
+                mute: muteForPolicy ? 1 : 0,
                 controls: 0,
                 modestbranding: 1,
                 rel: 0,
@@ -250,8 +277,31 @@ const mountYoutubePlayer = async (host, idOrUrl, { autoplay = true } = {}) => {
                     forceHd1080(event.target);
                     stopTimeline = bindTimeline(event.target, track, progress);
 
+                    const showUnmuteIfNeeded = () => {
+                        if (typeof event.target.isMuted === "function" && event.target.isMuted()) {
+                            unmuteButton.hidden = false;
+                        } else {
+                            unmuteButton.hidden = true;
+                        }
+                    };
+
+                    unmuteButton.addEventListener("click", (clickEvent) => {
+                        clickEvent.preventDefault();
+                        clickEvent.stopPropagation();
+                        event.target.unMute();
+                        event.target.setVolume?.(100);
+                        unmuteButton.hidden = true;
+                    });
+
                     frame.addEventListener("click", (clickEvent) => {
-                        if (clickEvent.target.closest("[data-yt-timeline]")) {
+                        if (clickEvent.target.closest("[data-yt-timeline], [data-yt-unmute]")) {
+                            return;
+                        }
+
+                        if (!unmuteButton.hidden) {
+                            event.target.unMute();
+                            event.target.setVolume?.(100);
+                            unmuteButton.hidden = true;
                             return;
                         }
 
@@ -265,10 +315,24 @@ const mountYoutubePlayer = async (host, idOrUrl, { autoplay = true } = {}) => {
 
                     if (autoplay) {
                         try {
+                            if (muteForPolicy) {
+                                event.target.mute();
+                            }
                             event.target.playVideo();
                         } catch (error) {
-                            // ignore autoplay policy failures
+                            // ignore autoplay policy failures; muted retry below
                         }
+
+                        window.setTimeout(() => {
+                            if (isYoutubeActivelyPlaying(event.target)) {
+                                showUnmuteIfNeeded();
+                                return;
+                            }
+
+                            event.target.mute();
+                            event.target.playVideo();
+                            showUnmuteIfNeeded();
+                        }, 450);
                     }
 
                     window.setTimeout(() => forceHd1080(event.target), 400);
@@ -326,7 +390,7 @@ const resetInlineVideoShell = (shell) => {
     shell.dataset.playing = "false";
 };
 
-const mountInlineVideoShell = async (shell, { autoplay = true } = {}) => {
+const mountInlineVideoShell = async (shell, { autoplay = true, mutedFallback = false } = {}) => {
     if (!shell) {
         return null;
     }
@@ -352,7 +416,7 @@ const mountInlineVideoShell = async (shell, { autoplay = true } = {}) => {
     }
 
     shell.dataset.playing = "true";
-    return mountYoutubePlayer(host, source, { autoplay });
+    return mountYoutubePlayer(host, source, { autoplay, mutedFallback });
 };
 
 const initInlineVideoShells = () => {

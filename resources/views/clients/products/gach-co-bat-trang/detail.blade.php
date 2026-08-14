@@ -26,27 +26,16 @@ productType="gach_co_bat_trang_ct"
 productId="{{ $product->gach_co_bat_trang_ct_id }}"
 />
 
-<div class="flex flex-col md:block">
-    <div class="order-2 md:order-none">
-        <x-client.shared.quantity-calculator
-            image="{{ !empty($product->size_image) ? asset('storage/' . $product->size_image) : asset('assets/images/gtt-size.png') }}"
-            :dinhMuc="$dinhMuc"
-            :rate="$dinhMuc->first()?->value" />
-    </div>
-    <div class="order-3 md:order-none">
-        <x-client.shared.fabrication-process />
-    </div>
-    <div class="order-1 md:order-none">
-        <x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="true" />
-    </div>
-</div>
-
-<x-client.shared.custom-design-process />
-
-<hr class="md:mb-16 mb-8" />
-
-<x-client.shared.outstanding-value />
+<x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="true" />
 <x-client.shared.works-simple :show-nav="true" />
+<x-client.shared.quantity-calculator
+    image="{{ !empty($product->size_image) ? asset('storage/' . $product->size_image) : asset('assets/images/gtt-size.png') }}"
+    :dinhMuc="$dinhMuc"
+    :rate="$dinhMuc->first()?->value" />
+<x-client.shared.fabrication-process />
+<x-client.shared.outstanding-value />
+<x-client.shared.custom-design-process />
+<hr class="md:mb-16 mb-8" />
 <x-client.shared.recommendations
     :related-products="$relatedProducts"
     :show-decor="true"
@@ -55,5 +44,6 @@ productId="{{ $product->gach_co_bat_trang_ct_id }}"
     product-type="gach_co_bat_trang_ct"
 />
 <x-client.shared.faq-cta-banner />
+<x-client.shared.weight-calculator-sticky-bar />
 
 </x-client.layouts.main>

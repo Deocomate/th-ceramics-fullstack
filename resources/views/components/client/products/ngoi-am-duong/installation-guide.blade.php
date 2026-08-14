@@ -61,12 +61,15 @@
     'subtitle' => null,
     'description' => null,
     'items' => null,
+    'hideTitle' => false,
 ])
-<section class="w-full pb-4 pt-8 lg:pb-20 lg:pt-20 bg-background-secondary" data-aos="fade-up">
+<section class="w-full {{ $hideTitle ? 'pb-4 pt-0 lg:pb-8 lg:pt-0' : 'pb-4 pt-8 lg:pb-20 lg:pt-20' }} bg-background-secondary" data-aos="fade-up">
     <div class="w-[85%] max-w-[1320px] mx-auto">
+        @unless ($hideTitle)
         <h2 class="text-[20px] md:text-3xl font-semibold text-center text-secondary mb-8 md:mb-12 uppercase">
             HƯỚNG DẪN LẮP ĐẶT
         </h2>
+        @endunless
 
         <div class="flex justify-center mb-8 md:mb-16">
             <div class="flex flex-row-reverse md:flex-row border-b border-black/10 w-full max-w-[600px]">

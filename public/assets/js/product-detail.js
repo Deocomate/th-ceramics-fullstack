@@ -50,7 +50,36 @@ const resetVideoShell = (shell) => {
     resetFileVideoShell(shell);
 };
 
-const mountFileVideo = (shell, { autoplay = true } = {}) => {
+const needsMutedAutoplay = () => {
+    if (typeof window.matchMedia !== "function") {
+        return true;
+    }
+
+    return window.matchMedia("(hover: none)").matches || window.matchMedia("(pointer: coarse)").matches;
+};
+
+const playHtml5Video = (video, { mutedFallback = false } = {}) => {
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "true");
+
+    const playMuted = () => {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.setAttribute("muted", "");
+        return video.play();
+    };
+
+    if (mutedFallback && needsMutedAutoplay()) {
+        return playMuted().catch(() => {});
+    }
+
+    video.muted = false;
+    video.removeAttribute("muted");
+    return video.play().catch(() => playMuted().catch(() => {}));
+};
+
+const mountFileVideo = (shell, { autoplay = true, mutedFallback = false } = {}) => {
     if (!shell?.dataset.videoSrc) {
         return Promise.resolve(null);
     }
@@ -73,26 +102,35 @@ const mountFileVideo = (shell, { autoplay = true } = {}) => {
     const video = document.createElement("video");
     video.src = shell.dataset.videoSrc;
     video.controls = true;
+    video.preload = "auto";
     video.playsInline = true;
     video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "true");
     video.className = "w-full h-full object-cover";
+
+    if (autoplay && mutedFallback && needsMutedAutoplay()) {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.setAttribute("muted", "");
+    }
+
     host.appendChild(video);
     host.classList.remove("hidden");
 
     if (autoplay) {
-        video.play().catch(() => {});
+        playHtml5Video(video, { mutedFallback });
     }
 
     return Promise.resolve(video);
 };
 
-const mountVideoIframe = (shell, { autoplay = true } = {}) => {
+const mountVideoIframe = (shell, { autoplay = true, mutedFallback = false } = {}) => {
     if (!shell) {
         return Promise.resolve(null);
     }
 
     if (shell.dataset.videoSrc) {
-        return mountFileVideo(shell, { autoplay });
+        return mountFileVideo(shell, { autoplay, mutedFallback });
     }
 
     if (!shell.dataset.youtubeId && shell.dataset.embedSrc) {
@@ -102,7 +140,7 @@ const mountVideoIframe = (shell, { autoplay = true } = {}) => {
         }
     }
 
-    return mountInlineVideoShell(shell, { autoplay });
+    return mountInlineVideoShell(shell, { autoplay, mutedFallback });
 };
 
 const resetAllVideoShells = (root) => {
@@ -120,7 +158,7 @@ const mountActiveVideoSlide = (mainSwiperElement, swiper) => {
     }
 
     const shell = activeSlide.querySelector("[data-product-video-shell]");
-    mountVideoIframe(shell, { autoplay: true });
+    mountVideoIframe(shell, { autoplay: true, mutedFallback: true });
 };
 
 const focusThumbSlide = (thumbSwiper, index) => {
@@ -183,6 +221,10 @@ const bindGalleryClickZones = (mainSwiperElement, mainSwiper) => {
 
     mainSwiperElement.addEventListener("click", (event) => {
         if (event.target.closest("[data-product-main-prev], [data-product-main-next]")) {
+            return;
+        }
+
+        if (event.target.closest("[data-yt-unmute]")) {
             return;
         }
 
@@ -256,9 +298,11 @@ const initProductGallery = (container) => {
         observeParents: true,
         on: {
             slideChange(swiper) {
-                // Swiper transform + YouTube iframe = màn đen; unmount khi rời slide.
+                // Unmount ngay khi rời slide để cắt tiếng; gắn player sau khi animation xong.
                 resetAllVideoShells(mainSwiperElement);
                 focusThumbSlide(thumbSwiper, swiper.activeIndex);
+            },
+            slideChangeTransitionEnd(swiper) {
                 mountActiveVideoSlide(mainSwiperElement, swiper);
             },
         },
@@ -357,6 +401,8 @@ const initStandaloneProductGalleries = () => {
             mainSwiperElement.dataset.videoResetBound = "true";
             swiper.on("slideChange", () => {
                 resetAllVideoShells(mainSwiperElement);
+            });
+            swiper.on("slideChangeTransitionEnd", () => {
                 mountActiveVideoSlide(mainSwiperElement, swiper);
             });
             mountActiveVideoSlide(mainSwiperElement, swiper);

@@ -68,7 +68,7 @@
 @endphp
 
 <!-- Ngoi Am Duong Calculator -->
-<section class="w-full pb-12 pt-8 lg:pt-16 lg:pb-16 bg-background-secondary" data-aos="fade-up" data-weight-calculator>
+<section id="cach-tinh-khoi-luong" class="w-full pb-12 pt-8 lg:pt-16 lg:pb-16 bg-background-secondary" data-aos="fade-up" data-weight-calculator>
     <script type="application/json" data-dinh-muc-json>@json($dinhMuc)</script>
     <div class="w-[85%] max-w-[1320px] mx-auto">
         <h2 class="text-[20px] font-semibold text-center text-secondary mb-8 uppercase block lg:hidden">

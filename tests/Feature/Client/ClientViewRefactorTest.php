@@ -171,6 +171,32 @@ test('calculator components keep root data attributes without inline scripts', f
 
     expect($haiHtml)
         ->toContain('data-hai-vm-calculator')
+        ->toContain('id="cach-tinh-khoi-luong"')
+        ->toContain('id="bang-kich-thuoc"')
         ->not->toContain('@push')
         ->not->toContain('<script>');
+});
+
+test('product guide tabs and weight sticky bar expose data hooks', function () {
+    $tabsHtml = Blade::render(
+        '<x-client.shared.product-guide-tabs><x-slot:install>install-body</x-slot:install><x-slot:applications>apps-body</x-slot:applications></x-client.shared.product-guide-tabs>'
+    );
+    $barHtml = Blade::render('<x-client.shared.weight-calculator-sticky-bar />');
+    $quantityHtml = Blade::render('<x-client.shared.quantity-calculator />');
+
+    expect($tabsHtml)
+        ->toContain('data-product-guide-tabs')
+        ->toContain('data-guide-tabs-swiper')
+        ->toContain('install-body')
+        ->toContain('apps-body');
+
+    expect($barHtml)
+        ->toContain('data-weight-calculator-bar')
+        ->toContain('#cach-tinh-khoi-luong')
+        ->toContain('Tính khối lượng');
+
+    expect($quantityHtml)
+        ->toContain('id="cach-tinh-khoi-luong"')
+        ->toContain('id="bang-kich-thuoc"')
+        ->toContain('data-quantity-calculator');
 });

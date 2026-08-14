@@ -137,9 +137,60 @@
         </div>
     </section>
 
+    <x-client.shared.journey-video :video="$journeyVideo ?? null" />
+
+    @php
+        $galleryImages =
+            is_array($product->images) && count($product->images) > 0
+                ? $product->images
+                : [
+                    'assets/images/gach-co-work-1.jpg',
+                    'assets/images/gach-co-work-2.jpg',
+                    'assets/images/trang-tri-slide-01.jpg',
+                ];
+    @endphp
+    <section class="w-full pb-8 md:pb-16 bg-background-secondary overflow-hidden" data-aos="fade-up">
+        <div class="max-w-[1920px] mx-auto mt-1">
+            <h2 class="text-[20px] md:text-3xl font-semibold text-secondary text-center uppercase mb-8 md:mb-20">
+                DẤU ẤN TRÊN NHỮNG CÔNG TRÌNH
+            </h2>
+            <div class="relative px-4 md:px-0">
+                <div class="swiper projects-slider overflow-visible">
+                    <div class="swiper-wrapper">
+                        @foreach ($galleryImages as $galleryImg)
+                            <div class="swiper-slide transition-all duration-500">
+                                <div class="aspect-[3/2] md:aspect-[4/3] overflow-hidden rounded-sm shadow-xl">
+                                    <img src="{{ \App\Support\AssetPath::url($galleryImg) }}" alt="Dấu ấn công trình"
+                                        class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700">
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="projects-pagination mt-6 md:mt-12 flex justify-center gap-[7px] md:gap-3"></div>
+                <div
+                    class="hidden md:flex projects-prev absolute left-2 md:left-6 lg:left-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded rotate-45 items-center justify-center text-white cursor-pointer hover:bg-secondary/90 shadow-lg transition-all">
+                    <div class="-rotate-45"><svg class="w-6 h-6" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 19l-7-7 7-7"></path>
+                        </svg></div>
+                </div>
+                <div
+                    class="projects-next absolute right-2 md:right-6 lg:right-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded rotate-45 hidden md:flex items-center justify-center text-white cursor-pointer hover:bg-secondary/90 shadow-lg transition-all">
+                    <div class="-rotate-45"><svg class="w-6 h-6" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Product Description Section (Size Info) -->
     @if ($product->size_image || (!empty($product->size_des) && is_array($product->size_des)))
-        <section class="max-w-[1320px] mx-auto pb-8 md:pb-16 lg:pb-24">
+        <section id="bang-kich-thuoc" class="max-w-[1320px] mx-auto pb-8 md:pb-16 lg:pb-24">
             <div class="w-[85%] mx-auto grid grid-cols-1 md:grid-cols-2 gap-0 lg:gap-16 items-center">
                 <!-- Left Image -->
                 <div class="flex items-center flex-col" data-aos="fade-right">
@@ -241,63 +292,8 @@
         </div>
     </section>
 
-    <!-- DẤU ẤN TRÊN NHỮNG CÔNG TRÌNH SECTION (Gallery Slider) -->
-    @php
-        // Gộp ảnh sản phẩm hoặc dùng ảnh tĩnh nếu ít ảnh
-        $galleryImages =
-            is_array($product->images) && count($product->images) > 0
-                ? $product->images
-                : [
-                    'assets/images/gach-co-work-1.jpg',
-                    'assets/images/gach-co-work-2.jpg',
-                    'assets/images/trang-tri-slide-01.jpg',
-                ];
-    @endphp
-    <section class="w-full pb-8 md:pb-16 bg-background-secondary overflow-hidden" data-aos="fade-up">
-        <div class="max-w-[1920px] mx-auto mt-1">
-            <h2 class="text-[20px] md:text-3xl font-semibold text-secondary text-center uppercase mb-8 md:mb-20">
-                DẤU ẤN TRÊN NHỮNG CÔNG TRÌNH
-            </h2>
-            <div class="relative px-4 md:px-0">
-                <div class="swiper projects-slider overflow-visible">
-                    <div class="swiper-wrapper">
-                        @foreach ($galleryImages as $galleryImg)
-                            <div class="swiper-slide transition-all duration-500">
-                                <div class="aspect-[3/2] md:aspect-[4/3] overflow-hidden rounded-sm shadow-xl">
-                                    <img src="{{ \App\Support\AssetPath::url($galleryImg) }}" alt="Dấu ấn công trình"
-                                        class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700">
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-                <div class="projects-pagination mt-6 md:mt-12 flex justify-center gap-[7px] md:gap-3"></div>
-                <!-- Navigation Buttons -->
-                <div
-                    class="hidden md:flex projects-prev absolute left-2 md:left-6 lg:left-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded rotate-45 items-center justify-center text-white cursor-pointer hover:bg-secondary/90 shadow-lg transition-all">
-                    <div class="-rotate-45"><svg class="w-6 h-6" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 19l-7-7 7-7"></path>
-                        </svg></div>
-                </div>
-                <div
-                    class="projects-next absolute right-2 md:right-6 lg:right-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded rotate-45 hidden md:flex items-center justify-center text-white cursor-pointer hover:bg-secondary/90 shadow-lg transition-all">
-                    <div class="-rotate-45"><svg class="w-6 h-6" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                            </path>
-                        </svg></div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- HÀNH TRÌNH CHẾ TÁC VIDEO -->
     <x-client.shared.outstanding-value />
-    <div class="hidden md:block">
-        <x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="false" />
-    </div>
 
     <!-- BẢNG SO SÁNH / CÓ THỂ BẠN QUAN TÂM -->
     @if ($relatedProducts->isNotEmpty())

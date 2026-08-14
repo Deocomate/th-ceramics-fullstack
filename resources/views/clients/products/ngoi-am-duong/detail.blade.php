@@ -33,108 +33,39 @@
     productId="{{ $product->ngoi_am_duong_ct_id }}"
 />
 
-<x-client.shared.outstanding-value />
-
 <x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="true" />
 
-<!-- Flex Container for Mobile Reordering -->
-<div class="flex flex-col w-full">
-    <!-- Sizes Options Section -->
-    <section class="order-2 md:order-1 w-[85%] max-w-[1320px] mx-auto pb-[40px] md:pb-16 pt-1" data-aos="fade-up">
-        <h2
-            class="text-[20px] leading-[32px] tracking-[0.6px] md:text-3xl md:leading-normal md:tracking-wide font-semibold text-center text-secondary mb-6 md:mb-12 uppercase break-words">
-            Bảng kích thước
-        </h2>
-        <div class="size-options-scroll mobile-scroll-visible w-full pb-2 overflow-x-scroll md:overflow-x-hidden">
-            <img src="{{ $sizeImage }}" alt="Bảng kích thước {{ $product->name }}"
-                class="h-auto object-contain max-w-none w-[200%] md:w-full"
-                onload="window.dispatchEvent(new Event('resize'))" />
-        </div>
-    </section>
-
-    <!-- Sections Wrapped in Accordion for Mobile -->
-    <div class="order-1 md:order-2 w-full flex flex-col pt-0 pb-2 md:pb-0">
-        @if ($colors->isNotEmpty())
-        <!-- Product Color Palette Accordion Item -->
-        <div class="md:border-none">
-            <button class="md:hidden w-full flex justify-between items-center py-[20px] px-[30px]"
-                onclick="toggleMobileAccordion(this)">
-                <span class="text-[#2E2F2A] text-[14px] font-bold tracking-tight">Bảng màu</span>
-                <div
-                    class="chevron w-6 h-6 bg-[#E5E7EB] rounded-full flex justify-center items-center transition-transform duration-300">
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1L5 5L9 1" stroke="#6B7280" stroke-width="1.33" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                </div>
-            </button>
-            <div class="accordion-content hidden md:block w-full pb-6 md:pb-0 pt-2 md:pt-0">
-                <x-client.shared.color-palette :colors="$colors" />
-            </div>
-        </div>
-        <hr class="mx-[30px] border-t border-black/10 md:hidden" />
-        @endif
-
-        <!-- Weight Calculator Accordion Item -->
-        <div class="md:border-none">
-            <button class="md:hidden w-full flex justify-between items-center py-[20px] px-[30px]"
-                onclick="toggleMobileAccordion(this)">
-                <span class="text-[#2E2F2A] text-[14px] font-bold tracking-tight">Ước tính khối lượng</span>
-                <div
-                    class="chevron w-6 h-6 bg-[#E5E7EB] rounded-full flex justify-center items-center transition-transform duration-300">
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1L5 5L9 1" stroke="#6B7280" stroke-width="1.33" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                </div>
-            </button>
-            <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                <x-client.products.ngoi-am-duong.weight-calculator :dinh-muc="$dinhMuc" />
-            </div>
-        </div>
-        <hr class="mx-[30px] border-t border-black/10 md:hidden" />
-
-        <!-- Applications Accordion Item -->
-        <div class="md:border-none">
-            <button class="md:hidden w-full flex justify-between items-center py-[20px] px-[30px]"
-                onclick="toggleMobileAccordion(this)">
-                <span class="text-[#2E2F2A] text-[14px] font-bold tracking-tight">Ứng dụng</span>
-                <div
-                    class="chevron w-6 h-6 bg-[#E5E7EB] rounded-full flex justify-center items-center transition-transform duration-300">
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1L5 5L9 1" stroke="#6B7280" stroke-width="1.33" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                </div>
-            </button>
-            <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                <x-client.products.ngoi-am-duong.applications :trang-chu="$trangChu ?? null" :ngoi-am-duongs="$ngoiAmDuongs ?? null" :ngoi-hais="$ngoiHais ?? null" :gach-hoas="$gachHoas ?? null" :about="$about ?? null" :factory="$factory ?? null" :showroom-images="$showroomImages ?? null" :showroom-content="$showroomContent ?? null" :news="$news ?? null" :article="$article ?? null" :articles="$articles ?? null" :related-articles="$relatedArticles ?? null" :history-articles="$historyArticles ?? null" :projects="$projects ?? null" :project="$project ?? null" :related-projects="$relatedProjects ?? null" :categories="$categories ?? null" :selected-category="$selectedCategory ?? null" :current-category="$currentCategory ?? null" :config="$config ?? null" :products="$products ?? null" :related-products="$relatedProducts ?? null" :product="$product ?? null" :colors="$colors ?? null" :dinh-muc="$dinhMuc ?? null" :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" :parent-config="$parentConfig ?? null" :page-label="$pageLabel ?? null" :index-route-name="$indexRouteName ?? null" :category-type="$categoryType ?? null" :category-label="$categoryLabel ?? null" :den-gom-products="$denGomProducts ?? null" :den-su-products="$denSuProducts ?? null" :featured-products="$featuredProducts ?? null" :collection-products="$collectionProducts ?? null" :nghe-products="$ngheProducts ?? null" :linh-vat-products="$linhVatProducts ?? null" />
-            </div>
-        </div>
-        <hr class="mx-[30px] border-t border-black/10 md:hidden" />
-
-        <!-- Installation Guide Accordion Item -->
-        <div class="md:border-none">
-            <button class="md:hidden w-full flex justify-between items-center py-[20px] px-[30px]"
-                onclick="toggleMobileAccordion(this)">
-                <span class="text-[#2E2F2A] text-[14px] font-bold tracking-tight">Hướng dẫn lắp đặt</span>
-                <div
-                    class="chevron w-6 h-6 bg-[#E5E7EB] rounded-full flex justify-center items-center transition-transform duration-300">
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1L5 5L9 1" stroke="#6B7280" stroke-width="1.33" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                </div>
-            </button>
-            <div class="accordion-content hidden md:block w-full pb-6 md:pb-0">
-                <x-client.products.ngoi-am-duong.installation-guide :trang-chu="$trangChu ?? null" :ngoi-am-duongs="$ngoiAmDuongs ?? null" :ngoi-hais="$ngoiHais ?? null" :gach-hoas="$gachHoas ?? null" :about="$about ?? null" :factory="$factory ?? null" :showroom-images="$showroomImages ?? null" :showroom-content="$showroomContent ?? null" :news="$news ?? null" :article="$article ?? null" :articles="$articles ?? null" :related-articles="$relatedArticles ?? null" :history-articles="$historyArticles ?? null" :projects="$projects ?? null" :project="$project ?? null" :related-projects="$relatedProjects ?? null" :categories="$categories ?? null" :selected-category="$selectedCategory ?? null" :current-category="$currentCategory ?? null" :config="$config ?? null" :products="$products ?? null" :related-products="$relatedProducts ?? null" :product="$product ?? null" :colors="$colors ?? null" :dinh-muc="$dinhMuc ?? null" :gia-tri-vuot-troi="$giaTriVuotTroi ?? null" :parent-config="$parentConfig ?? null" :page-label="$pageLabel ?? null" :index-route-name="$indexRouteName ?? null" :category-type="$categoryType ?? null" :category-label="$categoryLabel ?? null" :den-gom-products="$denGomProducts ?? null" :den-su-products="$denSuProducts ?? null" :featured-products="$featuredProducts ?? null" :collection-products="$collectionProducts ?? null" :nghe-products="$ngheProducts ?? null" :linh-vat-products="$linhVatProducts ?? null" />
-            </div>
-        </div>
-        <hr class="mx-[30px] border-t border-black/10 md:hidden mb-8 md:mb-0" />
-    </div>
-</div>
-
 <x-client.shared.works />
+
+<section id="bang-kich-thuoc" class="w-[85%] max-w-[1320px] mx-auto pb-[40px] md:pb-16 pt-1" data-aos="fade-up">
+    <h2
+        class="text-[20px] leading-[32px] tracking-[0.6px] md:text-3xl md:leading-normal md:tracking-wide font-semibold text-center text-secondary mb-6 md:mb-12 uppercase break-words">
+        Bảng kích thước
+    </h2>
+    <div class="size-options-scroll mobile-scroll-visible w-full pb-2 overflow-x-scroll md:overflow-x-hidden">
+        <img src="{{ $sizeImage }}" alt="Bảng kích thước {{ $product->name }}"
+            class="h-auto object-contain max-w-none w-[200%] md:w-full"
+            onload="window.dispatchEvent(new Event('resize'))" />
+    </div>
+</section>
+
+@if ($colors->isNotEmpty())
+    <x-client.shared.color-palette :colors="$colors" />
+@endif
+
+<x-client.shared.product-guide-tabs>
+    <x-slot:install>
+        <x-client.products.ngoi-am-duong.installation-guide :hide-title="true" />
+    </x-slot:install>
+    <x-slot:applications>
+        <x-client.products.ngoi-am-duong.applications :hide-title="true" />
+    </x-slot:applications>
+</x-client.shared.product-guide-tabs>
+
+<x-client.products.ngoi-am-duong.weight-calculator :dinh-muc="$dinhMuc" />
+
+<x-client.shared.outstanding-value />
+
 <x-client.shared.recommendations
     :related-products="$relatedProducts"
     route-name="client.products.ngoi-am-duong.detail"
@@ -143,19 +74,6 @@
 />
 <x-client.shared.faq-cta-banner />
 
-@push('scripts')
-<script>
-    function toggleMobileAccordion(btn) {
-        const content = btn.nextElementSibling;
-        const chevron = btn.querySelector('.chevron');
-        if (content.classList.contains('hidden')) {
-            content.classList.remove('hidden');
-            chevron.classList.add('rotate-180');
-        } else {
-            content.classList.add('hidden');
-            chevron.classList.remove('rotate-180');
-        }
-    }
-</script>
-@endpush
+<x-client.shared.weight-calculator-sticky-bar />
+
 </x-client.layouts.main>

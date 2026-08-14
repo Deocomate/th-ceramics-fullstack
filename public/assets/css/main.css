@@ -321,3 +321,49 @@
   border-radius: inherit;
   pointer-events: none;
 }
+
+.yt-clean-player__unmute {
+  position: absolute;
+  left: 50%;
+  bottom: 2.75rem;
+  z-index: 6;
+  transform: translateX(-50%);
+  padding: 0.4rem 0.85rem;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.yt-clean-player__unmute:hover,
+.yt-clean-player__unmute:focus-visible {
+  background: rgba(0, 0, 0, 0.88);
+  outline: none;
+}
+
+html.has-weight-calculator-bar {
+  scroll-padding-bottom: 7rem;
+}
+
+html.has-weight-calculator-bar body {
+  padding-bottom: 6rem;
+}
+
+#cach-tinh-khoi-luong,
+#bang-kich-thuoc {
+  scroll-margin-top: 5.5rem;
+}
+
+.product-guide-tabs-swiper .swiper-pagination-bullet {
+  background: #c76e00;
+  opacity: 0.3;
+}
+
+.product-guide-tabs-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+}

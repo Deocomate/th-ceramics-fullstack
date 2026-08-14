@@ -6,6 +6,8 @@ import { initLightbox } from "./lightbox.js";
 import { initCartUi, openCartModal, showCartToast } from "./cart-ui.js";
 import { initConsultationModal } from "./consultation-modal.js";
 import { initInlineVideoShells } from "./youtube-embed.js";
+import { initProductGuideTabs } from "./product-guide-tabs.js";
+import { initWeightCalculatorStickyBar } from "./weight-calculator-sticky-bar.js";
 
 const initProductSectionCarousels = () => {
     document.querySelectorAll("[data-product-section]").forEach((section) => {
@@ -473,6 +475,8 @@ const initSharedScripts = () => {
     initProductValues();
     initWorksCarousels();
     initLightbox();
+    initProductGuideTabs();
+    initWeightCalculatorStickyBar();
 };
 
 document.addEventListener("DOMContentLoaded", initSharedScripts);

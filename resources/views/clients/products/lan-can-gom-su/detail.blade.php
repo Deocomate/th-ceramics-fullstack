@@ -192,8 +192,11 @@
         </div>
     </section>
 
+    <x-client.shared.journey-video :video="$journeyVideo ?? null" />
+    <x-client.shared.works-simple />
+
     <!-- Product Description Section -->
-    <section class="w-[85%] max-w-[1320px] mx-auto pb-16 lg:pb-24 pt-0 md:pt-4">
+    <section id="bang-kich-thuoc" class="w-[85%] max-w-[1320px] mx-auto pb-16 lg:pb-24 pt-0 md:pt-4">
         <!-- Section Title -->
         <div class="text-center mb-8 md:mb-16 aos-init aos-animate" data-aos="fade-up">
             <h3 class="text-[20px] md:text-3xl font-semibold text-secondary uppercase drop-shadow-sm">
@@ -223,14 +226,7 @@
         </div>
     </section>
 
-    <!-- DẤU ẤN TRÊN NHỮNG CÔNG TRÌNH SECTION -->
-    <x-client.shared.works-simple />
-
-    <!-- Giá Trị Vượt Trội -->
     <x-client.shared.outstanding-value />
-
-    <!-- Hành Trình Chế Tác -->
-    <x-client.shared.journey-video :video="$journeyVideo ?? null" />
 
     <!-- CÓ THỂ BẠN QUAN TÂM -->
     <x-client.shared.recommendations :related-products="$relatedProducts" route-name="client.products.lan-can-gom-su.detail"

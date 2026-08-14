@@ -60,7 +60,9 @@
     'title' => null,
     'subtitle' => null,
     'description' => null,
-    'items' => null,])
+    'items' => null,
+    'hideTitle' => false,
+])
 @php
   $applicationCards = $applicationCards ?? [];
   $applicationIcons = $applicationIcons ?? [];
@@ -85,13 +87,15 @@
   }
 @endphp
 
-<section class="w-full bg-background-secondary" data-aos="fade-up">
+<section class="w-full {{ $hideTitle ? 'pt-0 pb-4' : '' }} bg-background-secondary" data-aos="fade-up">
   <div class="w-[85%] max-w-[1320px] mx-auto">
+    @unless ($hideTitle)
     <h2
       class="text-[20px] md:text-3xl font-bold text-center text-secondary mb-5 md:mb-12 uppercase tracking-[0.6px] leading-[32px] md:tracking-wide w-full flex justify-center"
     >
       ỨNG DỤNG ĐA DẠNG
     </h2>
+    @endunless
 
     <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 mb-4 md:mb-12 w-full pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:grid md:grid-cols-3 items-start">
       @foreach ($cards as $card)

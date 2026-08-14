@@ -61,33 +61,29 @@
     'subtitle' => null,
     'description' => null,
     'items' => null,])
-<!-- Ngoi Hai Van Mieu Calculator -->
-<section class="w-full pt-0 pb-0 md:pt-16 md:pb-16 bg-background-secondary" data-aos="fade-up" data-hai-vm-calculator>
+<!-- Ngoi Hai Van Mieu: bang kich thuoc -->
+<section id="bang-kich-thuoc" class="w-full pt-0 pb-8 md:pt-16 md:pb-16 bg-background-secondary" data-aos="fade-up">
     <div class="w-[85%] max-w-[1320px] mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-32 items-start">
-            <div class="hidden md:flex flex-col items-center md:col-span-2">
-                <h2 class="text-3xl font-semibold text-secondary mb-12 uppercase text-center">KÍCH THƯỚC</h2>
-                <div class="w-full max-w-[500px] flex justify-center">
-                    <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
-                        alt="Kích thước sản phẩm" class="w-full h-auto object-contain" />
-                </div>
+        <div class="flex flex-col items-center">
+            <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-6 md:mb-12 uppercase text-center">
+                KÍCH THƯỚC
+            </h2>
+            <div class="w-full max-w-[500px] flex justify-center">
+                <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
+                    alt="Kích thước sản phẩm" class="w-full h-auto object-contain" />
             </div>
+        </div>
+    </div>
+</section>
 
-            <div class="flex flex-col md:col-span-3">
-                <div class="md:hidden mb-8 md:mb-6">
-                    <h2
-                        class="text-[20px] font-semibold text-[#C76E00] uppercase text-center mb-0 md:mb-5 leading-[32px]">
-                        KÍCH THƯỚC</h2>
-                    <div class="w-full flex justify-center">
-                        <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
-                            alt="Kích thước sản phẩm" class="w-full h-auto object-contain" />
-                    </div>
-                </div>
-
-                <h2
-                    class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-8 md:mb-7 uppercase text-center leading-[32px] md:leading-normal">
-                    CÁCH TÍNH KHỐI LƯỢNG
-                </h2>
+<!-- Ngoi Hai Van Mieu: cach tinh khoi luong -->
+<section id="cach-tinh-khoi-luong" class="w-full pt-0 pb-0 md:pt-0 md:pb-16 bg-background-secondary" data-aos="fade-up" data-hai-vm-calculator>
+    <div class="w-[85%] max-w-[1320px] mx-auto">
+        <div class="flex flex-col max-w-[720px] mx-auto">
+            <h2
+                class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-8 md:mb-7 uppercase text-center leading-[32px] md:leading-normal">
+                CÁCH TÍNH KHỐI LƯỢNG
+            </h2>
 
                 <div class="md:hidden flex flex-col gap-8 mb-6">
                     <img src="{{ asset('assets/images/weight-01.svg') }}" alt="Cách đo mái chữ nhật"
@@ -233,6 +229,5 @@
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 

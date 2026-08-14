@@ -53,6 +53,9 @@
     productId="{{ $product->phu_kien_ngoi_ct_id }}"
   />
 
+  <x-client.shared.journey-video :video="$journeyVideo ?? null" />
+  <x-client.shared.works />
+
   <section class="w-full md:w-[85%] max-w-[1320px] mx-auto pb-16 lg:pb-20">
     <div class="text-center mb-8" data-aos="fade-up">
       <h2 class="text-[20px] md:text-3xl font-semibold text-secondary uppercase drop-shadow-sm">
@@ -74,8 +77,6 @@
   </section>
 
   <x-client.shared.outstanding-value />
-  <x-client.shared.journey-video :video="$journeyVideo ?? null" />
-  <x-client.shared.works />
   <x-client.shared.recommendations
     :related-products="$relatedProducts"
     route-name="client.products.phu-kien-ngoi.detail"

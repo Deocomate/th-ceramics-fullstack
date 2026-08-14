@@ -29,8 +29,11 @@
     productId="{{ $product->den_vuon_gom_su_ct_id }}"
   />
 
+  <x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="true" />
+  <x-client.shared.works />
+
   @if($product->size_image || (!empty($product->size_des) && is_array($product->size_des)))
-  <section class="w-[85%] max-w-[1320px] mx-auto pb-[40px] md:pb-16" data-aos="fade-up">
+  <section id="bang-kich-thuoc" class="w-[85%] max-w-[1320px] mx-auto pb-[40px] md:pb-16" data-aos="fade-up">
     <h2 class="text-[20px] leading-[32px] tracking-[0.6px] md:text-3xl md:leading-normal md:tracking-wide font-semibold text-center text-secondary mb-6 md:mb-12 uppercase break-words">
       Thông tin kích thước
     </h2>
@@ -50,8 +53,6 @@
   @endif
 
   <x-client.shared.outstanding-value />
-  <x-client.shared.journey-video :video="$journeyVideo ?? null" :hide-title="true" />
-  <x-client.shared.works />
   <x-client.shared.recommendations
     :related-products="$relatedProducts"
     route-name="client.products.den-gom-su.detail"
