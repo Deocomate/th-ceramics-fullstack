@@ -346,12 +346,38 @@
   outline: none;
 }
 
+[data-weight-calculator-bar] {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 5rem;
+  transform: none;
+  -webkit-transform: none;
+  z-index: 90;
+}
+
+@media (min-width: 768px) {
+  [data-weight-calculator-bar] {
+    bottom: 2rem;
+  }
+}
+
 html.has-weight-calculator-bar {
-  scroll-padding-bottom: 7rem;
+  scroll-padding-bottom: 9rem;
 }
 
 html.has-weight-calculator-bar body {
-  padding-bottom: 6rem;
+  padding-bottom: 8rem;
+}
+
+@media (min-width: 768px) {
+  html.has-weight-calculator-bar {
+    scroll-padding-bottom: 7rem;
+  }
+
+  html.has-weight-calculator-bar body {
+    padding-bottom: 6rem;
+  }
 }
 
 #cach-tinh-khoi-luong,

@@ -193,7 +193,9 @@ test('product guide tabs and weight sticky bar expose data hooks', function () {
     expect($barHtml)
         ->toContain('data-weight-calculator-bar')
         ->toContain('#cach-tinh-khoi-luong')
-        ->toContain('Tính khối lượng');
+        ->toContain('Tính khối lượng')
+        ->toContain('bottom-20')
+        ->not->toContain('-translate-x-1/2');
 
     expect($quantityHtml)
         ->toContain('id="cach-tinh-khoi-luong"')
