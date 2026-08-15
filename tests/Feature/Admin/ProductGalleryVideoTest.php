@@ -513,6 +513,28 @@ test('admin ajax can delete an uploaded gallery video file', function () {
     Storage::disk('public')->assertMissing('ngoi_am_duong_ct/videos/clip.mp4');
 });
 
+test('admin product gallery pages show a file size limit popup', function () {
+    $this->actingAs(User::factory()->create());
+
+    $this->get(route('admin.ngoi-am-duong-ct.create'))
+        ->assertOk()
+        ->assertSee('id="galleryFileLimitModal"', false)
+        ->assertSee('File quá dung lượng')
+        ->assertSee('Ảnh tối đa')
+        ->assertSee('5MB')
+        ->assertSee('Video tối đa')
+        ->assertSee('50MB')
+        ->assertSee('showGalleryFileLimitModal');
+
+    $product = makeNgoiAmDuongProduct();
+
+    $this->get(route('admin.ngoi-am-duong-ct.edit', $product->ngoi_am_duong_ct_id))
+        ->assertOk()
+        ->assertSee('id="galleryFileLimitModal"', false)
+        ->assertSee('MAX_IMAGE_BYTES')
+        ->assertSee('MAX_VIDEO_BYTES');
+});
+
 test('product detail renders uploaded file videos with html5 source', function () {
     $product = makeNgoiAmDuongProduct([
         'assets/images/ngoi-01.jpg',

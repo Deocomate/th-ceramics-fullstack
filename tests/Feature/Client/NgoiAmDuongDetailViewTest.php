@@ -29,3 +29,20 @@ test('ngoi am duong detail renders local calculator applications and installatio
         ->assertSee('ỨNG DỤNG ĐA DẠNG')
         ->assertSee('HƯỚNG DẪN LẮP ĐẶT');
 });
+
+test('ngoi am duong detail main gallery has no box shadow or border', function () {
+    $product = NgoiAmDuongCt::query()->create([
+        'code' => 'NAD-GALLERY-FRAME-001',
+        'name' => 'Ngói Âm Dương Gallery Frame',
+        'images' => ['assets/images/ngoi-01.jpg'],
+        'price' => 862000,
+        'is_delete' => false,
+    ]);
+
+    $this->get(route('client.products.ngoi-am-duong.detail', $product->ngoi_am_duong_ct_id))
+        ->assertOk()
+        ->assertSee('data-gallery-type="image"', false)
+        ->assertSee('shadow-none border-0 ring-0', false)
+        ->assertSee('box-shadow: none', false)
+        ->assertDontSee('md:shadow-lg');
+});

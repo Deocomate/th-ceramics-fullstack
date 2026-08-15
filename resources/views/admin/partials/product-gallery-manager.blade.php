@@ -167,6 +167,21 @@
     </div>
 </div>
 
+<div id="galleryFileLimitModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4 opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true" aria-labelledby="galleryFileLimitTitle">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 p-6 text-center">
+        <div class="w-16 h-16 mx-auto bg-amber-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+            </svg>
+        </div>
+        <h3 id="galleryFileLimitTitle" class="text-xl font-bold text-gray-800 mb-2">File quá dung lượng</h3>
+        <p id="galleryFileLimitLead" class="text-sm text-gray-600 mb-4">File vượt quá giới hạn nên không được tải lên.</p>
+        <ul id="galleryFileLimitList" class="mb-4 max-h-48 overflow-y-auto space-y-2 text-left text-sm bg-amber-50/80 rounded-xl p-3 border border-amber-100"></ul>
+        <p class="text-xs text-gray-500 mb-5">Ảnh tối đa <span class="font-semibold text-gray-700">5MB</span> · Video tối đa <span class="font-semibold text-gray-700">50MB</span><br>Định dạng: jpg/jpeg/png/webp hoặc mp4/webm</p>
+        <button type="button" onclick="closeGalleryFileLimitModal()" class="w-full px-4 py-2.5 text-sm font-bold text-white rounded-lg transition-colors" style="background:#A31D1D;">Đã hiểu</button>
+    </div>
+</div>
+
 @if($isEdit)
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mt-6"
         id="gallery-library-root"
@@ -289,9 +304,11 @@
     const ALLOWED_VIDEO_EXT = ['mp4', 'webm'];
     const ALLOWED_VIDEO_MIME = ['video/mp4', 'video/webm'];
     const CHUNK_SIZE = 1024 * 1024;
+    const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
     const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
     const editUsesAjaxUpload = {{ $isEdit ? 'true' : 'false' }};
     let galleryUploadBusy = false;
+    let galleryFileLimitEscHandler = null;
 
     function csrfToken() {
         return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
@@ -313,18 +330,55 @@
         });
     });
 
-    function isAllowedImage(file) {
+    function isAllowedImageFormat(file) {
         if (!file) return false;
         const ext = (file.name.split('.').pop() || '').toLowerCase();
         const mimeOk = !file.type || ALLOWED_IMAGE_MIME.includes(file.type);
         return mimeOk && ALLOWED_IMAGE_EXT.includes(ext);
     }
 
-    function isAllowedVideo(file) {
+    function isAllowedVideoFormat(file) {
         if (!file) return false;
         const ext = (file.name.split('.').pop() || '').toLowerCase();
         const mimeOk = !file.type || ALLOWED_VIDEO_MIME.includes(file.type);
-        return mimeOk && ALLOWED_VIDEO_EXT.includes(ext) && file.size <= MAX_VIDEO_BYTES;
+        return mimeOk && ALLOWED_VIDEO_EXT.includes(ext);
+    }
+
+    function describeRejectedGalleryFile(file, kind) {
+        const name = file?.name || 'unknown';
+        if (kind === 'video') {
+            if (!isAllowedVideoFormat(file)) {
+                return { name, reason: 'Định dạng không hỗ trợ (chỉ mp4/webm).', oversized: false };
+            }
+            if (file.size > MAX_VIDEO_BYTES) {
+                return { name, reason: 'Dung lượng ' + formatUploadBytes(file.size) + ' — tối đa 50MB/video.', oversized: true };
+            }
+            return null;
+        }
+        if (!isAllowedImageFormat(file)) {
+            return { name, reason: 'Định dạng không hỗ trợ (chỉ jpg/jpeg/png/webp).', oversized: false };
+        }
+        if (file.size > MAX_IMAGE_BYTES) {
+            return { name, reason: 'Dung lượng ' + formatUploadBytes(file.size) + ' — tối đa 5MB/ảnh.', oversized: true };
+        }
+        return null;
+    }
+
+    function notifyRejectedGalleryFiles(rejected, acceptedCount, hintEl, kind) {
+        if (hintEl) {
+            if (rejected.length) {
+                const limit = kind === 'video' ? '50MB' : '5MB';
+                const formats = kind === 'video' ? 'mp4/webm' : 'jpg/jpeg/png/webp';
+                hintEl.textContent = `Đã bỏ ${rejected.length} file không hợp lệ (chỉ ${formats} ≤${limit}).`;
+                hintEl.classList.remove('hidden');
+            } else {
+                hintEl.classList.add('hidden');
+                hintEl.textContent = '';
+            }
+        }
+        if (rejected.length) {
+            showGalleryFileLimitModal(rejected, { kind, acceptedCount });
+        }
     }
 
     function filterImageFiles(fileList, hintEl) {
@@ -332,18 +386,11 @@
         const accepted = [];
         const rejected = [];
         files.forEach((file) => {
-            if (isAllowedImage(file) && file.size <= 5 * 1024 * 1024) accepted.push(file);
-            else rejected.push(file.name || 'unknown');
+            const rejection = describeRejectedGalleryFile(file, 'image');
+            if (rejection) rejected.push(rejection);
+            else accepted.push(file);
         });
-        if (hintEl) {
-            if (rejected.length) {
-                hintEl.textContent = `Đã bỏ ${rejected.length} file không hợp lệ (chỉ jpg/jpeg/png/webp ≤5MB).`;
-                hintEl.classList.remove('hidden');
-            } else {
-                hintEl.classList.add('hidden');
-                hintEl.textContent = '';
-            }
-        }
+        notifyRejectedGalleryFiles(rejected, accepted.length, hintEl, 'image');
         return accepted;
     }
 
@@ -352,20 +399,76 @@
         const accepted = [];
         const rejected = [];
         files.forEach((file) => {
-            if (isAllowedVideo(file)) accepted.push(file);
-            else rejected.push(file.name || 'unknown');
+            const rejection = describeRejectedGalleryFile(file, 'video');
+            if (rejection) rejected.push(rejection);
+            else accepted.push(file);
         });
-        if (hintEl) {
-            if (rejected.length) {
-                hintEl.textContent = `Đã bỏ ${rejected.length} file (chỉ mp4/webm ≤50MB).`;
-                hintEl.classList.remove('hidden');
-            } else {
-                hintEl.classList.add('hidden');
-                hintEl.textContent = '';
-            }
-        }
+        notifyRejectedGalleryFiles(rejected, accepted.length, hintEl, 'video');
         return accepted;
     }
+
+    function showGalleryFileLimitModal(items, options = {}) {
+        const modal = document.getElementById('galleryFileLimitModal');
+        if (!modal || !items.length) return;
+        const titleEl = document.getElementById('galleryFileLimitTitle');
+        const leadEl = document.getElementById('galleryFileLimitLead');
+        const listEl = document.getElementById('galleryFileLimitList');
+        const inner = modal.querySelector('.bg-white');
+        const allOversized = items.every((item) => item.oversized);
+        const kind = options.kind === 'video' ? 'video' : 'ảnh';
+        const limit = options.kind === 'video' ? '50MB' : '5MB';
+        if (titleEl) {
+            titleEl.textContent = allOversized ? 'File quá dung lượng' : 'Không thể tải file lên';
+        }
+        if (leadEl) {
+            if (options.acceptedCount > 0) {
+                leadEl.textContent = `Một số file không hợp lệ đã bị bỏ. File ${kind} hợp lệ vẫn được tải lên.`;
+            } else if (allOversized) {
+                leadEl.textContent = `File ${kind} vượt quá ${limit} nên không được tải lên. Hãy nén hoặc chọn file nhỏ hơn.`;
+            } else {
+                leadEl.textContent = `File ${kind} không hợp lệ nên không được tải lên.`;
+            }
+        }
+        if (listEl) {
+            listEl.innerHTML = items.map((item) => {
+                const name = escapeHtml(item.name || 'File không xác định');
+                const reason = escapeHtml(item.reason || '');
+                return `<li class="rounded-lg bg-white px-3 py-2 border border-amber-100"><p class="font-semibold text-gray-800 break-all">${name}</p><p class="text-amber-800 mt-0.5">${reason}</p></li>`;
+            }).join('');
+        }
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        void modal.offsetWidth;
+        modal.classList.remove('opacity-0');
+        inner?.classList.remove('scale-95');
+        if (galleryFileLimitEscHandler) {
+            document.removeEventListener('keydown', galleryFileLimitEscHandler);
+        }
+        galleryFileLimitEscHandler = (event) => {
+            if (event.key === 'Escape') closeGalleryFileLimitModal();
+        };
+        document.addEventListener('keydown', galleryFileLimitEscHandler);
+    }
+
+    window.closeGalleryFileLimitModal = function() {
+        const modal = document.getElementById('galleryFileLimitModal');
+        if (!modal) return;
+        const inner = modal.querySelector('.bg-white');
+        modal.classList.add('opacity-0');
+        inner?.classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+        if (galleryFileLimitEscHandler) {
+            document.removeEventListener('keydown', galleryFileLimitEscHandler);
+            galleryFileLimitEscHandler = null;
+        }
+    };
+
+    document.getElementById('galleryFileLimitModal')?.addEventListener('click', (event) => {
+        if (event.target === event.currentTarget) closeGalleryFileLimitModal();
+    });
 
     let selectedFiles = [];
     let selectedVideoFiles = [];
@@ -443,15 +546,15 @@
                 const raw = xhr.responseText || '';
                 try { data = JSON.parse(raw); } catch (_) {}
                 if (xhr.status === 413 || /POST data is too large/i.test(raw + (data.message || ''))) {
-                    reject(new Error('File vượt quá giới hạn máy chủ. Hệ thống sẽ tải theo từng phần — hãy thử lại.'));
+                    reject(Object.assign(new Error('File vượt quá giới hạn máy chủ. Ảnh tối đa 5MB, video tối đa 50MB.'), { galleryLimit: true }));
                     return;
                 }
                 if (xhr.status < 200 || xhr.status >= 300) {
-                    reject(new Error(
-                        data.message
+                    const message = data.message
                         || (data.errors && Object.values(data.errors).flat().join(' '))
-                        || ('Upload thất bại (HTTP ' + xhr.status + ').')
-                    ));
+                        || ('Upload thất bại (HTTP ' + xhr.status + ').');
+                    const limitError = /vượt quá|quá lớn|5MB|50MB/i.test(message);
+                    reject(Object.assign(new Error(message), { galleryLimit: limitError }));
                     return;
                 }
                 if (data.items) renderLibraryFromItems(data.items, data.cover_path);
@@ -543,12 +646,16 @@
             window.setTimeout(() => hideGalleryProgress(uploadDropzone), 700);
         } catch (err) {
             hideGalleryProgress(uploadDropzone);
+            const message = err.message || 'Upload thất bại.';
+            if (err.galleryLimit || /vượt quá|quá lớn|5MB|50MB/i.test(message)) {
+                showGalleryFileLimitModal([{ name: 'Ảnh vừa chọn', reason: message, oversized: true }], { kind: 'image', acceptedCount: 0 });
+            }
             if (statusEl) {
-                statusEl.textContent = err.message || 'Upload thất bại.';
+                statusEl.textContent = message;
                 statusEl.classList.remove('text-gray-500');
                 statusEl.classList.add('text-red-600');
-            } else {
-                alert(err.message || 'Upload thất bại.');
+            } else if (!err.galleryLimit) {
+                alert(message);
             }
         } finally {
             galleryUploadBusy = false;
@@ -724,12 +831,16 @@
                 window.setTimeout(() => hideGalleryProgress(dropzone), 700);
             } catch (err) {
                 hideGalleryProgress(dropzone);
+                const message = err.message || 'Upload video thất bại.';
+                if (err.galleryLimit || /vượt quá|quá lớn|50MB/i.test(message)) {
+                    showGalleryFileLimitModal([{ name: 'Video vừa chọn', reason: message, oversized: true }], { kind: 'video', acceptedCount: 0 });
+                }
                 if (status) {
                     status.classList.remove('hidden', 'text-gray-500');
                     status.classList.add('text-red-600');
-                    status.textContent = err.message || 'Upload video thất bại.';
-                } else {
-                    alert(err.message || 'Upload video thất bại.');
+                    status.textContent = message;
+                } else if (!err.galleryLimit) {
+                    alert(message);
                 }
             } finally {
                 galleryUploadBusy = false;

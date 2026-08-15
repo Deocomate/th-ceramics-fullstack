@@ -19,7 +19,7 @@
 @endphp
 
 <div class="flex flex-col md:gap-5 lg:col-span-3">
-    <div class="relative w-full aspect-square bg-white md:shadow-lg overflow-hidden">
+    <div class="relative w-full aspect-square overflow-hidden shadow-none border-0 ring-0">
     <div class="absolute inset-0 swiper product-main-swiper group" data-product-main-swiper>
         <div class="swiper-wrapper">
             @foreach($mediaItems as $index => $item)
@@ -142,6 +142,13 @@
         .product-main-swiper .swiper-slide {
             width: 100%;
             height: 100%;
+            box-shadow: none;
+            border: 0;
+            outline: none;
+        }
+
+        .product-main-swiper .swiper-slide {
+            overflow: hidden;
         }
 
         .product-main-swiper .swiper-slide > img,
@@ -149,10 +156,14 @@
         .product-main-swiper [data-product-video-shell] > img,
         .product-main-swiper [data-product-video-shell] video,
         .product-main-swiper [data-product-video-play] img {
+            display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center;
+            box-shadow: none;
+            border: 0;
+            outline: none;
         }
 
         .product-main-swiper [data-product-video-shell] iframe,
