@@ -88,6 +88,7 @@
                         </div>
                     </div>
                 </div>
+                <p id="gallery-selected-summary" class="mt-2 text-xs text-gray-600 font-medium hidden"></p>
             @endif
         </div>
     </div>
@@ -669,8 +670,15 @@
             return;
         }
         const files = filterImageFiles(input.files, uploadHint);
-        if (!files.length) return;
+        if (!files.length) {
+            input.value = '';
+            selectedFiles = [];
+            updateFileInput();
+            renderPreviews();
+            return;
+        }
         selectedFiles = files.slice();
+        updateFileInput();
         renderPreviews();
     };
 
@@ -728,6 +736,52 @@
         const dataTransfer = new DataTransfer();
         selectedFiles.forEach((file) => dataTransfer.items.add(file));
         multipleImagesInput.files = dataTransfer.files;
+
+        const summaryEl = document.getElementById('gallery-selected-summary');
+        if (summaryEl) {
+            if (selectedFiles.length > 0) {
+                const totalBytes = selectedFiles.reduce((sum, f) => sum + f.size, 0);
+                summaryEl.textContent = `Đã chọn ${selectedFiles.length} ảnh (Tổng dung lượng: ${formatUploadBytes(totalBytes)}). Ảnh đầu tiên sẽ làm ảnh bìa.`;
+                summaryEl.className = 'mt-2 text-xs text-gray-600 font-medium';
+                summaryEl.classList.remove('hidden');
+            } else {
+                summaryEl.classList.add('hidden');
+                summaryEl.textContent = '';
+            }
+        }
+    }
+
+    if (!editUsesAjaxUpload && multipleImagesInput) {
+        const parentForm = multipleImagesInput.closest('form');
+        if (parentForm) {
+            parentForm.addEventListener('submit', function() {
+                if (parentForm.checkValidity && !parentForm.checkValidity()) {
+                    return;
+                }
+                if (selectedFiles.length > 0) {
+                    const submitBtn = parentForm.querySelector('button[type="submit"]');
+                    if (submitBtn && !submitBtn.disabled) {
+                        window.setTimeout(() => {
+                            submitBtn.disabled = true;
+                            submitBtn.classList.add('opacity-75', 'cursor-wait');
+                            submitBtn.innerHTML = `
+                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Đang tải lên ${selectedFiles.length} ảnh và lưu...
+                            `;
+                        }, 10);
+                    }
+                    const summary = document.getElementById('gallery-selected-summary');
+                    if (summary) {
+                        summary.textContent = `Đang tải ${selectedFiles.length} ảnh lên máy chủ, vui lòng đợi...`;
+                        summary.className = 'mt-2 text-xs text-amber-700 font-semibold animate-pulse';
+                        summary.classList.remove('hidden');
+                    }
+                }
+            });
+        }
     }
 
     window.extractGalleryYoutubeId = function(url) {
