@@ -663,13 +663,81 @@
         }
     }
 
-    window.handleMultipleFiles = function(event) {
+    window.prepareImageFile = async function(file) {
+        if (!file || !isAllowedImageFormat(file)) {
+            return file;
+        }
+        const ext = (file.name.split('.').pop() || '').toLowerCase();
+        if (ext === 'webp' && file.size <= 1.8 * 1024 * 1024) {
+            return file;
+        }
+        return new Promise((resolve) => {
+            const img = new Image();
+            const url = URL.createObjectURL(file);
+            img.onload = () => {
+                URL.revokeObjectURL(url);
+                const maxDim = 2000;
+                let { width, height } = img;
+                if (width <= maxDim && height <= maxDim && file.size <= 1.8 * 1024 * 1024) {
+                    return resolve(file);
+                }
+                if (width > maxDim || height > maxDim) {
+                    if (width > height) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    } else {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    if (!blob) return resolve(file);
+                    const cleanName = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+                    const newFile = new File([blob], cleanName, {
+                        type: 'image/jpeg',
+                        lastModified: Date.now(),
+                    });
+                    resolve(newFile);
+                }, 'image/jpeg', 0.92);
+            };
+            img.onerror = () => {
+                URL.revokeObjectURL(url);
+                resolve(file);
+            };
+            img.src = url;
+        });
+    };
+
+    window.handleMultipleFiles = async function(event) {
         const input = event.target;
         if (editUsesAjaxUpload) {
             uploadFilesViaAjax(input.files, formUploadStatus).finally(() => { input.value = ''; });
             return;
         }
-        const files = filterImageFiles(input.files, uploadHint);
+        let rawFiles = Array.from(input.files || []);
+        if (!rawFiles.length) {
+            input.value = '';
+            selectedFiles = [];
+            updateFileInput();
+            renderPreviews();
+            return;
+        }
+        if (uploadHint) {
+            uploadHint.textContent = 'Đang xử lý chuẩn bị ' + rawFiles.length + ' ảnh...';
+            uploadHint.classList.remove('hidden');
+        }
+        const processed = await Promise.all(rawFiles.map((f) => window.prepareImageFile(f)));
+        if (uploadHint) {
+            uploadHint.classList.add('hidden');
+            uploadHint.textContent = '';
+        }
+        const files = filterImageFiles(processed, uploadHint);
         if (!files.length) {
             input.value = '';
             selectedFiles = [];
@@ -682,12 +750,23 @@
         renderPreviews();
     };
 
-    function appendDroppedFiles(fileList) {
+    async function appendDroppedFiles(fileList) {
         if (editUsesAjaxUpload) {
             uploadFilesViaAjax(fileList, formUploadStatus);
             return;
         }
-        const files = filterImageFiles(fileList, uploadHint);
+        let rawFiles = Array.from(fileList || []);
+        if (!rawFiles.length) return;
+        if (uploadHint) {
+            uploadHint.textContent = 'Đang xử lý chuẩn bị ' + rawFiles.length + ' ảnh...';
+            uploadHint.classList.remove('hidden');
+        }
+        const processed = await Promise.all(rawFiles.map((f) => window.prepareImageFile(f)));
+        if (uploadHint) {
+            uploadHint.classList.add('hidden');
+            uploadHint.textContent = '';
+        }
+        const files = filterImageFiles(processed, uploadHint);
         if (!files.length) return;
         selectedFiles = selectedFiles.concat(files);
         updateFileInput();
