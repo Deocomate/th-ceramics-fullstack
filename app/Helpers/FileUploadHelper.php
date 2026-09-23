@@ -2,14 +2,16 @@
 
 namespace App\Helpers;
 
+use App\Services\ImageOptimizerService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class FileUploadHelper
 {
     /**
      * Upload a file to the specified directory under storage/app/public.
+     * Automatically optimizes and resizes images to SEO standards.
+     * Non-image files (PDFs, Videos, etc.) are stored unmodified.
      *
      * @param  UploadedFile  $file  The uploaded file.
      * @param  string  $directory  Sub-directory inside public disk (e.g. 'uploads/avatars').
@@ -18,10 +20,10 @@ class FileUploadHelper
      */
     public static function upload(UploadedFile $file, string $directory, ?string $slug = null): string
     {
-        $extension = $file->getClientOriginalExtension();
-        $filename = ($slug ? $slug : Str::random(16)).'_'.time().'.'.$extension;
+        /** @var ImageOptimizerService $optimizer */
+        $optimizer = app(ImageOptimizerService::class);
 
-        return $file->storeAs($directory, $filename, 'public');
+        return $optimizer->optimize($file, $directory, $slug);
     }
 
     /**
