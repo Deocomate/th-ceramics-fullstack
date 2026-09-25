@@ -3,6 +3,7 @@
 namespace App\View\Components\Client\Shared;
 
 use App\Support\ClientProductType;
+use App\Support\ProductPrice;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -10,6 +11,8 @@ use Illuminate\View\Component;
 class ProductCard extends Component
 {
     public string $resolvedProductType;
+
+    public string $displayPrice;
 
     public ?int $resolvedProductId;
 
@@ -48,6 +51,10 @@ class ProductCard extends Component
         $this->resolvedProductType = $this->productType
             ?: ClientProductType::fromDetailRoute($this->detailRouteName)
             ?: '';
+
+        $displayProductType = $this->resolvedProductType
+            ?: ($this->product ? (string) str($this->product::class)->classBasename()->snake() : null);
+        $this->displayPrice = ProductPrice::withUnit($this->price, $displayProductType);
 
         $this->resolvedProductId = ClientProductType::resolveProductId(
             $this->product,

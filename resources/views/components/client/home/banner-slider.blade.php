@@ -190,6 +190,13 @@
   .banner-carousel {
     width: 75%;
     animation: banner-slide-in 0.3s ease-in-out;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+  }
+
+  .banner-carousel.is-dragging {
+    cursor: grabbing;
   }
 
   @media (min-width: 1024px) {
@@ -335,10 +342,12 @@
     );
     const bannerNext = bannerSection.querySelector(".banner-next");
     const bannerPrev = bannerSection.querySelector(".banner-prev");
+    const bannerCarousel = bannerSection.querySelector(".banner-carousel");
 
     if (!bannerSlides.length) return;
 
     let bannerCurrentSlide = 0;
+    let bannerPointerActive = false;
     const totalBannerSlides = bannerSlides.length;
 
     const showBannerSlide = (index) => {
@@ -380,9 +389,78 @@
       });
     });
 
+    if (bannerCarousel && totalBannerSlides > 1) {
+      const DRAG_THRESHOLD = 40;
+      let pointerId = null;
+      let pointerButton = null;
+      let startX = 0;
+      let suppressActivation = false;
+      let suppressTimer = null;
+
+      bannerCarousel.addEventListener("dragstart", (event) => event.preventDefault());
+      bannerCarousel.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0 && event.button !== 2) return;
+
+        window.clearTimeout(suppressTimer);
+        suppressActivation = false;
+        pointerId = event.pointerId;
+        pointerButton = event.button;
+        startX = event.clientX;
+        bannerPointerActive = true;
+      });
+
+      window.addEventListener("pointermove", (event) => {
+        if (event.pointerId !== pointerId) return;
+
+        if (Math.abs(event.clientX - startX) >= DRAG_THRESHOLD) {
+          bannerCarousel.classList.add("is-dragging");
+          event.preventDefault();
+        }
+      });
+
+      const endDrag = (event) => {
+        if (event.pointerId !== pointerId) return;
+
+        const deltaX = event.clientX - startX;
+        pointerId = null;
+        pointerButton = null;
+        bannerPointerActive = false;
+        bannerCarousel.classList.remove("is-dragging");
+
+        if (event.type === "pointerup" && Math.abs(deltaX) >= DRAG_THRESHOLD) {
+          suppressActivation = true;
+          if (deltaX < 0) nextBannerSlide();
+          else prevBannerSlide();
+          suppressTimer = window.setTimeout(() => { suppressActivation = false; }, 300);
+        }
+      };
+
+      window.addEventListener("pointerup", endDrag);
+      window.addEventListener("pointercancel", endDrag);
+      window.addEventListener("blur", () => {
+        pointerId = null;
+        pointerButton = null;
+        bannerPointerActive = false;
+        bannerCarousel.classList.remove("is-dragging");
+      });
+
+      bannerCarousel.addEventListener("click", (event) => {
+        if (!suppressActivation) return;
+        event.preventDefault();
+        event.stopPropagation();
+      }, true);
+      bannerCarousel.addEventListener("contextmenu", (event) => {
+        if (suppressActivation || (pointerId !== null && pointerButton === 2)) {
+          event.preventDefault();
+        }
+      });
+    }
+
     showBannerSlide(bannerCurrentSlide);
     if (totalBannerSlides > 1) {
-      window.setInterval(nextBannerSlide, 5000);
+      window.setInterval(() => {
+        if (!bannerPointerActive) nextBannerSlide();
+      }, 5000);
     }
   });
 </script>

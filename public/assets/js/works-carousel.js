@@ -91,7 +91,7 @@ const initWorksCarousel = (container) => {
     };
 
     worksCarousel.addEventListener("pointerdown", (event) => {
-        if (event.button !== undefined && event.button !== 0) {
+        if (event.pointerType === "mouse" && event.button !== 0 && event.button !== 2) {
             return;
         }
 
@@ -112,6 +112,7 @@ const initWorksCarousel = (container) => {
         const deltaX = event.clientX - carouselStartX;
         if (Math.abs(deltaX) > 4) {
             carouselDidDrag = true;
+            event.preventDefault();
         }
 
         worksCarousel.scrollLeft = carouselStartScrollLeft - deltaX;
@@ -119,7 +120,13 @@ const initWorksCarousel = (container) => {
 
     worksCarousel.addEventListener("pointerup", endCarouselDrag);
     worksCarousel.addEventListener("pointercancel", endCarouselDrag);
-    worksCarousel.addEventListener("pointerleave", endCarouselDrag);
+    worksCarousel.addEventListener("lostpointercapture", endCarouselDrag);
+    worksCarousel.addEventListener("dragstart", (event) => event.preventDefault());
+    worksCarousel.addEventListener("contextmenu", (event) => {
+        if (carouselPointerId !== null || carouselDidDrag) {
+            event.preventDefault();
+        }
+    });
 
     worksCarousel.addEventListener(
         "click",

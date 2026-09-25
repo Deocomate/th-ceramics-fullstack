@@ -93,7 +93,7 @@
             <!-- Price -->
             <p id="dynamic-price"
                 class="text-[16px] text-black md:text-2xl md:text-[32px] font-semibold md:text-primary mb-4 md:mb-16 leading-[20px] md:leading-normal order-3 mt-0.5 md:mt-0">
-                {{ $firstVariant && $firstVariant->price > 0 ? number_format($firstVariant->price, 0, ',', '.') . ' đ/m2' : 'Liên hệ' }}
+                {{ $firstVariant && $firstVariant->price > 0 ? number_format($firstVariant->price, 0, ',', '.') . ' đ/chiếc' : 'Liên hệ' }}
             </p>
 
             <!-- Separator -->
@@ -122,7 +122,7 @@
                             class="variant-btn flex-1 md:w-auto md:min-w-[200px] border {{ $loop->first ? 'border-black/50 bg-black/5' : 'border-black/20' }} text-primary uppercase text-[10px] md:text-[13px] font-medium md:py-3 py-2 px-1 text-center hover:border-black/50 hover:bg-black/5 transition-all outline-none flex items-center justify-center leading-tight"
                             data-variant-id="{{ $variant->phan_loai_lan_can_gom_su_ct_id }}"
                             data-sku="{{ $variant->code }}" data-price="{{ $variant->price }}"
-                            data-price-formatted="{{ $variant->price > 0 ? number_format($variant->price, 0, ',', '.') . ' đ/m2' : 'Liên hệ' }}">
+                            data-price-formatted="{{ $variant->price > 0 ? number_format($variant->price, 0, ',', '.') . ' đ/chiếc' : 'Liên hệ' }}">
                             {{ $variant->name }}
                         </button>
                     @endforeach

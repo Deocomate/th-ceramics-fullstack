@@ -6,7 +6,7 @@
           'name' => $variant->name,
           'variantId' => $variant->phan_loai_den_vuon_gom_su_ct_id,
           'sku' => $variant->code,
-          'price' => number_format((float) $variant->price, 0, ',', '.') . 'đ',
+          'price' => number_format((float) $variant->price, 0, ',', '.') . ' đ/chiếc',
       ])
       ->values();
 @endphp

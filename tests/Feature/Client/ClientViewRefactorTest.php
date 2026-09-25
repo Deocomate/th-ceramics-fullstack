@@ -45,7 +45,7 @@ test('recommendations render normalized product card and add to cart data', func
     expect($html)
         ->toContain('Gạch thử nghiệm')
         ->toContain('assets/images/gach-co-work-2.jpg')
-        ->toContain('125.000 đ/m²')
+        ->toContain('125.000 đ/viên')
         ->toContain('data-product-type="gach_co_bat_trang_ct"')
         ->toContain('data-product-id="7"')
         ->toContain('js-add-to-cart')
@@ -90,6 +90,28 @@ test('product card includes variant id when provided', function () {
     expect($html)
         ->toContain('data-product-type="den_vuon_gom_su_ct"')
         ->toContain('data-variant-id="12"');
+});
+
+test('product card shows the correct unit for each product type', function () {
+    foreach ([
+        'ngoi_am_duong_ct' => 'm²',
+        'gach_trang_tri_ct' => 'viên',
+        'phu_kien_ngoi_ct' => 'chiếc',
+    ] as $type => $unit) {
+        $html = Blade::render(
+            '<x-client.shared.product-card title="Sản phẩm" price="Giá: 120.000 đ/m²" :product-type="$type" />',
+            ['type' => $type],
+        );
+
+        expect($html)->toContain('Giá: 120.000 đ/'.$unit);
+    }
+
+    $html = Blade::render(
+        '<x-client.shared.product-card title="Gạch" price="120.000đ" :product="$product" />',
+        ['product' => new \App\Models\GachTrangTriCt],
+    );
+
+    expect($html)->toContain('120.000 đ/viên');
 });
 
 test('product listing components use shared product card markup', function () {

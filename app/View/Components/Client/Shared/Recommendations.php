@@ -4,6 +4,7 @@ namespace App\View\Components\Client\Shared;
 
 use App\Support\AssetPath;
 use App\Support\ClientProductType;
+use App\Support\ProductPrice;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
@@ -64,7 +65,9 @@ class Recommendations extends Component
         $price = (float) (data_get($product, 'price') ?? data_get($product, 'min_price', 0));
         $rawColor = data_get($product, 'color') ?? data_get($product, 'color_name');
         $rawSize = data_get($product, 'size') ?? data_get($product, 'dimension');
-        $resolvedType = $this->productType ?: (is_object($product) ? (string) str($product::class)->classBasename()->snake() : null);
+        $resolvedType = $this->productType
+            ?: ClientProductType::fromDetailRoute($targetRouteName)
+            ?: (is_object($product) ? (string) str($product::class)->classBasename()->snake() : null);
 
         return [
             'id' => $productId,
@@ -74,7 +77,7 @@ class Recommendations extends Component
             'image' => AssetPath::url($rawImage, 'assets/images/gach-co-work-2.jpg'),
             'name' => data_get($product, 'name', 'Sản phẩm'),
             'price' => $price,
-            'price_display' => $price > 0 ? number_format($price, 0, ',', '.').' đ/m²' : 'Liên hệ',
+            'price_display' => ProductPrice::formatAmount($price, $resolvedType),
             'color' => filled($rawColor) ? $rawColor : 'Tự chọn',
             'size' => filled($rawSize) ? $rawSize : '--',
             'type' => $resolvedType,

@@ -6,7 +6,7 @@
           'variantId' => $variant->phan_loai_phu_kien_ngoi_ct_id,
           'sku' => $variant->code,
           'price' => $variant->price,
-          'priceFormatted' => number_format((float) $variant->price, 0, ',', '.') . ' đ/m²',
+          'priceFormatted' => number_format((float) $variant->price, 0, ',', '.') . ' đ/chiếc',
           'class' => str_contains(mb_strtolower($variant->name), 'combo') ? 'w-[54%] md:w-auto md:min-w-[240px]' : 'flex-1 md:w-auto md:min-w-[200px]',
       ])
       ->values();

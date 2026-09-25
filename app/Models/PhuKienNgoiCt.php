@@ -94,6 +94,6 @@ class PhuKienNgoiCt extends Model
             ? $this->phanLoais->where('is_delete', 0)->min('price')
             : $this->phanLoais()->where('is_delete', 0)->min('price');
 
-        return $price > 0 ? 'Giá: '.number_format((float) $price, 0, ',', '.').' đ/m²' : 'Giá: Liên hệ';
+        return $price > 0 ? 'Giá: '.number_format((float) $price, 0, ',', '.').' đ/chiếc' : 'Giá: Liên hệ';
     }
 }

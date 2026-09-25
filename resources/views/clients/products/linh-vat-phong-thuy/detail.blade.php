@@ -65,7 +65,7 @@
             <!-- Price -->
             <p
                 class="text-[16px] text-black md:text-2xl md:text-[32px] font-semibold md:text-primary mb-4 md:mb-16 leading-[20px] md:leading-normal order-3 mt-0.5 md:mt-0">
-                {{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ' : 'Liên hệ' }}
+                {{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/chiếc' : 'Liên hệ' }}
             </p>
 
             <!-- Separator -->
@@ -351,7 +351,7 @@
                                         @foreach ($relatedProducts->take(5) as $related)
                                             <div
                                                 class="w-[175px] md:w-[220px] shrink-0 text-[12px] md:text-base text-[#C76E00] font-semibold mr-4 md:mr-auto pl-8 md:pl-0">
-                                                {{ $related->price > 0 ? number_format($related->price, 0, ',', '.') . ' đ' : 'Liên hệ' }}
+                                                {{ $related->price > 0 ? number_format($related->price, 0, ',', '.') . ' đ/chiếc' : 'Liên hệ' }}
                                             </div>
                                         @endforeach
                                     </div>
