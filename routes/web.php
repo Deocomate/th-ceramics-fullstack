@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\StagedImageUploadController;
 use App\Http\Controllers\Admin\CatalogController;
 use App\Http\Controllers\Admin\ConsultationRequestController;
 use App\Http\Controllers\Admin\ContactPageController;
@@ -46,6 +47,7 @@ use App\Http\Controllers\Admin\PhanLoaiLanCanGomSuCtController;
 use App\Http\Controllers\Admin\PhanLoaiPhuKienNgoiCtController;
 use App\Http\Controllers\Admin\PhuKienNgoiController;
 use App\Http\Controllers\Admin\PhuKienNgoiCtController;
+use App\Http\Controllers\Admin\ProductCopyController;
 use App\Http\Controllers\Admin\ThiCongController;
 use App\Http\Controllers\Admin\TinTucController;
 use App\Http\Controllers\Admin\TrangChuController;
@@ -76,10 +78,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     // ── Authenticated routes ──────────────────────────────────────────────────
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', 'staged.images'])->group(function () {
         Route::get('/', fn () => redirect()->route('admin.dashboard'))->name('home');
         Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
         Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
+        Route::post('media/staged-images', [StagedImageUploadController::class, 'store'])->name('media.staged-images.store');
 
         // Cấu hình section chung
         Route::prefix('gia-tri-vuot-troi')->name('gia-tri-vuot-troi.')->group(function () {
@@ -94,6 +97,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/', [GiaiThuongThanhTuuController::class, 'store'])->name('store');
             Route::put('/{id}', [GiaiThuongThanhTuuController::class, 'update'])->name('update');
             Route::delete('/{id}', [GiaiThuongThanhTuuController::class, 'destroy'])->name('destroy');
+        });
+
+        // ── Product Copy API Routes ──────────────────────────────────────────────
+        Route::prefix('api/product-copy')->name('product-copy.')->group(function () {
+            Route::get('list', [ProductCopyController::class, 'list'])->name('list');
+            Route::get('detail/{type}/{id}', [ProductCopyController::class, 'detail'])->name('detail');
         });
 
         // ── Product Types Routes ────────────────────────────────────────────────

@@ -33,7 +33,12 @@ class PhuKienNgoiCtController extends Controller
         $categoryType = $this->categoryType($request);
         $categoryLabel = PhuKienNgoiCt::categoryLabel($categoryType);
 
-        return view('admin.phu-kien-ngoi-ct.create', compact('categoryType', 'categoryLabel'));
+        $copiedProduct = null;
+        if ($request->filled('copy_from')) {
+            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('phu-kien-ngoi-ct', (int) $request->query('copy_from'));
+        }
+
+        return view('admin.phu-kien-ngoi-ct.create', compact('categoryType', 'categoryLabel', 'copiedProduct'));
     }
 
     public function store(Request $request)

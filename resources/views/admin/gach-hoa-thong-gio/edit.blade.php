@@ -435,7 +435,7 @@
                     event.preventDefault();
                     zone.classList.remove('border-[#A31D1D]', 'bg-red-50');
                     input.files = event.dataTransfer.files;
-                    previewMultiple(input, previewId);
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
                 });
             });
 

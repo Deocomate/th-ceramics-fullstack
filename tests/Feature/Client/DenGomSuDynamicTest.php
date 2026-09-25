@@ -48,10 +48,7 @@ function createDenGomSuProduct(array $overrides = [], array $variants = []): Den
 
 function fakePngUpload(string $name): UploadedFile
 {
-    return UploadedFile::fake()->createWithContent(
-        $name,
-        base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=')
-    );
+    return UploadedFile::fake()->image($name, 1, 1);
 }
 
 test('client page renders separate dynamic grids for den gom and den su', function () {

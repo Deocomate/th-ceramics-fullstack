@@ -26,9 +26,14 @@ class GachTrangTriCtController extends Controller
         return view('admin.gach-trang-tri-ct.index', compact('products', 'status'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.gach-trang-tri-ct.create');
+        $copiedProduct = null;
+        if ($request->filled('copy_from')) {
+            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('gach-trang-tri-ct', (int) $request->query('copy_from'));
+        }
+
+        return view('admin.gach-trang-tri-ct.create', compact('copiedProduct'));
     }
 
     public function store(StoreGachTrangTriCtRequest $request)

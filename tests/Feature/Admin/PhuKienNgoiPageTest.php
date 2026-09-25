@@ -56,10 +56,7 @@ test('phu kien ngoi page appends gallery images', function () {
     actingAs($this->admin)
         ->put(route('admin.phu-kien-ngoi.update'), [
             'new_images' => [
-                UploadedFile::fake()->createWithContent(
-                    'cong-trinh.png',
-                    base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=')
-                ),
+                UploadedFile::fake()->image('cong-trinh.png', 1, 1),
             ],
         ])
         ->assertRedirect()

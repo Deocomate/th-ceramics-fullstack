@@ -26,9 +26,14 @@ class GachHoaThongGioCtController extends Controller
         return view('admin.gach-hoa-thong-gio-ct.index', compact('products', 'status'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.gach-hoa-thong-gio-ct.create');
+        $copiedProduct = null;
+        if ($request->filled('copy_from')) {
+            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('gach-hoa-thong-gio-ct', (int) $request->query('copy_from'));
+        }
+
+        return view('admin.gach-hoa-thong-gio-ct.create', compact('copiedProduct'));
     }
 
     public function store(StoreGachHoaThongGioCtRequest $request)

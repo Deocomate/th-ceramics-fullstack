@@ -20,10 +20,7 @@ beforeEach(function () {
 
 function gachTrangTriFakeImage(string $name = 'image.png'): UploadedFile
 {
-    return UploadedFile::fake()->createWithContent(
-        $name,
-        base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=')
-    );
+    return UploadedFile::fake()->image($name, 1, 1);
 }
 
 test('gach trang tri edit page renders without dau an crud', function () {

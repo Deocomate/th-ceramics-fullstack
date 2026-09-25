@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'verified' => EnsureEmailIsVerified::class,
             'ecommerce' => EnsureEcommerceEnabled::class,
+            'staged.images' => \App\Http\Middleware\SubstituteStagedImages::class,
         ]);
 
         $middleware->priority([

@@ -25,9 +25,14 @@ class NgoiHaiCoCtController extends Controller
         return view('admin.ngoi-hai-co-ct.index', compact('products', 'status'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.ngoi-hai-co-ct.create');
+        $copiedProduct = null;
+        if ($request->filled('copy_from')) {
+            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('ngoi-hai-co-ct', (int) $request->query('copy_from'));
+        }
+
+        return view('admin.ngoi-hai-co-ct.create', compact('copiedProduct'));
     }
 
     public function store(StoreNgoiHaiCoCtRequest $request)

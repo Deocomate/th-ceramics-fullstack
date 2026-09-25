@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Intervention\Image\Laravel\Facades\Image;
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 
@@ -52,7 +53,7 @@ class ImageOptimizerService
 
     /**
      * Optimize an uploaded image and store it to disk.
-     * Fallbacks safely to standard upload if optimization fails.
+     * Optimize raster images to WebP and keep every stored image below 1 MB.
      *
      * @param  UploadedFile  $file  The uploaded file
      * @param  string  $directory  Directory path relative to public disk
@@ -63,23 +64,21 @@ class ImageOptimizerService
     {
         $directory = trim($directory, '/');
 
-        // If optimization is disabled or file is non-image, store normally
-        if (! config('image_optimizer.enabled', true) || ! $this->isOptimizable($file)) {
+        // Non-image files (such as PDFs) retain their original content and format.
+        if (! $this->isOptimizable($file)) {
             return $this->fallbackStore($file, $directory, $slug);
         }
 
         try {
             $preset = $this->resolvePreset($directory);
-            $targetFormat = strtolower((string) config('image_optimizer.format', 'webp'));
-
-            $extension = $targetFormat === 'original'
-                ? strtolower($file->getClientOriginalExtension() ?: 'jpg')
-                : 'webp';
-
-            $filename = $this->generateSeoFilename($file, $slug, $extension);
+            $filename = $this->generateSeoFilename($file, $slug, 'webp');
             $targetPath = $directory !== '' ? $directory.'/'.$filename : $filename;
 
             $realPath = $file->getRealPath() ?: $file->getPathname();
+            $sourceDimensions = @getimagesize($realPath);
+            if ($sourceDimensions === false || ($sourceDimensions[0] * $sourceDimensions[1]) > 60_000_000) {
+                throw new \RuntimeException('The uploaded image is invalid or exceeds the supported pixel limit.');
+            }
             $image = Image::read($realPath);
 
             // 1. Auto-orient based on EXIF tag from mobile devices
@@ -92,27 +91,55 @@ class ImageOptimizerService
             $maxHeight = (int) ($preset['max_height'] ?? 1600);
             $image->scaleDown(width: $maxWidth, height: $maxHeight);
 
-            // 3. Encode image according to format and quality
-            $quality = (int) ($preset['quality'] ?? 82);
-            $encoded = match ($extension) {
-                'png' => $image->toPng(),
-                'jpg', 'jpeg' => $image->toJpeg(quality: $quality),
-                'avif' => $image->toAvif(quality: $quality),
-                default => $image->toWebp(quality: $quality),
-            };
+            // 3. Reduce quality first, then dimensions, until the SEO size cap is met.
+            $quality = min(90, max(45, (int) ($preset['quality'] ?? 82)));
+            $encoded = null;
+            for ($attempt = 0; $attempt < 40; $attempt++) {
+                $encoded = $image->toWebp(quality: $quality);
+                if (strlen((string) $encoded) < 1_000_000) {
+                    break;
+                }
+
+                if ($quality > 50) {
+                    $quality = max(50, $quality - 8);
+
+                    continue;
+                }
+
+                $width = (int) $image->width();
+                $height = (int) $image->height();
+                if (max($width, $height) <= 320) {
+                    $encoded = null;
+                    break;
+                }
+
+                $image->scaleDown(
+                    width: max(1, (int) round($width * 0.82)),
+                    height: max(1, (int) round($height * 0.82)),
+                );
+                $quality = 74;
+            }
+
+            if ($encoded === null || strlen((string) $encoded) >= 1_000_000) {
+                throw new \RuntimeException('Unable to encode the image below the 1 MB storage limit.');
+            }
 
             // 4. Save to public disk
-            Storage::disk('public')->put($targetPath, (string) $encoded);
+            if (! Storage::disk('public')->put($targetPath, (string) $encoded)) {
+                throw new \RuntimeException('Unable to write the optimized image to public storage.');
+            }
 
             return $targetPath;
         } catch (\Throwable $e) {
-            Log::warning('ImageOptimizerService failed, falling back to standard upload', [
+            Log::warning('ImageOptimizerService failed to optimize uploaded image', [
                 'error' => $e->getMessage(),
                 'file' => $file->getClientOriginalName(),
                 'directory' => $directory,
             ]);
 
-            return $this->fallbackStore($file, $directory, $slug);
+            throw ValidationException::withMessages([
+                'image' => 'Không thể tối ưu ảnh "'.$file->getClientOriginalName().'" thành WebP dưới 1MB. Hãy chọn ảnh khác hoặc thử lại.',
+            ]);
         }
     }
 
@@ -166,7 +193,7 @@ class ImageOptimizerService
         $timestamp = time();
         $random = Str::lower(Str::random(6));
 
-        return "{$base}_{$timestamp}_{$random}." . ltrim($extension, '.');
+        return "{$base}_{$timestamp}_{$random}.".ltrim($extension, '.');
     }
 
     /**
