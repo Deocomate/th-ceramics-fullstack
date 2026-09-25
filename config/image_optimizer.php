@@ -3,15 +3,12 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Image Optimization Enabled
+    | Image Optimization
     |--------------------------------------------------------------------------
     |
-    | Global switch to enable or disable automatic image resizing and conversion.
-    | When disabled, FileUploadHelper falls back to standard file storing.
+    | Uploaded raster images are always resized and converted to WebP before storage.
     |
     */
-    'enabled' => env('IMAGE_OPTIMIZE_ENABLED', true),
-
     /*
     |--------------------------------------------------------------------------
     | Target Output Format

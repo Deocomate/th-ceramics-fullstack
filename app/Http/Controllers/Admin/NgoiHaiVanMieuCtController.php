@@ -25,9 +25,14 @@ class NgoiHaiVanMieuCtController extends Controller
         return view('admin.ngoi-hai-van-mieu-ct.index', compact('products', 'status'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.ngoi-hai-van-mieu-ct.create');
+        $copiedProduct = null;
+        if ($request->filled('copy_from')) {
+            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('ngoi-hai-van-mieu-ct', (int) $request->query('copy_from'));
+        }
+
+        return view('admin.ngoi-hai-van-mieu-ct.create', compact('copiedProduct'));
     }
 
     public function store(StoreNgoiHaiVanMieuCtRequest $request)

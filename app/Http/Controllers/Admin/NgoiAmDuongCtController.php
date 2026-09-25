@@ -31,9 +31,14 @@ class NgoiAmDuongCtController extends Controller
         return view('admin.ngoi-am-duong-ct.index', compact('products', 'status'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('admin.ngoi-am-duong-ct.create');
+        $copiedProduct = null;
+        if ($request->filled('copy_from')) {
+            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('ngoi-am-duong-ct', (int) $request->query('copy_from'));
+        }
+
+        return view('admin.ngoi-am-duong-ct.create', compact('copiedProduct'));
     }
 
     public function store(StoreNgoiAmDuongCtRequest $request): RedirectResponse

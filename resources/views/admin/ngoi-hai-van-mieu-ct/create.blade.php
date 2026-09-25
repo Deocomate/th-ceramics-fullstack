@@ -1,7 +1,8 @@
-﻿<x-admin.layouts.app title="Thêm Ngói Hài Văn Miếu" breadcrumb="Admin › DS Sản phẩm chi tiết › Thêm mới">
+<x-admin.layouts.app title="Thêm Ngói Hài Văn Miếu" breadcrumb="Admin › DS Sản phẩm chi tiết › Thêm mới">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
             <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Thông tin dáng ngói mới</h2>
+            <x-admin.shared.copy-product-modal product-type="ngoi-hai-van-mieu-ct" :copied-product="$copiedProduct ?? null" />
         </div>
         <form method="POST" action="{{ route('admin.ngoi-hai-van-mieu-ct.store') }}" enctype="multipart/form-data" class="p-6">
             @csrf
@@ -114,6 +115,7 @@
             desContainer.appendChild(div);
             if(autoFocus && value === '') div.querySelector('input').focus();
         }
+        window.addDesBlock = addDesBlock;
         
         // Populate from old() - Sửa lỗi mất Data khi reload
         const oldDes = @json(old('des',[]));

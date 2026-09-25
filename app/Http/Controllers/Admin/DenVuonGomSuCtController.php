@@ -24,9 +24,14 @@ class DenVuonGomSuCtController extends Controller
         return view('admin.den-vuon-gom-su-ct.index', compact('products', 'status'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.den-vuon-gom-su-ct.create');
+        $copiedProduct = null;
+        if ($request->filled('copy_from')) {
+            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('den-vuon-gom-su-ct', (int) $request->query('copy_from'));
+        }
+
+        return view('admin.den-vuon-gom-su-ct.create', compact('copiedProduct'));
     }
 
     public function store(Request $request)

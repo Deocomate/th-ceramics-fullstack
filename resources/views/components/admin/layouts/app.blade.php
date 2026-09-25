@@ -116,6 +116,7 @@
     </div>
 
     <x-admin.shared.preview-button />
+    <script src="{{ asset('assets/js/admin-image-optimizer.js') }}?v={{ filemtime(public_path('assets/js/admin-image-optimizer.js')) }}" data-upload-url="{{ route('admin.media.staged-images.store') }}" data-heic-url="{{ asset('assets/js/vendor/heic2any.min.js') }}?v={{ filemtime(public_path('assets/js/vendor/heic2any.min.js')) }}"></script>
     @stack('scripts')
 </body>
 

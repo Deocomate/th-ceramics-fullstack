@@ -25,9 +25,14 @@ class LinhVatPhongThuyCtController extends Controller
         return view('admin.linh-vat-phong-thuy-ct.index', compact('products', 'status'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.linh-vat-phong-thuy-ct.create');
+        $copiedProduct = null;
+        if ($request->filled('copy_from')) {
+            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('linh-vat-phong-thuy-ct', (int) $request->query('copy_from'));
+        }
+
+        return view('admin.linh-vat-phong-thuy-ct.create', compact('copiedProduct'));
     }
 
     public function store(Request $request)

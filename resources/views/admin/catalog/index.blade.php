@@ -374,7 +374,7 @@
         document.getElementById('createForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const imgInput = this.querySelector('input[name="anh_dai_dien"]');
+            const imgInput = this.querySelector('input[name="anh_dai_dien"], input[data-original-image-name="anh_dai_dien"]');
             const fileInput = this.querySelector('input[name="file"]');
             
             if (!validateFileInput(imgInput, 'err-create-anh_dai_dien', 5, ['jpg', 'jpeg', 'png', 'webp'])) {
@@ -411,7 +411,7 @@
         document.getElementById('editForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const imgInput = this.querySelector('input[name="anh_dai_dien"]');
+            const imgInput = this.querySelector('input[name="anh_dai_dien"], input[data-original-image-name="anh_dai_dien"]');
             const fileInput = this.querySelector('input[name="file"]');
             
             if (!validateFileInput(imgInput, 'err-edit-anh_dai_dien', 5, ['jpg', 'jpeg', 'png', 'webp'])) {

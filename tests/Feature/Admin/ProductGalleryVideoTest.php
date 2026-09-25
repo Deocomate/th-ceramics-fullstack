@@ -11,10 +11,7 @@ use Illuminate\Support\Str;
 
 function galleryFakeImage(string $name): UploadedFile
 {
-    return UploadedFile::fake()->createWithContent(
-        $name,
-        base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=')
-    );
+    return UploadedFile::fake()->image($name, 1, 1);
 }
 
 function galleryFakeWebp(string $name = 'batch.webp'): UploadedFile
@@ -520,8 +517,8 @@ test('admin product gallery pages show a file size limit popup', function () {
         ->assertOk()
         ->assertSee('id="galleryFileLimitModal"', false)
         ->assertSee('File quá dung lượng')
-        ->assertSee('Ảnh tối đa')
-        ->assertSee('5MB')
+        ->assertSee('Ảnh WebP sau xử lý nhỏ hơn')
+        ->assertSee('1MB')
         ->assertSee('Video tối đa')
         ->assertSee('50MB')
         ->assertSee('showGalleryFileLimitModal');

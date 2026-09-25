@@ -163,7 +163,7 @@ test('factory gallery 2 uploads and deletes by original index', function () {
         ->put(route('admin.pages.factory.update'), [
             'delete_gallery_2' => [1, 2],
             'new_gallery_2' => [
-                UploadedFile::fake()->create('new-gallery.jpg', 10, 'image/jpeg'),
+                UploadedFile::fake()->image('new-gallery.jpg', 1, 1),
             ],
         ])
         ->assertRedirect()

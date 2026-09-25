@@ -1,4 +1,4 @@
-﻿@php
+@php
     $isEdit = isset($product) && $product;
 @endphp
 
@@ -98,6 +98,8 @@
 
     function addDesBlock(value = '', autoFocus = true) { addInputBlock(desContainer, 'des', value, autoFocus); }
     function addSizeDesBlock(value = '', autoFocus = true) { addInputBlock(sizeDesContainer, 'size_des', value, autoFocus); }
+    window.addDesBlock = addDesBlock;
+    window.addSizeDesBlock = addSizeDesBlock;
 
     (Array.isArray(existingDes) && existingDes.length ? existingDes : ['']).forEach(item => addDesBlock(item, false));
     (Array.isArray(existingSizeDes) && existingSizeDes.length ? existingSizeDes : ['']).forEach(item => addSizeDesBlock(item, false));

@@ -26,9 +26,14 @@ class GachCoBatTrangCtController extends Controller
         return view('admin.gach-co-bat-trang-ct.index', compact('products', 'status'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.gach-co-bat-trang-ct.create');
+        $copiedProduct = null;
+        if ($request->filled('copy_from')) {
+            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('gach-co-bat-trang-ct', (int) $request->query('copy_from'));
+        }
+
+        return view('admin.gach-co-bat-trang-ct.create', compact('copiedProduct'));
     }
 
     public function store(Request $request)

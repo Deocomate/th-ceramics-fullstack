@@ -29,10 +29,7 @@ beforeEach(function () {
 
 function gachCoBatTrangFakeImage(string $name = 'image.png'): UploadedFile
 {
-    return UploadedFile::fake()->createWithContent(
-        $name,
-        base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=')
-    );
+    return UploadedFile::fake()->image($name, 1, 1);
 }
 
 test('admin section update persists text colors gallery upload and order', function () {
@@ -98,6 +95,8 @@ test('admin section gallery image can be deleted from json and storage', functio
 });
 
 test('product create persists category type dinh muc and weight', function () {
+    Storage::fake('public');
+
     actingAs($this->admin)
         ->post(route('admin.gach-co-bat-trang-ct.store'), [
             'code' => 'GCB-DYN-001',
@@ -107,6 +106,7 @@ test('product create persists category type dinh muc and weight', function () {
             'size' => '5 x 20 cm',
             'dinh_muc' => '25',
             'weight' => '0.8',
+            'cover_image' => gachCoBatTrangFakeImage('cover.png'),
         ])
         ->assertRedirect(route('admin.gach-co-bat-trang-ct.index'))
         ->assertSessionHas('success');

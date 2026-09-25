@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 function productColorFakeImage(string $name): UploadedFile
 {
-    return UploadedFile::fake()->createWithContent(
-        $name,
-        base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=')
-    );
+    return UploadedFile::fake()->image($name, 1, 1);
 }
 
 test('ct tables expose color column', function () {

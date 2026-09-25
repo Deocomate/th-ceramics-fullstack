@@ -5,6 +5,7 @@ namespace Tests\Unit\Services;
 use App\Services\ImageOptimizerService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class ImageOptimizerServiceTest extends TestCase
@@ -14,7 +15,7 @@ class ImageOptimizerServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ImageOptimizerService();
+        $this->service = new ImageOptimizerService;
         Storage::fake('public');
     }
 
@@ -86,6 +87,7 @@ class ImageOptimizerServiceTest extends TestCase
         $this->assertEquals(2000, $dimensions[0]);
         $this->assertEquals(1000, $dimensions[1]); // 2:1 aspect ratio preserved!
         $this->assertEquals('image/webp', $dimensions['mime']);
+        $this->assertLessThan(1_000_000, filesize($fullPath));
     }
 
     public function test_it_does_not_upscale_small_images(): void
@@ -103,11 +105,39 @@ class ImageOptimizerServiceTest extends TestCase
         $this->assertEquals(200, $dimensions[1]);
     }
 
-    public function test_it_falls_back_gracefully_when_corrupted(): void
+    public function test_it_preserves_transparency_when_converting_png_to_webp(): void
+    {
+        $temporaryPath = tempnam(sys_get_temp_dir(), 'transparent-png-');
+        $image = imagecreatetruecolor(8, 8);
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+        $transparent = imagecolorallocatealpha($image, 0, 0, 0, 127);
+        imagefill($image, 0, 0, $transparent);
+        imagepng($image, $temporaryPath);
+        imagedestroy($image);
+
+        try {
+            $file = new UploadedFile($temporaryPath, 'transparent.png', 'image/png', UPLOAD_ERR_OK, true);
+            $stored = $this->service->optimize($file, 'products', 'transparent');
+            $optimized = imagecreatefromwebp(Storage::disk('public')->path($stored));
+
+            $this->assertSame(127, (imagecolorat($optimized, 0, 0) >> 24) & 0x7F);
+            imagedestroy($optimized);
+        } finally {
+            @unlink($temporaryPath);
+        }
+    }
+
+    public function test_it_rejects_corrupted_images_instead_of_storing_the_original(): void
     {
         $corrupt = UploadedFile::fake()->create('corrupted.jpg', 10, 'image/jpeg');
 
-        $stored = $this->service->optimize($corrupt, 'test_dir', 'corrupt-test');
-        Storage::disk('public')->assertExists($stored);
+        try {
+            $this->service->optimize($corrupt, 'test_dir', 'corrupt-test');
+            $this->fail('Corrupt images should be rejected.');
+        } catch (ValidationException $exception) {
+            $this->assertStringContainsString('corrupted.jpg', $exception->errors()['image'][0]);
+            $this->assertSame([], Storage::disk('public')->allFiles('test_dir'));
+        }
     }
 }
