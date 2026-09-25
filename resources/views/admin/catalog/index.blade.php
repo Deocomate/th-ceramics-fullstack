@@ -228,14 +228,13 @@
 
             if (!file) return true;
 
+            // Image inputs are validated and compressed by the shared admin uploader.
+            if (inputEl.name === 'anh_dai_dien') return true;
+
             const extension = file.name.split('.').pop().toLowerCase();
             if (!allowedExtensions.includes(extension)) {
                 if (errorEl) {
-                    if (inputEl.name === 'anh_dai_dien' && (extension === 'heic' || extension === 'heif')) {
-                        errorEl.textContent = 'Định dạng ảnh không hỗ trợ (vd HEIC từ iPhone). Vui lòng đổi sang JPG, PNG hoặc WEBP trước khi tải lên.';
-                    } else {
-                        errorEl.textContent = `Định dạng file không hợp lệ. Chỉ chấp nhận các đuôi: ${allowedExtensions.join(', ')}.`;
-                    }
+                    errorEl.textContent = `Định dạng file không hợp lệ. Chỉ chấp nhận các đuôi: ${allowedExtensions.join(', ')}.`;
                     errorEl.classList.remove('hidden');
                 }
                 inputEl.value = '';
@@ -336,7 +335,7 @@
                     } else if (xhr.status === 413) {
                         const generalErrEl = document.getElementById(errorContainerIds['general']);
                         if (generalErrEl) {
-                            generalErrEl.textContent = 'Dung lượng file vượt quá cấu hình tối đa của máy chủ (Lỗi 413 - Content Too Large). Vui lòng cấu hình tăng upload_max_filesize và post_max_size trong php.ini (đối với php artisan serve) hoặc client_max_body_size trong Nginx.';
+                            generalErrEl.textContent = 'Máy chủ từ chối tệp tải lên vì quá lớn. Hãy kiểm tra tệp tài liệu hoặc thử lại sau khi ảnh được tối ưu.';
                             generalErrEl.classList.remove('hidden');
                         }
                     } else {

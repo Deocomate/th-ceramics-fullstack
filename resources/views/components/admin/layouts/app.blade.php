@@ -107,6 +107,16 @@
                     {{ session('error') }}
                 </div>
             @endif
+            @if ($errors->any())
+                <div role="alert" class="mx-6 mt-4 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                    <p class="font-semibold">Chưa thể lưu. Vui lòng kiểm tra:</p>
+                    <ul class="mt-1 list-disc pl-5">
+                        @foreach (array_slice(array_unique($errors->all()), 0, 5) as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             {{-- Page content --}}
             <main class="flex-1 p-6">

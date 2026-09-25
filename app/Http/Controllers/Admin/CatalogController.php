@@ -24,7 +24,7 @@ class CatalogController extends Controller
     {
         $messages = [
             'anh_dai_dien.image' => 'Ảnh đại diện phải là hình ảnh.',
-            'anh_dai_dien.mimes' => 'Định dạng ảnh không hỗ trợ (vd HEIC từ iPhone). Vui lòng đổi sang JPG, PNG hoặc WEBP trước khi tải lên.',
+            'anh_dai_dien.mimes' => 'Ảnh chưa được tối ưu đúng định dạng. Hãy tải lại trang, chọn lại ảnh và đợi xử lý xong.',
             'anh_dai_dien.max' => 'Ảnh đại diện không được vượt quá 5MB.',
             'file.mimes' => 'File catalog phải thuộc định dạng: pdf, doc, docx, zip, rar.',
             'file.max' => 'File catalog không được vượt quá 200MB.',
@@ -68,7 +68,7 @@ class CatalogController extends Controller
     {
         $messages = [
             'anh_dai_dien.image' => 'Ảnh đại diện phải là hình ảnh.',
-            'anh_dai_dien.mimes' => 'Định dạng ảnh không hỗ trợ (vd HEIC từ iPhone). Vui lòng đổi sang JPG, PNG hoặc WEBP trước khi tải lên.',
+            'anh_dai_dien.mimes' => 'Ảnh chưa được tối ưu đúng định dạng. Hãy tải lại trang, chọn lại ảnh và đợi xử lý xong.',
             'anh_dai_dien.max' => 'Ảnh đại diện không được vượt quá 5MB.',
             'file.mimes' => 'File catalog phải thuộc định dạng: pdf, doc, docx, zip, rar.',
             'file.max' => 'File catalog không được vượt quá 200MB.',

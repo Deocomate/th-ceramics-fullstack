@@ -60,6 +60,7 @@
                 class="relative mb-4 border-2 border-dashed border-gray-300 rounded-xl bg-white p-4 transition-colors hover:border-[#A31D1D] hover:bg-red-50/30">
                 <input type="file" id="multipleImagesInput"
                     @if(! $isEdit) name="{{ $uploadField }}" @endif
+                    @if($isEdit) data-gallery-upload-mode="ajax" @endif
                     multiple accept="{{ $acceptImages }}"
                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     onchange="handleMultipleFiles(event)">
@@ -334,8 +335,8 @@
     function isAllowedImageFormat(file) {
         if (!file) return false;
         const ext = (file.name.split('.').pop() || '').toLowerCase();
-        const mimeOk = !file.type || ALLOWED_IMAGE_MIME.includes(file.type) || ['image/heic', 'image/heif'].includes(file.type);
-        return mimeOk && [...ALLOWED_IMAGE_EXT, 'heic', 'heif'].includes(ext);
+        return [...ALLOWED_IMAGE_EXT, 'heic', 'heif'].includes(ext)
+            || ALLOWED_IMAGE_MIME.includes(String(file.type || '').toLowerCase());
     }
 
     function isAllowedVideoFormat(file) {
@@ -423,11 +424,11 @@
         }
         if (leadEl) {
             if (options.acceptedCount > 0) {
-                leadEl.textContent = `Một số file không hợp lệ đã bị bỏ. File ${kind} hợp lệ vẫn được tải lên.`;
+                leadEl.textContent = `Đã thêm ${options.acceptedCount} file ${kind}; một số file chưa tải được. Xem lý do bên dưới.`;
             } else if (allOversized) {
                 leadEl.textContent = `File ${kind} vượt quá ${limit} nên không được tải lên. Hãy nén hoặc chọn file nhỏ hơn.`;
             } else {
-                leadEl.textContent = `File ${kind} không hợp lệ nên không được tải lên.`;
+                leadEl.textContent = `Chưa tải được file ${kind}. Xem lý do bên dưới rồi thử lại.`;
             }
         }
         if (listEl) {
@@ -472,6 +473,7 @@
     });
 
     let selectedFiles = [];
+    let previewUrls = [];
     let selectedVideoFiles = [];
     const multipleImagesInput = document.getElementById('multipleImagesInput');
     const previewContainer = document.getElementById('multiple-preview-container');
@@ -551,11 +553,19 @@
                     return;
                 }
                 if (xhr.status < 200 || xhr.status >= 300) {
-                    const message = data.message
-                        || (data.errors && Object.values(data.errors).flat().join(' '))
-                        || ('Upload thất bại (HTTP ' + xhr.status + ').');
+                    const validation = data.errors ? Object.values(data.errors).flat().join(' ') : '';
+                    const message = (xhr.status === 401 || xhr.status === 419)
+                        ? 'Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại rồi tải ảnh.'
+                        : xhr.status >= 500
+                        ? 'Máy chủ đang gặp sự cố khi nhận file. Hệ thống sẽ thử lại.'
+                        : validation
+                        || data.message
+                        || 'Máy chủ chưa nhận được file. Hãy thử lại.';
                     const limitError = /vượt quá|quá lớn|1MB|50MB/i.test(message);
-                    reject(Object.assign(new Error(message), { galleryLimit: limitError }));
+                    reject(Object.assign(new Error(message), {
+                        galleryLimit: limitError,
+                        retryable: xhr.status === 408 || xhr.status === 429 || xhr.status >= 500,
+                    }));
                     return;
                 }
                 if (data.items) renderLibraryFromItems(data.items, data.cover_path);
@@ -566,11 +576,22 @@
                 }
                 resolve(data);
             };
-            xhr.ontimeout = () => reject(new Error('Hết thời gian tải lên. Kiểm tra mạng rồi thử lại.'));
-            xhr.onerror = () => reject(new Error('Mất kết nối khi tải lên.'));
+            xhr.ontimeout = () => reject(Object.assign(new Error('Hết thời gian tải lên. Kiểm tra mạng rồi thử lại.'), { retryable: true }));
+            xhr.onerror = () => reject(Object.assign(new Error('Mất kết nối khi tải lên.'), { retryable: true }));
             xhr.onabort = () => reject(new Error('Đã hủy tải lên.'));
             xhr.send(body);
         });
+    }
+
+    async function postGalleryChunkWithRetry(body, statusEl, options) {
+        for (let attempt = 0; ; attempt++) {
+            try {
+                return await postGalleryFormData(body, statusEl, options);
+            } catch (error) {
+                if (!error.retryable || attempt >= 2) throw error;
+                await new Promise((resolve) => setTimeout(resolve, 500 * (2 ** attempt)));
+            }
+        }
     }
 
     function newGalleryUploadId() {
@@ -597,7 +618,7 @@
             fd.append('total_chunks', String(totalChunks));
             fd.append('kind', kind);
             fd.append('original_name', file.name);
-            lastData = await postGalleryFormData(fd, statusEl, {
+            lastData = await postGalleryChunkWithRetry(fd, statusEl, {
                 onProgress(percent) {
                     const overall = Math.round(((index + (percent / 100)) / totalChunks) * 100);
                     showGalleryProgress(dropzone, {
@@ -620,31 +641,6 @@
 
     async function uploadFilesViaAjax(fileList, statusEl) {
         const rawFiles = Array.from(fileList || []);
-        const optimizedFiles = [];
-        const processingErrors = [];
-        for (let index = 0; index < rawFiles.length; index++) {
-            const file = rawFiles[index];
-            if (statusEl) {
-                statusEl.textContent = `Đang tối ưu ảnh ${index + 1}/${rawFiles.length}: ${file.name}…`;
-                statusEl.classList.remove('hidden', 'text-red-600');
-                statusEl.classList.add('text-gray-500');
-            }
-            try {
-                optimizedFiles.push(await window.prepareImageFile(file));
-            } catch (error) {
-                processingErrors.push({ name: file.name, reason: error.message || 'Không thể tối ưu ảnh.', oversized: false });
-            }
-        }
-        const files = filterImageFiles(optimizedFiles, statusEl || uploadHint);
-        if (processingErrors.length) {
-            showGalleryFileLimitModal(processingErrors, { kind: 'image', acceptedCount: files.length });
-            if (statusEl) {
-                statusEl.textContent = processingErrors.map(({ name, reason }) => `${name}: ${reason}`).join(' ');
-                statusEl.classList.remove('text-gray-500');
-                statusEl.classList.add('text-red-600');
-            }
-        }
-        if (!files.length) return;
         if (galleryUploadBusy) {
             if (statusEl) {
                 statusEl.textContent = 'Đang tải file khác, vui lòng đợi xong rồi thêm tiếp.';
@@ -654,53 +650,88 @@
             return;
         }
         galleryUploadBusy = true;
-        if (statusEl) {
-            statusEl.textContent = 'Đang upload ' + files.length + ' ảnh…';
-            statusEl.classList.remove('hidden', 'text-red-600');
-            statusEl.classList.add('text-gray-500');
-        }
-        showGalleryProgress(uploadDropzone, { percent: 0, label: 'Đang tải ' + files.length + ' ảnh…' });
         try {
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const prefix = files.length > 1 ? ('Ảnh ' + (i + 1) + '/' + files.length + ' · ') : '';
-                await uploadFileInChunks(file, 'image', uploadDropzone, statusEl, prefix + file.name);
-                if (statusEl) statusEl.textContent = 'Đã upload ' + (i + 1) + '/' + files.length + ' ảnh…';
+            const errors = [];
+            let uploaded = 0;
+            showGalleryProgress(uploadDropzone, { percent: 0, label: `Đang xử lý ${rawFiles.length} ảnh…` });
+            for (let i = 0; i < rawFiles.length; i++) {
+                const rawFile = rawFiles[i];
+                try {
+                    if (!isAllowedImageFormat(rawFile)) throw new Error('Chỉ hỗ trợ JPG, PNG, WebP và ảnh iPhone HEIC/HEIF.');
+                    showGalleryProgress(uploadDropzone, { percent: 0, label: `Đang tối ưu ảnh ${i + 1}/${rawFiles.length}: ${rawFile.name}…` });
+                    const file = await window.prepareImageFile(rawFile);
+                    const rejected = describeRejectedGalleryFile(file, 'image');
+                    if (rejected) throw new Error(rejected.reason);
+                    await uploadFileInChunks(file, 'image', uploadDropzone, statusEl, `Ảnh ${i + 1}/${rawFiles.length} · ${rawFile.name}`);
+                    uploaded++;
+                } catch (error) {
+                    errors.push({ name: rawFile.name, reason: error?.message || 'Không thể xử lý ảnh này.', oversized: Boolean(error?.galleryLimit) });
+                }
             }
-            showGalleryProgress(uploadDropzone, { percent: 100, label: 'Đã thêm ảnh vào thư viện.' });
-            window.setTimeout(() => hideGalleryProgress(uploadDropzone), 700);
-        } catch (err) {
-            hideGalleryProgress(uploadDropzone);
-            const message = err.message || 'Upload thất bại.';
-            if (err.galleryLimit || /vượt quá|quá lớn|1MB|50MB/i.test(message)) {
-                showGalleryFileLimitModal([{ name: 'Ảnh vừa chọn', reason: message, oversized: true }], { kind: 'image', acceptedCount: 0 });
-            }
+            if (errors.length) showGalleryFileLimitModal(errors, { kind: 'image', acceptedCount: uploaded });
             if (statusEl) {
-                statusEl.textContent = message;
-                statusEl.classList.remove('text-gray-500');
-                statusEl.classList.add('text-red-600');
-            } else if (!err.galleryLimit) {
-                alert(message);
+                statusEl.textContent = errors.length
+                    ? `Đã thêm ${uploaded}/${rawFiles.length} ảnh. ${errors.map(({ name, reason }) => `${name}: ${reason}`).join(' ')}`
+                    : `Đã thêm ${uploaded} ảnh vào thư viện.`;
+                statusEl.classList.remove('hidden');
+                statusEl.classList.toggle('text-red-600', errors.length > 0);
+                statusEl.classList.toggle('text-gray-500', errors.length === 0);
             }
         } finally {
+            hideGalleryProgress(uploadDropzone);
             galleryUploadBusy = false;
         }
     }
 
     window.prepareImageFile = async function(file) {
         if (!file || !isAllowedImageFormat(file)) return file;
-        if (file.type === 'image/webp' && file.size < MAX_IMAGE_BYTES + 1) return file;
         if (!window.AdminImageOptimizer) throw new Error('Không tải được bộ tối ưu ảnh. Hãy tải lại trang rồi thử lại.');
+        if (window.AdminImageOptimizer.isProcessed(file)) return file;
         return window.AdminImageOptimizer.processFile(file, multipleImagesInput || document.createElement('input'));
     };
+
+    async function prepareGallerySelection(rawFiles) {
+        const files = [];
+        const errors = [];
+        for (let index = 0; index < rawFiles.length; index++) {
+            const file = rawFiles[index];
+            if (uploadHint) {
+                uploadHint.textContent = `Đang tối ưu ảnh ${index + 1}/${rawFiles.length}: ${file.name}…`;
+                uploadHint.classList.remove('hidden');
+            }
+            try {
+                if (!isAllowedImageFormat(file)) throw new Error('Chỉ hỗ trợ JPG, PNG, WebP và ảnh iPhone HEIC/HEIF.');
+                const optimized = await window.prepareImageFile(file);
+                const rejected = describeRejectedGalleryFile(optimized, 'image');
+                if (rejected) throw new Error(rejected.reason);
+                files.push(optimized);
+            } catch (error) {
+                errors.push({ name: file.name, reason: error?.message || 'Không thể đọc ảnh này.', oversized: false });
+            }
+        }
+        if (errors.length) showGalleryFileLimitModal(errors, { kind: 'image', acceptedCount: files.length });
+        if (uploadHint) {
+            uploadHint.textContent = errors.length ? `${errors.length} ảnh chưa được thêm. Xem lý do trong thông báo.` : '';
+            uploadHint.classList.toggle('hidden', errors.length === 0);
+        }
+        return files;
+    }
 
     window.handleMultipleFiles = async function(event) {
         const input = event.target;
         if (editUsesAjaxUpload) {
-            uploadFilesViaAjax(input.files, formUploadStatus).finally(() => { input.value = ''; });
+            window.AdminImageOptimizer.trackPending(input.form, uploadFilesViaAjax(input.files, formUploadStatus))
+                .catch((error) => {
+                    if (formUploadStatus) {
+                        formUploadStatus.textContent = error?.message || 'Không thể tải ảnh lên. Hãy thử lại.';
+                        formUploadStatus.classList.remove('hidden', 'text-gray-500');
+                        formUploadStatus.classList.add('text-red-600');
+                    }
+                })
+                .finally(() => { input.value = ''; });
             return;
         }
-        let rawFiles = Array.from(input.files || []);
+        const rawFiles = Array.from(input.files || []);
         if (!rawFiles.length) {
             input.value = '';
             selectedFiles = [];
@@ -708,49 +739,58 @@
             renderPreviews();
             return;
         }
-        if (uploadHint) {
-            uploadHint.textContent = 'Đang xử lý chuẩn bị ' + rawFiles.length + ' ảnh...';
-            uploadHint.classList.remove('hidden');
-        }
-        const processed = await Promise.all(rawFiles.map((f) => window.prepareImageFile(f)));
-        if (uploadHint) {
-            uploadHint.classList.add('hidden');
-            uploadHint.textContent = '';
-        }
-        const files = filterImageFiles(processed, uploadHint);
-        if (!files.length) {
-            input.value = '';
-            selectedFiles = [];
+        const work = (async () => {
+            const files = await prepareGallerySelection(rawFiles);
+            if (!files.length) {
+                input.value = '';
+                selectedFiles = [];
+                updateFileInput();
+                renderPreviews();
+                return;
+            }
+            selectedFiles = files.slice();
             updateFileInput();
             renderPreviews();
-            return;
+        })();
+        try {
+            await window.AdminImageOptimizer.trackPending(input.form, work);
+        } catch (error) {
+            if (uploadHint) {
+                uploadHint.textContent = error?.message || 'Không thể chuẩn bị ảnh. Hãy chọn lại.';
+                uploadHint.classList.remove('hidden');
+            }
         }
-        selectedFiles = files.slice();
-        updateFileInput();
-        renderPreviews();
     };
 
     async function appendDroppedFiles(fileList) {
         if (editUsesAjaxUpload) {
-            uploadFilesViaAjax(fileList, formUploadStatus);
+            window.AdminImageOptimizer.trackPending(multipleImagesInput?.form, uploadFilesViaAjax(fileList, formUploadStatus))
+                .catch((error) => {
+                    if (formUploadStatus) {
+                        formUploadStatus.textContent = error?.message || 'Không thể tải ảnh lên. Hãy thử lại.';
+                        formUploadStatus.classList.remove('hidden', 'text-gray-500');
+                        formUploadStatus.classList.add('text-red-600');
+                    }
+                });
             return;
         }
-        let rawFiles = Array.from(fileList || []);
+        const rawFiles = Array.from(fileList || []);
         if (!rawFiles.length) return;
-        if (uploadHint) {
-            uploadHint.textContent = 'Đang xử lý chuẩn bị ' + rawFiles.length + ' ảnh...';
-            uploadHint.classList.remove('hidden');
+        const work = (async () => {
+            const files = await prepareGallerySelection(rawFiles);
+            if (!files.length) return;
+            selectedFiles = selectedFiles.concat(files);
+            updateFileInput();
+            renderPreviews();
+        })();
+        try {
+            await window.AdminImageOptimizer.trackPending(multipleImagesInput?.form, work);
+        } catch (error) {
+            if (uploadHint) {
+                uploadHint.textContent = error?.message || 'Không thể chuẩn bị ảnh. Hãy chọn lại.';
+                uploadHint.classList.remove('hidden');
+            }
         }
-        const processed = await Promise.all(rawFiles.map((f) => window.prepareImageFile(f)));
-        if (uploadHint) {
-            uploadHint.classList.add('hidden');
-            uploadHint.textContent = '';
-        }
-        const files = filterImageFiles(processed, uploadHint);
-        if (!files.length) return;
-        selectedFiles = selectedFiles.concat(files);
-        updateFileInput();
-        renderPreviews();
     }
 
     if (uploadDropzone) {
@@ -769,18 +809,18 @@
 
     function renderPreviews() {
         if (!previewContainer || !emptyState) return;
+        previewUrls.forEach((url) => URL.revokeObjectURL(url));
+        previewUrls = [];
         previewContainer.querySelectorAll('.image-preview-item').forEach((item) => item.remove());
         if (selectedFiles.length === 0) { emptyState.style.display = 'flex'; return; }
         emptyState.style.display = 'none';
         selectedFiles.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const div = document.createElement('div');
-                div.className = 'image-preview-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100';
-                div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain"><div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><button type="button" onclick="removeGalleryFile(${index})" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>`;
-                previewContainer.appendChild(div);
-            };
-            reader.readAsDataURL(file);
+            const url = URL.createObjectURL(file);
+            previewUrls.push(url);
+            const div = document.createElement('div');
+            div.className = 'image-preview-item relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100';
+            div.innerHTML = `<img src="${url}" class="w-full h-full object-contain"><div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><button type="button" onclick="removeGalleryFile(${index})" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>`;
+            previewContainer.appendChild(div);
         });
     }
 
@@ -795,6 +835,7 @@
         const dataTransfer = new DataTransfer();
         selectedFiles.forEach((file) => dataTransfer.items.add(file));
         multipleImagesInput.files = dataTransfer.files;
+        window.AdminImageOptimizer.rememberFiles(multipleImagesInput);
 
         const summaryEl = document.getElementById('gallery-selected-summary');
         if (summaryEl) {

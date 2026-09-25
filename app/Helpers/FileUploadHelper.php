@@ -49,8 +49,9 @@ class FileUploadHelper
      */
     public static function replace(UploadedFile $file, ?string $oldPath, string $directory, ?string $slug = null): string
     {
+        $newPath = static::upload($file, $directory, $slug);
         static::delete($oldPath);
 
-        return static::upload($file, $directory, $slug);
+        return $newPath;
     }
 }

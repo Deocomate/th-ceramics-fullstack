@@ -10,6 +10,11 @@
     const processedChange = new WeakSet();
     const continuingForms = new WeakSet();
     const inputProcessing = new WeakMap();
+    const inputGeneration = new WeakMap();
+    const stagedProgress = new WeakMap();
+    const optimizedFiles = new WeakSet();
+    const lastGoodFiles = new WeakMap();
+    const externalProcessing = new WeakMap();
     let heicLoad = null;
 
     function extension(file) {
@@ -18,6 +23,11 @@
 
     function isImageFile(file) {
         return Boolean(file && (String(file.type || '').startsWith('image/') || IMAGE_EXTENSIONS.has(extension(file))));
+    }
+
+    function isImageInput(input) {
+        const accepted = (input.accept || '').toLowerCase();
+        return accepted.includes('image') || /\.(jpe?g|png|webp|heic|heif)/i.test(accepted);
     }
 
     function isHeic(file) {
@@ -35,6 +45,10 @@
         if (bytes < 1024) return `${bytes} B`;
         if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
         return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+    }
+
+    function errorText(error, fallback) {
+        return error instanceof Error && error.message ? error.message : fallback;
     }
 
     function messageElement(input) {
@@ -56,6 +70,7 @@
     }
 
     function clearStagedTokens(input) {
+        stagedProgress.delete(input);
         const form = input.form;
         if (!form || !input.dataset.stagedTokens) return;
         const hidden = form.querySelector('input[name="__staged_images"]');
@@ -81,6 +96,11 @@
     async function decodeFile(file) {
         let source = file;
         if (isHeic(file)) {
+            try {
+                return await decodeBrowser(file);
+            } catch (_) {
+                // Older browsers need the bundled HEIC decoder.
+            }
             if (typeof window.heic2any !== 'function') await loadHeicDecoder();
             if (typeof window.heic2any !== 'function') {
                 throw new Error('Không tải được bộ đọc ảnh HEIC. Hãy tải lại trang rồi thử lại.');
@@ -90,6 +110,10 @@
             if (!(source instanceof Blob)) throw new Error('Không đọc được ảnh HEIC/HEIF này.');
         }
 
+        return decodeBrowser(source);
+    }
+
+    async function decodeBrowser(source) {
         if (typeof createImageBitmap === 'function') {
             try {
                 const bitmap = await createImageBitmap(source, { imageOrientation: 'from-image' });
@@ -123,6 +147,9 @@
             script.onload = resolve;
             script.onerror = () => reject(new Error('Không tải được bộ đọc ảnh HEIC. Kiểm tra mạng rồi thử lại.'));
             document.head.appendChild(script);
+        }).catch((error) => {
+            heicLoad = null;
+            throw error;
         });
         return heicLoad;
     }
@@ -137,7 +164,15 @@
             throw new Error('Định dạng chưa hỗ trợ. Chọn JPG, PNG, WebP, HEIC hoặc HEIF.');
         }
 
-        const decoded = await decodeFile(file);
+        let decoded;
+        try {
+            decoded = await decodeFile(file);
+        } catch (error) {
+            throw new Error(errorText(error, isHeic(file)
+                ? 'Không đọc được ảnh HEIC/HEIF này. Hãy xuất lại ảnh trên điện thoại rồi thử lại.'
+                : 'Không đọc được ảnh này. File có thể bị hỏng; hãy chọn ảnh khác.'));
+        }
+        let canvas = null;
         try {
             if (!decoded.width || !decoded.height) throw new Error('Ảnh không có kích thước hợp lệ.');
 
@@ -145,17 +180,23 @@
             const scale = Math.min(1, maxDimension / Math.max(decoded.width, decoded.height));
             let width = Math.max(1, Math.round(decoded.width * scale));
             let height = Math.max(1, Math.round(decoded.height * scale));
-            const canvas = document.createElement('canvas');
+            canvas = document.createElement('canvas');
             const context = canvas.getContext('2d', { alpha: true });
             if (!context) throw new Error('Trình duyệt không thể xử lý ảnh này.');
 
             let quality = 0.90;
             let blob = null;
+            let drawnWidth = 0;
+            let drawnHeight = 0;
             for (let attempt = 0; attempt < 42; attempt++) {
-                canvas.width = width;
-                canvas.height = height;
-                context.clearRect(0, 0, width, height);
-                context.drawImage(decoded.image, 0, 0, width, height);
+                if (width !== drawnWidth || height !== drawnHeight) {
+                    canvas.width = width;
+                    canvas.height = height;
+                    context.clearRect(0, 0, width, height);
+                    context.drawImage(decoded.image, 0, 0, width, height);
+                    drawnWidth = width;
+                    drawnHeight = height;
+                }
                 blob = await canvasBlob(canvas, quality);
                 if (!blob) throw new Error('Trình duyệt không hỗ trợ xuất WebP.');
                 if (blob.type === 'image/webp' && blob.size <= MAX_BYTES) break;
@@ -173,12 +214,23 @@
             }
 
             if (!blob || blob.type !== 'image/webp' || blob.size > MAX_BYTES) {
-                throw new Error('Không thể giảm ảnh xuống dưới 1MB mà vẫn giữ được chất lượng phù hợp.');
+                throw new Error('Ảnh này không thể chuyển thành WebP dưới 1MB trên thiết bị hiện tại. Hãy thử ảnh có độ phân giải thấp hơn.');
             }
 
             const baseName = file.name.replace(/\.[^.]+$/, '') || 'image';
-            return new File([blob], `${baseName}.webp`, { type: 'image/webp', lastModified: Date.now() });
+            const optimized = new File([blob], `${baseName}.webp`, { type: 'image/webp', lastModified: Date.now() });
+            optimizedFiles.add(optimized);
+            return optimized;
+        } catch (error) {
+            const message = errorText(error, 'Trình duyệt không xử lý được ảnh này. Hãy thử ảnh có độ phân giải thấp hơn.');
+            throw new Error(/[\u00c0-\u1ef9]/i.test(message)
+                ? message
+                : 'Trình duyệt không đủ bộ nhớ hoặc không xử lý được ảnh này. Hãy thử ảnh có độ phân giải thấp hơn.');
         } finally {
+            if (canvas) {
+                canvas.width = 0;
+                canvas.height = 0;
+            }
             decoded.close();
         }
     }
@@ -190,55 +242,53 @@
     }
 
     function imageInputs(form) {
-        return Array.from(form.querySelectorAll('input[type="file"]')).filter((input) => {
-            const accepted = (input.accept || '').toLowerCase();
-            return accepted.includes('image') || /\.(jpe?g|png|webp|heic|heif)/i.test(accepted)
-                || Array.from(input.files || []).some(isImageFile);
-        });
+        return Array.from(form.querySelectorAll('input[type="file"]')).filter((input) => !input.disabled && isImageInput(input));
     }
 
-    async function prepareInput(input) {
+    async function prepareInput(input, generation = inputGeneration.get(input)) {
         const files = Array.from(input.files || []);
-        if (!files.some(isImageFile)) return;
+        if (!files.length || !isImageInput(input)) return;
         clearStagedTokens(input);
 
         const originalName = input.dataset.originalImageName || input.name;
         input.dataset.originalImageName = originalName;
         input.dataset.imageFieldName = originalName;
-        input.disabled = true;
         const accepted = [];
         const errors = [];
         for (const file of files) {
-            if (!isImageFile(file)) {
-                accepted.push(file);
-                continue;
-            }
             try {
                 setMessage(input, `Đang xử lý ${file.name}…`);
-                accepted.push(await processFile(file, input));
+                accepted.push(optimizedFiles.has(file) ? file : await processFile(file, input));
             } catch (error) {
-                errors.push(`${file.name}: ${error.message}`);
+                errors.push(`${file.name}: ${errorText(error, 'Không đọc được ảnh này. File có thể bị hỏng.')}`);
             }
         }
-        replaceFiles(input, accepted);
-        input.disabled = false;
-
+        if (generation !== inputGeneration.get(input)) return;
         if (errors.length) {
-            input.dataset.imageProcessingError = '1';
+            const previous = lastGoodFiles.get(input) || [];
+            if (previous.length) {
+                replaceFiles(input, previous);
+                delete input.dataset.imageProcessingError;
+            } else {
+                input.value = '';
+                input.dataset.imageProcessingError = '1';
+            }
             setMessage(input, errors.join(' '), true);
+            throw new Error(errors.join(' '));
         } else {
+            replaceFiles(input, accepted);
+            lastGoodFiles.set(input, accepted);
             delete input.dataset.imageProcessingError;
-            const beforeBytes = files.filter(isImageFile).reduce((total, file) => total + file.size, 0);
-            const afterBytes = accepted.filter(isImageFile).reduce((total, file) => total + file.size, 0);
-            setMessage(input, `${accepted.filter(isImageFile).length} ảnh WebP · ${formatBytes(beforeBytes)} → ${formatBytes(afterBytes)} · tối đa 1MB/ảnh`);
+            const beforeBytes = files.reduce((total, file) => total + file.size, 0);
+            const afterBytes = accepted.reduce((total, file) => total + file.size, 0);
+            setMessage(input, `${accepted.length} ảnh WebP · ${formatBytes(beforeBytes)} → ${formatBytes(afterBytes)} · tối đa 1MB/ảnh`);
         }
 
         processedChange.add(input);
         input.dispatchEvent(new Event('change', { bubbles: true }));
-        if (errors.length) throw new Error(errors.join(' '));
     }
 
-    async function postChunk(file, uploadId, index, total) {
+    function postChunk(file, uploadId, index, total) {
         const body = new FormData();
         body.append('chunk', file.slice(index * CHUNK_BYTES, (index + 1) * CHUNK_BYTES), file.name);
         body.append('upload_id', uploadId);
@@ -259,15 +309,35 @@
                 try { data = JSON.parse(request.responseText || '{}'); } catch (_) {}
                 if (request.status < 200 || request.status >= 300) {
                     const validation = data.errors ? Object.values(data.errors).flat().join(' ') : '';
-                    reject(new Error(request.status === 413 ? 'Máy chủ từ chối một phần ảnh. Hãy thử lại.' : (validation || data.message || `Upload thất bại (HTTP ${request.status}).`)));
+                    const message = request.status === 413
+                        ? 'Máy chủ từ chối phần ảnh vì vượt giới hạn tải lên.'
+                        : request.status === 401 || request.status === 419
+                            ? 'Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại rồi chọn ảnh.'
+                            : request.status >= 500
+                                ? 'Máy chủ đang gặp sự cố khi nhận ảnh. Hệ thống sẽ thử lại.'
+                            : (validation || data.message || 'Máy chủ chưa nhận được ảnh. Hãy thử lại.');
+                    const error = new Error(message);
+                    error.retryable = request.status === 408 || request.status === 429 || request.status >= 500;
+                    reject(error);
                     return;
                 }
                 resolve(data);
             };
-            request.onerror = () => reject(new Error('Mất kết nối khi tải ảnh lên. Kiểm tra mạng rồi thử lại.'));
-            request.ontimeout = () => reject(new Error('Hết thời gian tải ảnh lên. Hãy thử lại.'));
+            request.onerror = () => reject(Object.assign(new Error('Mất kết nối khi tải ảnh lên. Kiểm tra mạng rồi thử lại.'), { retryable: true }));
+            request.ontimeout = () => reject(Object.assign(new Error('Hết thời gian tải ảnh lên. Hãy thử lại.'), { retryable: true }));
             request.send(body);
         });
+    }
+
+    async function postChunkWithRetry(file, uploadId, index, total) {
+        for (let attempt = 0; ; attempt++) {
+            try {
+                return await postChunk(file, uploadId, index, total);
+            } catch (error) {
+                if (!error.retryable || attempt >= 2) throw error;
+                await new Promise((resolve) => setTimeout(resolve, 500 * (2 ** attempt)));
+            }
+        }
     }
 
     function uuid() {
@@ -286,7 +356,7 @@
         const uploadId = uuid();
         let response;
         for (let index = 0; index < total; index++) {
-            response = await postChunk(file, uploadId, index, total);
+            response = await postChunkWithRetry(file, uploadId, index, total);
         }
         if (!response?.complete || !response.token) throw new Error('Máy chủ chưa nhận đủ ảnh. Hãy thử lại.');
         return response.token;
@@ -310,38 +380,48 @@
         if (input.dataset.stagedTokens) return;
         const fieldName = input.dataset.imageFieldName || input.dataset.originalImageName || input.name;
         if (!fieldName) throw new Error('Không xác định được trường ảnh trong biểu mẫu.');
-        const files = Array.from(input.files || []);
-        const imageFiles = files.filter(isImageFile);
+        const imageFiles = Array.from(input.files || []);
         if (!imageFiles.length) return;
 
-        const tokens = [];
-        for (let index = 0; index < imageFiles.length; index++) {
-            setMessage(input, `Đang tải ảnh ${index + 1}/${imageFiles.length} lên vùng tạm…`);
-            tokens.push(await stageFile(imageFiles[index]));
+        let progress = stagedProgress.get(input);
+        if (!progress || progress.files.length !== imageFiles.length
+            || progress.files.some((file, index) => file !== imageFiles[index])) {
+            progress = { files: imageFiles, tokens: [] };
+            stagedProgress.set(input, progress);
         }
-        addStagedTokens(input.form, fieldName, tokens);
-        input.dataset.stagedTokens = JSON.stringify(tokens);
+        for (let index = progress.tokens.length; index < imageFiles.length; index++) {
+            setMessage(input, `Đang tải ảnh ${index + 1}/${imageFiles.length}: ${imageFiles[index].name}…`);
+            progress.tokens.push(await stageFile(imageFiles[index]));
+        }
+        addStagedTokens(input.form, fieldName, progress.tokens);
+        input.dataset.stagedTokens = JSON.stringify(progress.tokens);
         input.dataset.originalImageName = fieldName;
         input.removeAttribute('name');
-        setMessage(input, `${tokens.length} ảnh WebP đã sẵn sàng để lưu.`);
+        setMessage(input, `${progress.tokens.length} ảnh WebP đã sẵn sàng để lưu.`);
     }
 
     document.addEventListener('change', (event) => {
         const input = event.target;
         if (!(input instanceof HTMLInputElement) || input.type !== 'file') return;
+        if (input.dataset.galleryUploadMode === 'ajax') return;
         if (processedChange.has(input)) {
             processedChange.delete(input);
             return;
         }
-        if (!Array.from(input.files || []).some(isImageFile)) return;
+        if (!isImageInput(input) || !input.files?.length) return;
 
         event.preventDefault();
         event.stopImmediatePropagation();
-        const processing = prepareInput(input).catch((error) => {
-            input.disabled = false;
-            setMessage(input, error.message || 'Không thể xử lý ảnh này.', true);
+        const generation = (inputGeneration.get(input) || 0) + 1;
+        inputGeneration.set(input, generation);
+        const processing = prepareInput(input, generation).catch((error) => {
+            if (generation === inputGeneration.get(input)) {
+                setMessage(input, errorText(error, 'Không thể đọc ảnh này. Hãy chọn lại ảnh.'), true);
+            }
             throw error;
-        }).finally(() => inputProcessing.delete(input));
+        }).finally(() => {
+            if (inputProcessing.get(input) === processing) inputProcessing.delete(input);
+        });
         inputProcessing.set(input, processing);
         processing.catch(() => {});
     }, true);
@@ -354,30 +434,41 @@
             return;
         }
 
-        const inputs = imageInputs(form).filter((input) => input.name && !input.dataset.stagedTokens
-            && Array.from(input.files || []).some(isImageFile));
-        if (!inputs.length) return;
+        let allInputs = imageInputs(form).filter((input) => input.dataset.galleryUploadMode !== 'ajax');
+        let inputs = allInputs.filter((input) => input.name && !input.dataset.stagedTokens && input.files?.length);
+        if (!inputs.length && !externalProcessing.get(form)?.size
+            && !allInputs.some((input) => inputProcessing.has(input) || input.dataset.imageProcessingError)) return;
 
         event.preventDefault();
         event.stopImmediatePropagation();
         const submitter = event.submitter instanceof HTMLElement ? event.submitter : undefined;
         try {
-            for (const input of inputs) {
+            await Promise.all(Array.from(externalProcessing.get(form) || []));
+            allInputs = imageInputs(form).filter((input) => input.dataset.galleryUploadMode !== 'ajax');
+            inputs = allInputs.filter((input) => input.name && !input.dataset.stagedTokens && input.files?.length);
+            for (const input of allInputs) {
                 const pending = inputProcessing.get(input);
                 if (pending) await pending;
-                if (input.dataset.imageProcessingError) throw new Error('Có ảnh chưa xử lý được. Chọn lại ảnh bị báo lỗi rồi thử lại.');
-                if (!Array.from(input.files || []).every((file) => !isImageFile(file) || file.type === 'image/webp' && file.size <= MAX_BYTES)) {
+                if (input.dataset.imageProcessingError) throw new Error('Có ảnh chưa xử lý được. Hãy chọn lại ảnh được báo lỗi rồi thử lưu.');
+            }
+            for (const input of inputs) {
+                if (!Array.from(input.files || []).every((file) => file.type === 'image/webp' && file.size <= MAX_BYTES)) {
                     await prepareInput(input);
                 }
                 await stageInput(input);
             }
-            for (const input of inputs) input.disabled = false;
             continuingForms.add(form);
-            form.requestSubmit(submitter);
+            try {
+                form.requestSubmit(submitter);
+            } finally {
+                queueMicrotask(() => continuingForms.delete(form));
+            }
         } catch (error) {
             for (const input of inputs) {
-                input.disabled = false;
                 if (!input.dataset.stagedTokens) setMessage(input, error.message || 'Không tải được ảnh lên vùng tạm. Hãy thử lại.', true);
+            }
+            for (const input of allInputs.filter((item) => item.dataset.imageProcessingError && !inputs.includes(item))) {
+                setMessage(input, error.message || 'Hãy chọn lại ảnh được báo lỗi.', true);
             }
         }
     }, true);
@@ -387,6 +478,7 @@
         if (!(form instanceof HTMLFormElement)) return;
         form.querySelectorAll('input[type="file"]').forEach((input) => {
             clearStagedTokens(input);
+            lastGoodFiles.delete(input);
             delete input.dataset.imageProcessingError;
             setMessage(input, '');
         });
@@ -394,8 +486,8 @@
 
     function extendAccept(input) {
         const accept = (input.getAttribute('accept') || '').trim();
-        if (!accept || accept.includes('image') || /\.(jpe?g|png|webp)/i.test(accept)) {
-            if (!accept.includes('.heic')) input.setAttribute('accept', `${accept}${accept ? '' : 'image/*'}${ACCEPT_SUFFIX}`);
+        if (accept.includes('image') || /\.(jpe?g|png|webp)/i.test(accept)) {
+            if (!accept.includes('.heic')) input.setAttribute('accept', `${accept}${ACCEPT_SUFFIX}`);
         }
     }
 
@@ -419,6 +511,19 @@
             return processed;
         },
         isImageFile,
+        isProcessed: (file) => optimizedFiles.has(file),
+        rememberFiles: (input) => lastGoodFiles.set(input, Array.from(input.files || [])),
+        trackPending: (form, promise) => {
+            if (!form) return promise;
+            let pending = externalProcessing.get(form);
+            if (!pending) {
+                pending = new Set();
+                externalProcessing.set(form, pending);
+            }
+            pending.add(promise);
+            promise.finally(() => pending.delete(promise)).catch(() => {});
+            return promise;
+        },
         maxBytes: MAX_BYTES,
     };
 })();

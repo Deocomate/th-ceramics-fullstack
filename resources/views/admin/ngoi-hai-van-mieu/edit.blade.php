@@ -235,6 +235,7 @@
             const dataTransfer = new DataTransfer();
             selectedCongDoanFiles.forEach(file => dataTransfer.items.add(file));
             congDoanInput.files = dataTransfer.files;
+            window.AdminImageOptimizer.rememberFiles(congDoanInput);
         }
 
         // ====== LOGIC MODAL XÓA ẢNH CÔNG ĐOẠN ======

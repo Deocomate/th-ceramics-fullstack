@@ -235,6 +235,7 @@
                 dataTransfer.items.add(file);
             });
             multipleImagesInput.files = dataTransfer.files;
+            window.AdminImageOptimizer.rememberFiles(multipleImagesInput);
         }
 
         const deleteImageModal = document.getElementById('deleteImageModal');

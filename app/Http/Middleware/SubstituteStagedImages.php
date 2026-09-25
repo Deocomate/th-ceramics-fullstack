@@ -4,10 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class SubstituteStagedImages
 {
@@ -92,6 +92,8 @@ class SubstituteStagedImages
                     ]);
                 }
 
+                // Keep Laravel's test flag when allFiles() reads this staged file;
+                // a Symfony upload would be reconverted and fail the "uploaded" rule.
                 $uploadedFiles[] = new UploadedFile(
                     $disk->path($imagePath),
                     (string) ($metadata['original_name'] ?? 'optimized-image.webp'),

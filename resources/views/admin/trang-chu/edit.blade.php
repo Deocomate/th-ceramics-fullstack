@@ -237,6 +237,7 @@
     <script>
         // Validate file size helper (client-side)
         function validateFileSizes(input, maxSizeMB = 5) {
+            if ((input.accept || '').includes('image')) return true;
             const maxSizeBytes = maxSizeMB * 1024 * 1024;
             const files = Array.from(input.files);
             const oversizedFiles = files.filter(file => file.size > maxSizeBytes);
@@ -325,6 +326,7 @@
 
             // Ghi đè lại input files
             input.files = dt.files;
+            window.AdminImageOptimizer.rememberFiles(input);
 
             // Render lại giao diện
             renderPreviews(input, container, objectFit);
