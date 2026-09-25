@@ -24,10 +24,12 @@
     </div>
 
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        @include('admin.partials.bulk-rename-products', ['type' => 'ngoi-am-duong-ct'])
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
                 <thead class="bg-gray-50/80 text-gray-500 text-xs uppercase tracking-wider">
                     <tr>
+                        <th class="w-12 px-3 py-4 text-center"><input type="checkbox" data-bulk-rename-select-all aria-label="Chọn tất cả sản phẩm" class="block mx-auto h-4 w-4 rounded border-gray-300 text-[#A31D1D] focus:ring-[#A31D1D]"></th>
                         <th class="px-6 py-4 font-semibold">Sản phẩm</th>
                         <th class="px-6 py-4 font-semibold">Mã sản phẩm</th>
                         <th class="px-6 py-4 font-semibold">Giá / Kích thước</th>
@@ -38,6 +40,7 @@
                 <tbody class="divide-y divide-gray-100">
                     @forelse($products as $product)
                         <tr class="hover:bg-gray-50/50 transition-colors {{ $product->is_delete ? 'bg-red-50/30' : '' }}">
+                            <td class="w-12 px-3 py-4 text-center align-middle"><input type="checkbox" class="bulk-rename-product-checkbox block mx-auto h-4 w-4 rounded border-gray-300 text-[#A31D1D] focus:ring-[#A31D1D]" value="{{ $product->ngoi_am_duong_ct_id }}" aria-label="Chọn {{ $product->name }}"></td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-16 h-16 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0 {{ $product->is_delete ? 'opacity-50 grayscale' : '' }}">
@@ -92,7 +95,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-gray-500">Chưa có sản phẩm nào. Hãy thêm mới ngay!</td>
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500">Chưa có sản phẩm nào. Hãy thêm mới ngay!</td>
                         </tr>
                     @endforelse
                 </tbody>
