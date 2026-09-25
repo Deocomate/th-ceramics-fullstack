@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Helpers\FileUploadHelper;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class FileUploadHelperOptimizationTest extends TestCase
@@ -54,5 +55,19 @@ class FileUploadHelperOptimizationTest extends TestCase
         Storage::disk('public')->assertMissing($oldPath);
         Storage::disk('public')->assertExists($newPath);
         $this->assertStringEndsWith('.webp', $newPath);
+    }
+
+    public function test_failed_replacement_keeps_the_existing_image(): void
+    {
+        $oldPath = FileUploadHelper::upload(UploadedFile::fake()->image('old.jpg'), 'users/avatars');
+        $corrupt = UploadedFile::fake()->create('broken.jpg', 10, 'image/jpeg');
+
+        try {
+            FileUploadHelper::replace($corrupt, $oldPath, 'users/avatars');
+            $this->fail('Corrupt replacement should fail.');
+        } catch (ValidationException $exception) {
+            Storage::disk('public')->assertExists($oldPath);
+            $this->assertCount(1, Storage::disk('public')->allFiles('users/avatars'));
+        }
     }
 }

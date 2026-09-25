@@ -244,6 +244,7 @@
                 const dataTransfer = new DataTransfer();
                 selectedFiles.forEach(file => dataTransfer.items.add(file));
                 multipleImagesInput.files = dataTransfer.files;
+                window.AdminImageOptimizer.rememberFiles(multipleImagesInput);
             }
         </script>
     @endpush

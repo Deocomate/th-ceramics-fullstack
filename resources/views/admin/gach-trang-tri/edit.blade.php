@@ -167,7 +167,9 @@
                     return;
                 }
 
-                document.getElementById(targetId).src = URL.createObjectURL(file);
+                const preview = document.getElementById(targetId);
+                if (preview.src.startsWith('blob:')) URL.revokeObjectURL(preview.src);
+                preview.src = URL.createObjectURL(file);
             }
 
             function previewMultiple(input, targetId) {
@@ -191,11 +193,13 @@
                 const dataTransfer = new DataTransfer();
                 (selectedFilesByInput.get(input) || []).forEach(file => dataTransfer.items.add(file));
                 input.files = dataTransfer.files;
+                window.AdminImageOptimizer.rememberFiles(input);
             }
 
             function renderMultiplePreview(input, targetId) {
                 const target = document.getElementById(targetId);
                 const files = selectedFilesByInput.get(input) || [];
+                target.querySelectorAll('img[src^="blob:"]').forEach(img => URL.revokeObjectURL(img.src));
                 target.innerHTML = '';
                 target.classList.toggle('hidden', files.length === 0);
 
@@ -230,7 +234,7 @@
                     event.preventDefault();
                     zone.classList.remove('border-[#A31D1D]', 'bg-red-50');
                     const dataTransfer = new DataTransfer();
-                    const firstImage = Array.from(event.dataTransfer.files || []).find(file => file.type.startsWith('image/'));
+                    const firstImage = Array.from(event.dataTransfer.files || []).find(file => window.AdminImageOptimizer.isImageFile(file));
                     if (!firstImage) {
                         return;
                     }

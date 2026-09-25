@@ -393,6 +393,7 @@
             const files = Array.from(input.files);
             files.forEach((file, index) => { if (index !== indexToRemove) dt.items.add(file); });
             input.files = dt.files;
+            window.AdminImageOptimizer.rememberFiles(input);
             renderPreviews(input, container, objectFit);
         }
 

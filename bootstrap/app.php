@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureEcommerceEnabled;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Middleware\SubstituteStagedImages;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Application;
@@ -25,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'verified' => EnsureEmailIsVerified::class,
             'ecommerce' => EnsureEcommerceEnabled::class,
-            'staged.images' => \App\Http\Middleware\SubstituteStagedImages::class,
+            'staged.images' => SubstituteStagedImages::class,
         ]);
 
         $middleware->priority([
@@ -58,7 +59,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (PostTooLargeException $e, Request $request) {
-            $message = 'Dung lượng tải lên vượt quá giới hạn máy chủ. Với thư viện media, hãy thêm file trên trang chỉnh sửa (tải theo từng phần).';
+            $message = 'Máy chủ từ chối dữ liệu tải lên vì quá lớn. Với ảnh, hãy đợi tối ưu xong rồi thử lưu; với video hoặc tài liệu, hãy chọn tệp nhỏ hơn.';
 
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json(['message' => $message], 413);

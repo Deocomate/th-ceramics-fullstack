@@ -74,11 +74,11 @@ trait ValidatesProductGalleryMedia
             'images.required_without' => 'Vui lòng tải ảnh bìa hoặc ít nhất một ảnh gallery.',
             'images.min' => 'Vui lòng tải lên ít nhất một hình ảnh sản phẩm.',
             'images.*.file' => 'File tải lên phải là file hợp lệ.',
-            'images.*.uploaded' => 'Một ảnh gallery tải lên thất bại. Dùng upload theo lô trên trang chỉnh sửa (khuyến nghị cho webp).',
+            'images.*.uploaded' => 'Máy chủ chưa nhận được một ảnh gallery. Hãy chọn lại ảnh đó và thử lưu; nếu lỗi lặp lại, kiểm tra kết nối mạng.',
             'images.*.mimes' => 'Hình ảnh phải có định dạng: jpg, jpeg, png, webp.',
             'images.*.max' => 'Mỗi hình ảnh không được vượt quá 5MB.',
             'new_images.*.file' => 'File tải lên phải là file hợp lệ.',
-            'new_images.*.uploaded' => 'Một ảnh gallery tải lên thất bại. Hãy thêm ảnh qua vùng upload (AJAX), không gửi kèm nút Lưu Thay Đổi.',
+            'new_images.*.uploaded' => 'Máy chủ chưa nhận được một ảnh gallery mới. Hãy chọn lại ảnh và thử tải lên.',
             'new_images.*.mimes' => 'Hình ảnh phải có định dạng: jpg, jpeg, png, webp.',
             'new_images.*.max' => 'Mỗi hình ảnh không được vượt quá 5MB.',
         ];

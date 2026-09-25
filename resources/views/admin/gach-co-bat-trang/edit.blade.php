@@ -268,7 +268,9 @@
             function previewSingle(input, targetId) {
                 const file = input.files && input.files[0];
                 if (file) {
-                    document.getElementById(targetId).src = URL.createObjectURL(file);
+                    const preview = document.getElementById(targetId);
+                    if (preview.src.startsWith('blob:')) URL.revokeObjectURL(preview.src);
+                    preview.src = URL.createObjectURL(file);
                 }
             }
 
@@ -292,11 +294,13 @@
                 const dataTransfer = new DataTransfer();
                 (selectedFilesByInput.get(input) || []).forEach(file => dataTransfer.items.add(file));
                 input.files = dataTransfer.files;
+                window.AdminImageOptimizer.rememberFiles(input);
             }
 
             function renderMultiplePreview(input, targetId) {
                 const target = document.getElementById(targetId);
                 const files = selectedFilesByInput.get(input) || [];
+                target.querySelectorAll('img[src^="blob:"]').forEach(img => URL.revokeObjectURL(img.src));
                 target.innerHTML = '';
                 target.classList.toggle('hidden', files.length === 0);
 

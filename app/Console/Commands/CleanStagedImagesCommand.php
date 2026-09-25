@@ -41,6 +41,18 @@ class CleanStagedImagesCommand extends Command
             }
         }
 
+        foreach ($disk->allFiles('gallery-chunks') as $path) {
+            if (! str_ends_with($path, '/_meta.json')) {
+                continue;
+            }
+
+            $metadata = json_decode($disk->get($path), true);
+            if (! is_array($metadata) || (int) ($metadata['created_at'] ?? 0) < $now - 3600) {
+                $disk->deleteDirectory(dirname($path));
+                $removed++;
+            }
+        }
+
         $this->info("Removed {$removed} expired staged image upload(s).");
 
         return self::SUCCESS;

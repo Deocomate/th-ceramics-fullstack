@@ -460,6 +460,34 @@ test('admin ajax can upload a gallery video in chunks', function () {
         ->and($product->images[1]['source'])->toBe('file');
 });
 
+test('retrying the final gallery image chunk does not add a duplicate', function () {
+    Storage::fake('public');
+    Storage::fake('local');
+    $this->actingAs(User::factory()->create());
+
+    $product = makeNgoiAmDuongProduct(['ngoi_am_duong_ct/images/cover.png']);
+    $uploadId = (string) Str::uuid();
+    $bytes = base64_decode('UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=');
+    $payload = [
+        'chunk' => UploadedFile::fake()->createWithContent('part.bin', $bytes),
+        'upload_id' => $uploadId,
+        'chunk_index' => 0,
+        'total_chunks' => 1,
+        'kind' => 'image',
+        'original_name' => 'detail.webp',
+    ];
+
+    $first = $this->postJson(route('admin.ngoi-am-duong-ct.image.store', $product->ngoi_am_duong_ct_id), $payload)
+        ->assertOk()->assertJsonPath('remaining_count', 2);
+    $retry = $this->postJson(route('admin.ngoi-am-duong-ct.image.store', $product->ngoi_am_duong_ct_id), [
+        ...$payload,
+        'chunk' => UploadedFile::fake()->createWithContent('part.bin', $bytes),
+    ])->assertOk()->assertJsonPath('remaining_count', 2);
+
+    expect($retry->json('items'))->toBe($first->json('items'))
+        ->and($product->fresh()->images)->toHaveCount(2);
+});
+
 test('admin ajax rejects non video files for gallery video upload', function () {
     Storage::fake('public');
     $this->actingAs(User::factory()->create());
