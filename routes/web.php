@@ -47,6 +47,7 @@ use App\Http\Controllers\Admin\PhanLoaiLanCanGomSuCtController;
 use App\Http\Controllers\Admin\PhanLoaiPhuKienNgoiCtController;
 use App\Http\Controllers\Admin\PhuKienNgoiController;
 use App\Http\Controllers\Admin\PhuKienNgoiCtController;
+use App\Http\Controllers\Admin\ProductBulkRenameController;
 use App\Http\Controllers\Admin\ProductCopyController;
 use App\Http\Controllers\Admin\ThiCongController;
 use App\Http\Controllers\Admin\TinTucController;
@@ -104,6 +105,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('list', [ProductCopyController::class, 'list'])->name('list');
             Route::get('detail/{type}/{id}', [ProductCopyController::class, 'detail'])->name('detail');
         });
+
+        Route::post('api/products/{type}/bulk-rename', [ProductBulkRenameController::class, 'update'])
+            ->name('products.bulk-rename');
 
         // ── Product Types Routes ────────────────────────────────────────────────
         // 1. Ngói Âm Dương
