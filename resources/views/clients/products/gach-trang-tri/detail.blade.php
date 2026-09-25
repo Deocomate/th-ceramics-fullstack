@@ -18,7 +18,7 @@
 <!-- Product Detail Container -->
 <x-client.shared.product-detail-container
 title="{{ $product->name ?? 'GẠCH TRANG TRÍ' }}"
-price="{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}"
+price="{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/viên' : 'Liên hệ' }}"
 rawPrice="{{ $product->price }}"
 sku="{{ $product->code ?? '' }}"
 productType="gach_trang_tri_ct"

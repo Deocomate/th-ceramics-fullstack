@@ -77,7 +77,7 @@
         <td class="{{ $cellClass }}">{{ $product->size ?: '—' }}</td>
         <td class="{{ $cellClass }}">{{ $product->dinh_muc ?: '—' }}</td>
         <td class="{{ $cellClass }}">{{ $product->weight ?: '—' }}</td>
-        <td class="{{ $cellClass }}">{{ $product->price > 0 ? number_format($product->price) . 'đ' : 'Liên hệ' }}</td>
+        <td class="{{ $cellClass }}">{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/viên' : 'Liên hệ' }}</td>
       </tr>
       @endforeach
     </tbody>

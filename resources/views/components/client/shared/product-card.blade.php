@@ -39,8 +39,8 @@
                                 </p>
                             @endif
                             @if ($price)
-                                <p class="text-secondary font-bold text-[14px] md:text-[15px] leading-[20px] min-w-0 truncate">
-                                    {{ $price }}
+                                <p class="text-secondary font-bold text-[14px] md:text-[15px] leading-[20px] min-w-0 whitespace-normal break-words">
+                                    {{ $displayPrice }}
                                 </p>
                             @endif
                         </div>

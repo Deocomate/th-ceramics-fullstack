@@ -61,6 +61,6 @@ class DenVuonGomSuCt extends Model
     {
         $price = $this->min_price ?? $this->display_variant?->price;
 
-        return $price > 0 ? 'Từ '.number_format((float) $price, 0, ',', '.').' đ' : 'Liên hệ';
+        return $price > 0 ? 'Từ '.number_format((float) $price, 0, ',', '.').' đ/chiếc' : 'Liên hệ';
     }
 }

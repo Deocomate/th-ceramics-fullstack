@@ -45,6 +45,6 @@ class LanCanGomSuCt extends Model
             return 'Liên hệ';
         }
 
-        return 'Giá: '.number_format($price, 0, ',', '.').' đ/m²';
+        return 'Giá: '.number_format($price, 0, ',', '.').' đ/chiếc';
     }
 }
