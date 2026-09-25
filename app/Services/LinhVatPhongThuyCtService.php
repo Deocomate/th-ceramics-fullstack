@@ -21,7 +21,7 @@ class LinhVatPhongThuyCtService
 
     public function getAll(string $status = 'active')
     {
-        $query = LinhVatPhongThuyCt::query()->latest();
+        $query = LinhVatPhongThuyCt::query()->orderedByPriority();
 
         if ($status === 'active') {
             $query->where('is_delete', 0);

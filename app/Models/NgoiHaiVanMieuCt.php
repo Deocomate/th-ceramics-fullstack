@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NgoiHaiVanMieuCt extends Model
 {
+    use \App\Models\Concerns\HasProductPriority;
     protected $table = 'ngoi_hai_van_mieu_ct';
 
     protected $primaryKey = 'ngoi_hai_van_mieu_ct_id';

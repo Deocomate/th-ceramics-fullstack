@@ -21,7 +21,7 @@ class PhuKienNgoiCtService
         $query = PhuKienNgoiCt::query()
             ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)->orderBy('price')])
             ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
-            ->latest();
+            ->orderedByPriority();
 
         if ($categoryType) {
             $query->where('category_type', $categoryType);

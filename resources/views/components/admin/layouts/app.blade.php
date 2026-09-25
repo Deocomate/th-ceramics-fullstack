@@ -55,6 +55,8 @@
         }
     </style>
 
+    <link rel="stylesheet" href="{{ asset('assets/css/admin-select.css') }}?v={{ filemtime(public_path('assets/css/admin-select.css')) }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/admin-product-priority.css') }}?v={{ filemtime(public_path('assets/css/admin-product-priority.css')) }}">
     @stack('styles')
 </head>
 
@@ -126,6 +128,9 @@
     </div>
 
     <x-admin.shared.preview-button />
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script src="{{ asset('assets/js/admin-select.js') }}?v={{ filemtime(public_path('assets/js/admin-select.js')) }}"></script>
+    <script src="{{ asset('assets/js/admin-product-priority.js') }}?v={{ filemtime(public_path('assets/js/admin-product-priority.js')) }}"></script>
     <script src="{{ asset('assets/js/admin-image-optimizer.js') }}?v={{ filemtime(public_path('assets/js/admin-image-optimizer.js')) }}" data-upload-url="{{ route('admin.media.staged-images.store') }}" data-heic-url="{{ asset('assets/js/vendor/heic2any.min.js') }}?v={{ filemtime(public_path('assets/js/vendor/heic2any.min.js')) }}"></script>
     @stack('scripts')
 </body>

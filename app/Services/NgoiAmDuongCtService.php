@@ -23,7 +23,7 @@ class NgoiAmDuongCtService
 
     public function getAll(string $status = 'active')
     {
-        $query = NgoiAmDuongCt::query()->latest();
+        $query = NgoiAmDuongCt::query()->orderedByPriority();
 
         if ($status === 'active') {
             $query->where('is_delete', 0);

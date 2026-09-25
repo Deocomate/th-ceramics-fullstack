@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PhuKienNgoiCt extends Model
 {
+    use \App\Models\Concerns\HasProductPriority;
     public const TYPE_BO_NOC = 'bo_noc';
 
     public const TYPE_CHU_VAN = 'chu_van';

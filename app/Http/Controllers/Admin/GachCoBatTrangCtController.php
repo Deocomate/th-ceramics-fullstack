@@ -21,9 +21,11 @@ class GachCoBatTrangCtController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('status', 'active');
-        $products = $this->service->getAll($status);
+        $categoryType = $request->query('category_type', 'all');
+        abort_unless(in_array($categoryType, ['all', 'bat', 'that', 'the'], true), 404);
+        $products = $this->service->getAll($status, $categoryType);
 
-        return view('admin.gach-co-bat-trang-ct.index', compact('products', 'status'));
+        return view('admin.gach-co-bat-trang-ct.index', compact('products', 'status', 'categoryType'));
     }
 
     public function create(Request $request)

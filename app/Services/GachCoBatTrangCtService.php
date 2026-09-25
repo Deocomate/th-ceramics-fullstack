@@ -19,9 +19,13 @@ class GachCoBatTrangCtService
 
     public function __construct(private readonly GlobalProductCodeService $globalCodeService) {}
 
-    public function getAll(string $status = 'active')
+    public function getAll(string $status = 'active', ?string $categoryType = null)
     {
-        $query = GachCoBatTrangCt::query()->latest();
+        $query = GachCoBatTrangCt::query()->orderBy('category_type')->orderedByPriority();
+
+        if ($categoryType !== null && $categoryType !== 'all') {
+            $query->where('category_type', $categoryType);
+        }
 
         if ($status === 'active') {
             $query->where('is_delete', 0);

@@ -20,7 +20,7 @@ class NgoiHaiVanMieuCtService
     {
         $query = NgoiHaiVanMieuCt::query()->withCount(['mauSacs' => function ($q) {
             $q->where('is_delete', 0);
-        }])->latest();
+        }])->orderedByPriority();
 
         if ($status === 'active') {
             $query->where('is_delete', 0);

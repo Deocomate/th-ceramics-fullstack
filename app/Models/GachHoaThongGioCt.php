@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GachHoaThongGioCt extends Model
 {
+    use \App\Models\Concerns\HasProductPriority;
     protected $table = 'gach_hoa_thong_gio_ct';
 
     protected $primaryKey = 'gach_hoa_thong_gio_ct_id';

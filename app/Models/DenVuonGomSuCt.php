@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DenVuonGomSuCt extends Model
 {
+    use \App\Models\Concerns\HasProductPriority;
     public const CATEGORY_DEN_GOM = 'den_gom';
 
     public const CATEGORY_DEN_SU = 'den_su';

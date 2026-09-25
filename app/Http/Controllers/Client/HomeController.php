@@ -18,7 +18,7 @@ class HomeController extends Controller
         $projects = DuAn::latest()->take(10)->get();
 
         $ngoiAmDuongs = NgoiAmDuongCt::where('is_delete', 0)
-            ->latest()
+            ->orderedByPriority()
             ->take(8)
             ->get();
 
@@ -26,12 +26,12 @@ class HomeController extends Controller
             $query->where('is_delete', 0);
         }])
             ->where('is_delete', 0)
-            ->latest()
+            ->orderedByPriority()
             ->take(8)
             ->get();
 
         $gachHoas = GachHoaThongGioCt::where('is_delete', 0)
-            ->latest()
+            ->orderedByPriority()
             ->take(8)
             ->get();
 

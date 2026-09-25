@@ -6,6 +6,11 @@
         </div>
         <div class="flex items-center gap-3">
             <form method="GET" action="{{ route('admin.den-vuon-gom-su-ct.index') }}" class="flex items-center">
+                <select name="category_type" onchange="this.form.submit()" class="px-3 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:border-[#A31D1D] bg-white cursor-pointer">
+                    <option value="all" {{ $categoryType === 'all' ? 'selected' : '' }}>Tất cả phân nhóm</option>
+                    <option value="den_gom" {{ $categoryType === 'den_gom' ? 'selected' : '' }}>Đèn Gốm</option>
+                    <option value="den_su" {{ $categoryType === 'den_su' ? 'selected' : '' }}>Đèn Sứ</option>
+                </select>
                 <select name="status" onchange="this.form.submit()" class="px-3 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:border-[#A31D1D] bg-white cursor-pointer">
                     <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Sản phẩm đang bán</option>
                     <option value="deleted" {{ $status === 'deleted' ? 'selected' : '' }}>Sản phẩm đã ẩn</option>
@@ -34,9 +39,9 @@
                     <th class="px-6 py-4 font-semibold text-right">Thao tác</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-gray-100" data-admin-product-sortable data-priority-endpoint="{{ route('admin.products.priority.update', 'den-vuon-gom-su-ct') }}" data-can-reorder="{{ $status === 'active' && $categoryType !== 'all' ? 'true' : 'false' }}" data-category-type="{{ $categoryType }}">
                 @forelse($products as $product)
-                        <tr class="hover:bg-gray-50/50 transition-colors {{ $product->is_delete ? 'bg-red-50/30' : '' }}">
+                        <tr data-priority-id="{{ $product->den_vuon_gom_su_ct_id }}" class="hover:bg-gray-50/50 transition-colors {{ $product->is_delete ? 'bg-red-50/30' : '' }}">
                             <td class="w-12 px-3 py-4 text-center align-middle"><input type="checkbox" class="bulk-rename-product-checkbox block mx-auto h-4 w-4 rounded border-gray-300 text-[#A31D1D] focus:ring-[#A31D1D]" value="{{ $product->den_vuon_gom_su_ct_id }}" aria-label="Chọn {{ $product->name }}"></td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-4">

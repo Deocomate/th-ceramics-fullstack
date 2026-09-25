@@ -1,0 +1,10 @@
+.priority-save-status { color: #6b7280; font-size: .8125rem; margin: 0 0 .65rem; min-height: 1.25rem; }
+.priority-save-status.is-error { color: #b91c1c; }
+.priority-row-controls { align-items: center; display: flex; gap: .25rem; justify-content: center; }
+.priority-drag-handle { align-items: center; background: transparent; border: 0; border-radius: .375rem; color: #9ca3af; cursor: grab; display: inline-flex; flex: 0 0 auto; height: 1.75rem; justify-content: center; padding: .2rem; touch-action: none; width: 1.5rem; }
+.priority-drag-handle:hover, .priority-drag-handle:focus-visible { background: #f3f4f6; color: #a31d1d; outline: none; }
+.priority-drag-handle:active { cursor: grabbing; }
+.priority-drag-handle svg { height: 1rem; width: 1rem; }
+.priority-row-ghost { opacity: .35; }
+.priority-row-chosen { background: #fff7ed; }
+[data-admin-product-sortable][aria-busy="true"] .priority-drag-handle { cursor: wait; }

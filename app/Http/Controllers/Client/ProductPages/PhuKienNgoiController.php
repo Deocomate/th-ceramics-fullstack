@@ -77,7 +77,7 @@ class PhuKienNgoiController extends Controller
         $relatedProducts = PhuKienNgoiCt::query()
             ->where('is_delete', 0)
             ->where('phu_kien_ngoi_ct_id', '!=', $product->phu_kien_ngoi_ct_id)
-            ->latest()
+            ->orderedByPriority()
             ->take(4)
             ->get();
 
