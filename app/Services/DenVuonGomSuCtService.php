@@ -18,11 +18,17 @@ class DenVuonGomSuCtService
 
     private const SIZE_DIRECTORY = 'den_vuon_gom_su_ct/sizes';
 
-    public function getAll(string $status = 'active')
+    public function getAll(string $status = 'active', ?string $categoryType = null)
     {
         $query = DenVuonGomSuCt::query()
             ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)->orderBy('price')])
-            ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])->latest();
+            ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
+            ->orderBy('category_type')
+            ->orderedByPriority();
+
+        if ($categoryType !== null && $categoryType !== 'all') {
+            $query->where('category_type', $categoryType);
+        }
         if ($status === 'active') {
             $query->where('is_delete', 0);
         } elseif ($status === 'deleted') {
@@ -64,10 +70,10 @@ class DenVuonGomSuCtService
         }
 
         match ((string) ($filters['sort'] ?? '')) {
-            'price_asc' => $query->orderByRaw('min_price is null')->orderBy('min_price')->orderByDesc('den_vuon_gom_su_ct_id'),
-            'price_desc' => $query->orderByDesc('min_price')->orderByDesc('den_vuon_gom_su_ct_id'),
-            'name_asc' => $query->orderBy('name')->orderByDesc('den_vuon_gom_su_ct_id'),
-            default => $query->orderByDesc('den_vuon_gom_su_ct_id'),
+            'price_asc' => $query->orderByRaw('min_price is null')->orderBy('min_price')->orderByDesc('priority')->orderByDesc('den_vuon_gom_su_ct_id'),
+            'price_desc' => $query->orderByDesc('min_price')->orderByDesc('priority')->orderByDesc('den_vuon_gom_su_ct_id'),
+            'name_asc' => $query->orderBy('name')->orderByDesc('priority')->orderByDesc('den_vuon_gom_su_ct_id'),
+            default => $query->orderedByPriority(),
         };
 
         return $query
@@ -80,7 +86,7 @@ class DenVuonGomSuCtService
         return $this->clientBaseQuery()
             ->where('category_type', $categoryType)
             ->whereKeyNot($productId)
-            ->orderByDesc('den_vuon_gom_su_ct_id')
+            ->orderedByPriority()
             ->take($limit)
             ->get();
     }

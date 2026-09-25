@@ -19,9 +19,11 @@ class DenVuonGomSuCtController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('status', 'active');
-        $products = $this->service->getAll($status);
+        $categoryType = $request->query('category_type', 'all');
+        abort_unless(in_array($categoryType, ['all', 'den_gom', 'den_su'], true), 404);
+        $products = $this->service->getAll($status, $categoryType);
 
-        return view('admin.den-vuon-gom-su-ct.index', compact('products', 'status'));
+        return view('admin.den-vuon-gom-su-ct.index', compact('products', 'status', 'categoryType'));
     }
 
     public function create(Request $request)

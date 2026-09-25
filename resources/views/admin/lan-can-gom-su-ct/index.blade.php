@@ -33,9 +33,9 @@
                     <th class="px-6 py-4 font-semibold text-right">Thao tác</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-gray-100" data-admin-product-sortable data-priority-endpoint="{{ route('admin.products.priority.update', 'lan-can-gom-su-ct') }}" data-can-reorder="{{ $status === 'active' ? 'true' : 'false' }}">
                 @forelse($products as $product)
-                        <tr class="hover:bg-gray-50/50 transition-colors {{ $product->is_delete ? 'bg-red-50/30' : '' }}">
+                        <tr data-priority-id="{{ $product->lan_can_gom_su_ct_id }}" class="hover:bg-gray-50/50 transition-colors {{ $product->is_delete ? 'bg-red-50/30' : '' }}">
                             <td class="w-12 px-3 py-4 text-center align-middle"><input type="checkbox" class="bulk-rename-product-checkbox block mx-auto h-4 w-4 rounded border-gray-300 text-[#A31D1D] focus:ring-[#A31D1D]" value="{{ $product->lan_can_gom_su_ct_id }}" aria-label="Chọn {{ $product->name }}"></td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-4">

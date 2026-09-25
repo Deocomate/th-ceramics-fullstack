@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LanCanGomSuCt extends Model
 {
+    use \App\Models\Concerns\HasProductPriority;
     protected $table = 'lan_can_gom_su_ct';
 
     protected $primaryKey = 'lan_can_gom_su_ct_id';

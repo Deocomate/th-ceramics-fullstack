@@ -21,7 +21,7 @@ class GachTrangTriCtService
 
     public function getAll(string $status = 'active')
     {
-        $query = GachTrangTriCt::query()->latest();
+        $query = GachTrangTriCt::query()->orderedByPriority();
 
         if ($status === 'active') {
             $query->where('is_delete', 0);

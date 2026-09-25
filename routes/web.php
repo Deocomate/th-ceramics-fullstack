@@ -49,6 +49,7 @@ use App\Http\Controllers\Admin\PhuKienNgoiController;
 use App\Http\Controllers\Admin\PhuKienNgoiCtController;
 use App\Http\Controllers\Admin\ProductBulkRenameController;
 use App\Http\Controllers\Admin\ProductCopyController;
+use App\Http\Controllers\Admin\ProductPriorityController;
 use App\Http\Controllers\Admin\ThiCongController;
 use App\Http\Controllers\Admin\TinTucController;
 use App\Http\Controllers\Admin\TrangChuController;
@@ -108,6 +109,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::post('api/products/{type}/bulk-rename', [ProductBulkRenameController::class, 'update'])
             ->name('products.bulk-rename');
+        Route::put('api/products/{type}/priority', [ProductPriorityController::class, 'update'])
+            ->name('products.priority.update');
 
         // ── Product Types Routes ────────────────────────────────────────────────
         // 1. Ngói Âm Dương

@@ -21,7 +21,7 @@ class LanCanGomSuCtService
         $query = LanCanGomSuCt::query()
             ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
             ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
-            ->latest();
+            ->orderedByPriority();
         if ($status === 'active') {
             $query->where('is_delete', 0);
         } elseif ($status === 'deleted') {

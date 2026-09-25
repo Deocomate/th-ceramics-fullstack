@@ -21,7 +21,7 @@ class GachHoaThongGioCtService
 
     public function getAll(string $status = 'active')
     {
-        $query = GachHoaThongGioCt::query()->latest();
+        $query = GachHoaThongGioCt::query()->orderedByPriority();
 
         if ($status === 'active') {
             $query->where('is_delete', 0);
