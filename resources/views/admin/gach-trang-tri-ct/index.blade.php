@@ -24,6 +24,7 @@
     </div>
 
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        @include('admin.partials.product-list-search')
         @include('admin.partials.bulk-rename-products', ['type' => 'gach-trang-tri-ct'])
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
@@ -39,7 +40,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100" data-admin-product-sortable data-priority-endpoint="{{ route('admin.products.priority.update', 'gach-trang-tri-ct') }}" data-can-reorder="{{ $status === 'active' ? 'true' : 'false' }}">
                     @forelse($products as $product)
-                        <tr data-priority-id="{{ $product->gach_trang_tri_ct_id }}" class="hover:bg-gray-50/50 transition-colors {{ $product->is_delete ? 'bg-red-50/30' : '' }}">
+                        <tr data-admin-product-search-row data-search-text="{{ $product->name }} {{ $product->code ?? '' }}" data-priority-id="{{ $product->gach_trang_tri_ct_id }}" class="hover:bg-gray-50/50 transition-colors {{ $product->is_delete ? 'bg-red-50/30' : '' }}">
                             <td class="w-12 px-3 py-4 text-center align-middle"><input type="checkbox" class="bulk-rename-product-checkbox block mx-auto h-4 w-4 rounded border-gray-300 text-[#A31D1D] focus:ring-[#A31D1D]" value="{{ $product->gach_trang_tri_ct_id }}" aria-label="Chọn {{ $product->name }}"></td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">

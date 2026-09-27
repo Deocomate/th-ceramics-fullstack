@@ -56,7 +56,8 @@
 
         const modal = root.querySelector('[data-bulk-rename-modal]');
         const checkboxes = () => Array.from(document.querySelectorAll('.bulk-rename-product-checkbox'));
-        const selected = () => checkboxes().filter((checkbox) => checkbox.checked);
+        const visibleCheckboxes = () => checkboxes().filter((checkbox) => !checkbox.closest('tr')?.hidden);
+        const selected = () => visibleCheckboxes().filter((checkbox) => checkbox.checked);
         const selectAll = document.querySelector('[data-bulk-rename-select-all]');
         const openButton = toolbar.querySelector('[data-open-bulk-rename]');
         const countLabel = toolbar.querySelector('[data-selected-count]');
@@ -82,8 +83,9 @@
             openButton.classList.toggle('text-white', items.length > 0);
             openButton.classList.toggle('hover:bg-[#8A1818]', items.length > 0);
             if (selectAll) {
-                selectAll.checked = checkboxes().length > 0 && items.length === checkboxes().length;
-                selectAll.indeterminate = items.length > 0 && items.length < checkboxes().length;
+                const visible = visibleCheckboxes();
+                selectAll.checked = visible.length > 0 && visible.every((checkbox) => checkbox.checked);
+                selectAll.indeterminate = items.length > 0 && items.length < visible.length;
             }
             checkboxes().forEach((checkbox) => {
                 const row = checkbox.closest('tr');
@@ -139,9 +141,10 @@
         modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
         nameInput.addEventListener('input', renderPreview);
         checkboxes().forEach((checkbox) => checkbox.addEventListener('change', syncSelection));
+        document.addEventListener('admin-product-search:changed', syncSelection);
         if (selectAll) {
             selectAll.addEventListener('change', () => {
-                checkboxes().forEach((checkbox) => { checkbox.checked = selectAll.checked; });
+                visibleCheckboxes().forEach((checkbox) => { checkbox.checked = selectAll.checked; });
                 syncSelection();
             });
         }
