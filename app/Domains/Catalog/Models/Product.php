@@ -5,6 +5,7 @@ namespace App\Domains\Catalog\Models;
 use App\Models\ProductLegacyId;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -36,5 +37,10 @@ class Product extends Model
     public function legacyIds(): HasMany
     {
         return $this->hasMany(ProductLegacyId::class);
+    }
+
+    public function publicId(): HasOne
+    {
+        return $this->hasOne(ProductPublicId::class);
     }
 }

@@ -21,6 +21,7 @@ return [
         // The refactor keeps legacy rows during the compatibility window.
         'products', 'product_variants', 'product_media', 'product_display_options',
         'product_legacy_ids', 'variant_legacy_ids',
+        'product_public_ids', 'variant_public_ids',
     ],
     // Used only to identify an export from a mixed schema. Keep this explicit:
     // page configuration tables are shared by both schema generations.
@@ -36,6 +37,7 @@ return [
         'users', 'password_reset_tokens', 'sessions', 'cache', 'cache_locks',
         'jobs', 'job_batches', 'failed_jobs', 'orders', 'order_items',
         'coupons', 'consultation_requests', 'migrations', 'content_archive_record_maps',
+        'catalog_public_id_sequences',
     ],
     'max_files' => (int) env('CONTENT_ARCHIVE_MAX_FILES', 100_000),
     'max_uncompressed_bytes' => (int) env('CONTENT_ARCHIVE_MAX_UNCOMPRESSED_BYTES', 20_000_000_000),

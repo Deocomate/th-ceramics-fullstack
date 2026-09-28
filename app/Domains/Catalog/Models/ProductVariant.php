@@ -6,6 +6,7 @@ use App\Models\VariantLegacyId;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProductVariant extends Model
 {
@@ -24,5 +25,10 @@ class ProductVariant extends Model
     public function legacyIds(): HasMany
     {
         return $this->hasMany(VariantLegacyId::class);
+    }
+
+    public function publicId(): HasOne
+    {
+        return $this->hasOne(VariantPublicId::class);
     }
 }
