@@ -2,21 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\DenVuonGomSuCt;
-use App\Models\GachCoBatTrangCt;
-use App\Models\GachHoaThongGioCt;
-use App\Models\GachTrangTriCt;
-use App\Models\LanCanGomSuCt;
-use App\Models\LinhVatPhongThuyCt;
-use App\Models\MauSacNgoiHaiCoCt;
-use App\Models\MauSacNgoiHaiVanMieuCt;
-use App\Models\NgoiAmDuongCt;
-use App\Models\NgoiHaiCoCt;
-use App\Models\NgoiHaiVanMieuCt;
-use App\Models\PhanLoaiDenVuonGomSuCt;
-use App\Models\PhanLoaiLanCanGomSuCt;
-use App\Models\PhanLoaiPhuKienNgoiCt;
-use App\Models\PhuKienNgoiCt;
 use App\Models\Product;
 use App\Models\ProductDisplayOption;
 use App\Models\ProductVariant;
@@ -29,27 +14,6 @@ use Illuminate\Support\Collection;
 
 class UnifiedProductCatalog
 {
-    private const LEGACY_MODELS = [
-        'ngoi_am_duong_ct' => NgoiAmDuongCt::class,
-        'ngoi_hai_co_ct' => NgoiHaiCoCt::class,
-        'ngoi_hai_van_mieu_ct' => NgoiHaiVanMieuCt::class,
-        'gach_hoa_thong_gio_ct' => GachHoaThongGioCt::class,
-        'gach_trang_tri_ct' => GachTrangTriCt::class,
-        'gach_co_bat_trang_ct' => GachCoBatTrangCt::class,
-        'linh_vat_phong_thuy_ct' => LinhVatPhongThuyCt::class,
-        'phu_kien_ngoi_ct' => PhuKienNgoiCt::class,
-        'lan_can_gom_su_ct' => LanCanGomSuCt::class,
-        'den_vuon_gom_su_ct' => DenVuonGomSuCt::class,
-    ];
-
-    private const VARIANT_MODELS = [
-        'mau_sac_ngoi_hai_co_ct' => MauSacNgoiHaiCoCt::class,
-        'mau_sac_ngoi_hai_van_mieu_ct' => MauSacNgoiHaiVanMieuCt::class,
-        'phan_loai_phu_kien_ngoi_ct' => PhanLoaiPhuKienNgoiCt::class,
-        'phan_loai_lan_can_gom_su_ct' => PhanLoaiLanCanGomSuCt::class,
-        'phan_loai_den_vuon_gom_su_ct' => PhanLoaiDenVuonGomSuCt::class,
-    ];
-
     /** @return Collection<int, Model> */
     public function all(string $type, string $status = 'active', ?string $categoryType = null): Collection
     {
@@ -301,7 +265,7 @@ class UnifiedProductCatalog
     {
         $type = $product->type_key;
         $config = ProductTypeRegistry::get($type);
-        $legacyClass = self::LEGACY_MODELS[$type];
+        $legacyClass = $config['model'];
         $legacyId = $product->legacyIds->firstWhere('source_table', $type)?->source_id;
         $default = $product->variants->firstWhere('is_default', true);
         $images = $product->media->map(function ($item) {
@@ -341,7 +305,7 @@ class UnifiedProductCatalog
         $legacy->exists = true;
 
         if ($config['variant_table']) {
-            $variantClass = self::VARIANT_MODELS[$config['variant_table']];
+            $variantClass = $config['variant_model'];
             $variants = $product->variants->where('is_default', false)->map(function ($variant) use ($product, $config, $variantClass) {
                 $legacyId = $variant->legacyIds->firstWhere('source_table', $config['variant_table'])?->source_id;
                 $record = new $variantClass;

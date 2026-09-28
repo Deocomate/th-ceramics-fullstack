@@ -3,15 +3,11 @@
 namespace App\Services;
 
 use App\Models\DenVuonGomSuCt;
-use App\Models\GachCoBatTrangCt;
-use App\Models\GachHoaThongGioCt;
-use App\Models\GachTrangTriCt;
 use App\Models\LanCanGomSuCt;
-use App\Models\LinhVatPhongThuyCt;
-use App\Models\NgoiAmDuongCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\PhuKienNgoiCt;
+use App\Products\ProductTypeRegistry;
 use App\Support\AssetPath;
 use App\Support\ProductGallery;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,83 +21,25 @@ class ProductCopyService
      *
      * @var array<string, array{model: class-string<Model>, pk: string, label: string, has_code: bool, has_price: bool}>
      */
-    protected array $typeConfigs = [
-        'ngoi-am-duong-ct' => [
-            'model' => NgoiAmDuongCt::class,
-            'pk' => 'ngoi_am_duong_ct_id',
-            'label' => 'Ngói Âm Dương',
-            'has_code' => true,
-            'has_price' => true,
-        ],
-        'ngoi-hai-co-ct' => [
-            'model' => NgoiHaiCoCt::class,
-            'pk' => 'ngoi_hai_co_ct_id',
-            'label' => 'Ngói Hài Cổ',
-            'has_code' => false,
-            'has_price' => false,
-            'with' => ['mauSacs'],
-        ],
-        'ngoi-hai-van-mieu-ct' => [
-            'model' => NgoiHaiVanMieuCt::class,
-            'pk' => 'ngoi_hai_van_mieu_ct_id',
-            'label' => 'Ngói Hài Văn Miếu',
-            'has_code' => false,
-            'has_price' => false,
-            'with' => ['mauSacs'],
-        ],
-        'gach-hoa-thong-gio-ct' => [
-            'model' => GachHoaThongGioCt::class,
-            'pk' => 'gach_hoa_thong_gio_ct_id',
-            'label' => 'Gạch Hoa Thông Gió',
-            'has_code' => true,
-            'has_price' => true,
-        ],
-        'gach-trang-tri-ct' => [
-            'model' => GachTrangTriCt::class,
-            'pk' => 'gach_trang_tri_ct_id',
-            'label' => 'Gạch Trang Trí',
-            'has_code' => true,
-            'has_price' => true,
-        ],
-        'phu-kien-ngoi-ct' => [
-            'model' => PhuKienNgoiCt::class,
-            'pk' => 'phu_kien_ngoi_ct_id',
-            'label' => 'Phụ Kiện Ngói',
-            'has_code' => false,
-            'has_price' => false,
-            'with' => ['phanLoais'],
-        ],
-        'gach-co-bat-trang-ct' => [
-            'model' => GachCoBatTrangCt::class,
-            'pk' => 'gach_co_bat_trang_ct_id',
-            'label' => 'Gạch Cổ Bát Tràng',
-            'has_code' => true,
-            'has_price' => true,
-        ],
-        'linh-vat-phong-thuy-ct' => [
-            'model' => LinhVatPhongThuyCt::class,
-            'pk' => 'linh_vat_phong_thuy_ct_id',
-            'label' => 'Linh Vật Phong Thủy',
-            'has_code' => true,
-            'has_price' => true,
-        ],
-        'lan-can-gom-su-ct' => [
-            'model' => LanCanGomSuCt::class,
-            'pk' => 'lan_can_gom_su_ct_id',
-            'label' => 'Lan Can Gốm Sứ',
-            'has_code' => false,
-            'has_price' => false,
-            'with' => ['phanLoais'],
-        ],
-        'den-vuon-gom-su-ct' => [
-            'model' => DenVuonGomSuCt::class,
-            'pk' => 'den_vuon_gom_su_ct_id',
-            'label' => 'Đèn Vườn Gốm Sứ',
-            'has_code' => false,
-            'has_price' => false,
-            'with' => ['phanLoais'],
-        ],
-    ];
+    protected array $typeConfigs = [];
+
+    public function __construct()
+    {
+        foreach (ProductTypeRegistry::all() as $type => $product) {
+            $direct = $product['variant_table'] === null;
+            $config = [
+                'model' => $product['model'],
+                'pk' => $product['pk'],
+                'label' => $product['label'],
+                'has_code' => $direct,
+                'has_price' => $direct,
+            ];
+            if ($product['relation']) {
+                $config['with'] = [$product['relation']];
+            }
+            $this->typeConfigs[str_replace('_', '-', $type)] = $config;
+        }
+    }
 
     /**
      * Lấy danh sách các loại sản phẩm được hỗ trợ kèm nhãn
