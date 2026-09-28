@@ -2,7 +2,7 @@
 
 use App\Models\NgoiAmDuongCt;
 use App\Models\PhuKienNgoiCt;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 
 function createBulkRenameNgoiAmDuongProduct(string $code, string $name, bool $deleted = false): NgoiAmDuongCt
 {

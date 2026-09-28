@@ -2,7 +2,7 @@
 
 use App\Models\GachCoBatTrang;
 use App\Models\GachCoBatTrangCt;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 

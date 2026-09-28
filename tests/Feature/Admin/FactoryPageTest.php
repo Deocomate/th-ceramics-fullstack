@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\PageFactory;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;

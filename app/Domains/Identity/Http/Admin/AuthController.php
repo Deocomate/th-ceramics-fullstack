@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Domains\Identity\Http\Admin;
 
+use App\Domains\Identity\Services\AuthService;
 use App\Http\Controllers\Controller;
-use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;

@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <p class="text-2xl font-bold text-gray-800">
-                    {{ \App\Models\User::allAdmins()->count() }}
+                    {{ \App\Domains\Identity\Models\User::allAdmins()->count() }}
                 </p>
                 <a href="{{ route('admin.users.index') }}"
                     class="inline-flex items-center gap-1 text-xs mt-2 transition-colors duration-150"

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Domains\Identity\Services;
 
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 

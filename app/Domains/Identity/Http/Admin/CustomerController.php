@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Domains\Identity\Http\Admin;
 
+use App\Domains\Identity\Models\User;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\View\View;
 
 class CustomerController extends Controller
