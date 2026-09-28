@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Domains\Archive;
 
+use App\Services\ProductBackfillService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;

@@ -1,6 +1,6 @@
 <?php
 
-use App\Services\ContentArchiveService;
+use App\Domains\Archive\ContentArchiveService;
 use App\Services\ProductBackfillService;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;

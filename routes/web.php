@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\StagedImageUploadController;
 use App\Http\Controllers\Admin\CatalogController;
 use App\Http\Controllers\Admin\ConsultationRequestController;
-use App\Http\Controllers\Admin\ContentArchiveController;
+use App\Domains\Archive\Http\ContentArchiveController;
 use App\Http\Controllers\Admin\ContactPageController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CustomerController;

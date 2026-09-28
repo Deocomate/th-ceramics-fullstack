@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\ContentArchiveService;
+use App\Domains\Archive\ContentArchiveService;
 use Illuminate\Console\Command;
 use Throwable;
 

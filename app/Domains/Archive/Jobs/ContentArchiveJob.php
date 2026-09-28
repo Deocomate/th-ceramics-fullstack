@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Domains\Archive\Jobs;
 
-use App\Services\ContentArchiveService;
+use App\Domains\Archive\ContentArchiveService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Throwable;
