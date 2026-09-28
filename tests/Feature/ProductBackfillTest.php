@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\MauSacNgoiAmDuongCt;
 use App\Models\MauSacNgoiHaiCoCt;
 use App\Models\NgoiAmDuongCt;
 use App\Models\NgoiHaiCoCt;
@@ -96,4 +97,17 @@ it('resolves legacy cart identifiers through unified variants', function () {
     config()->set('product_catalog.shadow_write', true);
     $variant->update(['price' => 35000]);
     expect(app(CartService::class)->getProductDetails('ngoi_hai_co_ct', $parent->getKey(), $variant->getKey())['price'])->toBe(35000);
+});
+
+it('reports display color drift before switching reads', function () {
+    $color = MauSacNgoiAmDuongCt::query()->create(['name' => 'Đỏ', 'image' => 'assets/images/red.jpg']);
+    $service = app(ProductBackfillService::class);
+    $service->backfill();
+    expect($service->verify()['display_options']['mismatched'])->toBe([]);
+
+    DB::table('product_display_options')->where('legacy_id', $color->getKey())->update(['image' => 'assets/images/changed.jpg']);
+    expect($service->verify()['display_options']['mismatched'])->toBe([$color->getKey()]);
+    $this->artisan('products:backfill', ['--verify' => true])->assertExitCode(1);
+    $service->backfill();
+    $this->artisan('products:backfill', ['--verify' => true])->assertExitCode(0);
 });

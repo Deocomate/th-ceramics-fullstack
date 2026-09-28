@@ -122,6 +122,18 @@ class ProductBackfillService
             }, $config['pk']);
         }
 
+        $colors = DB::table('mau_sac_ngoi_am_duong_ct')->get();
+        $options = DB::table('product_display_options')->where('type_key', 'ngoi_am_duong_ct')->get()->keyBy('legacy_id');
+        $report['display_options'] = [
+            'legacy' => $colors->count(),
+            'unified' => $options->count(),
+            'mismatched' => $colors->filter(function ($color) use ($options) {
+                $option = $options->get($color->mau_sac_ngoi_am_duong_ct_id);
+
+                return ! $option || $option->name !== $color->name || $option->image !== $color->image;
+            })->pluck('mau_sac_ngoi_am_duong_ct_id')->values()->all(),
+        ];
+
         return $report;
     }
 
@@ -137,13 +149,20 @@ class ProductBackfillService
                 $issues[] = $field;
             }
         }
-        $expectedMedia = collect(ProductGallery::normalize($row->images ?? null))
+        $normalizedMedia = collect(ProductGallery::normalize($row->images ?? null))
             ->map(fn ($item) => [$item['type'] === ProductGallery::TYPE_VIDEO ? 'video' : 'image', $item['path'] ?? $item['url'] ?? null])
-            ->filter(fn ($item) => is_string($item[1]) && $item[1] !== '')->values()->all();
+            ->filter(fn ($item) => is_string($item[1]) && $item[1] !== '');
+        $expectedMedia = $normalizedMedia->values()->all();
         $actualMedia = DB::table('product_media')->where('product_id', $product->id)
             ->orderBy('sort_order')->get(['kind', 'path'])->map(fn ($item) => [$item->kind, $item->path])->all();
         if ($expectedMedia !== $actualMedia) {
             $issues[] = 'media';
+        }
+        $expectedCover = $normalizedMedia->search(fn ($item) => $item[0] === 'image');
+        $actualCover = DB::table('product_media')->where('product_id', $product->id)
+            ->where('is_cover', true)->value('sort_order');
+        if (($expectedCover === false ? null : $expectedCover) !== ($actualCover === null ? null : (int) $actualCover)) {
+            $issues[] = 'cover';
         }
         $table = $config['variant_table'];
         $expectedVariants = $table === null ? collect() : DB::table($table)
@@ -160,6 +179,7 @@ class ProductBackfillService
             if (! $mapped || $mapped->name !== $variant->name
                 || (string) $mapped->sku !== (string) ($variant->code ?? null)
                 || (string) $mapped->price !== (string) ($variant->price ?? null)
+                || (string) $mapped->image !== (string) ($variant->image ?? null)
                 || (bool) $mapped->is_delete !== (bool) ($variant->is_delete ?? false)) {
                 $issues[] = 'variants';
                 break;
@@ -305,6 +325,7 @@ class ProductBackfillService
                     }
                     if (isset($seen[$normalized])) {
                         $duplicates[] = ['sku' => (string) $sku, 'first' => $seen[$normalized], 'second' => $table];
+
                         continue;
                     }
                     $seen[$normalized] = $table;
