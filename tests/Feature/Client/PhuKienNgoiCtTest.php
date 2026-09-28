@@ -2,6 +2,7 @@
 
 use App\Models\PhanLoaiPhuKienNgoiCt;
 use App\Models\PhuKienNgoiCt;
+use App\Services\ProductBackfillService;
 
 test('phu kien detail routes only render products from the matching category', function () {
     $boNoc = PhuKienNgoiCt::query()->create([
@@ -67,4 +68,20 @@ test('cart accepts active phu kien variants and rejects inactive variants', func
         'qty' => 1,
     ])->assertUnprocessable()
         ->assertJsonPath('status', 'error');
+});
+
+test('legacy accessory URL resolves from the unified catalog', function () {
+    $product = PhuKienNgoiCt::query()->create([
+        'name' => 'Phụ kiện URL cũ',
+        'category_type' => PhuKienNgoiCt::TYPE_CHU_VAN,
+        'legacy_type' => PhuKienNgoiCt::TYPE_CHU_VAN,
+        'legacy_id' => 901,
+        'images' => [],
+        'is_delete' => 0,
+    ]);
+    app(ProductBackfillService::class)->backfill();
+    config()->set('product_catalog.read_unified', true);
+
+    $this->get(route('client.products.phu-kien-ngoi.detail', ['id' => 901, 'type' => 'chu_van']))
+        ->assertRedirect(route('client.products.phu-kien-ngoi.bo-noc-chu-van.detail', $product->getKey()));
 });

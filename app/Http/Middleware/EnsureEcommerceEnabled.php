@@ -2,27 +2,16 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\TrangChu;
+use App\Providers\AppServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureEcommerceEnabled
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $enabled = true;
-
-        if (Schema::hasTable('trang_chu') && Schema::hasColumn('trang_chu', 'is_ecommerce_enabled')) {
-            $enabled = Cache::rememberForever(
-                'site_ecommerce_enabled',
-                static fn () => (bool) (TrangChu::query()->value('is_ecommerce_enabled') ?? true),
-            );
-        }
-
-        if (! $enabled) {
+        if (! AppServiceProvider::resolveIsEcommerceEnabled()) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'status' => 'error',

@@ -40,5 +40,6 @@ Chỉ xóa bảng và code cũ trong một đợt riêng sau khi thử nhập l�
 - Xuất ZIP schema `hybrid`, xem trước trên schema không có nội dung: 2.445 bản ghi cần thêm, 0 xung đột, 0 media thiếu. Sau nhập và chạy lại, cả 2.445 bản ghi được nhận diện là không đổi.
 - Phục hồi `database.sql` trên một schema MySQL 8.4 thử nghiệm cùng phiên bản: số bản ghi của cả 58 bảng trong manifest khớp; đối soát product vẫn đạt 174/174. Cần thử riêng trên MariaDB trước khi phát hành.
 - Bộ kiểm thử archive trên nhánh refactor: 12 bài qua. Lần chạy toàn bộ trước thay đổi nhỏ về định dạng JSON: 273 bài qua, 3 bài lỗi giao diện cũng xuất hiện trên `main` (`NewsPageTest` và `NgoiAmDuongDetailViewTest`).
+- Đo một request trên bản sao cục bộ 174 sản phẩm sau khi bỏ truy vấn cấu hình lặp trong mỗi view: danh sách Ngói Âm Dương 11 truy vấn (nguồn cũ) / 16 (nguồn mới), chi tiết 13 / 21, tìm kiếm nhanh 15 / 7. Số truy vấn bổ sung của nguồn mới là các truy vấn tải quan hệ cố định; không thấy truy vấn lặp theo từng sản phẩm trong ba luồng đo. Thời gian tương ứng trên bộ dữ liệu nhỏ: danh sách 64,7 / 74 ms, chi tiết 77,3 / 86,9 ms, tìm kiếm 42,2 / 38,4 ms. Cần đo lại với dữ liệu và hạ tầng gần sản xuất trước khi đổi nguồn đọc.
 
 Các schema thử nghiệm và ZIP thử đã được xóa sau khi đối soát. Hai migration mới vẫn ở trạng thái chưa chạy trên database gốc.

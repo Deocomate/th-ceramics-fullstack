@@ -28,14 +28,21 @@ class AppServiceProvider extends ServiceProvider
 
     public static function resolveIsEcommerceEnabled(): bool
     {
-        if (! Schema::hasTable('trang_chu') || ! Schema::hasColumn('trang_chu', 'is_ecommerce_enabled')) {
-            return true;
+        $request = app()->bound('request') ? request() : null;
+        if ($request?->attributes->has('site_ecommerce_enabled')) {
+            return (bool) $request->attributes->get('site_ecommerce_enabled');
         }
 
-        return (bool) Cache::rememberForever(
-            'site_ecommerce_enabled',
-            static fn () => (bool) (TrangChu::query()->value('is_ecommerce_enabled') ?? true),
-        );
+        $enabled = true;
+        if (Schema::hasTable('trang_chu') && Schema::hasColumn('trang_chu', 'is_ecommerce_enabled')) {
+            $enabled = (bool) Cache::rememberForever(
+                'site_ecommerce_enabled',
+                static fn () => (bool) (TrangChu::query()->value('is_ecommerce_enabled') ?? true),
+            );
+        }
+        $request?->attributes->set('site_ecommerce_enabled', $enabled);
+
+        return $enabled;
     }
 
     /**

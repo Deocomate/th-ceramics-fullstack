@@ -45,6 +45,20 @@ class UnifiedProductCatalog
         return $this->project($product);
     }
 
+    public function findByLegacyReference(string $type, int $legacyReference, string $categoryType): ?Model
+    {
+        $product = Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])
+            ->where('type_key', $type)
+            ->where('category_type', $categoryType)
+            ->where(function ($query) use ($type, $legacyReference) {
+                $query->where('legacy_id', $legacyReference)
+                    ->orWhereHas('legacyIds', fn ($ids) => $ids->where('source_table', $type)
+                        ->where('source_id', $legacyReference));
+            })->first();
+
+        return $product ? $this->project($product) : null;
+    }
+
     public function paginate(string $type, array $filters, int $perPage = 8, ?string $categoryType = null, string $pageName = 'page'): LengthAwarePaginator
     {
         $query = Product::query()
