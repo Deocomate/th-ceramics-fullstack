@@ -75,6 +75,30 @@ it('preserves destination media when a path has different bytes', function () {
     }
 });
 
+it('includes media embedded in HTML and rewrites a conflicting reference', function () {
+    Storage::disk('public')->put('uploads/manual.pdf', 'source PDF');
+    DB::table('archive_test_items')->insert([
+        'id' => 9, 'name' => 'Catalog link',
+        'image' => '<a href="/storage/uploads/manual.pdf">PDF</a>',
+        'created_at' => '2026-01-01 00:00:00', 'updated_at' => '2026-01-01 00:00:00',
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        $zip = new ZipArchive;
+        $zip->open($path);
+        expect($zip->getFromName('media/storage/uploads/manual.pdf'))->toBe('source PDF');
+        $zip->close();
+        DB::table('archive_test_items')->delete();
+        Storage::disk('public')->put('uploads/manual.pdf', 'destination PDF');
+        expect($archive->import($path)['added'])->toBe(1);
+        expect(DB::table('archive_test_items')->value('image'))
+            ->toContain('/storage/imports/'.hash('sha256', 'source PDF').'/manual.pdf');
+    } finally {
+        @unlink($path);
+    }
+});
+
 it('keeps business and identity tables outside the content allowlist', function () {
     $excluded = config('content_archive.excluded_tables');
     $tables = config('content_archive.tables');
