@@ -28,7 +28,17 @@
                     @if (! empty($preview['conflicts']))
                         <details class="text-amber-800"><summary>Xem các bản ghi xung đột (tối đa 100)</summary>
                             <ul class="list-disc pl-5">@foreach ($preview['conflicts'] as $conflict)
-                                <li>{{ $conflict['table'] }} #{{ $conflict['id'] }}: {{ $conflict['reason'] === 'destination_newer' ? 'Bản đích mới hơn' : 'Trùng ID từ nguồn khác' }}</li>
+                                <li>{{ $conflict['table'] }} #{{ $conflict['id'] }}:
+                                    {{ match ($conflict['reason']) {
+                                        'destination_newer' => 'Bản đích mới hơn',
+                                        'different_source_same_id' => 'Trùng ID từ nguồn khác',
+                                        'unmapped_parent' => 'Bản ghi cha bị xung đột hoặc chưa được nhập',
+                                        'unmapped_legacy_record' => 'Bản ghi gốc bị xung đột',
+                                        'duplicate_slug' => 'Slug đã thuộc bản ghi khác',
+                                        'duplicate_sku', 'duplicate_code' => 'Mã hàng đã thuộc bản ghi khác',
+                                        default => 'Xung đột dữ liệu',
+                                    } }}
+                                </li>
                             @endforeach</ul>
                         </details>
                     @endif
