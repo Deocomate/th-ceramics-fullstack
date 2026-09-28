@@ -294,3 +294,25 @@ it('reports a matching code at a different destination ID before import', functi
         @unlink($path);
     }
 });
+
+it('rejects a modified archive and an archive over its configured size limit', function () {
+    DB::table('archive_test_items')->insert([
+        'id' => 30, 'name' => 'Original', 'created_at' => now(), 'updated_at' => now(),
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        config()->set('content_archive.max_uncompressed_bytes', 1);
+        expect(fn () => $archive->preview($path))->toThrow(RuntimeException::class);
+        config()->set('content_archive.max_uncompressed_bytes', 20_000_000_000);
+
+        $zip = new ZipArchive;
+        $zip->open($path);
+        $data = $zip->getFromName('data/archive_test_items.ndjson');
+        $zip->addFromString('data/archive_test_items.ndjson', str_replace('Original', 'Modified', $data));
+        $zip->close();
+        expect(fn () => $archive->preview($path))->toThrow(RuntimeException::class, 'Checksum không khớp');
+    } finally {
+        @unlink($path);
+    }
+});
