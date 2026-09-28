@@ -16,6 +16,8 @@ class ContentArchiveService
 
     private array $foreignKeys = [];
 
+    private array $tableColumns = [];
+
     private ?string $cachedSourceId = null;
 
     public function directory(): string
@@ -351,6 +353,16 @@ class ContentArchiveService
         $existing = DB::table($table)->where($key, $targetId)->first();
         if ($existing && ! $mapping && $sourceId !== $this->sourceId()) {
             return ['conflict', 'different_source_same_id', $targetId, $row];
+        }
+        $columns = $this->tableColumns[$table] ??= Schema::getColumnListing($table);
+        foreach (['slug', 'sku', 'code'] as $naturalKey) {
+            if (! in_array($naturalKey, $columns, true) || empty($row[$naturalKey])) {
+                continue;
+            }
+            if (DB::table($table)->where($naturalKey, $row[$naturalKey])
+                ->where($key, '!=', $targetId)->exists()) {
+                return ['conflict', 'duplicate_'.$naturalKey, $targetId, $row];
+            }
         }
         if (! $existing) {
             return ['add', null, $targetId, $row];

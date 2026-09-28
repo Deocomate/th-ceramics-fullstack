@@ -170,3 +170,34 @@ it('does not attach an external child to a different local parent with the same 
         Schema::dropIfExists('archive_test_parents');
     }
 });
+
+it('reports a matching code at a different destination ID before import', function () {
+    Schema::table('archive_test_items', fn (Blueprint $table) => $table->string('code')->nullable());
+    DB::table('archive_test_items')->insert([
+        'id' => 20, 'name' => 'Source', 'code' => 'SAME-CODE',
+        'created_at' => now(), 'updated_at' => now(),
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        $zip = new ZipArchive;
+        $zip->open($path);
+        $manifest = json_decode($zip->getFromName('manifest.json'), true);
+        $manifest['source_id'] = '66dfe10d-8f35-4d10-88ed-fc66c7acaf4e';
+        $zip->addFromString('manifest.json', json_encode($manifest));
+        $zip->close();
+        DB::table('archive_test_items')->delete();
+        DB::table('archive_test_items')->insert([
+            'id' => 21, 'name' => 'Destination', 'code' => 'SAME-CODE',
+            'created_at' => now(), 'updated_at' => now(),
+        ]);
+
+        $report = $archive->preview($path);
+        expect($report['conflict'])->toBe(1);
+        expect($report['conflicts'][0]['reason'])->toBe('duplicate_code');
+        expect($archive->import($path)['skipped'])->toBe(1);
+        expect(DB::table('archive_test_items')->count())->toBe(1);
+    } finally {
+        @unlink($path);
+    }
+});
