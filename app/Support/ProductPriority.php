@@ -2,34 +2,32 @@
 
 namespace App\Support;
 
+use App\Products\ProductTypeRegistry;
+use App\Services\ProductBackfillService;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ProductPriority
 {
-    /** @var array<string, array{table: string, key: string, category: ?string}> */
-    private const GROUPS = [
-        'ngoi-am-duong-ct' => ['table' => 'ngoi_am_duong_ct', 'key' => 'ngoi_am_duong_ct_id', 'category' => null],
-        'ngoi-hai-co-ct' => ['table' => 'ngoi_hai_co_ct', 'key' => 'ngoi_hai_co_ct_id', 'category' => null],
-        'ngoi-hai-van-mieu-ct' => ['table' => 'ngoi_hai_van_mieu_ct', 'key' => 'ngoi_hai_van_mieu_ct_id', 'category' => null],
-        'gach-hoa-thong-gio-ct' => ['table' => 'gach_hoa_thong_gio_ct', 'key' => 'gach_hoa_thong_gio_ct_id', 'category' => null],
-        'gach-trang-tri-ct' => ['table' => 'gach_trang_tri_ct', 'key' => 'gach_trang_tri_ct_id', 'category' => null],
-        'gach-co-bat-trang-ct' => ['table' => 'gach_co_bat_trang_ct', 'key' => 'gach_co_bat_trang_ct_id', 'category' => 'category_type'],
-        'linh-vat-phong-thuy-ct' => ['table' => 'linh_vat_phong_thuy_ct', 'key' => 'linh_vat_phong_thuy_ct_id', 'category' => null],
-        'phu-kien-ngoi-ct' => ['table' => 'phu_kien_ngoi_ct', 'key' => 'phu_kien_ngoi_ct_id', 'category' => 'category_type'],
-        'lan-can-gom-su-ct' => ['table' => 'lan_can_gom_su_ct', 'key' => 'lan_can_gom_su_ct_id', 'category' => null],
-        'den-vuon-gom-su-ct' => ['table' => 'den_vuon_gom_su_ct', 'key' => 'den_vuon_gom_su_ct_id', 'category' => 'category_type'],
-    ];
-
     public static function groups(): array
     {
-        return self::GROUPS;
+        $groups = [];
+        foreach (ProductTypeRegistry::all() as $table => $config) {
+            $groups[str_replace('_', '-', $table)] = [
+                'table' => $table,
+                'key' => $config['pk'],
+                'category' => in_array($table, ['gach_co_bat_trang_ct', 'phu_kien_ngoi_ct', 'den_vuon_gom_su_ct'], true)
+                    ? 'category_type' : null,
+            ];
+        }
+
+        return $groups;
     }
 
     public static function reorder(string $type, array $ids, ?string $categoryType = null): void
     {
-        $group = self::GROUPS[$type] ?? null;
+        $group = self::groups()[$type] ?? null;
 
         if ($group === null || count($ids) !== count(array_unique($ids))) {
             throw ValidationException::withMessages(['ids' => 'Danh sách thứ tự sản phẩm không hợp lệ.']);
@@ -56,7 +54,7 @@ class ProductPriority
                     ->where('is_delete', 0)
                     ->update(['priority' => count($normalizedIds) - $index]);
                 if (config('product_catalog.shadow_write')) {
-                    app(\App\Services\ProductBackfillService::class)->sync($group['table'], $id);
+                    app(ProductBackfillService::class)->sync($group['table'], $id);
                 }
             }
         });
