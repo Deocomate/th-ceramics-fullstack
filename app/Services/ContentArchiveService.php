@@ -34,11 +34,26 @@ class ContentArchiveService
             return $this->cachedSourceId;
         }
         $path = $this->directory().DIRECTORY_SEPARATOR.'source-id';
-        if (! is_file($path)) {
-            file_put_contents($path, (string) Str::uuid(), LOCK_EX);
+        $handle = fopen($path, 'c+');
+        if ($handle === false || ! flock($handle, LOCK_EX)) {
+            throw new RuntimeException('Không thể khóa định danh nguồn của bản xuất.');
         }
+        try {
+            rewind($handle);
+            $id = trim((string) stream_get_contents($handle));
+            if ($id === '') {
+                $id = (string) Str::uuid();
+                rewind($handle);
+                ftruncate($handle, 0);
+                fwrite($handle, $id);
+                fflush($handle);
+            }
 
-        return $this->cachedSourceId = trim((string) file_get_contents($path));
+            return $this->cachedSourceId = $id;
+        } finally {
+            flock($handle, LOCK_UN);
+            fclose($handle);
+        }
     }
 
     /** @return list<string> */
@@ -480,7 +495,9 @@ class ContentArchiveService
         if ($target === null) {
             return $reference;
         }
-        $newPath = '/storage/'.$target;
+        $suffix = (isset($parsed['query']) ? '?'.$parsed['query'] : '')
+            .(isset($parsed['fragment']) ? '#'.$parsed['fragment'] : '');
+        $newPath = '/storage/'.$target.$suffix;
         if (isset($parsed['host'])) {
             $base = parse_url((string) config('app.url'));
             if ($parsed['host'] !== ($base['host'] ?? null)) {
@@ -532,6 +549,7 @@ class ContentArchiveService
                 $path = ltrim((string) ($url['path'] ?? ''), '/');
             }
         }
+        $path = (string) (parse_url($path, PHP_URL_PATH) ?: $path);
         if (str_starts_with($path, 'assets/') || str_starts_with($path, 'storage/')) {
             if (str_contains('/'.$path, '/../')) {
                 throw new RuntimeException('Đường dẫn media không an toàn.');
