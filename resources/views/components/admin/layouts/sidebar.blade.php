@@ -24,6 +24,10 @@
             Tổng quan
         </a>
 
+        @if (auth()->user()->isSuperAdmin())
+            <a href="{{ route('admin.content-archive.index') }}" class="block px-3 py-2.5 rounded-lg text-[13px] font-medium {{ request()->routeIs('admin.content-archive.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">Sao lưu nội dung</a>
+        @endif
+
         <!-- ================= BÁN HÀNG ================= -->
         <div class="pt-4 pb-1">
             <p class="px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500">Quản lý bán hàng</p>
