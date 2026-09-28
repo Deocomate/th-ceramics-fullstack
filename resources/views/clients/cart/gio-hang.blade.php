@@ -1,4 +1,4 @@
-@inject('cartService', 'App\Services\CartService')
+@inject('cartService', 'App\Domains\Commerce\Services\CartService')
 @php
     $subtotal = collect($cartItems)->sum(fn($item) => $item['price'] * $item['quantity']);
     $currentCoupon = $cartService->getCouponCode();

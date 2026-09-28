@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Domains\Commerce\Http\Admin;
 
+use App\Domains\Commerce\Models\ConsultationRequest;
 use App\Http\Controllers\Controller;
-use App\Models\ConsultationRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;

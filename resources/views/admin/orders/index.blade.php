@@ -46,7 +46,7 @@
                                     'returned' => 'bg-orange-100 text-orange-800',
                                     default => 'bg-gray-100 text-gray-800',
                                 } }}">
-                                    {{ \App\Models\Order::statusLabel($order->status) }}
+                                    {{ \App\Domains\Commerce\Models\Order::statusLabel($order->status) }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-gray-500 text-xs uppercase">

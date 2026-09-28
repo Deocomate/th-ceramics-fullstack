@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Domains\Commerce\Services;
 
+use App\Domains\Commerce\Models\Coupon;
 use App\Helpers\FileUploadHelper;
-use App\Models\Coupon;
 use Illuminate\Http\UploadedFile;
 
 class CouponService

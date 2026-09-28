@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\OrderItem;
+use App\Domains\Commerce\Models\OrderItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class OrderItemFactory extends Factory
 {
+    protected $model = OrderItem::class;
+
     public function definition(): array
     {
         $price = fake()->numberBetween(5000, 500000);

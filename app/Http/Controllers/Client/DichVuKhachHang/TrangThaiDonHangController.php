@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client\DichVuKhachHang;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
+use App\Domains\Commerce\Models\Order;
 use Illuminate\View\View;
 
 class TrangThaiDonHangController extends Controller

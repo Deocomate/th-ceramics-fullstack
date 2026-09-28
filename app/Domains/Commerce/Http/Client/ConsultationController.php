@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Client;
+namespace App\Domains\Commerce\Http\Client;
 
+use App\Domains\Commerce\Models\ConsultationRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\StoreConsultationRequest;
 use App\Mail\ConsultationConfirmationMail;
 use App\Mail\ConsultationRequestedMail;
-use App\Models\ConsultationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Mail;
 

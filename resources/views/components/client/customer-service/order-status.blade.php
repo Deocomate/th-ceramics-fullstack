@@ -131,7 +131,7 @@
         <div class="flex items-center gap-3">
           <span class="text-secondary font-bold text-sm lg:text-base">{{ $order->order_code }}</span>
           <span class="text-[10px] lg:text-xs font-bold px-3 py-1 rounded-full uppercase {{ $badgeClass }}">
-            {{ \App\Models\Order::statusLabel($order->status) }}
+            {{ \App\Domains\Commerce\Models\Order::statusLabel($order->status) }}
           </span>
         </div>
         <div class="text-primary/60 text-[12px] lg:text-sm font-semibold">{{ $order->created_at->format('d/m/Y - H:i') }}</div>

@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Admin\ConsultationRequestController;
-use App\Http\Controllers\Admin\CouponController;
-use App\Http\Controllers\Admin\OrderController;
+use App\Domains\Commerce\Http\Admin\ConsultationRequestController;
+use App\Domains\Commerce\Http\Admin\CouponController;
+use App\Domains\Commerce\Http\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
 
 // ── Quản lý mã giảm giá ──────────────────────────────────────────

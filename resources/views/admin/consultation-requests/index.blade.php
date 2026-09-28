@@ -55,7 +55,7 @@
                             </td>
                             <td class="px-4 py-3">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold {{ $request->status === 'processed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                    {{ \App\Models\ConsultationRequest::statusLabel($request->status) }}
+                                    {{ \App\Domains\Commerce\Models\ConsultationRequest::statusLabel($request->status) }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-right">

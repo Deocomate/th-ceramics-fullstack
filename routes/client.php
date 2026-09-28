@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Client\AboutController;
 use App\Domains\Identity\Http\Client\AuthController;
-use App\Http\Controllers\Client\CartController;
-use App\Http\Controllers\Client\ConsultationController;
+use App\Domains\Commerce\Http\Client\CartController;
+use App\Domains\Commerce\Http\Client\ConsultationController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\CustomerServiceController;
 use App\Http\Controllers\Client\DichVuKhachHang\BaoMatThongTinController;

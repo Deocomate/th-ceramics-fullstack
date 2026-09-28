@@ -2,7 +2,7 @@
 
 use App\Mail\ConsultationConfirmationMail;
 use App\Mail\ConsultationRequestedMail;
-use App\Models\ConsultationRequest;
+use App\Domains\Commerce\Models\ConsultationRequest;
 use Illuminate\Support\Facades\Mail;
 
 test('consultation submit saves record and queues admin mail', function () {
