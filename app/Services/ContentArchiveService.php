@@ -267,7 +267,8 @@ class ContentArchiveService
             throw new RuntimeException('ZIP không hợp lệ.');
         }
         try {
-            if ($zip->numFiles > 10000 || ($zip->statName('manifest.json')['size'] ?? PHP_INT_MAX) > 1_000_000) {
+            if ($zip->numFiles > config('content_archive.max_files')
+                || ($zip->statName('manifest.json')['size'] ?? PHP_INT_MAX) > 20_000_000) {
                 throw new RuntimeException('ZIP có quá nhiều file hoặc manifest quá lớn.');
             }
             $raw = $zip->getFromName('manifest.json');
