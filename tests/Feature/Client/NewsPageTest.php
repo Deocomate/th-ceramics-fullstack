@@ -60,11 +60,14 @@ test('news index groups newest articles by visible categories', function () {
         ->assertSee('Cam nang xay dung')
         ->assertSee('Bai moi nhat')
         ->assertSee('Bai moi thu hai')
-        ->assertDontSee('Bai cu thu ba')
         ->assertDontSee($emptyCategory->ten_danh_muc)
         ->assertDontSee($deletedCategory->ten_danh_muc)
         ->assertDontSee('Tin tức mới nhất')
         ->assertDontSee('Tất cả');
+
+    $categories = $response->viewData('categoriesWithNews');
+    expect($categories->pluck('ten_danh_muc')->all())->toBe(['Cam nang xay dung']);
+    expect($categories->first()->tinTucs->pluck('tieu_de')->all())->toBe(['Bai moi nhat', 'Bai moi thu hai']);
 });
 
 test('news category page paginates only articles in selected category', function () {
@@ -91,8 +94,9 @@ test('news category page paginates only articles in selected category', function
     $response
         ->assertOk()
         ->assertSee('Cong trinh du an')
-        ->assertSee('Bai trong category')
-        ->assertDontSee('Bai category khac');
+        ->assertSee('Bai trong category');
+
+    expect(collect($response->viewData('news')->items())->pluck('tieu_de')->all())->toBe(['Bai trong category']);
 });
 
 test('news category pagination uses custom pagination and preserves query string', function () {
