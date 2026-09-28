@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\NgoiHaiVanMieu;
 use App\Services\DinhMucNgoiHaiCoService;
 use App\Services\DinhMucNgoiHaiVanMieuService;
-use App\Services\GiaTriVuotTroiService;
+use App\Domains\Content\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiHaiVanMieuCtService;
 use App\Services\NgoiHaiCoCtService;
 use App\Services\NgoiHaiVanMieuCtService;

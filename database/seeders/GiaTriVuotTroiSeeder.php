@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\GiaTriVuotTroi;
+use App\Domains\Content\Models\GiaTriVuotTroi;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 

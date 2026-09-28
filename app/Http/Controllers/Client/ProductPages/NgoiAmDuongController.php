@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Client\ProductPages;
 use App\Http\Controllers\Controller;
 use App\Models\NgoiAmDuong;
 use App\Services\DinhMucNgoiAmDuongService;
-use App\Services\GiaTriVuotTroiService;
+use App\Domains\Content\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiAmDuongCtService;
 use App\Services\NgoiAmDuongCtService;
 use App\Services\NgoiAmDuongService;

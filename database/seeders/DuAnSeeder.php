@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\DanhMucDuAn;
-use App\Models\DuAn;
+use App\Domains\Content\Models\DanhMucDuAn;
+use App\Domains\Content\Models\DuAn;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;

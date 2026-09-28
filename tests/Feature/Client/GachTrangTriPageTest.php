@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\DanhMucDuAn;
-use App\Models\DuAn;
+use App\Domains\Content\Models\DanhMucDuAn;
+use App\Domains\Content\Models\DuAn;
 use App\Models\GachTrangTri;
 use App\Models\GachTrangTriCt;
 

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Faq;
-use App\Models\PageFaq;
+use App\Domains\Content\Models\Faq;
+use App\Domains\Content\Models\PageFaq;
 use App\Domains\Identity\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

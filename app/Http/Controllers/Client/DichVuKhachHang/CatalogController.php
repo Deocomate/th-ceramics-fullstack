@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client\DichVuKhachHang;
 
 use App\Http\Controllers\Controller;
-use App\Models\Catalog;
+use App\Domains\Content\Models\Catalog;
 
 class CatalogController extends Controller
 {

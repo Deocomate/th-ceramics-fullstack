@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\PageFactory;
+use App\Domains\Content\Models\PageFactory;
 use App\Domains\Identity\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;

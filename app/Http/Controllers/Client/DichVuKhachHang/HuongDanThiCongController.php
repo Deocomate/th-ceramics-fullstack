@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client\DichVuKhachHang;
 
 use App\Http\Controllers\Controller;
-use App\Models\ThiCong;
+use App\Domains\Content\Models\ThiCong;
 
 class HuongDanThiCongController extends Controller
 {

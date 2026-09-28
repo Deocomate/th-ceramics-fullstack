@@ -1,7 +1,7 @@
 @props(['awards' => null])
 
 @php
-    $awardItems = collect($awards ?? \App\Models\GiaiThuongThanhTuu::latest()->get())->values();
+    $awardItems = collect($awards ?? \App\Domains\Content\Models\GiaiThuongThanhTuu::latest()->get())->values();
     $renderAwards = collect($awardItems->all());
 
     while ($renderAwards->count() > 0 && $renderAwards->count() < 12) {

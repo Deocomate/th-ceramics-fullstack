@@ -2,8 +2,8 @@
 
 use App\Models\LinhVatPhongThuy;
 use App\Models\LinhVatPhongThuyCt;
-use App\Models\TrangChu;
-use App\Services\TrangChuService;
+use App\Domains\Content\Models\TrangChu;
+use App\Domains\Content\Services\TrangChuService;
 use Illuminate\Support\Facades\Cache;
 
 function ensureTrangChuRecord(): TrangChu

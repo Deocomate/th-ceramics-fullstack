@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Models\DuAn;
+use App\Domains\Content\Models\DuAn;
 use App\Models\GachHoaThongGioAnh;
 use App\Models\GiaTriGachHoaThongGio;
 use App\Models\NgoiAmDuongCt;
-use App\Models\TrangChu;
-use App\Models\TrangDuAn;
-use App\Models\VeChungToi;
+use App\Domains\Content\Models\TrangChu;
+use App\Domains\Content\Models\TrangDuAn;
+use App\Domains\Content\Models\VeChungToi;
 use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function () {

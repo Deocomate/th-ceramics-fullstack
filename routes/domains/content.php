@@ -1,17 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin\CatalogController;
-use App\Http\Controllers\Admin\ContactPageController;
-use App\Http\Controllers\Admin\DanhMucDuAnController;
-use App\Http\Controllers\Admin\DanhMucTinTucController;
-use App\Http\Controllers\Admin\DuAnController;
-use App\Http\Controllers\Admin\FactoryPageController;
-use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\FaqPageController;
-use App\Http\Controllers\Admin\ThiCongController;
-use App\Http\Controllers\Admin\TinTucController;
-use App\Http\Controllers\Admin\TrangDuAnController;
-use App\Http\Controllers\Admin\VeChungToiController;
+use App\Domains\Content\Http\Admin\CatalogController;
+use App\Domains\Content\Http\Admin\ContactPageController;
+use App\Domains\Content\Http\Admin\DanhMucDuAnController;
+use App\Domains\Content\Http\Admin\DanhMucTinTucController;
+use App\Domains\Content\Http\Admin\DuAnController;
+use App\Domains\Content\Http\Admin\FactoryPageController;
+use App\Domains\Content\Http\Admin\FaqController;
+use App\Domains\Content\Http\Admin\FaqPageController;
+use App\Domains\Content\Http\Admin\ThiCongController;
+use App\Domains\Content\Http\Admin\TinTucController;
+use App\Domains\Content\Http\Admin\TrangDuAnController;
+use App\Domains\Content\Http\Admin\VeChungToiController;
 use Illuminate\Support\Facades\Route;
 
 // ── Page Configuration: single-page config panels ──────────────────────

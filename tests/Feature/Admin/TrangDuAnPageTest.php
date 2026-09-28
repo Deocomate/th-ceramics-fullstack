@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\TrangDuAn;
+use App\Domains\Content\Models\TrangDuAn;
 use App\Domains\Identity\Models\User;
 
 test('admin can access trang du an config page', function () {

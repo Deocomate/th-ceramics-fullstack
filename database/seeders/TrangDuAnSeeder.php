@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\TrangDuAn;
+use App\Domains\Content\Models\TrangDuAn;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 
