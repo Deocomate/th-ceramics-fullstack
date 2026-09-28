@@ -26,8 +26,8 @@ test('ngoi am duong detail renders local calculator applications and installatio
     $this->get(route('client.products.ngoi-am-duong.detail', $product->ngoi_am_duong_ct_id))
         ->assertOk()
         ->assertSee('data-weight-calculator', false)
-        ->assertSee('ỨNG DỤNG ĐA DẠNG')
-        ->assertSee('HƯỚNG DẪN LẮP ĐẶT');
+        ->assertSee('ỐP MÁI')
+        ->assertSee('MÁI BÊ TÔNG');
 });
 
 test('ngoi am duong detail main gallery has no box shadow or border', function () {
