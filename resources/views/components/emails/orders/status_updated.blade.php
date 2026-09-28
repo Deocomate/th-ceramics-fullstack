@@ -5,7 +5,7 @@ Xin chào **{{ $order->customer_name }}**,
 
 Đơn hàng **{{ $order->order_code }}** của bạn đã được cập nhật sang trạng thái:
 
-## {{ \App\Models\Order::statusLabel($order->status) }}
+## {{ \App\Domains\Commerce\Models\Order::statusLabel($order->status) }}
 
 ---
 

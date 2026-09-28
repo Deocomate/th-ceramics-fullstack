@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Domains\Commerce\Services;
 
+use App\Domains\Catalog\ProductTypeRegistry;
 use App\Models\DenGomSu;
 use App\Models\DenVuonGomSuCt;
 use App\Models\GachCoBatTrangCt;
@@ -20,7 +21,8 @@ use App\Models\PhanLoaiDenVuonGomSuCt;
 use App\Models\PhanLoaiLanCanGomSuCt;
 use App\Models\PhanLoaiPhuKienNgoiCt;
 use App\Models\PhuKienNgoiCt;
-use App\Domains\Catalog\ProductTypeRegistry;
+use App\Services\UnifiedProductCatalog;
+use App\Support\ProductGallery;
 use Exception;
 
 class CartService
@@ -37,6 +39,7 @@ class CartService
         if (config('product_catalog.read_unified') && ProductTypeRegistry::get($productType)) {
             return app(UnifiedProductCatalog::class)->cartDetails($productType, $productId, $variantId);
         }
+
         return match ($productType) {
             'ngoi_am_duong_ct' => $this->getNgoiAmDuongDetails($productId, $variantId),
             'ngoi_hai_van_mieu_ct' => $this->getNgoiHaiVanMieuDetails($productId, $variantId),
@@ -373,6 +376,6 @@ class CartService
 
     private function firstImage(mixed $images): ?string
     {
-        return \App\Support\ProductGallery::firstImagePath($images);
+        return ProductGallery::firstImagePath($images);
     }
 }

@@ -71,7 +71,7 @@
                 <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Trạng thái</h3>
                 <p class="mb-4">
                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold {{ $consultationRequest->status === 'processed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                        {{ \App\Models\ConsultationRequest::statusLabel($consultationRequest->status) }}
+                        {{ \App\Domains\Commerce\Models\ConsultationRequest::statusLabel($consultationRequest->status) }}
                     </span>
                 </p>
                 <form method="POST" action="{{ route('admin.consultation-requests.update-status', $consultationRequest) }}" class="space-y-3">

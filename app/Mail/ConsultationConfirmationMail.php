@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\ConsultationRequest;
+use App\Domains\Commerce\Models\ConsultationRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;

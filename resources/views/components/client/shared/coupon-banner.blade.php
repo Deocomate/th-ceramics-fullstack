@@ -1,5 +1,5 @@
 @php
-    use App\Models\Coupon;
+    use App\Domains\Commerce\Models\Coupon;
 
     $bannerCoupons = Coupon::query()
         ->where('show_banner', true)

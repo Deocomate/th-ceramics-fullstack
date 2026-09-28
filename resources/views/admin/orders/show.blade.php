@@ -140,7 +140,7 @@
                             'returned' => 'bg-orange-100 text-orange-800',
                             default => 'bg-gray-100 text-gray-800',
                         } }}">
-                            {{ \App\Models\Order::statusLabel($order->status) }}
+                            {{ \App\Domains\Commerce\Models\Order::statusLabel($order->status) }}
                         </span>
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                             class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A31D1D]/20 focus:border-[#A31D1D] bg-white text-gray-700 mb-3">
                         @foreach(['pending_payment','processing','shipping','completed','canceled','returned'] as $status)
                             <option value="{{ $status }}" @selected($order->status === $status)>
-                                {{ \App\Models\Order::statusLabel($status) }}
+                                {{ \App\Domains\Commerce\Models\Order::statusLabel($status) }}
                             </option>
                         @endforeach
                     </select>

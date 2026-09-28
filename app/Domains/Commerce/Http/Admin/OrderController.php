@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Domains\Commerce\Http\Admin;
 
+use App\Domains\Commerce\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Mail\OrderStatusUpdatedMail;
-use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;

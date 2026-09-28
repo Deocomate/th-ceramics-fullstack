@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Domains\Commerce\Http\Admin;
 
+use App\Domains\Commerce\Services\CouponService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CouponRequest;
-use App\Services\CouponService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 

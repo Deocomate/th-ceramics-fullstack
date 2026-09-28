@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Client;
+namespace App\Domains\Commerce\Http\Client;
 
+use App\Domains\Commerce\Models\Order;
+use App\Domains\Commerce\Services\CartService;
+use App\Domains\Commerce\Services\CouponService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\AddToCartRequest;
 use App\Http\Requests\Cart\CheckoutRequest;
 use App\Http\Requests\Cart\ProductCartOptionsRequest;
 use App\Http\Requests\Cart\UpdateCartRequest;
 use App\Mail\OrderCreatedMail;
-use App\Models\Order;
-use App\Services\CartService;
-use App\Services\CouponService;
 use App\Services\ProductCartOptionsService;
 use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

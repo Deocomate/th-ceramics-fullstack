@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Order;
+use App\Domains\Commerce\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class OrderFactory extends Factory
 {
+    protected $model = Order::class;
+
     public function definition(): array
     {
         $subtotal = fake()->numberBetween(1000000, 50000000);
