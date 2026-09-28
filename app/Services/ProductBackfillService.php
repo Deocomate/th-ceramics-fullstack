@@ -203,6 +203,12 @@ class ProductBackfillService
     private function syncVariants(int $productId, object $row, array $config): void
     {
         $table = $config['variant_table'];
+        if ($table !== null && ! $config['requires_variant']) {
+            app(PublicIdAllocator::class)->reserveVariantFloor(
+                $this->typeForProduct($productId),
+                (int) DB::table($table)->max($config['variant_pk']) + 1,
+            );
+        }
         $seen = [];
         $preferredIds = [];
         if ($table !== null) {
@@ -259,6 +265,11 @@ class ProductBackfillService
         foreach ($seen as $id) {
             app(PublicIdAllocator::class)->variant(ProductVariant::with('product')->findOrFail($id), $preferredIds[$id] ?? null);
         }
+    }
+
+    private function typeForProduct(int $productId): string
+    {
+        return (string) DB::table('products')->where('id', $productId)->value('type_key');
     }
 
     private function syncMedia(int $productId, mixed $gallery): void
