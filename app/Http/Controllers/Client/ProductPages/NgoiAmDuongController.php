@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
+use App\Models\NgoiAmDuong;
 use App\Services\DinhMucNgoiAmDuongService;
 use App\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiAmDuongCtService;
@@ -12,6 +13,7 @@ use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
+use App\Support\ProductJourneyVideo;
 use Illuminate\Http\Request;
 
 class NgoiAmDuongController extends Controller
@@ -73,12 +75,12 @@ class NgoiAmDuongController extends Controller
 
         // 4. Lấy sản phẩm liên quan (Gợi ý các sản phẩm Ngói Âm Dương khác)
         // Lấy tất cả active và loại trừ sản phẩm hiện tại, lấy ngẫu nhiên 4 sản phẩm
-        $relatedProducts = $this->ngoiAmDuongCtService->getAll('active')
-            ->where('ngoi_am_duong_ct_id', '!=', $id)
-            ->take(4);
+        $relatedProducts = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->related('ngoi_am_duong_ct', (int) $id, null, 4)
+            : $this->ngoiAmDuongCtService->getAll('active')->where('ngoi_am_duong_ct_id', '!=', $id)->take(4);
 
-        $config = \App\Models\NgoiAmDuong::query()->first();
-        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+        $config = NgoiAmDuong::query()->first();
+        $journeyVideo = ProductJourneyVideo::resolve($product->video ?? null, $config);
 
         // Trả data về View
         return view('clients.products.ngoi-am-duong.detail', compact(

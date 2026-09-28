@@ -351,6 +351,17 @@ class ContentArchiveService
                 return ['conflict', 'unmapped_parent', $targetId, $row];
             }
         }
+        if ($sourceId !== $this->sourceId()
+            && in_array($table, ['product_legacy_ids', 'variant_legacy_ids'], true)
+            && isset($row['source_table'], $row['source_id'])
+            && array_key_exists($row['source_table'], $manifest['tables'])) {
+            $legacyMapping = DB::table('content_archive_record_maps')
+                ->where('source_id', $sourceId)->where('table_name', $row['source_table'])
+                ->where('source_record_id', $row['source_id'])->exists();
+            if (! $legacyMapping && ! isset($planned[$row['source_table']][(string) $row['source_id']])) {
+                return ['conflict', 'unmapped_legacy_record', $targetId, $row];
+            }
+        }
 
         $existing = DB::table($table)->where($key, $targetId)->first();
         if ($existing && ! $mapping && $sourceId !== $this->sourceId()) {

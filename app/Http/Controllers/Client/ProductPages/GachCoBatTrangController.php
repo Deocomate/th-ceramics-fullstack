@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
+use App\Models\GachCoBatTrang;
 use App\Services\DinhMucGachCoBatTrangService;
 use App\Services\GachCoBatTrangCtService;
 use App\Services\GachCoBatTrangService;
 use App\Services\GiaTriVuotTroiService;
+use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
 use App\Support\ProductCollectionFilter;
+use App\Support\ProductJourneyVideo;
 use Illuminate\Http\Request;
 
 class GachCoBatTrangController extends Controller
@@ -23,12 +26,13 @@ class GachCoBatTrangController extends Controller
     public function index(Request $request, ViewHistoryService $historyService)
     {
         $config = $this->gachCoBatTrangService->getFirstRecord();
-        $products = ProductCollectionFilter::apply(
-            $this->gachCoBatTrangCtService->getAll('active'),
-            $request->query()
-        );
+        $category = in_array($request->query('type'), ['bat', 'that', 'the'], true)
+            ? $request->query('type') : null;
+        $products = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->filtered('gach_co_bat_trang_ct', $request->query(), $category)
+            : ProductCollectionFilter::apply($this->gachCoBatTrangCtService->getAll('active'), $request->query());
 
-        if (in_array($request->query('type'), ['bat', 'that', 'the'], true)) {
+        if (! config('product_catalog.read_unified') && $category !== null) {
             $products = $products->where('category_type', $request->query('type'))->values();
         }
 
@@ -62,12 +66,12 @@ class GachCoBatTrangController extends Controller
 
         $dinhMuc = $this->dinhMucService->getAll();
 
-        $relatedProducts = $this->gachCoBatTrangCtService->getAll('active')
-            ->where('gach_co_bat_trang_ct_id', '!=', $id)
-            ->take(4);
+        $relatedProducts = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->related('gach_co_bat_trang_ct', (int) $id, null, 4)
+            : $this->gachCoBatTrangCtService->getAll('active')->where('gach_co_bat_trang_ct_id', '!=', $id)->take(4);
 
-        $config = \App\Models\GachCoBatTrang::query()->first();
-        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+        $config = GachCoBatTrang::query()->first();
+        $journeyVideo = ProductJourneyVideo::resolve($product->video ?? null, $config);
 
         return view('clients.products.gach-co-bat-trang.detail', compact(
             'product', 'dinhMuc', 'relatedProducts', 'config', 'journeyVideo'

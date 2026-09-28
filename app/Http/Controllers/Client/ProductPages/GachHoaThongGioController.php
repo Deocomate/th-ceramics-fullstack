@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
+use App\Models\GachHoaThongGio;
 use App\Services\DinhMucGachHoaThongGioService;
 use App\Services\GachHoaThongGioCtService;
 use App\Services\GachHoaThongGioService;
+use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
-use App\Services\UnifiedProductCatalog;
+use App\Support\ProductJourneyVideo;
 use Illuminate\Http\Request;
 
 class GachHoaThongGioController extends Controller
@@ -46,12 +48,12 @@ class GachHoaThongGioController extends Controller
 
         $dinhMuc = $this->dinhMucService->getAll();
 
-        $relatedProducts = $this->gachHoaThongGioCtService->getAll('active')
-            ->where('gach_hoa_thong_gio_ct_id', '!=', $id)
-            ->take(4);
+        $relatedProducts = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->related('gach_hoa_thong_gio_ct', (int) $id, null, 4)
+            : $this->gachHoaThongGioCtService->getAll('active')->where('gach_hoa_thong_gio_ct_id', '!=', $id)->take(4);
 
-        $config = \App\Models\GachHoaThongGio::query()->first();
-        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+        $config = GachHoaThongGio::query()->first();
+        $journeyVideo = ProductJourneyVideo::resolve($product->video ?? null, $config);
 
         return view('clients.products.gach-hoa-thong-gio.detail', compact(
             'product', 'dinhMuc', 'relatedProducts', 'config', 'journeyVideo'
