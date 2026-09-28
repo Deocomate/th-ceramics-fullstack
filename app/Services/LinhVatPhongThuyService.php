@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Helpers\FileUploadHelper;
+use App\Domains\Media\FileUploadHelper;
 use App\Models\LinhVat;
 use App\Models\LinhVatPhongThuy;
 use App\Models\LinhVatPhongThuyAnh;

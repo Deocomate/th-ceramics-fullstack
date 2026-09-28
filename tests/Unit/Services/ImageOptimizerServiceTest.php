@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services;
 
-use App\Services\ImageOptimizerService;
+use App\Domains\Media\ImageOptimizerService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Helpers\FileUploadHelper;
+use App\Domains\Media\FileUploadHelper;
 use App\Models\GachHoaThongGio;
 use App\Models\GachHoaThongGioAnh;
 use App\Models\GiaTriGachHoaThongGio;

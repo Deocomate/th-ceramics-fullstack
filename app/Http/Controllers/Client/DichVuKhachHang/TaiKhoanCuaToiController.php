@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Client\DichVuKhachHang;
 
-use App\Helpers\FileUploadHelper;
+use App\Domains\Media\FileUploadHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
