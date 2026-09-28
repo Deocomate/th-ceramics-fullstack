@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\GiaiThuongThanhTuu;
+use App\Domains\Content\Models\GiaiThuongThanhTuu;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 

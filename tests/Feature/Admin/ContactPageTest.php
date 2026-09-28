@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\PageContact;
+use App\Domains\Content\Models\PageContact;
 use App\Domains\Identity\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

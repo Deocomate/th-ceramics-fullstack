@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Client\Shared;
 
-use App\Models\DuAn;
+use App\Domains\Content\Models\DuAn;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;

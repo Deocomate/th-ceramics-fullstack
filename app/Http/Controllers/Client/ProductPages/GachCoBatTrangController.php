@@ -7,7 +7,7 @@ use App\Models\GachCoBatTrang;
 use App\Services\DinhMucGachCoBatTrangService;
 use App\Services\GachCoBatTrangCtService;
 use App\Services\GachCoBatTrangService;
-use App\Services\GiaTriVuotTroiService;
+use App\Domains\Content\Services\GiaTriVuotTroiService;
 use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
 use App\Support\ProductCollectionFilter;

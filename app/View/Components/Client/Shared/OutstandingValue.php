@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Client\Shared;
 
-use App\Services\GiaTriVuotTroiService;
+use App\Domains\Content\Services\GiaTriVuotTroiService;
 use App\Support\AssetPath;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;

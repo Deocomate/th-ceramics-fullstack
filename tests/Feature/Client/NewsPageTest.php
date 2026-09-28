@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\DanhMucTinTuc;
+use App\Domains\Content\Models\DanhMucTinTuc;
 use App\Models\NgoiAmDuongCt;
-use App\Models\TinTuc;
+use App\Domains\Content\Models\TinTuc;
 
 function createNewsArticle(DanhMucTinTuc $category, array $overrides = []): TinTuc
 {

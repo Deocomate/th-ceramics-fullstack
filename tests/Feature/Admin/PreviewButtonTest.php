@@ -1,13 +1,13 @@
 <?php
 
-use App\Models\DanhMucDuAn;
-use App\Models\DanhMucTinTuc;
-use App\Models\DuAn;
+use App\Domains\Content\Models\DanhMucDuAn;
+use App\Domains\Content\Models\DanhMucTinTuc;
+use App\Domains\Content\Models\DuAn;
 use App\Models\GachHoaThongGioCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieu;
 use App\Models\PhuKienNgoiCt;
-use App\Models\TinTuc;
+use App\Domains\Content\Models\TinTuc;
 use App\Domains\Identity\Models\User;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;

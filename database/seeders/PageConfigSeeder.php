@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Faq;
-use App\Models\PageContact;
-use App\Models\PageFactory;
-use App\Models\PageFaq;
+use App\Domains\Content\Models\Faq;
+use App\Domains\Content\Models\PageContact;
+use App\Domains\Content\Models\PageFactory;
+use App\Domains\Content\Models\PageFaq;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;

@@ -3,14 +3,14 @@
 namespace App\Providers;
 
 use App\Models\MauSacNgoiAmDuongCt;
-use App\Models\PageContact;
-use App\Models\TrangChu;
+use App\Domains\Content\Models\PageContact;
+use App\Domains\Content\Models\TrangChu;
 use App\Observers\LegacyColorObserver;
 use App\Observers\LegacyProductObserver;
 use App\Observers\LegacyVariantObserver;
 use App\Domains\Catalog\ProductTypeRegistry;
 use App\Domains\Commerce\Services\CartService;
-use App\Services\GiaTriVuotTroiService;
+use App\Domains\Content\Services\GiaTriVuotTroiService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;

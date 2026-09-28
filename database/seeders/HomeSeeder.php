@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\TrangChu;
+use App\Domains\Content\Models\TrangChu;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;

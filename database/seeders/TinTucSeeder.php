@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\DanhMucTinTuc;
-use App\Models\TinTuc;
+use App\Domains\Content\Models\DanhMucTinTuc;
+use App\Domains\Content\Models\TinTuc;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 

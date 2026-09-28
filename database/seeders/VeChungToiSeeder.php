@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\VeChungToi;
+use App\Domains\Content\Models\VeChungToi;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 

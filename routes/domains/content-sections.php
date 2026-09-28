@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\GiaiThuongThanhTuuController;
-use App\Http\Controllers\Admin\GiaTriVuotTroiController;
+use App\Domains\Content\Http\Admin\GiaiThuongThanhTuuController;
+use App\Domains\Content\Http\Admin\GiaTriVuotTroiController;
 use Illuminate\Support\Facades\Route;
 
 // Cấu hình section chung

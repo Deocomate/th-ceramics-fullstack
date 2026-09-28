@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Client\AboutController;
+use App\Domains\Content\Http\Client\AboutController;
 use App\Domains\Identity\Http\Client\AuthController;
 use App\Domains\Commerce\Http\Client\CartController;
 use App\Domains\Commerce\Http\Client\ConsultationController;
-use App\Http\Controllers\Client\ContactController;
-use App\Http\Controllers\Client\CustomerServiceController;
+use App\Domains\Content\Http\Client\ContactController;
+use App\Domains\Content\Http\Client\CustomerServiceController;
 use App\Http\Controllers\Client\DichVuKhachHang\BaoMatThongTinController;
 use App\Http\Controllers\Client\DichVuKhachHang\CatalogController;
 use App\Http\Controllers\Client\DichVuKhachHang\ChinhSachDoiTraController;
@@ -14,11 +14,11 @@ use App\Http\Controllers\Client\DichVuKhachHang\HuongDanThiCongController;
 use App\Http\Controllers\Client\DichVuKhachHang\QuyTrinhDatHangController;
 use App\Http\Controllers\Client\DichVuKhachHang\TaiKhoanCuaToiController;
 use App\Http\Controllers\Client\DichVuKhachHang\TrangThaiDonHangController;
-use App\Http\Controllers\Client\FactoryController;
-use App\Http\Controllers\Client\FaqController;
+use App\Domains\Content\Http\Client\FactoryController;
+use App\Domains\Content\Http\Client\FaqController;
 use App\Http\Controllers\Client\GlobalSearchController;
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\NewsController;
+use App\Domains\Content\Http\Client\HomeController;
+use App\Domains\Content\Http\Client\NewsController;
 use App\Http\Controllers\Client\ProductPages\DenGomSuController;
 use App\Http\Controllers\Client\ProductPages\GachCoBatTrangController;
 use App\Http\Controllers\Client\ProductPages\GachHoaThongGioController;
@@ -28,8 +28,8 @@ use App\Http\Controllers\Client\ProductPages\LinhVatPhongThuyController;
 use App\Http\Controllers\Client\ProductPages\NgoiAmDuongController;
 use App\Http\Controllers\Client\ProductPages\NgoiHaiVanMieuController;
 use App\Http\Controllers\Client\ProductPages\PhuKienNgoiController;
-use App\Http\Controllers\Client\ProjectController;
-use App\Http\Controllers\Client\ShowroomController;
+use App\Domains\Content\Http\Client\ProjectController;
+use App\Domains\Content\Http\Client\ShowroomController;
 use Illuminate\Support\Facades\Route;
 
 /*

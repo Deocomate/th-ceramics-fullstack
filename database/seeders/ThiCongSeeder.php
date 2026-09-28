@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ThiCong;
+use App\Domains\Content\Models\ThiCong;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 

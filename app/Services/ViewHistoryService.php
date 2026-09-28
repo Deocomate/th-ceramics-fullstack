@@ -13,7 +13,7 @@ use App\Models\NgoiAmDuongCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\PhuKienNgoiCt;
-use App\Models\TinTuc;
+use App\Domains\Content\Models\TinTuc;
 use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

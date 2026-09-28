@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
-use App\Models\DuAn;
+use App\Domains\Content\Models\DuAn;
 use App\Models\GachTrangTri;
 use App\Services\DinhMucGachTrangTriService;
 use App\Services\GachTrangTriCtService;
