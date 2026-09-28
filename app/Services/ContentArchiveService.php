@@ -437,7 +437,33 @@ class ContentArchiveService
             return json_encode($this->rewriteMedia($decoded, $rewrites), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         }
 
+        if (str_contains($value, '<')) {
+            return preg_replace_callback('~((?:src|href|poster)\s*=\s*["\'])([^"\']+)(["\'])~i',
+                fn ($match) => $match[1].$this->rewriteEmbeddedMedia($match[2], $rewrites).$match[3], $value);
+        }
+
         return $value;
+    }
+
+    private function rewriteEmbeddedMedia(string $reference, array $rewrites): string
+    {
+        $parsed = parse_url($reference);
+        $path = ltrim((string) ($parsed['path'] ?? $reference), '/');
+        $target = $rewrites[$path] ?? $rewrites[$reference] ?? null;
+        if ($target === null) {
+            return $reference;
+        }
+        $newPath = '/storage/'.$target;
+        if (isset($parsed['host'])) {
+            $base = parse_url((string) config('app.url'));
+            if ($parsed['host'] !== ($base['host'] ?? null)) {
+                return $reference;
+            }
+
+            return ($parsed['scheme'] ?? 'https').'://'.$parsed['host'].$newPath;
+        }
+
+        return $newPath;
     }
 
     private function collectMedia(mixed $value, array &$media): void
@@ -450,6 +476,14 @@ class ContentArchiveService
             return;
         }
         if (! is_string($value)) {
+            return;
+        }
+        if (str_contains($value, '<')
+            && preg_match_all('~(?:src|href|poster)\s*=\s*["\']([^"\']+)["\']~i', $value, $matches)) {
+            foreach ($matches[1] as $reference) {
+                $this->collectMedia(html_entity_decode($reference, ENT_QUOTES | ENT_HTML5), $media);
+            }
+
             return;
         }
         $decoded = json_decode($value, true);
