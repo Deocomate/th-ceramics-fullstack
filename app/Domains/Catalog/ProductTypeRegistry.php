@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Products;
+namespace App\Domains\Catalog;
 
 use App\Models\DenVuonGomSuCt;
 use App\Models\GachCoBatTrangCt;

@@ -119,6 +119,45 @@ it('includes media embedded in HTML and rewrites a conflicting reference', funct
     }
 });
 
+it('keeps external media URLs as references without bundling remote files', function () {
+    DB::table('archive_test_items')->insert([
+        'id' => 10, 'name' => 'External catalog',
+        'image' => 'https://example.org/storage/catalog/manual.pdf',
+        'created_at' => '2026-01-01 00:00:00', 'updated_at' => '2026-01-01 00:00:00',
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        $zip = new ZipArchive;
+        expect($zip->open($path))->toBeTrue();
+        expect($zip->locateName('media/storage/catalog/manual.pdf'))->toBeFalse();
+        $zip->close();
+        expect($archive->preview($path)['missing_media'])->toBe([]);
+        DB::table('archive_test_items')->delete();
+        expect($archive->import($path)['added'])->toBe(1);
+        expect(DB::table('archive_test_items')->value('image'))
+            ->toBe('https://example.org/storage/catalog/manual.pdf');
+    } finally {
+        @unlink($path);
+    }
+});
+
+it('labels exports from a product-only schema as canonical and accepts them', function () {
+    config()->set('content_archive.legacy_product_tables', []);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        $zip = new ZipArchive;
+        expect($zip->open($path))->toBeTrue();
+        $manifest = json_decode($zip->getFromName('manifest.json'), true);
+        expect($manifest['source_schema'])->toBe('canonical');
+        $zip->close();
+        expect($archive->preview($path)['manifest']['source_schema'])->toBe('canonical');
+    } finally {
+        @unlink($path);
+    }
+});
+
 it('keeps business and identity tables outside the content allowlist', function () {
     $excluded = config('content_archive.excluded_tables');
     $tables = config('content_archive.tables');

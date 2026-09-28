@@ -2,7 +2,7 @@
 
 namespace App\Support;
 
-use App\Products\ProductTypeRegistry;
+use App\Domains\Catalog\ProductTypeRegistry;
 use App\Services\ProductBackfillService;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;

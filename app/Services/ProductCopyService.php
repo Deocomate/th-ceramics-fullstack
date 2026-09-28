@@ -7,7 +7,7 @@ use App\Models\LanCanGomSuCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\PhuKienNgoiCt;
-use App\Products\ProductTypeRegistry;
+use App\Domains\Catalog\ProductTypeRegistry;
 use App\Support\AssetPath;
 use App\Support\ProductGallery;
 use Illuminate\Database\Eloquent\Builder;

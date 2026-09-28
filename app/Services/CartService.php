@@ -20,7 +20,7 @@ use App\Models\PhanLoaiDenVuonGomSuCt;
 use App\Models\PhanLoaiLanCanGomSuCt;
 use App\Models\PhanLoaiPhuKienNgoiCt;
 use App\Models\PhuKienNgoiCt;
-use App\Products\ProductTypeRegistry;
+use App\Domains\Catalog\ProductTypeRegistry;
 use Exception;
 
 class CartService
