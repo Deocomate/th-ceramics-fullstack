@@ -28,6 +28,21 @@ class PublicIdAllocator
         }
     }
 
+    public function reserveVariantFloor(string $type, int $nextId): void
+    {
+        DB::transaction(function () use ($type, $nextId): void {
+            DB::table('catalog_public_id_sequences')->insertOrIgnore([
+                'type_key' => $type,
+                'next_product_id' => 1,
+                'next_variant_id' => 1,
+            ]);
+            $sequence = DB::table('catalog_public_id_sequences')->where('type_key', $type)->lockForUpdate()->first();
+            if ((int) $sequence->next_variant_id < $nextId) {
+                DB::table('catalog_public_id_sequences')->where('type_key', $type)->update(['next_variant_id' => $nextId]);
+            }
+        });
+    }
+
     public function product(Product $product, ?int $preferred = null): int
     {
         return $this->assign('product_public_ids', 'product_id', $product->id, $product->type_key, 'next_product_id', $preferred);
