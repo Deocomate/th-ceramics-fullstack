@@ -45,7 +45,7 @@
     title="{{ $product->name }}"
     price="{{ $firstVariant ? $firstVariant['priceFormatted'] : 'Liên hệ' }}"
     rawPrice="{{ $firstVariant['price'] ?? 0 }}"
-    sku="{{ $firstVariant['sku'] ?? \App\Models\PhuKienNgoiCt::categoryCodePrefix($product->category_type) . $product->phu_kien_ngoi_ct_id }}"
+    sku="{{ $firstVariant['sku'] ?? \App\Http\Controllers\Admin\PhuKienNgoiCtController::categoryCodePrefix($product->category_type) . $product->phu_kien_ngoi_ct_id }}"
     :features="$product->des ?? null"
     :images="$product->images ?? []"
     :variants="$variants"

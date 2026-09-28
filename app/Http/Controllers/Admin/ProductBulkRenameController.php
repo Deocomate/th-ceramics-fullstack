@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\PhuKienNgoiCt;
 use App\Services\ProductBulkRenameService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,8 +20,8 @@ class ProductBulkRenameController extends Controller
             'ids.*' => ['required', 'integer', 'min:1', 'distinct'],
             'base_name' => ['required', 'string', 'max:255'],
             'category_type' => [Rule::requiredIf($type === 'phu-kien-ngoi-ct'), 'nullable', Rule::in([
-                PhuKienNgoiCt::TYPE_BO_NOC,
-                PhuKienNgoiCt::TYPE_CHU_VAN,
+                PhuKienNgoiCtController::TYPE_BO_NOC,
+                PhuKienNgoiCtController::TYPE_CHU_VAN,
             ])],
         ], [
             'ids.required' => 'Vui lòng chọn ít nhất một sản phẩm.',

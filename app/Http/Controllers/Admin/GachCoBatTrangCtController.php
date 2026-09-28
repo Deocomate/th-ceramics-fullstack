@@ -2,154 +2,25 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
-use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
-use App\Http\Controllers\Controller;
-use App\Rules\YoutubeUrl;
-use App\Services\GachCoBatTrangCtService;
+use App\Domains\Catalog\Http\Admin\BaseProductItemController;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use InvalidArgumentException;
 
-class GachCoBatTrangCtController extends Controller
+class GachCoBatTrangCtController extends BaseProductItemController
 {
-    use DestroysProductGalleryMedia;
-    use UploadsProductGalleryMedia;
+    protected string $typeKey = 'gach_co_bat_trang_ct';
+    protected string $viewPrefix = 'admin.gach-co-bat-trang-ct';
+    protected string $routePrefix = 'admin.gach-co-bat-trang-ct';
+    protected string $itemLabel = 'Gạch Cổ Bát Tràng';
+    protected string $imageDirectory = 'gach_co_bat_trang_ct';
+    protected string $sizeDirectory = 'gach_co_bat_trang_ct/sizes';
 
-    public function __construct(private readonly GachCoBatTrangCtService $service) {}
-
-    public function index(Request $request)
+    protected function customStoreRules(Request $request): array
     {
-        $status = $request->query('status', 'active');
-        $categoryType = $request->query('category_type', 'all');
-        abort_unless(in_array($categoryType, ['all', 'bat', 'that', 'the'], true), 404);
-        $products = $this->service->getAll($status, $categoryType);
-
-        return view('admin.gach-co-bat-trang-ct.index', compact('products', 'status', 'categoryType'));
-    }
-
-    public function create(Request $request)
-    {
-        $copiedProduct = null;
-        if ($request->filled('copy_from')) {
-            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('gach-co-bat-trang-ct', (int) $request->query('copy_from'));
-        }
-
-        return view('admin.gach-co-bat-trang-ct.create', compact('copiedProduct'));
-    }
-
-    public function store(Request $request)
-    {
-        $data = $request->validate([
+        return [
             'code' => ['required', 'string', 'max:50'],
-            'name' => ['required', 'string', 'max:255'],
-            'color' => ['nullable', 'string', 'max:100'],
-            'category_type' => ['required', Rule::in(['bat', 'that', 'the'])],
             'price' => ['required', 'integer', 'min:0'],
-            'size' => ['nullable', 'string', 'max:255'],
-            'dinh_muc' => ['nullable', 'string', 'max:50'],
-            'weight' => ['nullable', 'string', 'max:50'],
-            'des' => ['nullable', 'array'],
-            'des.*' => ['nullable', 'string', 'max:500'],
-            'images' => ['nullable', 'required_without:cover_image', 'array', 'min:1'],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'cover_image' => ['nullable', 'required_without:images', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            'video_urls' => ['nullable', 'array'],
-            'video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            'videos' => ['nullable', 'array'],
-            'videos.*' => ['file', 'mimes:mp4,webm', 'max:51200'],
-        ]);
-
-        try {
-            $this->service->create($data);
-
-            return redirect()->route('admin.gach-co-bat-trang-ct.index')
-                ->with('success', 'Thêm mới Gạch Cổ Bát Tràng thành công.');
-        } catch (InvalidArgumentException $e) {
-            return back()->withInput()->withErrors(['code' => $e->getMessage()]);
-        }
-    }
-
-    public function edit(int $id)
-    {
-        $product = $this->service->findById($id);
-
-        return view('admin.gach-co-bat-trang-ct.edit', compact('product'));
-    }
-
-    public function update(Request $request, int $id)
-    {
-        $data = $request->validate([
-            'code' => ['required', 'string', 'max:50'],
-            'name' => ['required', 'string', 'max:255'],
-            'color' => ['nullable', 'string', 'max:100'],
             'category_type' => ['required', Rule::in(['bat', 'that', 'the'])],
-            'price' => ['required', 'integer', 'min:0'],
-            'size' => ['nullable', 'string', 'max:255'],
-            'dinh_muc' => ['nullable', 'string', 'max:50'],
-            'weight' => ['nullable', 'string', 'max:50'],
-            'des' => ['nullable', 'array'],
-            'des.*' => ['nullable', 'string', 'max:500'],
-            'new_images' => ['nullable', 'array'],
-            'new_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'gallery_order' => ['nullable', 'array'],
-            'gallery_order.*' => ['string'],
-            'size_image' => ['nullable', 'image', 'max:5120'],
-            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            'new_video_urls' => ['nullable', 'array'],
-            'new_video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            'new_videos' => ['nullable', 'array'],
-            'new_videos.*' => ['file', 'mimes:mp4,webm', 'max:51200'],
-        ]);
-
-        try {
-            $this->service->update($id, $data);
-
-            return back()->with('success', 'Cập nhật sản phẩm thành công.');
-        } catch (InvalidArgumentException $e) {
-            return back()->withInput()->withErrors(['code' => $e->getMessage()]);
-        }
-    }
-
-    public function destroy(int $id)
-    {
-        $this->service->toggleStatus($id, 1);
-
-        return back()->with('success', 'Đã tạm ẩn sản phẩm thành công.');
-    }
-
-    public function restore(int $id)
-    {
-        $this->service->toggleStatus($id, 0);
-
-        return back()->with('success', 'Khôi phục sản phẩm thành công.');
-    }
-
-    public function destroyImage(Request $request, int $id)
-    {
-        return $this->destroyGalleryMediaResponse(
-            $request,
-            fn (array $imagePaths, array $videoUrls, array $videoPaths = []) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls, $videoPaths)
-        );
-    }
-
-    public function storeImages(Request $request, int $id)
-    {
-        return $this->storeGalleryImagesResponse(
-            $request,
-            fn (array $images, array $videoUrls, array $videoFiles) => $this->service->appendMediaToGallery($id, $images, $videoUrls, $videoFiles)
-        );
-    }
-
-    public function reorderGallery(Request $request, int $id)
-    {
-        return $this->reorderGalleryResponse(
-            $request,
-            fn (array $tokens) => $this->service->reorderGalleryItems($id, $tokens),
-            fn (string $imagePath) => $this->service->promoteCoverImage($id, $imagePath)
-        );
+        ];
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-use App\Models\MauSacNgoiHaiVanMieuCt;
-use App\Models\NgoiAmDuongCt;
-use App\Models\NgoiHaiVanMieuCt;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Catalog\PublicIdAllocator;
 
 test('quick search returns direct product matches by name or code', function () {
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-SEARCH-001',
         'name' => 'Ngói âm dương tìm nhanh',
         'images' => ['assets/images/ngoi-01.jpg'],
@@ -26,23 +25,23 @@ test('quick search returns direct product matches by name or code', function () 
 });
 
 test('quick search returns variant backed product matches by code', function () {
-    $product = NgoiHaiVanMieuCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_hai_van_mieu_ct', [
         'name' => 'Ngói hài văn miếu đại',
         'images' => ['assets/images/ngoi-hai-01.png'],
         'price' => 100000,
         'des' => ['Mô tả'],
-        'mau_sac_id' => 1,
         'is_delete' => false,
     ]);
 
-    MauSacNgoiHaiVanMieuCt::query()->create([
+    $variant = $product->variants()->create([
         'name' => 'Men đỏ',
         'image' => 'assets/images/ngoi-hai-02.png',
-        'code' => 'NHVM-RED-001',
+        'sku' => 'NHVM-RED-001',
         'price' => 120000,
-        'ngoi_hai_van_mieu_ct_id' => $product->ngoi_hai_van_mieu_ct_id,
         'is_delete' => false,
+        'is_default' => false,
     ]);
+    app(PublicIdAllocator::class)->variant($variant->setRelation('product', $product));
 
     $this->getJson(route('client.search.quick', ['q' => 'NHVM-RED']))
         ->assertSuccessful()
@@ -55,7 +54,7 @@ test('quick search returns variant backed product matches by code', function () 
 });
 
 test('quick search excludes deleted products', function () {
-    NgoiAmDuongCt::query()->create([
+    app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-DELETED-001',
         'name' => 'Ngói đã xóa',
         'images' => ['assets/images/ngoi-01.jpg'],
@@ -70,7 +69,7 @@ test('quick search excludes deleted products', function () {
 });
 
 test('quick search ignores empty and one character queries', function (?string $keyword) {
-    NgoiAmDuongCt::query()->create([
+    app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-SHORT-001',
         'name' => 'Ngói short query',
         'images' => ['assets/images/ngoi-01.jpg'],

@@ -2,50 +2,34 @@
 
 namespace App\Services;
 
-use App\Models\DenVuonGomSuCt;
-use App\Models\LanCanGomSuCt;
-use App\Models\NgoiHaiCoCt;
-use App\Models\NgoiHaiVanMieuCt;
-use App\Models\PhuKienNgoiCt;
+use App\Domains\Catalog\Models\Product;
 use App\Domains\Catalog\ProductTypeRegistry;
 use App\Support\AssetPath;
 use App\Support\ProductGallery;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 
 class ProductCopyService
 {
     /**
-     * Cấu hình chi tiết cho 10 loại sản phẩm trong hệ thống
-     *
-     * @var array<string, array{model: class-string<Model>, pk: string, label: string, has_code: bool, has_price: bool}>
+     * @var array<string, array{type_key: string, pk: string, label: string, has_code: bool, has_price: bool}>
      */
     protected array $typeConfigs = [];
 
     public function __construct()
     {
         foreach (ProductTypeRegistry::all() as $type => $product) {
-            $direct = $product['variant_table'] === null;
-            $config = [
-                'model' => $product['model'],
+            $direct = ($product['variant_table'] ?? null) === null;
+            $this->typeConfigs[str_replace('_', '-', $type)] = [
+                'type_key' => $type,
                 'pk' => $product['pk'],
                 'label' => $product['label'],
                 'has_code' => $direct,
                 'has_price' => $direct,
             ];
-            if ($product['relation']) {
-                $config['with'] = [$product['relation']];
-            }
-            $this->typeConfigs[str_replace('_', '-', $type)] = $config;
         }
     }
 
-    /**
-     * Lấy danh sách các loại sản phẩm được hỗ trợ kèm nhãn
-     *
-     * @return array<int, array{key: string, label: string}>
-     */
     public function getSupportedTypes(): array
     {
         $result = [];
@@ -59,17 +43,12 @@ class ProductCopyService
         return $result;
     }
 
-    /**
-     * Lấy cấu hình của một loại sản phẩm
-     */
     public function getTypeConfig(string $type): ?array
     {
         return $this->typeConfigs[$type] ?? null;
     }
 
     /**
-     * Tìm kiếm danh sách sản phẩm theo loại và từ khóa
-     *
      * @return array<int, array{id: int, name: string, code: string, price: float|int, formatted_price: string, color: string, size: string, thumbnail_url: string, des_count: int, category_type: ?string}>
      */
     public function searchProducts(string $type, ?string $keyword = null, int $limit = 30): array
@@ -79,53 +58,49 @@ class ProductCopyService
             throw new InvalidArgumentException("Loại sản phẩm không hợp lệ: {$type}");
         }
 
-        /** @var class-string<Model> $modelClass */
-        $modelClass = $config['model'];
-        $pk = $config['pk'];
-
-        /** @var Builder $query */
-        $query = $modelClass::query()->where('is_delete', 0);
-
-        if (! empty($config['with'])) {
-            $query->with($config['with']);
-        }
+        $typeKey = $config['type_key'];
+        $query = Product::query()
+            ->with(['variants' => fn ($q) => $q->where('is_delete', false), 'media', 'publicId'])
+            ->where('type_key', $typeKey)
+            ->where('is_delete', false);
 
         if ($keyword !== null && trim($keyword) !== '') {
-            $kw = '%'.trim($keyword).'%';
-            $query->where(function (Builder $q) use ($kw, $config) {
-                $q->where('name', 'like', $kw);
-
-                if ($config['has_code']) {
-                    $q->orWhere('code', 'like', $kw);
-                }
-
-                // Tìm kiếm mở rộng nếu có biến thể màu / phân loại
-                if (in_array($config['model'], [NgoiHaiCoCt::class, NgoiHaiVanMieuCt::class], true)) {
-                    $q->orWhereHas('mauSacs', function (Builder $sub) use ($kw) {
-                        $sub->where('is_delete', 0)->where(function (Builder $s) use ($kw) {
-                            $s->where('code', 'like', $kw)->orWhere('name', 'like', $kw);
+            $kw = '%' . trim($keyword) . '%';
+            $query->where(function (Builder $q) use ($kw) {
+                $q->where('name', 'like', $kw)
+                    ->orWhere('color', 'like', $kw)
+                    ->orWhere('size', 'like', $kw)
+                    ->orWhereHas('variants', function (Builder $sub) use ($kw) {
+                        $sub->where('is_delete', false)->where(function (Builder $s) use ($kw) {
+                            $s->where('sku', 'like', $kw)->orWhere('name', 'like', $kw);
                         });
                     });
-                } elseif (in_array($config['model'], [PhuKienNgoiCt::class, LanCanGomSuCt::class, DenVuonGomSuCt::class], true)) {
-                    $q->orWhereHas('phanLoais', function (Builder $sub) use ($kw) {
-                        $sub->where('is_delete', 0)->where(function (Builder $s) use ($kw) {
-                            $s->where('code', 'like', $kw)->orWhere('name', 'like', $kw);
-                        });
-                    });
-                }
             });
         }
 
-        $items = $query->latest($pk)->limit($limit)->get();
+        $items = $query->orderByDesc('priority')->orderByDesc('id')->limit($limit)->get();
 
-        return $items->map(function ($item) use ($pk, $config) {
-            return $this->formatForListItem($item, $pk, $config);
+        return $items->map(function (Product $item) {
+            $firstImg = ProductGallery::firstImagePath($item->images);
+            $thumbnailUrl = $firstImg ? AssetPath::url($firstImg) : asset('assets/images/logo.png');
+            $price = (int) ($item->price ?? 0);
+            $formattedPrice = $price > 0 ? number_format($price, 0, ',', '.') . ' đ' : 'Liên hệ';
+
+            return [
+                'id' => (int) $item->public_id,
+                'name' => (string) $item->name,
+                'code' => (string) ($item->code ?? '—'),
+                'price' => $price,
+                'formatted_price' => $formattedPrice,
+                'color' => (string) ($item->color ?? '—'),
+                'size' => (string) ($item->size ?? '—'),
+                'thumbnail_url' => $thumbnailUrl,
+                'des_count' => is_array($item->des) ? count($item->des) : 0,
+                'category_type' => $item->category_type,
+            ];
         })->values()->all();
     }
 
-    /**
-     * Lấy chi tiết thông tin sản phẩm chuẩn hóa để đưa vào form tạo mới
-     */
     public function getProductDetailForCopy(string $type, int $id): ?array
     {
         $config = $this->getTypeConfig($type);
@@ -133,91 +108,55 @@ class ProductCopyService
             return null;
         }
 
-        /** @var class-string<Model> $modelClass */
-        $modelClass = $config['model'];
-        $pk = $config['pk'];
+        $typeKey = $config['type_key'];
+        /** @var Product|null $product */
+        $product = Product::query()
+            ->with(['variants' => fn ($q) => $q->where('is_delete', false), 'media', 'publicId'])
+            ->where('type_key', $typeKey)
+            ->where('is_delete', false)
+            ->whereHas('publicId', fn ($p) => $p->where('type_key', $typeKey)->where('public_id', $id))
+            ->first();
 
-        $query = $modelClass::query()->where($pk, $id)->where('is_delete', 0);
-        if (! empty($config['with'])) {
-            $query->with($config['with']);
-        }
-
-        $product = $query->first();
         if (! $product) {
             return null;
         }
 
-        // Lấy thông tin mã và giá
-        $code = $config['has_code'] ? ($product->code ?? '') : ($product->code ?? $product->display_code ?? '');
-        if ($code === 'Đang cập nhật' || $code === 'N/A') {
-            $code = '';
-        }
-        $price = $config['has_price'] ? ($product->price ?? 0) : ($product->price ?? 0);
+        $firstImage = ProductGallery::firstImagePath($product->images);
 
-        // Chuẩn hóa mảng des (mô tả / thông số)
-        $desList = [];
-        if (is_array($product->des)) {
-            $desList = array_values(array_filter(array_map('trim', $product->des)));
-        }
-
-        // Chuẩn hóa mảng size_des (kích thước chi tiết)
-        $sizeDesList = [];
-        if (isset($product->size_des) && is_array($product->size_des)) {
-            $sizeDesList = array_values(array_filter(array_map('trim', $product->size_des)));
-        }
-
-        $firstImage = ProductGallery::firstImagePath($product->images ?? []);
-        $thumbnailUrl = $firstImage ? AssetPath::url($firstImage) : null;
-
-        return [
-            'id' => $product->{$pk},
-            'type' => $type,
-            'name' => $product->name ?? '',
-            'code' => $code,
-            'suggested_code' => $code ? ($code.'-COPY') : '',
-            'price' => (float) $price,
-            'color' => $product->color ?? 'Tự chọn',
-            'size' => $product->size ?? '',
-            'category_type' => $product->category_type ?? null,
-            'dinh_muc' => $product->dinh_muc ?? null,
-            'weight' => $product->weight ?? null,
-            'des' => $desList,
-            'size_des' => $sizeDesList,
-            'video' => $product->video ?? null,
-            'thumbnail_url' => $thumbnailUrl,
-            'size_image_url' => ! empty($product->size_image) ? AssetPath::url($product->size_image) : null,
+        $result = [
+            'id' => (int) $product->public_id,
+            'name' => $product->name,
+            'color' => $product->color,
+            'size' => $product->size,
+            'size_image' => $product->size_image,
+            'size_image_url' => $product->size_image ? AssetPath::url($product->size_image) : null,
+            'video' => $product->video,
+            'dinh_muc' => $product->dinh_muc,
+            'weight' => $product->weight,
+            'des' => is_array($product->des) ? $product->des : [],
+            'size_des' => is_array($product->size_des) ? $product->size_des : [],
+            'images' => $product->images,
+            'first_image_url' => $firstImage ? AssetPath::url($firstImage) : null,
+            'category_type' => $product->category_type,
+            'code' => $product->code,
+            'suggested_code' => $product->code ? ($product->code . '-COPY') : null,
+            'price' => $product->price,
         ];
-    }
 
-    /**
-     * Định dạng sản phẩm cho danh sách trong Modal
-     */
-    protected function formatForListItem(Model $item, string $pk, array $config): array
-    {
-        $code = $config['has_code']
-            ? ($item->code ?? 'N/A')
-            : ($item->code ?? $item->display_code ?? 'N/A');
+        $variants = $product->variants->where('is_default', false)->values();
+        if ($variants->isNotEmpty()) {
+            $result['variants'] = $variants->map(function ($v) {
+                return [
+                    'id' => (int) $v->public_id,
+                    'name' => $v->name,
+                    'code' => $v->sku,
+                    'price' => $v->price,
+                    'image' => $v->image,
+                    'image_url' => $v->image ? AssetPath::url($v->image) : null,
+                ];
+            })->all();
+        }
 
-        $price = $config['has_price']
-            ? ($item->price ?? 0)
-            : ($item->price ?? 0);
-
-        $firstImage = ProductGallery::firstImagePath($item->images ?? []);
-        $thumbnailUrl = $firstImage ? AssetPath::url($firstImage) : null;
-
-        $desCount = is_array($item->des) ? count(array_filter($item->des)) : 0;
-
-        return [
-            'id' => $item->{$pk},
-            'name' => (string) ($item->name ?? ''),
-            'code' => (string) ($code ?: 'N/A'),
-            'price' => (float) $price,
-            'formatted_price' => $price > 0 ? number_format($price, 0, ',', '.').' VNĐ' : 'Liên hệ / Theo phân loại',
-            'color' => (string) ($item->color ?? 'Tự chọn'),
-            'size' => (string) ($item->size ?? 'N/A'),
-            'thumbnail_url' => $thumbnailUrl,
-            'des_count' => $desCount,
-            'category_type' => $item->category_type ?? null,
-        ];
+        return $result;
     }
 }

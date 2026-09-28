@@ -49,10 +49,12 @@ class ProductCard extends Component
         public string $addToCartVariant = 'outline',
     ) {
         $this->resolvedProductType = $this->productType
+            ?: data_get($this->product, 'type_key')
             ?: ClientProductType::fromDetailRoute($this->detailRouteName)
             ?: '';
 
         $displayProductType = $this->resolvedProductType
+            ?: data_get($this->product, 'type_key')
             ?: ($this->product ? (string) str($this->product::class)->classBasename()->snake() : null);
         $this->displayPrice = ProductPrice::withUnit($this->price, $displayProductType);
 

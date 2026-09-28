@@ -4,8 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\DenGomSu;
 use App\Models\DenGomSuAnh;
-use App\Models\DenVuonGomSuCt;
-use App\Models\PhanLoaiDenVuonGomSuCt;
+use Database\Seeders\Support\CanonicalProductSeeding;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Eloquent\Model;
@@ -14,16 +13,10 @@ use Illuminate\Database\Seeder;
 class DenGomSuSeeder extends Seeder
 {
     use SeedsFromSqlData;
+    use CanonicalProductSeeding;
 
     public function run(): void
     {
-        $this->truncateTables(
-            'phan_loai_den_vuon_gom_su_ct',
-            'den_vuon_gom_su_ct',
-            'den_gom_su_anh',
-            'den_gom_su',
-        );
-
         $this->seedFromData('den_gom_su', DenGomSu::class);
 
         $galleryRows = $this->seederData('den_gom_su_anh');
@@ -40,7 +33,7 @@ class DenGomSuSeeder extends Seeder
             }
         });
 
-        $this->seedFromData('den_vuon_gom_su_ct', DenVuonGomSuCt::class);
-        $this->seedFromData('phan_loai_den_vuon_gom_su_ct', PhanLoaiDenVuonGomSuCt::class);
+        $this->seedCanonicalProductType('den_vuon_gom_su_ct', 'den_vuon_gom_su_ct_id', false);
+        $this->seedCanonicalVariants('phan_loai_den_vuon_gom_su_ct', 'phan_loai_den_vuon_gom_su_ct_id', 'den_vuon_gom_su_ct_id', 'den_vuon_gom_su_ct');
     }
 }

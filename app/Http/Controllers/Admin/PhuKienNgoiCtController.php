@@ -2,145 +2,101 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
-use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
-use App\Http\Controllers\Controller;
-use App\Models\PhuKienNgoiCt;
-use App\Rules\YoutubeUrl;
-use App\Services\PhuKienNgoiCtService;
+use App\Domains\Catalog\Http\Admin\BaseProductItemController;
+use App\Domains\Media\FileUploadHelper;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
+use InvalidArgumentException;
 
-class PhuKienNgoiCtController extends Controller
+class PhuKienNgoiCtController extends BaseProductItemController
 {
-    use DestroysProductGalleryMedia;
-    use UploadsProductGalleryMedia;
+    public const TYPE_BO_NOC = 'ngoi_bo_noc';
+    public const TYPE_CHU_VAN = 'chu_van';
 
-    public function __construct(private readonly PhuKienNgoiCtService $service) {}
+    protected string $typeKey = 'phu_kien_ngoi_ct';
+    protected string $viewPrefix = 'admin.phu-kien-ngoi-ct';
+    protected string $routePrefix = 'admin.phu-kien-ngoi-ct';
+    protected string $itemLabel = 'Phụ Kiện Ngói';
+    protected string $imageDirectory = 'phu_kien_ngoi_ct';
+    protected string $sizeDirectory = 'phu_kien_ngoi_ct/sizes';
 
-    public function index(Request $request)
+    public static function categoryLabel(string $type): string
+    {
+        return $type === self::TYPE_CHU_VAN ? 'Bờ Nóc Chữ Vạn' : 'Ngói Bờ Nóc';
+    }
+
+    public static function categoryCodePrefix(?string $type): string
+    {
+        return $type === self::TYPE_CHU_VAN ? 'BNCV-' : 'NBN-';
+    }
+
+    public function index(Request $request): View
     {
         $status = $request->query('status', 'active');
         $categoryType = $this->categoryType($request);
-        $products = $this->service->getAll($status, $categoryType);
-        $categoryLabel = PhuKienNgoiCt::categoryLabel($categoryType);
+        $products = $this->queryService->all($this->typeKey, $status, $categoryType);
+        $categoryLabel = self::categoryLabel($categoryType);
 
         return view('admin.phu-kien-ngoi-ct.index', compact('products', 'status', 'categoryType', 'categoryLabel'));
     }
 
-    public function create(Request $request)
+    public function create(Request $request): View
     {
         $categoryType = $this->categoryType($request);
-        $categoryLabel = PhuKienNgoiCt::categoryLabel($categoryType);
+        $categoryLabel = self::categoryLabel($categoryType);
 
         $copiedProduct = null;
         if ($request->filled('copy_from')) {
-            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('phu-kien-ngoi-ct', (int) $request->query('copy_from'));
+            $copiedProduct = $this->copyService->getProductDetailForCopy('phu-kien-ngoi-ct', (int) $request->query('copy_from'));
         }
 
         return view('admin.phu-kien-ngoi-ct.create', compact('categoryType', 'categoryLabel', 'copiedProduct'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $data = $this->validatedProductData($request, true);
-        $this->service->create($data);
+        try {
+            $data = $this->validateStore($request);
 
-        return redirect()
-            ->route('admin.phu-kien-ngoi-ct.index', ['category_type' => $data['category_type']])
-            ->with('success', 'Thêm mới '.PhuKienNgoiCt::categoryLabel($data['category_type']).' thành công.');
+            if ($request->hasFile('size_image')) {
+                $data['size_image'] = FileUploadHelper::upload($request->file('size_image'), $this->sizeDirectory);
+            }
+
+            $product = $this->writer->create($this->typeKey, $data);
+            $this->storeUploadsOnProduct($request, $product);
+
+            $categoryType = $data['category_type'] ?? self::TYPE_BO_NOC;
+
+            return redirect()
+                ->route('admin.phu-kien-ngoi-ct.index', ['category_type' => $categoryType])
+                ->with('success', 'Thêm mới '.self::categoryLabel($categoryType).' thành công.');
+        } catch (InvalidArgumentException $e) {
+            return back()->withInput()->withErrors(['code' => $e->getMessage()]);
+        }
     }
 
-    public function edit(int $id)
+    public function edit(int $id): View
     {
-        $product = $this->service->findById($id);
-        $categoryType = $product->category_type;
-        $categoryLabel = PhuKienNgoiCt::categoryLabel($categoryType);
+        $product = $this->queryService->find($this->typeKey, $id);
+        $categoryType = $product->category_type ?? self::TYPE_BO_NOC;
+        $categoryLabel = self::categoryLabel($categoryType);
 
         return view('admin.phu-kien-ngoi-ct.edit', compact('product', 'categoryType', 'categoryLabel'));
     }
 
-    public function update(Request $request, int $id)
+    protected function customStoreRules(Request $request): array
     {
-        $product = $this->service->findById($id);
-        $data = $this->validatedProductData($request, false, $product->category_type);
-        $this->service->update($id, $data);
-
-        return back()->with('success', 'Cập nhật thành công.');
-    }
-
-    public function destroy(int $id)
-    {
-        $this->service->toggleStatus($id, 1);
-
-        return back()->with('success', 'Đã tạm ẩn sản phẩm.');
-    }
-
-    public function restore(int $id)
-    {
-        $this->service->toggleStatus($id, 0);
-
-        return back()->with('success', 'Khôi phục sản phẩm thành công.');
-    }
-
-    public function destroyImage(Request $request, int $id)
-    {
-        return $this->destroyGalleryMediaResponse(
-            $request,
-            fn (array $imagePaths, array $videoUrls, array $videoPaths = []) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls, $videoPaths)
-        );
-    }
-
-    private function validatedProductData(Request $request, bool $create, ?string $fallbackCategoryType = null): array
-    {
-        return $request->validate([
-            'category_type' => ['required', Rule::in([PhuKienNgoiCt::TYPE_BO_NOC, PhuKienNgoiCt::TYPE_CHU_VAN])],
-            'name' => ['required', 'string', 'max:255'],
-            'color' => ['nullable', 'string', 'max:100'],
-            'size' => ['nullable', 'string', 'max:255'],
-            'des' => ['nullable', 'array'],
-            'des.*' => ['nullable', 'string', 'max:500'],
-            'size_des' => ['nullable', 'array'],
-            'size_des.*' => ['nullable', 'string', 'max:500'],
-            $create ? 'images' : 'new_images' => $create
-                ? ['nullable', 'required_without:cover_image', 'array', 'min:1']
-                : ['nullable', 'array'],
-            ($create ? 'images' : 'new_images').'.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'cover_image' => $create
-                ? ['nullable', 'required_without:images', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']
-                : ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'gallery_order' => ['nullable', 'array'],
-            'gallery_order.*' => ['string'],
-            'size_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            $create ? 'video_urls' : 'new_video_urls' => ['nullable', 'array'],
-            ($create ? 'video_urls' : 'new_video_urls').'.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            $create ? 'videos' : 'new_videos' => ['nullable', 'array'],
-            ($create ? 'videos' : 'new_videos').'.*' => ['file', 'mimes:mp4,webm', 'max:51200'],
-        ]) + ['category_type' => $fallbackCategoryType ?? $request->input('category_type')];
+        return [
+            'category_type' => ['required', Rule::in([self::TYPE_BO_NOC, self::TYPE_CHU_VAN])],
+        ];
     }
 
     private function categoryType(Request $request): string
     {
-        $categoryType = $request->query('category_type', PhuKienNgoiCt::TYPE_BO_NOC);
+        $categoryType = $request->query('category_type', self::TYPE_BO_NOC);
 
-        return $categoryType === PhuKienNgoiCt::TYPE_CHU_VAN ? PhuKienNgoiCt::TYPE_CHU_VAN : PhuKienNgoiCt::TYPE_BO_NOC;
-    }
-
-    public function storeImages(Request $request, int $id)
-    {
-        return $this->storeGalleryImagesResponse(
-            $request,
-            fn (array $images, array $videoUrls, array $videoFiles) => $this->service->appendMediaToGallery($id, $images, $videoUrls, $videoFiles)
-        );
-    }
-
-    public function reorderGallery(Request $request, int $id)
-    {
-        return $this->reorderGalleryResponse(
-            $request,
-            fn (array $tokens) => $this->service->reorderGalleryItems($id, $tokens),
-            fn (string $imagePath) => $this->service->promoteCoverImage($id, $imagePath)
-        );
+        return $categoryType === self::TYPE_CHU_VAN ? self::TYPE_CHU_VAN : self::TYPE_BO_NOC;
     }
 }

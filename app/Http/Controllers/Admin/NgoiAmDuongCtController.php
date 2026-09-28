@@ -2,111 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
-use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreNgoiAmDuongCtRequest;
-use App\Http\Requests\UpdateNgoiAmDuongCtRequest;
-use App\Services\NgoiAmDuongCtService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
+use App\Domains\Catalog\Http\Admin\BaseProductItemController;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use InvalidArgumentException;
 
-class NgoiAmDuongCtController extends Controller
+class NgoiAmDuongCtController extends BaseProductItemController
 {
-    use DestroysProductGalleryMedia;
-    use UploadsProductGalleryMedia;
+    protected string $typeKey = 'ngoi_am_duong_ct';
+    protected string $viewPrefix = 'admin.ngoi-am-duong-ct';
+    protected string $routePrefix = 'admin.ngoi-am-duong-ct';
+    protected string $itemLabel = 'chi tiết Ngói Âm Dương';
+    protected string $imageDirectory = 'ngoi_am_duong_ct';
+    protected string $sizeDirectory = 'ngoi_am_duong_ct/sizes';
 
-    public function __construct(
-        private readonly NgoiAmDuongCtService $service
-    ) {}
-
-    public function index(Request $request): View
+    protected function customStoreRules(Request $request): array
     {
-        $status = $request->query('status', 'active');
-        $products = $this->service->getAll($status);
-
-        return view('admin.ngoi-am-duong-ct.index', compact('products', 'status'));
-    }
-
-    public function create(Request $request): View
-    {
-        $copiedProduct = null;
-        if ($request->filled('copy_from')) {
-            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('ngoi-am-duong-ct', (int) $request->query('copy_from'));
-        }
-
-        return view('admin.ngoi-am-duong-ct.create', compact('copiedProduct'));
-    }
-
-    public function store(StoreNgoiAmDuongCtRequest $request): RedirectResponse
-    {
-        try {
-            $this->service->create($request->validated());
-
-            return redirect()->route('admin.ngoi-am-duong-ct.index')
-                ->with('success', 'Thêm mới chi tiết Ngói Âm Dương thành công.');
-        } catch (InvalidArgumentException $e) {
-            return back()->withInput()->withErrors(['code' => $e->getMessage()]);
-        }
-    }
-
-    public function edit(int $id): View
-    {
-        $product = $this->service->findById($id);
-
-        return view('admin.ngoi-am-duong-ct.edit', compact('product'));
-    }
-
-    public function update(UpdateNgoiAmDuongCtRequest $request, int $id): RedirectResponse
-    {
-        try {
-            $this->service->update($id, $request->validated());
-
-            return back()->with('success', 'Cập nhật sản phẩm thành công.');
-        } catch (InvalidArgumentException $e) {
-            return back()->withInput()->withErrors(['code' => $e->getMessage()]);
-        }
-    }
-
-    public function destroy(int $id): RedirectResponse
-    {
-        $this->service->deleteProduct($id);
-
-        return back()->with('success', 'Đã tạm ẩn sản phẩm thành công.');
-    }
-
-    public function restore(int $id): RedirectResponse
-    {
-        $this->service->restoreProduct($id);
-
-        return back()->with('success', 'Khôi phục sản phẩm thành công.');
-    }
-
-    public function destroyImage(Request $request, int $id): RedirectResponse|JsonResponse
-    {
-        return $this->destroyGalleryMediaResponse(
-            $request,
-            fn (array $imagePaths, array $videoUrls, array $videoPaths = []) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls, $videoPaths)
-        );
-    }
-
-    public function storeImages(Request $request, int $id)
-    {
-        return $this->storeGalleryImagesResponse(
-            $request,
-            fn (array $images, array $videoUrls, array $videoFiles) => $this->service->appendMediaToGallery($id, $images, $videoUrls, $videoFiles)
-        );
-    }
-
-    public function reorderGallery(Request $request, int $id)
-    {
-        return $this->reorderGalleryResponse(
-            $request,
-            fn (array $tokens) => $this->service->reorderGalleryItems($id, $tokens),
-            fn (string $imagePath) => $this->service->promoteCoverImage($id, $imagePath)
-        );
+        return [
+            'code' => ['required', 'string', 'max:50'],
+            'price' => ['required', 'integer', 'min:0'],
+        ];
     }
 }

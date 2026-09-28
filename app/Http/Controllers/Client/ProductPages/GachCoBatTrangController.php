@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Client\ProductPages;
 
+use App\Domains\Catalog\Services\CatalogQueryService;
+use App\Domains\Content\Services\GiaTriVuotTroiService;
 use App\Http\Controllers\Controller;
 use App\Models\GachCoBatTrang;
 use App\Services\DinhMucGachCoBatTrangService;
-use App\Services\GachCoBatTrangCtService;
 use App\Services\GachCoBatTrangService;
-use App\Domains\Content\Services\GiaTriVuotTroiService;
-use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
-use App\Support\ProductCollectionFilter;
 use App\Support\ProductJourneyVideo;
 use Illuminate\Http\Request;
 
@@ -18,7 +16,7 @@ class GachCoBatTrangController extends Controller
 {
     public function __construct(
         private readonly GachCoBatTrangService $gachCoBatTrangService,
-        private readonly GachCoBatTrangCtService $gachCoBatTrangCtService,
+        private readonly CatalogQueryService $catalogQuery,
         private readonly DinhMucGachCoBatTrangService $dinhMucService,
         private readonly GiaTriVuotTroiService $giaTriVuotTroiService,
     ) {}
@@ -28,13 +26,7 @@ class GachCoBatTrangController extends Controller
         $config = $this->gachCoBatTrangService->getFirstRecord();
         $category = in_array($request->query('type'), ['bat', 'that', 'the'], true)
             ? $request->query('type') : null;
-        $products = config('product_catalog.read_unified')
-            ? app(UnifiedProductCatalog::class)->filtered('gach_co_bat_trang_ct', $request->query(), $category)
-            : ProductCollectionFilter::apply($this->gachCoBatTrangCtService->getAll('active'), $request->query());
-
-        if (! config('product_catalog.read_unified') && $category !== null) {
-            $products = $products->where('category_type', $request->query('type'))->values();
-        }
+        $products = $this->catalogQuery->filtered('gach_co_bat_trang_ct', $request->query(), $category);
 
         $batProducts = $products->where('category_type', 'bat')->values();
         $thatXayProducts = $products->where('category_type', 'that')->values();
@@ -56,19 +48,11 @@ class GachCoBatTrangController extends Controller
 
     public function detail($id, ViewHistoryService $historyService)
     {
-        $product = $this->gachCoBatTrangCtService->findById($id);
-
-        if ($product->is_delete == 1) {
-            abort(404);
-        }
-
-        $historyService->trackProduct('gach_co_bat_trang_ct', (int) $product->gach_co_bat_trang_ct_id);
+        $product = $this->catalogQuery->findActive('gach_co_bat_trang_ct', (int) $id);
+        $historyService->trackProduct('gach_co_bat_trang_ct', (int) $product->public_id);
 
         $dinhMuc = $this->dinhMucService->getAll();
-
-        $relatedProducts = config('product_catalog.read_unified')
-            ? app(UnifiedProductCatalog::class)->related('gach_co_bat_trang_ct', (int) $id, null, 4)
-            : $this->gachCoBatTrangCtService->getAll('active')->where('gach_co_bat_trang_ct_id', '!=', $id)->take(4);
+        $relatedProducts = $this->catalogQuery->related('gach_co_bat_trang_ct', (int) $product->public_id, null, 4);
 
         $config = GachCoBatTrang::query()->first();
         $journeyVideo = ProductJourneyVideo::resolve($product->video ?? null, $config);

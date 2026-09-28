@@ -1,17 +1,18 @@
 <?php
 
-use App\Models\NgoiAmDuongCt;
-use App\Models\PhuKienNgoiCt;
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Catalog\PublicIdAllocator;
 use App\Domains\Identity\Models\User;
 
-function makePriorityProduct(string $code, string $name, bool $hidden = false): NgoiAmDuongCt
+function makePriorityProduct(string $code, string $name, bool $hidden = false): Product
 {
-    return NgoiAmDuongCt::query()->create([
+    return app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => $code,
         'name' => $name,
         'images' => [],
         'price' => 1000,
-        'is_delete' => $hidden,
+        'is_delete' => $hidden ? 1 : 0,
     ]);
 }
 
@@ -22,11 +23,11 @@ test('admin can reorder active products and the order is persisted', function ()
     $third = makePriorityProduct('PRIORITY-003', 'Sản phẩm C');
 
     $this->putJson(route('admin.products.priority.update', 'ngoi-am-duong-ct'), [
-        'ids' => [$third->getKey(), $first->getKey(), $second->getKey()],
+        'ids' => [$third->public_id, $first->public_id, $second->public_id],
     ])->assertOk();
 
-    expect(NgoiAmDuongCt::query()->orderedByPriority()->pluck('ngoi_am_duong_ct_id')->map(fn ($id) => (int) $id)->all())
-        ->toBe([$third->getKey(), $first->getKey(), $second->getKey()]);
+    expect(Product::where('type_key', 'ngoi_am_duong_ct')->orderedByPriority()->get()->map(fn ($p) => (int) $p->public_id)->all())
+        ->toBe([$third->public_id, $first->public_id, $second->public_id]);
 });
 
 test('homepage product sections use the persisted priority order', function () {
@@ -47,20 +48,20 @@ test('reorder rejects missing, hidden, duplicate and cross-category product IDs 
     $before = $first->priority;
 
     $this->putJson(route('admin.products.priority.update', 'ngoi-am-duong-ct'), [
-        'ids' => [$first->getKey(), $hidden->getKey()],
+        'ids' => [$first->public_id, $hidden->public_id],
     ])->assertUnprocessable();
     $this->putJson(route('admin.products.priority.update', 'ngoi-am-duong-ct'), [
-        'ids' => [$first->getKey(), $first->getKey()],
+        'ids' => [$first->public_id, $first->public_id],
     ])->assertUnprocessable();
     $this->putJson(route('admin.products.priority.update', 'ngoi-am-duong-ct'), [
-        'ids' => [$first->getKey(), 999999],
+        'ids' => [$first->public_id, 999999],
     ])->assertUnprocessable();
 
-    $boNoc = PhuKienNgoiCt::query()->create(['name' => 'Bò nóc', 'category_type' => PhuKienNgoiCt::TYPE_BO_NOC]);
-    $chuVan = PhuKienNgoiCt::query()->create(['name' => 'Chữ vạn', 'category_type' => PhuKienNgoiCt::TYPE_CHU_VAN]);
+    $boNoc = app(ProductWriter::class)->create('phu_kien_ngoi_ct', ['name' => 'Bò nóc', 'category_type' => 'bo_noc']);
+    $chuVan = app(ProductWriter::class)->create('phu_kien_ngoi_ct', ['name' => 'Chữ vạn', 'category_type' => 'chu_van']);
     $this->putJson(route('admin.products.priority.update', 'phu-kien-ngoi-ct'), [
-        'category_type' => PhuKienNgoiCt::TYPE_BO_NOC,
-        'ids' => [$boNoc->getKey(), $chuVan->getKey()],
+        'category_type' => 'bo_noc',
+        'ids' => [$boNoc->public_id, $chuVan->public_id],
     ])->assertUnprocessable();
 
     expect($first->fresh()->priority)->toBe($before);
@@ -87,4 +88,18 @@ test('guest cannot save product priorities', function () {
     $this->putJson(route('admin.products.priority.update', 'ngoi-am-duong-ct'), [
         'ids' => [1],
     ])->assertUnauthorized();
+});
+
+test('reorder uses public IDs when they collide with database IDs', function () {
+    $this->actingAs(User::factory()->create());
+    $first = Product::create(['type_key' => 'ngoi_am_duong_ct', 'name' => 'First']);
+    $second = Product::create(['type_key' => 'ngoi_am_duong_ct', 'name' => 'Second']);
+    app(PublicIdAllocator::class)->product($first, 2);
+    app(PublicIdAllocator::class)->product($second, 1);
+
+    $this->putJson(route('admin.products.priority.update', 'ngoi-am-duong-ct'), [
+        'ids' => [1, 2],
+    ])->assertOk();
+
+    expect($second->fresh()->priority)->toBeGreaterThan($first->fresh()->priority);
 });

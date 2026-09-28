@@ -1,10 +1,9 @@
 <?php
 
+use App\Domains\Catalog\ProductWriter;
 use App\Models\DinhMucNgoiAmDuong;
 use App\Models\DinhMucNgoiHaiVanMieu;
-use App\Models\NgoiAmDuongCt;
 use App\Models\NgoiHaiVanMieu;
-use App\Models\NgoiHaiVanMieuCt;
 use Illuminate\Support\Facades\Blade;
 
 test('shape area block partial renders standardized shape calculator markup', function () {
@@ -38,7 +37,7 @@ test('quantity calculator partial keeps rectangle-only multi-area markup', funct
 });
 
 test('ngoi am duong detail renders weight calculator with shape area markup', function () {
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-CALC-MARKUP',
         'name' => 'Ngói Âm Dương Calculator Markup',
         'images' => ['assets/images/ngoi-01.jpg'],
@@ -85,16 +84,15 @@ test('ngoi hai van mieu detail renders shape calculator blocks', function () {
         'images' => ['ngoi-hai/cong-doan-01.jpg'],
     ]);
 
-    $product = NgoiHaiVanMieuCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_hai_van_mieu_ct', [
         'name' => 'Ngói Hài Calculator Markup',
         'color' => 'Tự chọn',
         'images' => ['ngoi-hai/product-main.jpg'],
         'price' => 0,
         'des' => ['Mô tả test'],
-        'mau_sac_id' => 0,
         'size' => 'L280 x W280 x H54mm',
         'size_image' => 'ngoi-hai/size-image.jpg',
-        'is_delete' => 0,
+        'is_delete' => false,
     ]);
 
     DinhMucNgoiHaiVanMieu::query()->create([

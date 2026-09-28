@@ -2,36 +2,20 @@
 
 namespace App\Domains\Catalog;
 
-use App\Models\DenVuonGomSuCt;
-use App\Models\GachCoBatTrangCt;
-use App\Models\GachHoaThongGioCt;
-use App\Models\GachTrangTriCt;
-use App\Models\LanCanGomSuCt;
-use App\Models\LinhVatPhongThuyCt;
-use App\Models\MauSacNgoiHaiCoCt;
-use App\Models\MauSacNgoiHaiVanMieuCt;
-use App\Models\NgoiAmDuongCt;
-use App\Models\NgoiHaiCoCt;
-use App\Models\NgoiHaiVanMieuCt;
-use App\Models\PhanLoaiDenVuonGomSuCt;
-use App\Models\PhanLoaiLanCanGomSuCt;
-use App\Models\PhanLoaiPhuKienNgoiCt;
-use App\Models\PhuKienNgoiCt;
-
 final class ProductTypeRegistry
 {
-    /** @var array<string, array{pk: string, label: string, route: string, model: class-string, variant_model: ?class-string, variant_table: ?string, variant_pk: ?string, variant_fk: ?string, relation: ?string, requires_variant: bool}> */
+    /** @var array<string, array{pk: string, label: string, route: string, has_variants: bool, requires_variant: bool, variant_table: ?string}> */
     private const TYPES = [
-        'ngoi_am_duong_ct' => ['pk' => 'ngoi_am_duong_ct_id', 'label' => 'Ngói Âm Dương', 'route' => 'client.products.ngoi-am-duong.detail', 'model' => NgoiAmDuongCt::class, 'variant_model' => null, 'variant_table' => null, 'variant_pk' => null, 'variant_fk' => null, 'relation' => null, 'requires_variant' => false],
-        'ngoi_hai_van_mieu_ct' => ['pk' => 'ngoi_hai_van_mieu_ct_id', 'label' => 'Ngói Hài Văn Miếu', 'route' => 'client.products.ngoi-hai-van-mieu.detail', 'model' => NgoiHaiVanMieuCt::class, 'variant_model' => MauSacNgoiHaiVanMieuCt::class, 'variant_table' => 'mau_sac_ngoi_hai_van_mieu_ct', 'variant_pk' => 'mau_sac_ngoi_hai_van_mieu_ct_id', 'variant_fk' => 'ngoi_hai_van_mieu_ct_id', 'relation' => 'mauSacs', 'requires_variant' => false],
-        'ngoi_hai_co_ct' => ['pk' => 'ngoi_hai_co_ct_id', 'label' => 'Ngói Hài Cổ', 'route' => 'client.products.ngoi-hai-co.detail', 'model' => NgoiHaiCoCt::class, 'variant_model' => MauSacNgoiHaiCoCt::class, 'variant_table' => 'mau_sac_ngoi_hai_co_ct', 'variant_pk' => 'mau_sac_ngoi_hai_co_ct_id', 'variant_fk' => 'ngoi_hai_co_ct_id', 'relation' => 'mauSacs', 'requires_variant' => true],
-        'gach_hoa_thong_gio_ct' => ['pk' => 'gach_hoa_thong_gio_ct_id', 'label' => 'Gạch Hoa Thông Gió', 'route' => 'client.products.gach-hoa-thong-gio.detail', 'model' => GachHoaThongGioCt::class, 'variant_model' => null, 'variant_table' => null, 'variant_pk' => null, 'variant_fk' => null, 'relation' => null, 'requires_variant' => false],
-        'gach_trang_tri_ct' => ['pk' => 'gach_trang_tri_ct_id', 'label' => 'Gạch Trang Trí', 'route' => 'client.products.gach-trang-tri.detail', 'model' => GachTrangTriCt::class, 'variant_model' => null, 'variant_table' => null, 'variant_pk' => null, 'variant_fk' => null, 'relation' => null, 'requires_variant' => false],
-        'gach_co_bat_trang_ct' => ['pk' => 'gach_co_bat_trang_ct_id', 'label' => 'Gạch Cổ Bát Tràng', 'route' => 'client.products.gach-co-bat-trang.detail', 'model' => GachCoBatTrangCt::class, 'variant_model' => null, 'variant_table' => null, 'variant_pk' => null, 'variant_fk' => null, 'relation' => null, 'requires_variant' => false],
-        'linh_vat_phong_thuy_ct' => ['pk' => 'linh_vat_phong_thuy_ct_id', 'label' => 'Linh Vật Phong Thủy', 'route' => 'client.products.linh-vat-phong-thuy.detail', 'model' => LinhVatPhongThuyCt::class, 'variant_model' => null, 'variant_table' => null, 'variant_pk' => null, 'variant_fk' => null, 'relation' => null, 'requires_variant' => false],
-        'lan_can_gom_su_ct' => ['pk' => 'lan_can_gom_su_ct_id', 'label' => 'Lan Can Gốm Sứ', 'route' => 'client.products.lan-can-gom-su.detail', 'model' => LanCanGomSuCt::class, 'variant_model' => PhanLoaiLanCanGomSuCt::class, 'variant_table' => 'phan_loai_lan_can_gom_su_ct', 'variant_pk' => 'phan_loai_lan_can_gom_su_ct_id', 'variant_fk' => 'lan_can_gom_su_ct_id', 'relation' => 'phanLoais', 'requires_variant' => true],
-        'den_vuon_gom_su_ct' => ['pk' => 'den_vuon_gom_su_ct_id', 'label' => 'Đèn Gốm Sứ', 'route' => 'client.products.den-gom-su.detail', 'model' => DenVuonGomSuCt::class, 'variant_model' => PhanLoaiDenVuonGomSuCt::class, 'variant_table' => 'phan_loai_den_vuon_gom_su_ct', 'variant_pk' => 'phan_loai_den_vuon_gom_su_ct_id', 'variant_fk' => 'den_vuon_gom_su_ct_id', 'relation' => 'phanLoais', 'requires_variant' => true],
-        'phu_kien_ngoi_ct' => ['pk' => 'phu_kien_ngoi_ct_id', 'label' => 'Phụ Kiện Ngói', 'route' => 'client.products.phu-kien-ngoi.ngoi-bo-noc.detail', 'model' => PhuKienNgoiCt::class, 'variant_model' => PhanLoaiPhuKienNgoiCt::class, 'variant_table' => 'phan_loai_phu_kien_ngoi_ct', 'variant_pk' => 'phan_loai_phu_kien_ngoi_ct_id', 'variant_fk' => 'phu_kien_ngoi_ct_id', 'relation' => 'phanLoais', 'requires_variant' => true],
+        'ngoi_am_duong_ct' => ['pk' => 'ngoi_am_duong_ct_id', 'label' => 'Ngói Âm Dương', 'route' => 'client.products.ngoi-am-duong.detail', 'has_variants' => false, 'requires_variant' => false, 'variant_table' => null],
+        'ngoi_hai_van_mieu_ct' => ['pk' => 'ngoi_hai_van_mieu_ct_id', 'label' => 'Ngói Hài Văn Miếu', 'route' => 'client.products.ngoi-hai-van-mieu.detail', 'has_variants' => true, 'requires_variant' => false, 'variant_table' => 'mau_sac_ngoi_hai_van_mieu_ct'],
+        'ngoi_hai_co_ct' => ['pk' => 'ngoi_hai_co_ct_id', 'label' => 'Ngói Hài Cổ', 'route' => 'client.products.ngoi-hai-co.detail', 'has_variants' => true, 'requires_variant' => true, 'variant_table' => 'mau_sac_ngoi_hai_co_ct'],
+        'gach_hoa_thong_gio_ct' => ['pk' => 'gach_hoa_thong_gio_ct_id', 'label' => 'Gạch Hoa Thông Gió', 'route' => 'client.products.gach-hoa-thong-gio.detail', 'has_variants' => false, 'requires_variant' => false, 'variant_table' => null],
+        'gach_trang_tri_ct' => ['pk' => 'gach_trang_tri_ct_id', 'label' => 'Gạch Trang Trí', 'route' => 'client.products.gach-trang-tri.detail', 'has_variants' => false, 'requires_variant' => false, 'variant_table' => null],
+        'gach_co_bat_trang_ct' => ['pk' => 'gach_co_bat_trang_ct_id', 'label' => 'Gạch Cổ Bát Tràng', 'route' => 'client.products.gach-co-bat-trang.detail', 'has_variants' => false, 'requires_variant' => false, 'variant_table' => null],
+        'linh_vat_phong_thuy_ct' => ['pk' => 'linh_vat_phong_thuy_ct_id', 'label' => 'Linh Vật Phong Thủy', 'route' => 'client.products.linh-vat-phong-thuy.detail', 'has_variants' => false, 'requires_variant' => false, 'variant_table' => null],
+        'lan_can_gom_su_ct' => ['pk' => 'lan_can_gom_su_ct_id', 'label' => 'Lan Can Gốm Sứ', 'route' => 'client.products.lan-can-gom-su.detail', 'has_variants' => true, 'requires_variant' => true, 'variant_table' => 'phan_loai_lan_can_gom_su_ct'],
+        'den_vuon_gom_su_ct' => ['pk' => 'den_vuon_gom_su_ct_id', 'label' => 'Đèn Gốm Sứ', 'route' => 'client.products.den-gom-su.detail', 'has_variants' => true, 'requires_variant' => true, 'variant_table' => 'phan_loai_den_vuon_gom_su_ct'],
+        'phu_kien_ngoi_ct' => ['pk' => 'phu_kien_ngoi_ct_id', 'label' => 'Phụ Kiện Ngói', 'route' => 'client.products.phu-kien-ngoi.ngoi-bo-noc.detail', 'has_variants' => true, 'requires_variant' => true, 'variant_table' => 'phan_loai_phu_kien_ngoi_ct'],
     ];
 
     public static function all(): array

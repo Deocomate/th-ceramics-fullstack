@@ -23,42 +23,46 @@ return new class extends Migration
             }
         });
 
-        Schema::table('gach_co_bat_trang_ct', function (Blueprint $table) {
-            if (! Schema::hasColumn('gach_co_bat_trang_ct', 'category_type')) {
-                $table->string('category_type', 20)->default('bat')->after('name')->index();
-            }
+        if (Schema::hasTable('gach_co_bat_trang_ct')) {
+            Schema::table('gach_co_bat_trang_ct', function (Blueprint $table) {
+                if (! Schema::hasColumn('gach_co_bat_trang_ct', 'category_type')) {
+                    $table->string('category_type', 20)->default('bat')->after('name')->index();
+                }
 
-            if (! Schema::hasColumn('gach_co_bat_trang_ct', 'dinh_muc')) {
-                $table->string('dinh_muc', 50)->nullable()->after('size');
-            }
+                if (! Schema::hasColumn('gach_co_bat_trang_ct', 'dinh_muc')) {
+                    $table->string('dinh_muc', 50)->nullable()->after('size');
+                }
 
-            if (! Schema::hasColumn('gach_co_bat_trang_ct', 'weight')) {
-                $table->string('weight', 50)->nullable()->after('dinh_muc');
-            }
-        });
+                if (! Schema::hasColumn('gach_co_bat_trang_ct', 'weight')) {
+                    $table->string('weight', 50)->nullable()->after('dinh_muc');
+                }
+            });
 
-        DB::table('gach_co_bat_trang_ct')
-            ->whereNull('category_type')
-            ->orWhere('category_type', '')
-            ->update(['category_type' => 'bat']);
+            DB::table('gach_co_bat_trang_ct')
+                ->whereNull('category_type')
+                ->orWhere('category_type', '')
+                ->update(['category_type' => 'bat']);
+        }
     }
 
     public function down(): void
     {
-        Schema::table('gach_co_bat_trang_ct', function (Blueprint $table) {
-            if (Schema::hasColumn('gach_co_bat_trang_ct', 'category_type')) {
-                $table->dropIndex(['category_type']);
-                $table->dropColumn('category_type');
-            }
+        if (Schema::hasTable('gach_co_bat_trang_ct')) {
+            Schema::table('gach_co_bat_trang_ct', function (Blueprint $table) {
+                if (Schema::hasColumn('gach_co_bat_trang_ct', 'category_type')) {
+                    $table->dropIndex(['category_type']);
+                    $table->dropColumn('category_type');
+                }
 
-            if (Schema::hasColumn('gach_co_bat_trang_ct', 'weight')) {
-                $table->dropColumn('weight');
-            }
+                if (Schema::hasColumn('gach_co_bat_trang_ct', 'weight')) {
+                    $table->dropColumn('weight');
+                }
 
-            if (Schema::hasColumn('gach_co_bat_trang_ct', 'dinh_muc')) {
-                $table->dropColumn('dinh_muc');
-            }
-        });
+                if (Schema::hasColumn('gach_co_bat_trang_ct', 'dinh_muc')) {
+                    $table->dropColumn('dinh_muc');
+                }
+            });
+        }
 
         Schema::table('gach_co_bat_trang', function (Blueprint $table) {
             foreach (['section_the', 'section_that', 'section_bat'] as $column) {

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Middleware\SubstituteStagedImages;
-use App\Models\NgoiAmDuongCt;
+use App\Domains\Catalog\Models\Product;
 use App\Domains\Identity\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -154,7 +154,9 @@ test('product creation accepts a staged gallery with the first image as cover', 
         '__staged_images' => json_encode(['images[]' => $tokens], JSON_THROW_ON_ERROR),
     ])->assertRedirect(route('admin.ngoi-am-duong-ct.index'));
 
-    $product = NgoiAmDuongCt::query()->where('code', 'NAD-STAGED-GALLERY-001')->firstOrFail();
+    $product = Product::where('type_key', 'ngoi_am_duong_ct')
+        ->whereHas('variants', fn ($q) => $q->where('sku', 'NAD-STAGED-GALLERY-001'))
+        ->firstOrFail();
     expect($product->images)->toHaveCount(2);
     foreach ($product->images as $path) {
         Storage::disk('public')->assertExists($path);

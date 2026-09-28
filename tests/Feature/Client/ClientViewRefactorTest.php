@@ -108,7 +108,7 @@ test('product card shows the correct unit for each product type', function () {
 
     $html = Blade::render(
         '<x-client.shared.product-card title="Gạch" price="120.000đ" :product="$product" />',
-        ['product' => new \App\Models\GachTrangTriCt],
+        ['product' => new \App\Domains\Catalog\Models\Product(['type_key' => 'gach_trang_tri_ct'])],
     );
 
     expect($html)->toContain('120.000 đ/viên');
