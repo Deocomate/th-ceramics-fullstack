@@ -14,6 +14,10 @@ class ContentArchiveService
 {
     public const FORMAT_VERSION = 1;
 
+    private array $foreignKeys = [];
+
+    private ?string $cachedSourceId = null;
+
     public function directory(): string
     {
         $path = storage_path('app/private/content-archives');
@@ -24,12 +28,15 @@ class ContentArchiveService
 
     public function sourceId(): string
     {
+        if ($this->cachedSourceId !== null) {
+            return $this->cachedSourceId;
+        }
         $path = $this->directory().DIRECTORY_SEPARATOR.'source-id';
         if (! is_file($path)) {
             file_put_contents($path, (string) Str::uuid(), LOCK_EX);
         }
 
-        return trim((string) file_get_contents($path));
+        return $this->cachedSourceId = trim((string) file_get_contents($path));
     }
 
     /** @return list<string> */
@@ -145,35 +152,31 @@ class ContentArchiveService
             $manifest = json_decode((string) $zip->getFromName('manifest.json'), true, flags: JSON_THROW_ON_ERROR);
             $report = ['manifest' => $manifest, 'add' => 0, 'update' => 0, 'conflict' => 0, 'unchanged' => 0, 'conflicts' => [], 'missing_media' => []];
             $referencedMedia = [];
+            $planned = [];
             foreach ($manifest['tables'] as $table => $expected) {
                 if (! in_array($table, $this->tables(), true)) {
                     throw new RuntimeException("Bảng {$table} không được hỗ trợ ở schema này.");
                 }
                 $key = $this->primaryKey($table);
                 $seen = 0;
-                $this->eachRow($zip, $table, function (array $row) use ($table, $key, $manifest, &$report, &$seen, &$referencedMedia): void {
+                $this->eachRow($zip, $table, function (array $row) use ($table, $key, $manifest, &$report, &$seen, &$referencedMedia, &$planned): void {
                     $seen++;
                     $this->collectMedia($row, $referencedMedia);
                     if (! array_key_exists($key, $row)) {
                         throw new RuntimeException("Thiếu khóa chính của {$table}.");
                     }
-                    $existing = DB::table($table)->where($key, $row[$key])->first();
-                    if (! $existing) {
-                        $report['add']++;
-                    } elseif ($manifest['source_id'] !== $this->sourceId()
-                        || (isset($existing->updated_at, $row['updated_at']) && $existing->updated_at > $row['updated_at'])) {
-                        $report['conflict']++;
+                    [$status, $reason] = $this->classifyRow($table, $key, $row, $manifest, $planned);
+                    $report[$status]++;
+                    if ($status === 'conflict') {
                         if (count($report['conflicts']) < 100) {
                             $report['conflicts'][] = [
                                 'table' => $table,
                                 'id' => $row[$key],
-                                'reason' => $manifest['source_id'] !== $this->sourceId() ? 'different_source_same_id' : 'destination_newer',
+                                'reason' => $reason,
                             ];
                         }
-                    } elseif ((array) $existing == $row) {
-                        $report['unchanged']++;
                     } else {
-                        $report['update']++;
+                        $planned[$table][(string) $row[$key]] = true;
                     }
                 });
                 if ($seen !== $expected) {
@@ -206,24 +209,31 @@ class ContentArchiveService
         try {
             $rewrites = $this->restoreMedia($zip, $manifest);
             DB::transaction(function () use ($zip, $manifest, $rewrites, &$result): void {
+                $planned = [];
                 foreach ($manifest['tables'] as $table => $_count) {
                     $key = $this->primaryKey($table);
-                    $this->eachRow($zip, $table, function (array $row) use ($table, $key, $manifest, $rewrites, &$result): void {
+                    $this->eachRow($zip, $table, function (array $row) use ($table, $key, $manifest, $rewrites, &$result, &$planned): void {
                         $row = $this->rewriteMedia($row, $rewrites);
-                        $existing = DB::table($table)->where($key, $row[$key])->first();
-                        if ($existing && ($manifest['source_id'] !== $this->sourceId()
-                            || (isset($existing->updated_at, $row['updated_at']) && $existing->updated_at > $row['updated_at']))) {
+                        [$status, , $targetId, $row] = $this->classifyRow($table, $key, $row, $manifest, $planned);
+                        if ($status === 'conflict') {
                             $result['skipped']++;
 
                             return;
                         }
-                        if ($existing && (array) $existing == $row) {
+                        $sourceId = $row[$key];
+                        $row[$key] = $targetId;
+                        if ($status === 'unchanged') {
                             $result['skipped']++;
-
-                            return;
+                        } else {
+                            DB::table($table)->updateOrInsert([$key => $targetId], $row);
+                            $result[$status === 'add' ? 'added' : 'updated']++;
                         }
-                        DB::table($table)->updateOrInsert([$key => $row[$key]], $row);
-                        $result[$existing ? 'updated' : 'added']++;
+                        DB::table('content_archive_record_maps')->updateOrInsert([
+                            'source_id' => $manifest['source_id'],
+                            'table_name' => $table,
+                            'source_record_id' => $sourceId,
+                        ], ['target_record_id' => $targetId, 'updated_at' => now(), 'created_at' => now()]);
+                        $planned[$table][(string) $sourceId] = true;
                     });
                 }
             });
@@ -253,7 +263,8 @@ class ContentArchiveService
                 || ! in_array(($manifest['source_schema'] ?? null), ['legacy', 'hybrid'], true)
                 || ! is_array($manifest['tables'] ?? null)
                 || ! is_array($manifest['files'] ?? null)
-                || ! is_string($manifest['source_id'] ?? null)) {
+                || ! is_string($manifest['source_id'] ?? null)
+                || ! Str::isUuid($manifest['source_id'])) {
                 throw new RuntimeException('Phiên bản archive không được hỗ trợ.');
             }
             $total = 0;
@@ -307,6 +318,55 @@ class ContentArchiveService
             $zip->close();
             throw $error;
         }
+    }
+
+    /** @return array{string, ?string, int, array} */
+    private function classifyRow(string $table, string $key, array $row, array $manifest, array $planned): array
+    {
+        $sourceRecordId = (int) $row[$key];
+        $sourceId = $manifest['source_id'];
+        $mapping = DB::table('content_archive_record_maps')
+            ->where('source_id', $sourceId)->where('table_name', $table)
+            ->where('source_record_id', $sourceRecordId)->first();
+        $targetId = (int) ($mapping->target_record_id ?? $sourceRecordId);
+
+        foreach ($this->foreignKeys[$table] ??= Schema::getForeignKeys($table) as $foreignKey) {
+            if (count($foreignKey['columns']) !== 1 || count($foreignKey['foreign_columns']) !== 1
+                || ! array_key_exists($foreignKey['foreign_table'], $manifest['tables'])) {
+                continue;
+            }
+            $column = $foreignKey['columns'][0];
+            $parentTable = $foreignKey['foreign_table'];
+            if (($row[$column] ?? null) === null) {
+                continue;
+            }
+            $parentSourceId = (int) $row[$column];
+            $parentMapping = DB::table('content_archive_record_maps')
+                ->where('source_id', $sourceId)->where('table_name', $parentTable)
+                ->where('source_record_id', $parentSourceId)->first();
+            if ($parentMapping) {
+                $row[$column] = $parentMapping->target_record_id;
+            } elseif ($sourceId !== $this->sourceId()
+                && ! isset($planned[$parentTable][(string) $parentSourceId])) {
+                return ['conflict', 'unmapped_parent', $targetId, $row];
+            }
+        }
+
+        $existing = DB::table($table)->where($key, $targetId)->first();
+        if ($existing && ! $mapping && $sourceId !== $this->sourceId()) {
+            return ['conflict', 'different_source_same_id', $targetId, $row];
+        }
+        if (! $existing) {
+            return ['add', null, $targetId, $row];
+        }
+        if (isset($existing->updated_at, $row['updated_at']) && $existing->updated_at > $row['updated_at']) {
+            return ['conflict', 'destination_newer', $targetId, $row];
+        }
+        $row[$key] = $targetId;
+
+        return (array) $existing == $row
+            ? ['unchanged', null, $targetId, $row]
+            : ['update', null, $targetId, $row];
     }
 
     private function eachRow(ZipArchive $zip, string $table, callable $callback): void
