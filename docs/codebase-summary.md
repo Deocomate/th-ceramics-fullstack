@@ -2,144 +2,106 @@
 
 ## Overview
 
-Laravel 12 monolith with Blade frontend. 44+ database tables, layered architecture (Controller -> Service -> Model), no repository pattern. Custom RBAC with `superadmin`/`admin`/`customer` roles. Vietnamese SEO URLs with 301 redirects from legacy English paths. Home page fully dynamic via HomeController. Session-based cart with AJAX controls, checkout flow with Orders/OrderItems persistence (COD-only payment), email notification system (order confirmation + status updates via database queue), coupon/discount code system with percent and fixed discount types. **E-commerce showcase toggle**: global `is_ecommerce_enabled` flag on `trang_chu` switches between full cart/checkout and B2B consultation mode (`consultation_requests` table, `EnsureEcommerceEnabled` middleware). Admin panel includes page configuration (factory tour, contact, FAQ) with Alpine.js, order management, consultation request management, and coupon management. Client-side auth (email/password + Google OAuth) with custom Vietnamese-branded password reset notifications. Dynamic customer service pages: installation guide (ThiCong model), catalog list with PDF flipbook reader (Catalog model, PDF.js + StPageFlip). JSON-LD structured data on product detail pages.
+**TH Ceramics Fullstack** is a Laravel 12 monolith with a Blade frontend, transitioning from a flat layered architecture into a **Modular Domain-Driven Monolith** (`app/Domains/`). The core product system was completely refactored from 16 fragmented category tables into a **Canonical Catalog** architecture (`products`, `product_variants`, `product_media`, `product_display_options`). 
+
+Features include:
+- **Canonical Product Catalog**: All ceramic products unified under a single flexible entity with variants, polymorphic media (images, YouTube links, MP4 videos), and dynamic display options.
+- **Data Portability**: Full backup and restore via `database.zip` through the Archive Domain, with two-way backward compatibility for legacy exports.
+- **E-commerce & Consultation**: Global toggle (`is_ecommerce_enabled`) switching between session-based cart/checkout (with coupon discounts and queued order status emails) and B2B consultation request mode.
+- **Dynamic CMS**: Home page hero banner, project showcase (`du_an`), factory tour, FAQ, installation guides (`thi_cong`), and PDF flipbook catalog reader (`catalog`).
+- **Role-Based Auth**: Custom RBAC (`superadmin`, `admin`, `customer`) with throttled logins, Google OAuth, and queued branded Vietnamese password reset notifications.
 
 ## Directory Tree
 
 ```
 th-ceramics-fullstack/
 ├── app/
-│   ├── Helpers/
-│   │   └── FileUploadHelper.php          # Image upload/replace/delete
-│   ├── Http/
+│   ├── Domains/                          # Bounded Contexts (Domain Layer)
+│   │   ├── Archive/                      # Content backup/restore (ContentArchiveService, LegacyV1ArchiveAdapter)
+│   │   ├── Catalog/                      # Core Product Catalog
+│   │   │   ├── Http/Admin/               # BaseProductItemController, BaseProductVariantController
+│   │   │   ├── Models/                   # Product, ProductVariant, ProductMedia, ProductDisplayOption
+│   │   │   ├── Services/                 # CatalogQueryService
+│   │   │   ├── ProductWriter.php         # Atomic mutations, SKU uniqueness, gallery reordering
+│   │   │   ├── ProductTypeRegistry.php   # Category metadata & definitions
+│   │   │   └── PublicIdAllocator.php     # Stable public ID mapping for SEO URLs
+│   │   ├── Commerce/                     # Cart, Orders, Coupons
+│   │   │   ├── Http/                     # CartController, OrderController
+│   │   │   ├── Models/                   # Order, OrderItem, Coupon
+│   │   │   └── Services/                 # CartService, CouponService
+│   │   ├── Content/                      # CMS pages, projects, customer services
+│   │   │   ├── Http/                     # HomeController, ProjectController, etc.
+│   │   │   ├── Models/                   # TrangChu, DuAn, DanhMucDuAn, ThiCong, Catalog, Page*
+│   │   │   └── Services/                 # TrangChuService, DuAnService, etc.
+│   │   ├── Identity/                     # Authentication & User Management
+│   │   │   ├── Http/                     # Admin\AuthController, Client\AuthController
+│   │   │   ├── Models/                   # User
+│   │   │   └── Services/                 # AuthService
+│   │   └── Media/                        # Media upload pipeline & WebP optimization
+│   │       ├── Http/                     # Staged image uploads
+│   │       └── Services/                 # StagedImageUploadService, FileUploadHelper
+│   ├── Http/                             # Application Delivery Layer
 │   │   ├── Controllers/
-│   │   │   ├── Admin/                    # 51 files: CRUD per product category + page config + order + coupon management
+│   │   │   ├── Admin/                    # Thin product stubs inheriting BaseProductItemController + CMS config
 │   │   │   └── Client/
-│   │   │       ├── ProductPages/         # 9 product page controllers
-│   │   │       ├── DichVuKhachHang/      # 8 customer service controllers (catalog, install guide, policies, order status)
-│   │   │       └── 12 page/auth/cart controllers (Home, About, Factory, Contact, Faq, Showroom, News, Project, Cart, Auth, GlobalSearch, CustomerService)
-│   │   ├── Middleware/
-│   │   │   └── RoleMiddleware.php        # RBAC: superadmin, admin
-│   │   └── Requests/                     # 31 form validation classes
-│   ├── Mail/                             # 2 Mailable classes (ShouldQueue)
-│   │   ├── OrderCreatedMail.php          # Order confirmation email
-│   │   └── OrderStatusUpdatedMail.php    # Status change notification
-│   ├── Notifications/
-│   │   └── ResetPasswordNotification.php # Custom password reset (ShouldQueue, role-based routing)
-│   ├── Models/                           # 55 Eloquent models
-│   ├── Providers/
-│   │   └── AppServiceProvider.php        # Empty registration
-│   └── Services/                         # 53 service classes (business logic)
-├── bootstrap/
-│   ├── app.php                           # Middleware, routing, exception config
-│   └── providers.php                     # Service provider registration
-├── config/                               # 10 Laravel config files
+│   │   │       ├── ProductPages/         # 9 product controllers orchestrating distinct Blade templates
+│   │   │       └── DichVuKhachHang/      # Customer service view controllers
+│   │   ├── Middleware/                   # RoleMiddleware, EnsureEcommerceEnabled, ContentWriteGate
+│   │   └── Requests/                     # Form request validators
+│   ├── Mail/                             # OrderCreatedMail, OrderStatusUpdatedMail (ShouldQueue)
+│   ├── Notifications/                    # ResetPasswordNotification (ShouldQueue)
+│   ├── Models/                           # Legacy CMS section configuration models
+│   ├── Providers/                        # AppServiceProvider
+│   ├── Rules/                            # Custom rules (e.g., YoutubeUrl)
+│   ├── Services/                         # Cross-cutting services (ProductBulkRename, ViewHistory)
+│   ├── Support/                          # ClientProductType, ProductPriority, ProductJourneyVideo
+│   └── View/Components/                  # Blade view components
+├── config/                               # Application configurations
 ├── database/
-│   ├── factories/
-│   ├── migrations/                       # 15 files → 44 tables
-│   └── seeders/                          # 26 files (core: User, DinhMuc, PageConfig, HomeAndAboutUs, ProductType, ProductDetail, DuAn, DatabaseSeeder + 18 individual product & detail seeders)
-├── public/
-│   └── assets/
-│       ├── css/main.css
-│       ├── images/                       # Logo, icons
-│       └── js/app.js
-├── resources/
-│   └── views/
-│       ├── admin/                        # 86 files (multiple sub-directories per category)
-│       ├── clients/                      # 142 files (per-category sub-directories + home parts + service pages)
-│       ├── emails/                       # 4 files: order confirmation, status update, password reset, combined layout
-│       │   ├── auth/
-│       │   │   └── reset_password.blade.php  # Vietnamese branded password reset email
-│       │   └── orders/
-│       └── components/                   # 32 shared Blade components
+│   ├── migrations/                       # 24 migration files (Canonical catalog + CMS + commerce)
+│   └── seeders/                          # 21 seeders using Canonical ProductWriter
+├── resources/views/
+│   ├── admin/                            # Admin Blade templates
+│   ├── clients/                          # Client Blade templates (9 distinct product layouts)
+│   ├── emails/                           # Order & password reset email templates
+│   └── components/                       # Shared Blade components
 ├── routes/
-│   ├── web.php                           # Admin routes (/admin/*)
-│   ├── client.php                        # Public routes (Vietnamese URLs)
-│   └── console.php
-├── tests/
-│   ├── Feature/
-│   ├── Unit/
-│   ├── Pest.php
-│   └── TestCase.php
-├── vendor/                               # Composer dependencies
-├── composer.json
-├── vite.config.js                        # Configured but unused
-└── CLAUDE.md                             # Laravel Boost project guidelines
+│   ├── web.php                           # Admin routes
+│   ├── client.php                        # Client SEO routes
+│   └── domains/                          # Route files split by domain context
+└── tests/
+    └── Feature/ & Unit/                  # 293 automated tests (100% green)
 ```
-
-## File Counts
-
-| Directory | Count | Description |
-|-----------|-------|-------------|
-| `app/Models/` | 55 | Eloquent models mapping to DB tables |
-| `app/Services/` | 53 | Business logic layer (incl. CartService, CouponService, GlobalProductCodeService) |
-| `app/Http/Controllers/Admin/` | 51 | Admin CRUD controllers (incl. OrderController, CouponController) |
-| `app/Http/Controllers/Client/` | 12 | Top-level public page controllers (Home, About, Factory, Contact, Faq, Showroom, News, Project, Cart, Auth, GlobalSearch, CustomerService) |
-| `app/Http/Controllers/Client/DichVuKhachHang/` | 8 | Customer service controllers (catalog, installation guide, policies, order status) |
-| `app/Http/Controllers/Client/ProductPages/` | 9 | Product page controllers |
-| `app/Http/Requests/` | 31 | Form request validators |
-| `app/Mail/` | 2 | Mailable classes (ShouldQueue: order created, status updated) |
-| `app/Notifications/` | 1 | ResetPasswordNotification (ShouldQueue, role-based routing) |
-| `app/Helpers/` | 1 | FileUploadHelper |
-| `app/Http/Middleware/` | 1 | RoleMiddleware |
-| `routes/` | 3 | web.php (/admin + /admin/pages/*), client.php, console.php |
-| `database/migrations/` | 15 | Migration files (grouped batch + individual) |
-| `database/seeders/` | 26 | Core + individual product seeders |
-| `resources/views/admin/` | 86 | Admin Blade templates (all categories + orders + coupons + config) |
-| `resources/views/clients/` | 142 | Client Blade templates (all products + home + service pages) |
-| `resources/views/emails/` | 4 | Email templates (order created, status updated, password reset, combined layout) |
-| `resources/views/components/` | 32 | Shared Blade components (incl. desktop-product-card, preview-button) |
-| `config/` | 10 | App, database, cache, session, etc. |
-| `tests/` | 25 | Pest test files (covering admin pages, auth, client product pages) |
 
 ## Models Breakdown
 
-### Parent Section Models (10)
-Single-row config per product category: `NgoiAmDuong`, `NgoiHaiVanMieu`, `GachHoaThongGio`, `PhuKienNgoi`, `GachTrangTri`, `LanCanGomXu`, `GachCoBatTrang`, `LinhVatPhongThuy`, `DenGomSu`, `GiaTriVuotTroi`
+### 1. Canonical Catalog Models (`app/Domains/Catalog/Models`)
+- `Product`: Central entity representing a product item across all categories. Stores `type_key`, dimensions, weight, rating criteria, priority, and visibility.
+- `ProductVariant`: Pricing and SKU entity. Supports multi-variant products (e.g. Ngói Hài Văn Miếu) and single-variant defaults.
+- `ProductMedia`: Polymorphic media gallery storing cover images, gallery photos, uploaded MP4 videos, and external YouTube embeds with unique sequence ordering.
+- `ProductDisplayOption`: Category or product-level color swatches and finish options.
 
-### Child Detail Models (10)
-Multi-row product items: `NgoiAmDuongCt`, `NgoiHaiCoCt`, `NgoiHaiVanMieuCt`, `GachHoaThongGioCt`, `GachTrangTriCt`, `GachCoBatTrangCt`, `LinhVatPhongThuyCt`, `DenVuonGomSuCt`, `PhuKienNgoiCt`, `LanCanGomSuCt`
+### 2. CMS Section Models (`app/Models`)
+Single-row configuration records controlling the marketing intro and landing sections for each category:
+`NgoiAmDuong`, `NgoiHaiVanMieu`, `GachHoaThongGio`, `PhuKienNgoi`, `GachTrangTri`, `LanCanGomXu`, `GachCoBatTrang`, `LinhVatPhongThuy`, `DenGomSu`.
 
-### Sub-Resource Models (12)
-`MauSacNgoiAmDuongCt`, `MauSacNgoiHaiCoCt`, `MauSacNgoiHaiVanMieuCt`, `GiaTriGachHoaThongGio`, `LinhVat`, `DenGomSuAnh`, `GachCoBatTrangAnh`, `GachHoaThongGioAnh`, `LinhVatPhongThuyAnh`, `PhanLoaiDenVuonGomSuCt`, `PhanLoaiLanCanGomSuCt`, `PhanLoaiPhuKienNgoiCt`
+### 3. Commerce Models (`app/Domains/Commerce/Models`)
+- `Order`: Full order lifecycle tracking with auto-generated order codes (`THC-YYYYMMDD-XXXX`), status workflows, and email notifications.
+- `OrderItem`: Snapshot of ordered items (product_type, product_id, variant_id, price, quantity).
+- `Coupon`: Discount code engine (percentage / fixed discount, product-type restriction, usage limits).
 
-### Dinh Muc Models (6)
-Rating/estimation tables: `DinhMucNgoiAmDuong`, `DinhMucNgoiHaiCo`, `DinhMucNgoiHaiVanMieu`, `DinhMucGachHoaThongGio`, `DinhMucGachTrangTri`, `DinhMucGachCoBatTrang`
+### 4. Content & Showcase Models (`app/Domains/Content/Models`)
+- `TrangChu`: Home page dynamic configuration (hero slides, partner logos, statistics, showroom gallery).
+- `DuAn` & `DanhMucDuAn`: Portfolio project showcase with category filtering and gallery images.
+- `ThiCong`: Technical installation guides with YouTube video links.
+- `Catalog`: Downloadable PDF product catalogs with an integrated flipbook reader.
+- `PageFactory`, `PageContact`, `PageFaq`, `Faq`: Static and informational page configurations.
 
-### Page Configuration Models (7)
-Single-row config for static pages: `PageFactory` (14+ fields for factory tour page), `PageContact` (5 fields for contact page), `PageFaq` (FAQ page config), `Faq` (FAQ items with WYSIWYG answers), `TrangChu` (home page: banner, khach_hang_doi_tac, loi_tri_an, ve_chung_toi_logo, nhung_con_so, showroom_images -- all JSON arrays), `GiaiThuongThanhTuu` (awards: image, des), `VeChungToi` (about us page)
+---
 
-### System Models (1)
-`User` — authentication with role-based access
+## Architectural Notes on Product Controllers
 
-### Commerce Models (3)
-`Order` — orders with status tracking (pending_payment, processing, shipping, completed, canceled, returned), payment method (COD only since banking disabled), auto-generated order codes (`THC-YYYYMMDD-XXXX`), optional coupon_code, `statusLabel()` static helper for Vietnamese labels, `generateOrderCode()` with uniqueness check
-`OrderItem` — polymorphic line items (product_type, product_id, variant_id) with price and quantity tracking
-`Coupon` — discount codes with percent/fixed types, max discount cap, min order value, product-type filtering, usage limits, validity dates, banner support
-
-### Customer Service Models (2)
-`ThiCong` — installation guide records (table `thi_cong`, PK `thi_cong`), fields: tieu_de, anh (image), link_youtube, used in dynamic installation guide page
-`Catalog` — product catalog PDFs (table `catalog`, PK `catalog_id`), fields: tieu_de, anh_dai_dien (thumbnail), file (PDF path), used in catalog list + PDF flipbook reader
-
-### News/Content Models (3)
-`TinTuc` — news articles, fields: tieu_de, slug, noi_dung, hinh_anh, tac_gia_id, danh_muc_tin_tuc_id, ngay_dang, is_delete
-`DanhMucTinTuc` — news categories (table `danh_muc_tin_tuc`, PK `danh_muc_tin_tuc_id`), fields: ten_danh_muc, slug, is_delete
-`TacGia` — news authors (table `tac_gia`, PK `tac_gia_id`), fields: ten_tac_gia, slug
-
-### Project Module Models (2)
-`DanhMucDuAn` — project categories (table `danh_muc_du_an`, PK `danh_muc_du_an_id`), fields: ten_danh_muc, is_delete; hasMany DuAns
-`DuAn` — individual projects (table `du_an`, PK `du_an_id`), fields: ten_du_an, dia_diem, san_pham, nam, images (JSON array), slug, danh_muc_du_an_id; BelongsTo DanhMucDuAn
-
-## Key Architectural Decisions
-
-1. **No Repository Pattern**: Business logic lives in Service classes; controllers are thin and delegate to services via constructor DI
-2. **Custom Primary Keys**: All tables use `{table_name}_id` instead of default `id`
-3. **Boolean Soft-Delete**: `is_delete` column (0=active, 1=deleted) instead of Laravel's built-in soft delete trait; queries must manually filter `WHERE is_delete = 0`
-4. **JSON Columns**: `images`, `des`, `size_des` columns store arrays as JSON
-5. **Single-Record Tables**: Product section tables hold exactly one row (updated in place, never deleted)
-6. **Frontend**: Tailwind CSS via CDN for client main layout; Vite used for auth layout; assets served from `public/assets/` for legacy content
-7. **Database Drivers**: Session, cache, and queue all use the `database` driver (no Redis dependency)
-8. **Global Code Uniqueness**: `GlobalProductCodeService` enforces unique product codes across 9 detail tables
-9. **Role-Based Auth**: Simple string `role` column on `users` table (`superadmin`, `admin`, `customer`) -- no Spatie Permission package
-10. **Client Authentication**: Email/password + Google OAuth via Socialite 5.27; custom Vietnamese ResetPasswordNotification (ShouldQueue)
-11. **JSON-LD Structured Data**: Product schema markup injected on product detail pages for SEO
+### Why are Product Controllers in `app/Http/Controllers/`?
+- **Domain Core vs Delivery Mechanism**: The core business logic, database transactions, SKU validation, and gallery reordering are fully encapsulated inside `app/Domains/Catalog` (`ProductWriter`, `CatalogQueryService`, `BaseProductItemController`).
+- **Contract & Route Preservation**: Admin controllers in `app/Http/Controllers/Admin` are thin subclasses (~20 lines) extending `BaseProductItemController`. Keeping them in `app/Http` preserves all 385 existing route references, preview URL lookups, and test configurations without a mass-renaming refactor.
+- **Bespoke View Presentation**: The 9 controllers in `app/Http/Controllers/Client/ProductPages/` manage the distinct Blade layouts, interactive tile calculators, and technical drawing specs unique to each ceramic product category.

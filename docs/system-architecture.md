@@ -1,388 +1,243 @@
 # System Architecture
 
-## Layered Architecture Overview
+## Architecture Overview (Modular Domain Architecture)
+
+The system is architected as a **Modular Domain-Driven Monolith** built on **Laravel 12**, transitioning from a legacy flat layered structure into distinct **Bounded Contexts** under `app/Domains/`, while retaining thin HTTP delivery endpoints in `app/Http/`.
 
 ```
-┌──────────────────────────────────────────────────┐
-│                   HTTP Request                     │
-└────────────────────┬─────────────────────────────┘
-                     │
-┌────────────────────▼─────────────────────────────┐
-│              Laravel Router                        │
-│  ┌─────────────┐  ┌──────────────┐               │
-│  │ web.php      │  │ client.php   │               │
-│  │ (Admin /admin)│  │ (Public)     │               │
-│  └─────────────┘  └──────────────┘               │
-└────────────────────┬─────────────────────────────┘
-                     │
-┌────────────────────▼─────────────────────────────┐
-│              Middleware Stack                      │
-│  ┌───────────┐ ┌──────────────┐ ┌──────────────┐ │
-│  │ web group │ │ auth/guest   │ │ role:superadmin│ │
-│  │ (session) │ │ (redirect)   │ │ (RBAC check)  │ │
-│  └───────────┘ └──────────────┘ └──────────────┘ │
-└────────────────────┬─────────────────────────────┘
-                     │
-┌────────────────────▼─────────────────────────────┐
-│              Controller Layer                     │
-│  ┌─────────────────────┐ ┌──────────────────────┐ │
-│  │ Admin/Controller     │ │ Client/Controller    │ │
-│  │ (thin: validate,     │ │ (thin: query,        │ │
-│  │  delegate to service,│ │  return view)        │ │
-│  │  return redirect)    │ │                      │ │
-│  └─────────────────────┘ └──────────────────────┘ │
-└────────────────────┬─────────────────────────────┘
-                     │
-┌────────────────────▼─────────────────────────────┐
-│              Service Layer                        │
-│  ┌─────────────────────────────────────────────┐ │
-│  │ Business logic, DB operations, file uploads  │ │
-│  │ DB::transaction() for atomic writes          │ │
-│  │ FileUploadHelper for image management        │ │
-│  └─────────────────────────────────────────────┘ │
-└────────────────────┬─────────────────────────────┘
-                     │
-┌────────────────────▼─────────────────────────────┐
-│              Model / ORM Layer                    │
-│  ┌─────────────────────────────────────────────┐ │
-│  │ Eloquent Models (42): relationships, scopes, │ │
-│  │ custom PKs, casts, fillable/hidden attrs     │ │
-│  └─────────────────────────────────────────────┘ │
-└────────────────────┬─────────────────────────────┘
-                     │
-┌────────────────────▼─────────────────────────────┐
-│              Database Layer                       │
-│  ┌─────────────────────────────────────────────┐ │
-│  │ MariaDB (th_ceramics_fullstack)              │ │
-│  │ 44 tables across 15 migrations              │ │
-│  │ Session, Cache, Queue: database driver      │ │
-│  └─────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                              HTTP Request                              │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│                           Laravel Router                               │
+│  ┌───────────────────────┐  ┌───────────────────────┐  ┌────────────┐  │
+│  │ routes/web.php        │  │ routes/client.php     │  │ console.php│  │
+│  │ (Admin, requires auth)│  │ (Public SEO routes)   │  │ (Artisan)  │  │
+│  └───────────┬───────────┘  └───────────┬───────────┘  └────────────┘  │
+│              │                          │                              │
+│              └─────────► routes/domains/◄──────────────────────────────┘
+│               (catalog, commerce, content, identity, media, archive)
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│                          Middleware Stack                              │
+│  ┌───────────┐ ┌──────────────┐ ┌──────────────┐ ┌───────────────────┐ │
+│  │ web group │ │ auth / guest │ │ role:admin   │ │ ecommerce toggle  │ │
+│  │ (session) │ │ (redirect)   │ │ superadmin   │ │ (EnsureEcommerce) │ │
+│  └───────────┘ └──────────────┘ └──────────────┘ └───────────────────┘ │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│                    Delivery / Controller Layer                         │
+│                                                                        │
+│  ┌─────────────────────────────────┐ ┌──────────────────────────────┐  │
+│  │ Domain HTTP (Embedded)          │ │ Application HTTP (app/Http)  │  │
+│  │ - Identity: Admin & Client Auth │ │ - Admin: Thin Product Stubs  │  │
+│  │ - Commerce: Cart & Checkout     │ │   extending Base Controllers │  │
+│  │ - Media: Staged uploads         │ │ - Client: 9 Dedicated Blade  │  │
+│  │ - Archive: Export/Import/Writes │ │   Product Page View Runners  │  │
+│  │ - Catalog: Base Controllers     │ │ - DichVuKhachHang View Ctrls │  │
+│  └────────────────┬────────────────┘ └──────────────┬───────────────┘  │
+└───────────────────┼─────────────────────────────────┼──────────────────┘
+                    │                                 │
+┌───────────────────▼─────────────────────────────────▼──────────────────┐
+│                   Domain Logic & Service Layer                         │
+│                                                                        │
+│  ┌───────────────────┐ ┌────────────────────┐ ┌─────────────────────┐  │
+│  │  Catalog Domain   │ │  Commerce Domain   │ │   Content Domain    │  │
+│  │ - ProductWriter   │ │ - CartService      │ │ - TrangChu / DuAn   │  │
+│  │ - CatalogQuerySvc │ │ - OrderService     │ │ - Page configs      │  │
+│  │ - TypeRegistry    │ │ - CouponService    │ │ - GiaiThuong / Faq  │  │
+│  │ - PublicIdAlloc   │ └────────────────────┘ └─────────────────────┘  │
+│  └───────────────────┘ ┌────────────────────┐ ┌─────────────────────┐  │
+│  ┌───────────────────┐ │    Media Domain    │ │   Archive Domain    │  │
+│  │  Identity Domain  │ │ - Upload Pipeline  │ │ - ContentArchiveSvc │  │
+│  │ - AuthService     │ │ - WebP Image Opt   │ │ - LegacyV1Adapter   │  │
+│  │ - Role RBAC       │ │ - Staged file temp │ │ - Canonical ZIP     │  │
+│  └───────────────────┘ └────────────────────┘ └─────────────────────┘  │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│                    Canonical Model / Data Layer                        │
+│                                                                        │
+│  - Catalog Core: Product, ProductVariant, ProductMedia, DisplayOption  │
+│  - Commerce: Order, OrderItem, Coupon                                  │
+│  - Content: TrangChu, DuAn, DanhMucDuAn, ThiCong, Catalog, Page*       │
+│  - Identity: User                                                      │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│                           Database Layer                               │
+│  - MariaDB (th_ceramics_fullstack): 24 migrations, unified schema      │
+│  - Session, Cache, Queue: database driver                              │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Layer Descriptions
+---
 
-### 1. Router Layer
-Two route files loaded under a single `web` middleware group in `bootstrap/app.php`:
-- **`routes/web.php`**: All admin routes under `/admin` prefix, named `admin.*`
-- **`routes/client.php`**: All public routes with Vietnamese SEO URLs, named `client.*`
-- **`routes/console.php`**: Artisan commands
+## Bounded Contexts (Domains) Breakdown
 
-### 2. Middleware Stack
-- **Default web middleware**: CSRF, sessions, etc. (Laravel defaults)
-- **`auth` middleware**: Guest routes (login) redirect authenticated users to dashboard; protected routes redirect unauthenticated users to admin login
-- **`role:superadmin`**: Restricts user management routes to superadmin only
-- **`throttle` middleware**: Applied to client login (6 req/min), contact form (3 req/min), and consultation requests (5 req/min)
-- **`ecommerce` middleware** (`EnsureEcommerceEnabled`): When `trang_chu.is_ecommerce_enabled` is false, blocks cart/checkout/order-tracking routes server-side (redirect for web, JSON 403 for AJAX). Flag is cached under `site_ecommerce_enabled` and shared to all views as `$isEcommerceEnabled` via `AppServiceProvider`.
-- Guest/Auth redirects configured in `bootstrap/app.php`
+The application business logic is segmented into 6 domain contexts under `app/Domains/`:
 
-### 3. Controller Layer
-- **Admin controllers** (51 files): Thin controllers that validate requests, delegate to services, and return redirect responses with flash messages. OrderController handles list/detail/status-update with email notification. CouponController handles discount code CRUD.
-- **Client controllers** (29 total): 12 page/auth controllers (Home, About, Factory, Contact, Faq, Showroom, News, Project, Cart, Auth, GlobalSearch, CustomerService) + 8 DichVuKhachHang controllers + 9 product page controllers. Query services, return view responses with data. HuongDanThiCongController and CatalogController provide dynamic customer service pages. TrangThaiDonHangController provides dynamic order status tracking with tab filtering. AuthController handles login, register, password reset, and Google OAuth.
-- All use constructor DI with `private readonly` service properties
+### 1. Catalog Domain (`app/Domains/Catalog`)
+The single source of truth for all product data, variants, media galleries, display options, and pricing:
+- **`Models/`**:
+  - `Product`: Central entity storing common attributes (`type_key`, `category_type`, dimensions, weight, rating criteria, priority, status).
+  - `ProductVariant`: SKU (`code`), selling price, classification, default variant flag.
+  - `ProductMedia`: Polymorphic media gallery (cover images, gallery photos, uploaded MP4 videos, external YouTube links, with strict `sort_order`).
+  - `ProductDisplayOption`: Category or product-level color swatches and display materials.
+- **`Services/ & Logic`**:
+  - `ProductWriter`: Atomic mutation engine for creating, updating, deleting/restoring products, validating SKU uniqueness, processing gallery reordering, and attaching media.
+  - `CatalogQueryService`: Optimized query engine for pagination, price sorting, search, filtering, and cross-category recommendations.
+  - `ProductTypeRegistry`: Static registry defining all 10 product groups, their route names, views, table aliases, and variant configurations.
+  - `PublicIdAllocator`: Maintains deterministic public identifiers (`public_id`) per product type, guaranteeing 100% backward compatibility for existing SEO URLs.
+- **`Http/Admin/`**:
+  - `BaseProductItemController`: Abstract controller providing robust CRUD, gallery management, video embeds, drag-drop ordering, and restore actions for standard product items.
+  - `BaseProductVariantController`: Abstract controller handling multi-variant product groups (e.g., Ngói Hài Văn Miếu, Ngói Hài Cổ).
 
-### 4. Service Layer
-- **53 service classes**: One per major model + utility services (CartService, CouponService, GlobalProductCodeService, AuthService, etc.)
-- Contains business logic including file upload handling, transaction management, and code uniqueness checks
-- No repository pattern — services interact directly with Eloquent models
-- `GlobalProductCodeService`: Cross-table uniqueness validation for product codes
+### 2. Commerce Domain (`app/Domains/Commerce`)
+Handles shopping cart, checkout, coupon validation, and order management:
+- **`Models/`**: `Order`, `OrderItem` (records snapshot of product title, price, code at time of purchase), `Coupon`.
+- **`Services/`**: `CartService` (session-based cart, mini-cart, option calculations), `CouponService` (percent/fixed discount calculation, validity, usage limits).
+- **`Http/`**: `CartController` (AJAX add/update/remove, coupon application), `OrderController` (admin fulfillment, status workflow).
 
-### 5. Model Layer
-- **55 Eloquent models**: Map to database tables with custom primary keys
-- Define relationships, query scopes, attribute casting, and fillable/hidden attributes
-- Single-record pattern for product section models (no create/delete)
-- Order model includes `statusLabel()` static helper and `generateOrderCode()` method
-- ThiCong and Catalog models serve dynamic customer service content (installation guides, catalog PDFs)
-- DuAn and DanhMucDuAn models serve the dynamic project showcase (project listing with category filters, detail with gallery)
+### 3. Content Domain (`app/Domains/Content`)
+Manages marketing pages, dynamic home page blocks, and CMS sections:
+- **`Models/`**: `TrangChu` (home hero banner, partners, stats, showroom JSON arrays), `DuAn` & `DanhMucDuAn` (project showcase with categories), `ThiCong` (installation guides), `Catalog` (PDF flipbook brochures), `GiaiThuongThanhTuu` (awards), `GiaTriVuotTroi` (brand value propositions), `PageFactory`, `PageContact`, `PageFaq`.
+- **`Services/`**: `TrangChuService`, `DuAnService`, `CatalogService`, `ThiCongService`, etc.
 
-### 6. Database Layer
-- **MariaDB** via `DB_CONNECTION=mariadb` in `.env`
-- **44 tables** from 15 migration files + 26 seeders
-- All session/cache/queue storage uses `database` driver (queue actively used for email dispatch)
-- Soft delete via boolean `is_delete` column
+### 4. Identity Domain (`app/Domains/Identity`)
+Handles user authentication, password resets, and role-based access control:
+- **`Models/`**: `User` (with `role` field: `superadmin`, `admin`, `customer`).
+- **`Services/`**: `AuthService`.
+- **`Http/`**: `Admin\AuthController`, `Client\AuthController` (credentials + Google Socialite OAuth).
 
-## Request Flow Example (Admin Update)
+### 5. Media Domain (`app/Domains/Media`)
+Manages media uploads, temporary staged uploads, and WebP image optimization:
+- **`Services/`**: `StagedImageUploadService`, `FileUploadHelper` (resize, format conversion to WebP).
+- **`Http/`**: Endpoints for handling chunked and asynchronous media uploads.
 
-```
-1. Browser POST /admin/ngoi-am-duong
-2. web.php: Route matches -> NgoiAmDuongController@update
-3. Middleware: auth checked, session started
-4. Controller::update():
-   a. Validate request data
-   b. Call NgoiAmDuongService::update($data)
-5. Service::update():
-   a. Fetch single record via getFirstRecord()
-   b. DB::transaction():
-      - Check if thumbnail files uploaded
-      - FileUploadHelper::replace() for new files
-      - $model->fill($fillable)->save()
-   c. Return fresh model
-6. Controller: back()->with('success', '...')
-7. Browser redirected back with flash message
-```
+### 6. Archive Domain (`app/Domains/Archive`)
+Provides complete data portability and content backup/restore:
+- **`Services/`**: `ContentArchiveService` exports/imports a single verified `database.zip` bundle.
+- **`Adapters/`**: `LegacyV1ArchiveAdapter` seamlessly reads archives from the legacy schema (from `main` branch) and backfills into canonical `Product` models without requiring legacy DB tables.
 
-## Request Flow Example (Client Product Page)
+---
 
-```
-1. Browser GET /san-pham/ngoi-am-duong
-2. client.php: Route matches -> NgoiAmDuongController@index
-3. Controller::index():
-   a. Call NgoiAmDuongService::getFirstRecord()
-   b. Call NgoiAmDuongCtService::getAllActive()
-   c. Return view('clients.products.ngoi-am-duong.index', compact(...))
-4. Blade template renders:
-   - Layout: components/client/layouts/main.blade.php
-   - Product components: product-card, breadcrumb, etc.
-   - Swiper.js for image galleries
-   - AOS for scroll animations
-5. HTML sent to browser
-```
+## Architectural Analysis: Why Product Controllers are in `app/Http/`
+
+### 1. The Rationale for Current Controller Placement
+In the current project structure, while the core Catalog logic lives in `app/Domains/Catalog`, the individual product controllers remain in:
+- `app/Http/Controllers/Admin/*CtController.php` (e.g. `NgoiAmDuongCtController`, `GachCoBatTrangCtController`)
+- `app/Http/Controllers/Client/ProductPages/*.php` (e.g. `NgoiAmDuongController`, `LanCanGomSuController`)
+
+This structure exists due to 3 deliberate engineering reasons:
+
+1. **Separation of Domain Core vs Application Delivery**:
+   - The **Domain** contains business logic, database transactions, invariant enforcement, media attachments, and query rules (`ProductWriter`, `CatalogQueryService`, `BaseProductItemController`).
+   - The **Application HTTP layer** (`app/Http`) acts as the delivery mechanism for specific routes, form views, and Blade layouts.
+2. **Contract Preservation & Blast Radius Minimization**:
+   - The application has **385 registered routes** and **293 automated test cases**.
+   - Admin controllers in `app/Http/Controllers/Admin` were refactored into **declarative thin subclasses** extending `BaseProductItemController`. Each file is only ~20 lines long, defining only `$typeKey`, `$viewPrefix`, and custom rules.
+   - Leaving them in `app/Http/Controllers/Admin` preserved all route references (`routes/domains/catalog.php`), guest preview URLs (`@section('preview_url')`), and existing test namespaces without requiring an invasive rename across hundreds of files simultaneously.
+3. **Distinct Blade Client Templates**:
+   - Unlike generic e-commerce products, each ceramic product category (Ngói Âm Dương, Gạch Thông Gió, Đèn Vườn...) features a distinct page experience: custom tile calculators, installation diagrams, dynamic dimension matrices, and category video journeys. The client controllers in `app/Http/Controllers/Client/ProductPages` specifically orchestrate these diverse Blade presentations.
+
+---
+
+## Is This Structure Optimal? (Evaluation & Roadmap)
+
+| Criteria | Status | Evaluation |
+| :--- | :---: | :--- |
+| **Business Logic DRY** | **Optimal** | Zero code duplication. 16 legacy services and 16 models were eliminated. All CRUD, image/video processing, priority, and SKU checking are centralized in `ProductWriter` and `BaseProductItemController`. |
+| **System Stability & Tests** | **Optimal** | **293/293 test cases pass (100% Green)**. 385 routes remain functional with zero regressions. |
+| **Directory Uniformity** | **Sub-optimal (Hybrid)** | Inconsistent with other domains. Domains like `Identity`, `Commerce`, and `Content` encapsulate their own `Http/` controllers, whereas `Catalog` has its base classes in `app/Domains/Catalog/Http/` while derived controllers remain in `app/Http/Controllers/`. |
+| **Controller Boilerplate** | **Acceptable (Transitional)** | Having 10 separate admin controllers that only declare `$typeKey` is safe and clear, but creates 10 boilerplate files where a single parameterized controller could suffice. |
+
+### Recommended Future Refinement (Phase 2):
+1. **Move Controllers into Domain Context**:
+   - Relocate `app/Http/Controllers/Admin/*CtController.php` to `app/Domains/Catalog/Http/Admin/`.
+   - Relocate `app/Http/Controllers/Client/ProductPages/` to `app/Domains/Catalog/Http/Client/`.
+   - Update `routes/domains/catalog.php` to point to the new domain namespace.
+2. **Consolidate Admin CRUD with Dynamic Parameterization**:
+   - For standard single-variant products, route `/admin/{type}` directly to a single `CatalogProductController` with route-model/type binding via `ProductTypeRegistry`.
+
+---
 
 ## Database ER Overview
 
 ```
-Product Categories (10 single-row "section" tables)
+Canonical Catalog Core Tables (Unified)
 │
-├── NgoiAmDuong ──────────────┬── NgoiAmDuongCt (children)
-│                             ├── MauSacNgoiAmDuongCt (child colors)
-│                             └── DinhMucNgoiAmDuong (ratings)
+├── products (Central Product Entity)
+│   ├── Columns: id, public_id, type_key, category_type, name, slug, kich_thuoc,
+│   │            khoi_luong, quy_cach, dong_goi, do_hut_nuoc, nhiet_do_nung,
+│   │            priority, is_active, is_delete, timestamps
+│   │
+│   ├── product_variants (1:N variants, pricing & SKUs)
+│   │   └── Columns: id, product_id, public_id, sku, name, price, is_default, is_active
+│   │
+│   ├── product_media (1:N polymorphic media items)
+│   │   └── Columns: id, product_id, kind (image/video/youtube), path, title,
+│   │                is_cover, sort_order (offset protected)
+│   │
+│   └── product_display_options (Color & Material swatches)
+│       └── Columns: id, type_key, product_id, name, color_code, image, sort_order
 │
-├── NgoiHaiVanMieu ───────────┬── NgoiHaiCoCt
-│                             ├── NgoiHaiVanMieuCt
-│                             ├── MauSacNgoiHaiCoCt
-│                             ├── MauSacNgoiHaiVanMieuCt
-│                             ├── DinhMucNgoiHaiCo
-│                             └── DinhMucNgoiHaiVanMieu
+├── CMS Section Configuration Tables (Single-row per category for landing page copy)
+│   ├── ngoi_am_duong (banner, intro, video, section images)
+│   ├── ngoi_hai_van_mieu
+│   ├── gach_hoa_thong_gio
+│   ├── gach_trang_tri
+│   ├── gach_co_bat_trang
+│   ├── linh_vat_phong_thuy
+│   ├── den_gom_su
+│   ├── phu_kien_ngoi
+│   └── lan_can_gom_xu
 │
-├── GachHoaThongGio ──────────┬── GachHoaThongGioCt
-│                             ├── GachHoaThongGioAnh (gallery)
-│                             ├── GiaTriGachHoaThongGio (values)
-│                             └── DinhMucGachHoaThongGio
+├── Content & Showcase Tables
+│   ├── trang_chu (home config: banners, partners, stats)
+│   ├── du_an & danh_muc_du_an (project showcase)
+│   ├── thi_cong & catalog (installation guides & flipbook PDFs)
+│   └── giai_thuong_thanh_tuu & gia_tri_vuot_troi
 │
-├── GachTrangTri ─────────────┬── GachTrangTriCt
-│                             └── DinhMucGachTrangTri
+├── Commerce Tables
+│   ├── orders (order_code, status, totals, customer details)
+│   ├── order_items (order_id, product_id, variant_id, sku, price, quantity)
+│   └── coupons (code, type, value, usage limits, date windows)
 │
-├── GachCoBatTrang ───────────┬── GachCoBatTrangCt
-│                             ├── GachCoBatTrangAnh (gallery)
-│                             └── DinhMucGachCoBatTrang
-│
-├── LinhVatPhongThuy ─────────┬── LinhVatPhongThuyCt
-│                             ├── LinhVat (items)
-│                             ├── LinhVatPhongThuyAnh (gallery)
-│
-├── DenGomSu ─────────────────┬── DenVuonGomSuCt (garden light items)
-│                             ├── PhanLoaiDenVuonGomSuCt (classifications)
-│                             └── DenGomSuAnh (gallery)
-│
-├── PhuKienNgoi ──────────────┬── PhuKienNgoiCt
-│                             └── PhanLoaiPhuKienNgoiCt (classifications)
-│
-├── LanCanGomXu ──────────────┬── LanCanGomSuCt
-│                             └── PhanLoaiLanCanGomSuCt (classifications)
-│
-└── GiaTriVuotTroi (values, shared section)
+└── Identity & Operations
+    ├── users (admin & customer accounts, role RBAC)
+    ├── jobs & failed_jobs (database queue for emails)
+    └── sessions & cache
 ```
 
-Page Configuration Tables (static pages, single-record sections)
-│
-├── PageFactory (factory tour page, 14+ fields)
-├── PageContact (contact page, 5 fields)
-├── PageFaq -- Faqs (FAQ items, 5 fields)
-├── TrangChu (home page config: banner, khach_hang_doi_tac, loi_tri_an, ve_chung_toi_logo, nhung_con_so, showroom_images -- all JSON arrays)
-└── GiaiThuongThanhTuu (awards: image, des)
+---
 
-Users table (separate, for admin auth)
+## Request Flow Examples
 
-Project Module Tables
-│
-├── DanhMucDuAn (project categories: ten_danh_muc, is_delete)
-└── DuAn (projects: ten_du_an, dia_diem, san_pham, nam, images JSON, slug, FK danh_muc_du_an_id)
-
-Customer Service Tables
-│
-├── ThiCong (installation guide: tieu_de, anh, link_youtube)
-└── Catalog (product catalogs: tieu_de, anh_dai_dien, file PDF)
-
-Commerce Tables
-│
-├── Orders (order_code THLC-YYYYMMDD-XXXX, status, payment_method: cod)
-├── OrderItems (polymorphic: product_type, product_id, variant_id)
-└── Coupons (discount codes with percent/fixed types)
-
-Mail & Queue
-│
-├── jobs (database queue driver, processes ShouldQueue mailables)
-└── failed_jobs (failed queue job tracking)
-
-## Routing Strategy
-
+### 1. Admin Product Update
 ```
-/admin                    → Dashboard (authenticated)
-/admin/login              → Login page (guest)
-/admin/users              → User management (superadmin only)
-/admin/{category}         → Section CRUD (e.g., ngoi-am-duong)
-/admin/{category}-ct      → Detail items CRUD (e.g., ngoi-am-duong-ct)
-/admin/mau-sac-{ct}       → Colors CRUD (e.g., mau-sac-ngoi-am-duong-ct)
-/admin/dinh-muc-{ct}      → Ratings CRUD (e.g., dinh-muc-ngoi-am-duong)
-/admin/pages/factory       → Factory page config (single-record edit)
-/admin/pages/contact       → Contact page config (single-record edit)
-/admin/pages/faq           → FAQ page config + FAQ items CRUD
-
-/                          → Home page (fully dynamic: HomeController queries TrangChu, DuAn, NgoiAmDuongCt, NgoiHaiVanMieuCt, GachHoaThongGioCt)
-/xuong-san-xuat             → Factory tour (dynamic from DB)
-/lien-he                    → Contact page (dynamic from DB)
-/cau-hoi-thuong-gap          → FAQ page (dynamic from DB)
-/ve-chung-toi              → About
-/san-pham/{category}       → Product listing
-/san-pham/{category}/{id}  → Product detail
-/tin-tuc                   → News listing
-/du-an                     → Projects listing (dynamic: category filters + pagination, 8 per page)
-/du-an/{slug}              → Project detail (dynamic: hero, meta bar, GLightbox/Swiper gallery, related projects)
-/gio-hang                  → Cart
-/thanh-toan                → Checkout
-/thanh-toan/ap-dung-ma     → Apply coupon (AJAX POST)
-/thanh-toan/go-ma          → Remove coupon (AJAX POST)
-/admin/orders              → Order list (paginated, latest first)
-/admin/orders/{order}      → Order detail with items + status update form
-/admin/coupons             → Coupon management (CRUD + restore)
-/admin/danh-muc-du-an       → Project category management (CRUD + restore)
-/admin/du-an                 → Project item management (CRUD + image delete)
-
-/dich-vu/huong-dan-thi-cong   → Installation guide (dynamic from ThiCong model)
-/dich-vu/tai-catalog          → Catalog list (dynamic from Catalog model, featured + grid)
-/dich-vu/tai-catalog/doc/{id} → PDF flipbook reader (standalone, PDF.js + StPageFlip)
-/trang-thai-don-hang       → Client order status tracking (auth required, tab filters)
-
-/tai-khoan/dang-nhap           → Client login (throttled: 6/min)
-/tai-khoan/dang-ky             → Client register
-/tai-khoan/quen-mat-khau       → Forgot password
-/tai-khoan/dat-lai-mat-khau/{token} → Reset password (role-routed)
-/tai-khoan/google              → Google OAuth redirect
-/tai-khoan/google/callback     → Google OAuth callback
-/tai-khoan/dang-xuat           → Client logout
+1. Admin submits PUT /admin/ngoi-am-duong-ct/{id}
+2. Route matches -> NgoiAmDuongCtController@update (extends BaseProductItemController)
+3. BaseProductItemController delegates payload to ProductWriter::update($product, $data)
+4. ProductWriter:
+   - Validates unique SKU across product variants
+   - Updates `products` and default `product_variants` in DB::transaction()
+   - Reorders media gallery (applying +10000 sort_order offset to avoid UNIQUE collisions)
+   - Synchronizes new uploaded images and YouTube video URLs
+5. Fresh Product loaded, redirect back with flash message
 ```
 
-## Email Notification Flow
-
-### Order Emails
-
+### 2. Client Product Page
 ```
-1. Order placed → CartController::processCheckout():
-   - DB::transaction() creates Order + OrderItems
-   - Mail::to($order->email)->send(new OrderCreatedMail($order))
-   - OrderCreatedMail implements ShouldQueue → queued to jobs table
-
-2. Admin updates status → OrderController::update():
-   - Validates new status from [pending_payment, processing, shipping, completed, canceled, returned]
-   - Updates order status
-   - If status changed AND order has email:
-     Mail::to($order->email)->send(new OrderStatusUpdatedMail($order))
-   - OrderStatusUpdatedMail implements ShouldQueue → queued to jobs table
-
-3. Queue processing:
-   - php artisan queue:work processes jobs from database queue
-   - Both mailables use markdown templates in resources/views/emails/orders/
-   - Status updated email shows Vietnamese label via Order::statusLabel()
+1. Guest visits GET /san-pham/ngoi-am-duong/{id}
+2. Route matches -> Client\ProductPages\NgoiAmDuongController@detail
+3. Controller:
+   - Queries product via CatalogQueryService::findActive('ngoi_am_duong_ct', $id)
+   - Tracks recent view history via ViewHistoryService
+   - Queries category color swatches from ProductDisplayOption
+   - Resolves category-specific YouTube journey video via ProductJourneyVideo
+4. Renders Blade view `clients.products.ngoi-am-duong.detail` with structured JSON-LD
 ```
-
-### Password Reset Emails
-
-```
-1. User requests reset → AuthController::sendResetLink():
-   - Validates email via ForgotPasswordRequest
-   - Laravel Password facade dispatches reset token
-   - User::sendPasswordResetNotification() sends custom ResetPasswordNotification
-
-2. ResetPasswordNotification::toMail():
-   - Checks $notifiable->isAdmin() for role-based routing
-   - Admin users route to admin.auth.reset-password (/admin/reset-password/{token})
-   - Client users route to client.auth.reset-password (/tai-khoan/dat-lai-mat-khau/{token})
-   - Sends branded Vietnamese email via emails.auth.reset_password markdown template
-   - Implements ShouldQueue → queued to jobs table
-
-3. Queue processing:
-   - php artisan queue:work processes notification from database queue
-   - Uses markdown template in resources/views/emails/auth/reset_password.blade.php
-   - Email shows configurable expiration time from auth.passwords.users.expire
-```
-
-## Coupon/Discount Flow
-
-```
-1. Admin creates coupon in /admin/coupons:
-   - Sets title, code (unique), discount_type (percent/fixed), discount_value
-   - Optional: max_discount_amount, min_order_value, applicable_product_types (JSON array)
-   - Optional: usage_limit, start_date, end_date, banner_image, show_banner
-
-2. Customer applies coupon on checkout page /thanh-toan:
-   - JS fetch() POST to /thanh-toan/ap-dung-ma with code
-   - CartController::applyCoupon():
-     a. CouponService::validateAndCalculate(code, cart items)
-        - Check coupon exists, is_valid() (active, not deleted, within date range, not exceeded usage)
-        - Check min_order_value against CartService::getSubtotal()
-        - If applicable_product_types set: filter cart, skip non-matching items
-        - Calculate: percent = subtotal * discount_value / 100, capped at max_discount_amount
-                   OR fixed = min(discount_value, subtotal)
-     b. CartService::setCoupon(code) → stored in session th_cart_coupon
-     c. Return JSON { success, discount_amount, new_total, message }
-
-3. During checkout processCheckout():
-   - CartService::getTotal() calls getSubtotal() - getDiscountAmount()
-   - Coupon re-validated server-side before order creation
-   - DB::transaction(): save discount + coupon_code to Order, increment coupon used_count
-
-4. Customer removes coupon:
-   - JS fetch() POST to /thanh-toan/go-ma
-   - CartService::removeCoupon() → clears session
-   - Return JSON { success, subtotal, total }
-```
-
-## Authentication Flow
-
-### Admin Authentication
-```
-Guest accesses /admin/login
-  → POST login with email + password
-  → AuthController validates credentials
-  → Session created, redirect to /admin/dashboard
-
-Authenticated user visits /admin/login
-  → redirectUsersTo middleware → /admin/dashboard
-
-Unauthenticated user visits /admin/*
-  → redirectGuestsTo middleware → /admin/login
-
-Role check on superadmin routes:
-  → RoleMiddleware checks user->role === 'superadmin'
-  → 403 if unauthorized
-```
-
-### Client Authentication
-```
-/tai-khoan/dang-nhap       → Login (email + password)
-/tai-khoan/dang-ky         → Register (name, email, password, confirmation)
-/tai-khoan/quen-mat-khau   → Forgot password (email exists check)
-/tai-khoan/dat-lai-mat-khau → Reset password (token-based, role-routed URLs)
-/tai-khoan/google          → Google OAuth redirect (Socialite 5.27)
-/tai-khoan/google/callback → Google OAuth callback (find or create user)
-
-Password Reset Flow:
-  1. User submits email → ForgotPasswordRequest validates
-  2. Laravel Password facade dispatches reset token
-  3. User::sendPasswordResetNotification() sends custom ResetPasswordNotification
-  4. Notification checks $notifiable->isAdmin() for role-based routing:
-     - Admin → /admin/reset-password/{token}
-     - Client → /tai-khoan/dat-lai-mat-khau/{token}
-  5. ResetPasswordNotification implements ShouldQueue → queued to jobs table
-```
-
-> **RBAC design**: The system uses a simple string `role` column on the `users` table (`superadmin`, `admin`, `customer`) rather than a database-driven permission package (e.g., Spatie). This keeps the auth layer lightweight and performant. RoleMiddleware accepts variadic role names (e.g., `role:superadmin,admin`) for flexible route protection. Client routes use `auth` middleware for protected pages (cart, checkout, order tracking) and `guest` middleware for login/register pages.
-
-## Cache / Session / Queue Architecture
-
-All three use the `database` driver:
-- **Session**: Stored in `sessions` table (120-minute lifetime)
-- **Cache**: Stored in `cache` table
-- **Queue**: Stored in `jobs` table, processed via `php artisan queue:work`. Used for email dispatch (OrderCreatedMail, OrderStatusUpdatedMail, and ResetPasswordNotification implement `ShouldQueue`), ensuring non-blocking checkout, status update, and password reset operations.
-
-This means no Redis or Memcached dependency, but performance may be limited under high load.

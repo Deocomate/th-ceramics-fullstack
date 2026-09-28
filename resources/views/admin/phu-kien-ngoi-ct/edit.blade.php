@@ -1,4 +1,4 @@
-@section('preview_url', $product->category_type === \App\Models\PhuKienNgoiCt::TYPE_CHU_VAN
+@section('preview_url', $product->category_type === \App\Http\Controllers\Admin\PhuKienNgoiCtController::TYPE_CHU_VAN
     ? route('client.products.phu-kien-ngoi.bo-noc-chu-van.detail', $product->phu_kien_ngoi_ct_id)
     : route('client.products.phu-kien-ngoi.ngoi-bo-noc.detail', $product->phu_kien_ngoi_ct_id))
 

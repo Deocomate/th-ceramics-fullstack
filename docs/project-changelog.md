@@ -1,5 +1,19 @@
 # Project Changelog
 
+## 0.6.0 (2026-09-28)
+
+### Added
+- **Modular Domain Architecture**: Restructured application into 6 Bounded Contexts under `app/Domains/` (`Catalog`, `Commerce`, `Content`, `Identity`, `Media`, `Archive`).
+- **Canonical Product Catalog**: Replaced 16 fragmented product detail tables with a unified 4-table canonical schema (`products`, `product_variants`, `product_media`, `product_display_options`).
+- **ProductWriter & CatalogQueryService**: Centralized atomic mutation engine with SKU uniqueness checking, transactional media sort ordering (with collision prevention), and optimized queries.
+- **BaseProductItemController & BaseProductVariantController**: Abstract CRUD controllers under `app/Domains/Catalog/Http/Admin/` standardizing admin workflows across all 10 product categories.
+- **Two-Way Archive Compatibility**: Added `LegacyV1ArchiveAdapter` to export/import single `database.zip` archives, enabling seamless cross-branch migration between legacy schema and canonical schema.
+- **Full Test Suite Verification**: Achieved 293/293 passing tests (100% green).
+
+### Changed
+- **Admin Product Controllers**: Refactored in-place into thin subclasses of `BaseProductItemController` in `app/Http/Controllers/Admin/` to preserve 385 existing routes and preview bindings.
+- **Deleted Legacy Code**: Removed 16 obsolete `*Ct` Eloquent models and 16 duplicate service classes.
+
 ## 0.5.7 (2026-07-11)
 
 ### Added

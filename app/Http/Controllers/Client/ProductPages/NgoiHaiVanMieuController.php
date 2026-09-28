@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers\Client\ProductPages;
 
+use App\Domains\Catalog\Services\CatalogQueryService;
+use App\Domains\Content\Services\GiaTriVuotTroiService;
 use App\Http\Controllers\Controller;
 use App\Models\NgoiHaiVanMieu;
 use App\Services\DinhMucNgoiHaiCoService;
 use App\Services\DinhMucNgoiHaiVanMieuService;
-use App\Domains\Content\Services\GiaTriVuotTroiService;
-use App\Services\MauSacNgoiHaiVanMieuCtService;
-use App\Services\NgoiHaiCoCtService;
-use App\Services\NgoiHaiVanMieuCtService;
 use App\Services\NgoiHaiVanMieuService;
-use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
-use App\Support\CollectionPaginator;
-use App\Support\ProductCollectionFilter;
 use App\Support\ProductJourneyVideo;
 use Illuminate\Http\Request;
 
@@ -22,9 +17,7 @@ class NgoiHaiVanMieuController extends Controller
 {
     public function __construct(
         private readonly NgoiHaiVanMieuService $ngoiHaiVanMieuService,
-        private readonly NgoiHaiVanMieuCtService $ngoiHaiVanMieuCtService,
-        private readonly NgoiHaiCoCtService $ngoiHaiCoCtService,
-        private readonly MauSacNgoiHaiVanMieuCtService $mauSacService,
+        private readonly CatalogQueryService $catalogQuery,
         private readonly DinhMucNgoiHaiVanMieuService $dinhMucService,
         private readonly DinhMucNgoiHaiCoService $dinhMucNgoiHaiCoService,
         private readonly GiaTriVuotTroiService $giaTriVuotTroiService,
@@ -33,11 +26,7 @@ class NgoiHaiVanMieuController extends Controller
     public function index(Request $request)
     {
         $config = $this->ngoiHaiVanMieuService->getFirstRecord();
-        $products = config('product_catalog.read_unified')
-            ? app(UnifiedProductCatalog::class)->paginate('ngoi_hai_van_mieu_ct', $request->only(['search', 'sort']))
-            : CollectionPaginator::paginate(ProductCollectionFilter::apply(
-                $this->ngoiHaiVanMieuCtService->getAll('active'), $request->only(['search', 'sort'])
-            ), 8);
+        $products = $this->catalogQuery->paginate('ngoi_hai_van_mieu_ct', $request->only(['search', 'sort']), 8);
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();
 
         return view('clients.products.ngoi-hai-van-mieu.index', compact(
@@ -48,23 +37,13 @@ class NgoiHaiVanMieuController extends Controller
     public function detail($id, ViewHistoryService $historyService)
     {
         $parentConfig = NgoiHaiVanMieu::query()->first();
-        $product = $this->ngoiHaiVanMieuCtService->findById($id);
+        $product = $this->catalogQuery->findActive('ngoi_hai_van_mieu_ct', (int) $id);
 
-        if ($product->is_delete == 1) {
-            abort(404);
-        }
+        $historyService->trackProduct('ngoi_hai_van_mieu_ct', (int) $product->public_id);
 
-        $historyService->trackProduct('ngoi_hai_van_mieu_ct', (int) $product->ngoi_hai_van_mieu_ct_id);
-
-        $colors = config('product_catalog.read_unified')
-            ? $product->mauSacs->where('is_delete', 0)
-            : $product->mauSacs()->where('is_delete', 0)->get();
-
+        $colors = $product->variants->where('is_default', false)->where('is_delete', false);
         $dinhMuc = $this->dinhMucService->getAll();
-
-        $relatedProducts = config('product_catalog.read_unified')
-            ? app(UnifiedProductCatalog::class)->related('ngoi_hai_van_mieu_ct', (int) $id, null, 4)
-            : $this->ngoiHaiVanMieuCtService->getAll('active')->where('ngoi_hai_van_mieu_ct_id', '!=', $id)->take(4);
+        $relatedProducts = $this->catalogQuery->related('ngoi_hai_van_mieu_ct', (int) $product->public_id, null, 4);
 
         $pageLabel = 'Ngói Hài Văn Miếu';
         $indexRouteName = 'client.products.ngoi-hai-van-mieu.index';
@@ -92,22 +71,14 @@ class NgoiHaiVanMieuController extends Controller
 
     public function detailNgoiHaiCo($id, ViewHistoryService $historyService)
     {
-        $product = $this->ngoiHaiCoCtService->findById($id);
+        $product = $this->catalogQuery->findActive('ngoi_hai_co_ct', (int) $id);
         $parentConfig = NgoiHaiVanMieu::query()->first();
 
-        if ($product->is_delete == 1) {
-            abort(404);
-        }
+        $historyService->trackProduct('ngoi_hai_co_ct', (int) $product->public_id);
 
-        $historyService->trackProduct('ngoi_hai_co_ct', (int) $product->ngoi_hai_co_ct_id);
-
-        $colors = config('product_catalog.read_unified')
-            ? $product->mauSacs->where('is_delete', 0)
-            : $product->mauSacs()->where('is_delete', 0)->get();
+        $colors = $product->variants->where('is_default', false)->where('is_delete', false);
         $dinhMuc = $this->dinhMucNgoiHaiCoService->getAll();
-        $relatedProducts = config('product_catalog.read_unified')
-            ? app(UnifiedProductCatalog::class)->related('ngoi_hai_co_ct', (int) $id, null, 4)
-            : $this->ngoiHaiCoCtService->getAll('active')->where('ngoi_hai_co_ct_id', '!=', $id)->take(4);
+        $relatedProducts = $this->catalogQuery->related('ngoi_hai_co_ct', (int) $product->public_id, null, 4);
 
         $pageLabel = 'Ngói Hài Cổ';
         $indexRouteName = 'client.products.ngoi-hai-van-mieu.index';

@@ -2,27 +2,7 @@
 
 namespace App\Domains\Commerce\Services;
 
-use App\Domains\Catalog\ProductTypeRegistry;
-use App\Models\DenGomSu;
-use App\Models\DenVuonGomSuCt;
-use App\Models\GachCoBatTrangCt;
-use App\Models\GachHoaThongGioCt;
-use App\Models\GachTrangTriCt;
-use App\Models\LanCanGomSuCt;
-use App\Models\LanCanGomXu;
-use App\Models\LinhVatPhongThuyCt;
-use App\Models\MauSacNgoiAmDuongCt;
-use App\Models\MauSacNgoiHaiCoCt;
-use App\Models\MauSacNgoiHaiVanMieuCt;
-use App\Models\NgoiAmDuongCt;
-use App\Models\NgoiHaiCoCt;
-use App\Models\NgoiHaiVanMieuCt;
-use App\Models\PhanLoaiDenVuonGomSuCt;
-use App\Models\PhanLoaiLanCanGomSuCt;
-use App\Models\PhanLoaiPhuKienNgoiCt;
-use App\Models\PhuKienNgoiCt;
-use App\Services\UnifiedProductCatalog;
-use App\Support\ProductGallery;
+use App\Domains\Catalog\Services\CatalogQueryService;
 use Exception;
 
 class CartService
@@ -36,127 +16,112 @@ class CartService
     /** @return array{name: string, variant_name: ?string, sku: ?string, price: int, image: ?string} */
     public function getProductDetails(string $productType, int $productId, ?int $variantId): array
     {
-        if (config('product_catalog.read_unified') && ProductTypeRegistry::get($productType)) {
-            return app(UnifiedProductCatalog::class)->cartDetails($productType, $productId, $variantId);
-        }
-
-        return match ($productType) {
-            'ngoi_am_duong_ct' => $this->getNgoiAmDuongDetails($productId, $variantId),
-            'ngoi_hai_van_mieu_ct' => $this->getNgoiHaiVanMieuDetails($productId, $variantId),
-            'ngoi_hai_co_ct' => $this->getNgoiHaiCoDetails($productId, $variantId),
-            'gach_hoa_thong_gio_ct' => $this->getSimpleCtDetails(GachHoaThongGioCt::class, $productId, 'gach_hoa_thong_gio_ct_id'),
-            'gach_trang_tri_ct' => $this->getSimpleCtDetails(GachTrangTriCt::class, $productId, 'gach_trang_tri_ct_id'),
-            'gach_co_bat_trang_ct' => $this->getSimpleCtDetails(GachCoBatTrangCt::class, $productId, 'gach_co_bat_trang_ct_id'),
-            'linh_vat_phong_thuy_ct' => $this->getSimpleCtDetails(LinhVatPhongThuyCt::class, $productId, 'linh_vat_phong_thuy_ct_id'),
-            'lan_can_gom_xu' => $this->getNoPriceDetails(LanCanGomXu::class, $productId, 'lan_can_gom_xu_id', 'thumbnail_main'),
-            'den_gom_su' => $this->getNoPriceDetails(DenGomSu::class, $productId, 'den_gom_su_id', 'thumbnail_main'),
-            'den_vuon_gom_su_ct' => $this->getDenVuonGomSuDetails($productId, $variantId),
-            'phu_kien_ngoi_ct' => $this->getPhuKienNgoiDetails($productId, $variantId),
-            'lan_can_gom_su_ct' => $this->getLanCanGomSuDetails($productId, $variantId),
-            default => throw new Exception('Loại sản phẩm không hợp lệ.'),
-        };
+        return app(CatalogQueryService::class)->cartDetails($productType, $productId, $variantId);
     }
 
     public function add(string $productType, int $productId, ?int $variantId, int $qty): void
     {
-        $rowId = $this->makeRowId($productType, $productId, $variantId);
-        $cart = $this->getCart();
-
-        if (isset($cart[$rowId])) {
-            $cart[$rowId]['quantity'] += $qty;
-            session([$this->sessionKey => $cart]);
-
-            return;
-        }
-
         $details = $this->getProductDetails($productType, $productId, $variantId);
-
         if ($details['price'] <= 0) {
             throw new Exception('Vui lòng liên hệ đặt hàng.');
         }
 
-        $cart[$rowId] = [
-            'row_id' => $rowId,
-            'product_type' => $productType,
-            'product_id' => $productId,
-            'variant_id' => $variantId,
-            'name' => $details['name'],
-            'variant_name' => $details['variant_name'],
-            'sku' => $details['sku'],
-            'price' => $details['price'],
-            'image' => $details['image'],
-            'quantity' => $qty,
-        ];
-
-        session([$this->sessionKey => $cart]);
-    }
-
-    public function update(string $rowId, int $qty): void
-    {
+        $rowId = $this->makeRowId($productType, $productId, $variantId);
         $cart = $this->getCart();
 
-        if (! isset($cart[$rowId])) {
-            throw new Exception('Sản phẩm không tồn tại trong giỏ hàng.');
+        if (isset($cart[$rowId])) {
+            $cart[$rowId]['qty'] += $qty;
+            $cart[$rowId]['total'] = $cart[$rowId]['qty'] * $cart[$rowId]['price'];
+        } else {
+            $cart[$rowId] = [
+                'rowId' => $rowId,
+                'productType' => $productType,
+                'productId' => $productId,
+                'variantId' => $variantId,
+                'name' => $details['name'],
+                'variantName' => $details['variant_name'],
+                'sku' => $details['sku'],
+                'price' => $details['price'],
+                'image' => $details['image'],
+                'qty' => $qty,
+                'total' => $qty * $details['price'],
+            ];
         }
 
-        $cart[$rowId]['quantity'] = $qty;
-        session([$this->sessionKey => $cart]);
+        $this->saveCart($cart);
+    }
+
+    public function updateQty(string $rowId, int $qty): void
+    {
+        $cart = $this->getCart();
+        if (isset($cart[$rowId])) {
+            if ($qty <= 0) {
+                unset($cart[$rowId]);
+            } else {
+                $cart[$rowId]['qty'] = $qty;
+                $cart[$rowId]['total'] = $qty * $cart[$rowId]['price'];
+            }
+            $this->saveCart($cart);
+        }
     }
 
     public function remove(string $rowId): void
     {
         $cart = $this->getCart();
         unset($cart[$rowId]);
-        session([$this->sessionKey => $cart]);
+        $this->saveCart($cart);
     }
 
-    /**
-     * @return array<string, array{row_id: string, product_type: string, product_id: int, variant_id: ?int, name: string, variant_name: ?string, sku: ?string, price: int, image: ?string, quantity: int}>
-     */
     public function getCart(): array
     {
-        return session($this->sessionKey, []);
-    }
-
-    public function getTotal(): int
-    {
-        $subtotal = $this->getSubtotal();
-        $discount = $this->getDiscountAmount();
-
-        return max(0, $subtotal - $discount);
+        return session()->get($this->sessionKey, []);
     }
 
     public function getCount(): int
     {
-        $count = 0;
-        foreach ($this->getCart() as $item) {
-            $count += $item['quantity'];
-        }
+        $cart = $this->getCart();
 
-        return $count;
-    }
-
-    public function setCoupon(string $code): void
-    {
-        session(['th_cart_coupon' => $code]);
-    }
-
-    public function getCouponCode(): ?string
-    {
-        return session('th_cart_coupon');
-    }
-
-    public function removeCoupon(): void
-    {
-        session()->forget('th_cart_coupon');
+        return array_sum(array_column($cart, 'qty'));
     }
 
     public function getSubtotal(): int
     {
-        return $this->couponService->getCartSubtotal($this->getCart());
+        $cart = $this->getCart();
+
+        return array_sum(array_column($cart, 'total'));
     }
 
-    public function getDiscountAmount(): int
+    public function getTotal(): int
+    {
+        return max(0, $this->getSubtotal() - $this->getDiscount());
+    }
+
+    public function applyCoupon(string $code): array
+    {
+        $cart = $this->getCart();
+        if (empty($cart)) {
+            return ['valid' => false, 'message' => 'Giỏ hàng trống.'];
+        }
+
+        $result = $this->couponService->validateAndCalculate($code, $cart);
+        if ($result['valid']) {
+            session()->put('th_coupon_code', $result['coupon']->code);
+        }
+
+        return $result;
+    }
+
+    public function removeCoupon(): void
+    {
+        session()->forget('th_coupon_code');
+    }
+
+    public function getCouponCode(): ?string
+    {
+        return session()->get('th_coupon_code');
+    }
+
+    public function getDiscount(): int
     {
         $code = $this->getCouponCode();
         if (! $code) {
@@ -173,6 +138,11 @@ class CartService
         return $result['discount'];
     }
 
+    public function getDiscountAmount(): int
+    {
+        return $this->getDiscount();
+    }
+
     public function clear(): void
     {
         session()->forget($this->sessionKey);
@@ -183,199 +153,8 @@ class CartService
         return md5("{$type}_{$productId}_{$variantId}");
     }
 
-    private function getNgoiAmDuongDetails(int $productId, ?int $variantId): array
+    private function saveCart(array $cart): void
     {
-        $product = NgoiAmDuongCt::findOrFail($productId);
-        $variantName = null;
-
-        if ($variantId) {
-            $variant = MauSacNgoiAmDuongCt::find($variantId);
-            if (! $variant) {
-                throw new Exception('Biến thể không tồn tại.');
-            }
-            $variantName = $variant->name;
-        }
-
-        return [
-            'name' => $product->name,
-            'variant_name' => $variantName,
-            'sku' => $product->code,
-            'price' => $product->price,
-            'image' => $this->firstImage($product->images),
-        ];
-    }
-
-    private function getNgoiHaiVanMieuDetails(int $productId, ?int $variantId): array
-    {
-        $product = NgoiHaiVanMieuCt::findOrFail($productId);
-
-        if ($variantId) {
-            $variant = MauSacNgoiHaiVanMieuCt::find($variantId);
-            if (! $variant) {
-                throw new Exception('Biến thể không tồn tại.');
-            }
-
-            return [
-                'name' => $product->name,
-                'variant_name' => $variant->name,
-                'sku' => $variant->code,
-                'price' => $variant->price,
-                'image' => $variant->image,
-            ];
-        }
-
-        return [
-            'name' => $product->name,
-            'variant_name' => null,
-            'sku' => null,
-            'price' => $product->price,
-            'image' => $this->firstImage($product->images),
-        ];
-    }
-
-    private function getNgoiHaiCoDetails(int $productId, ?int $variantId): array
-    {
-        $product = NgoiHaiCoCt::findOrFail($productId);
-
-        if ($variantId) {
-            $variant = MauSacNgoiHaiCoCt::query()
-                ->where('ngoi_hai_co_ct_id', $productId)
-                ->find($variantId);
-
-            if (! $variant) {
-                throw new Exception('Biến thể không tồn tại.');
-            }
-
-            return [
-                'name' => $product->name,
-                'variant_name' => $variant->name,
-                'sku' => $variant->code,
-                'price' => $variant->price,
-                'image' => $variant->image,
-            ];
-        }
-
-        return [
-            'name' => $product->name,
-            'variant_name' => null,
-            'sku' => null,
-            'price' => 0,
-            'image' => $this->firstImage($product->images),
-        ];
-    }
-
-    private function getSimpleCtDetails(string $modelClass, int $productId, string $pk): array
-    {
-        $product = $modelClass::findOrFail($productId);
-
-        return [
-            'name' => $product->name,
-            'variant_name' => null,
-            'sku' => $product->code,
-            'price' => $product->price,
-            'image' => $this->firstImage($product->images),
-        ];
-    }
-
-    private function getDenVuonGomSuDetails(int $productId, ?int $variantId): array
-    {
-        $product = DenVuonGomSuCt::query()
-            ->where('is_delete', 0)
-            ->findOrFail($productId);
-
-        if (! $variantId) {
-            throw new Exception('Vui lòng chọn phân loại sản phẩm.');
-        }
-
-        $variant = PhanLoaiDenVuonGomSuCt::query()
-            ->where('den_vuon_gom_su_ct_id', $productId)
-            ->where('is_delete', 0)
-            ->find($variantId);
-
-        if (! $variant) {
-            throw new Exception('Biến thể không tồn tại.');
-        }
-
-        return [
-            'name' => $product->name,
-            'variant_name' => $variant->name,
-            'sku' => $variant->code,
-            'price' => $variant->price,
-            'image' => $this->firstImage($product->images),
-        ];
-    }
-
-    private function getPhuKienNgoiDetails(int $productId, ?int $variantId): array
-    {
-        $product = PhuKienNgoiCt::query()
-            ->where('is_delete', 0)
-            ->findOrFail($productId);
-
-        if (! $variantId) {
-            throw new Exception('Vui lòng chọn phân loại sản phẩm.');
-        }
-
-        $variant = PhanLoaiPhuKienNgoiCt::query()
-            ->where('phu_kien_ngoi_ct_id', $productId)
-            ->where('is_delete', 0)
-            ->find($variantId);
-
-        if (! $variant) {
-            throw new Exception('Biến thể không tồn tại.');
-        }
-
-        return [
-            'name' => $product->name,
-            'variant_name' => $variant->name,
-            'sku' => $variant->code,
-            'price' => $variant->price,
-            'image' => $this->firstImage($product->images),
-        ];
-    }
-
-    private function getLanCanGomSuDetails(int $productId, ?int $variantId): array
-    {
-        $product = LanCanGomSuCt::query()
-            ->where('is_delete', 0)
-            ->findOrFail($productId);
-
-        if (! $variantId) {
-            throw new Exception('Vui lòng chọn phân loại sản phẩm.');
-        }
-
-        $variant = PhanLoaiLanCanGomSuCt::query()
-            ->where('lan_can_gom_su_ct_id', $productId)
-            ->where('is_delete', 0)
-            ->find($variantId);
-
-        if (! $variant) {
-            throw new Exception('Biến thể không tồn tại.');
-        }
-
-        return [
-            'name' => $product->name,
-            'variant_name' => $variant->name,
-            'sku' => $variant->code,
-            'price' => $variant->price,
-            'image' => $this->firstImage($product->images),
-        ];
-    }
-
-    private function getNoPriceDetails(string $modelClass, int $productId, string $pk, string $imageField): array
-    {
-        $product = $modelClass::findOrFail($productId);
-
-        return [
-            'name' => $product->name ?? $product->title ?? '',
-            'variant_name' => null,
-            'sku' => null,
-            'price' => 0,
-            'image' => $product->$imageField ?? null,
-        ];
-    }
-
-    private function firstImage(mixed $images): ?string
-    {
-        return ProductGallery::firstImagePath($images);
+        session()->put($this->sessionKey, $cart);
     }
 }

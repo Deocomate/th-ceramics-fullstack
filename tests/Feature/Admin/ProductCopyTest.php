@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\GachHoaThongGioCt;
-use App\Models\NgoiAmDuongCt;
+use App\Domains\Catalog\ProductWriter;
 use App\Domains\Identity\Models\User;
 
 test('guest cannot access product copy api', function () {
@@ -16,7 +15,7 @@ test('admin can search and list products for copy', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-COPY-TEST-001',
         'name' => 'Ngói Âm Dương Thử Nghiệm Sao Chép',
         'color' => 'Xanh Ngọc',
@@ -47,7 +46,7 @@ test('admin can get product detail for copy with formatted data', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $product = GachHoaThongGioCt::query()->create([
+    $product = app(ProductWriter::class)->create('gach_hoa_thong_gio_ct', [
         'code' => 'GHTG-COPY-001',
         'name' => 'Gạch Hoa Thông Gió Bánh Chưng',
         'color' => 'Trắng Sứ',
@@ -93,7 +92,7 @@ test('admin create page loads with copy_from parameter and renders modal', funct
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-PRELOAD-001',
         'name' => 'Ngói Âm Dương Nạp Sẵn',
         'color' => 'Men Cổ',
@@ -118,7 +117,7 @@ test('admin index page renders duplicate button linking to create with copy_from
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-INDEX-DUP-001',
         'name' => 'Sản phẩm kiểm tra nút nhân bản',
         'color' => 'Tự chọn',
@@ -137,7 +136,7 @@ test('deleted product is excluded from search and detail endpoints', function ()
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $deletedProduct = NgoiAmDuongCt::query()->create([
+    $deletedProduct = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-DELETED-001',
         'name' => 'Ngói Âm Dương Đã Xóa',
         'color' => 'Đỏ Cổ',
@@ -163,4 +162,3 @@ test('deleted product is excluded from search and detail endpoints', function ()
     ]));
     $detailResponse->assertNotFound();
 });
-

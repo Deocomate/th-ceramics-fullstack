@@ -1,8 +1,9 @@
 <?php
 
-use App\Models\NgoiAmDuong;
-use App\Models\NgoiAmDuongCt;
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductWriter;
 use App\Domains\Identity\Models\User;
+use App\Models\NgoiAmDuong;
 use App\Services\ProductCartOptionsService;
 use App\Support\ProductGallery;
 use Illuminate\Http\UploadedFile;
@@ -23,9 +24,9 @@ function galleryFakeWebp(string $name = 'batch.webp'): UploadedFile
     );
 }
 
-function makeNgoiAmDuongProduct(array $images = ['seeders/products/cover.png']): NgoiAmDuongCt
+function makeNgoiAmDuongProduct(array $images = ['seeders/products/cover.png']): Product
 {
-    return NgoiAmDuongCt::query()->create([
+    return app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-VIDEO-'.uniqid(),
         'name' => 'Ngói test gallery video',
         'color' => 'Tự chọn',
@@ -254,7 +255,7 @@ test('creating product can include gallery videos with images', function () {
         'video_urls' => ['https://youtu.be/Win12rIicBI'],
     ])->assertRedirect(route('admin.ngoi-am-duong-ct.index'));
 
-    $product = NgoiAmDuongCt::query()->where('code', 'NAD-VIDEO-STORE-001')->firstOrFail();
+    $product = Product::where('type_key', 'ngoi_am_duong_ct')->whereHas('variants', fn ($q) => $q->where('sku', 'NAD-VIDEO-STORE-001'))->firstOrFail();
 
     expect($product->images)->toHaveCount(2)
         ->and($product->images[1]['type'])->toBe('video')
@@ -275,7 +276,7 @@ test('creating product can include an uploaded gallery video file', function () 
         'videos' => [UploadedFile::fake()->create('clip.webm', 120, 'video/webm')],
     ])->assertRedirect(route('admin.ngoi-am-duong-ct.index'));
 
-    $product = NgoiAmDuongCt::query()->where('code', 'NAD-VIDEO-FILE-001')->firstOrFail();
+    $product = Product::where('type_key', 'ngoi_am_duong_ct')->whereHas('variants', fn ($q) => $q->where('sku', 'NAD-VIDEO-FILE-001'))->firstOrFail();
 
     expect($product->images)->toHaveCount(2)
         ->and($product->images[1]['type'])->toBe('video')
@@ -297,7 +298,7 @@ test('admin can create product with dedicated cover image', function () {
         'images' => [galleryFakeImage('detail.png')],
     ])->assertRedirect(route('admin.ngoi-am-duong-ct.index'));
 
-    $product = NgoiAmDuongCt::query()->where('code', 'NAD-COVER-001')->firstOrFail();
+    $product = Product::where('type_key', 'ngoi_am_duong_ct')->whereHas('variants', fn ($q) => $q->where('sku', 'NAD-COVER-001'))->firstOrFail();
 
     expect($product->images)->toHaveCount(2)
         ->and($product->images[0])->toBeString()

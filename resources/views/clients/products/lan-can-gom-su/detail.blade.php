@@ -16,13 +16,6 @@
         ->all();
     $jsonLdDesc = \Illuminate\Support\Str::limit(strip_tags(implode(', ', $product->des ?? [])), 300);
 
-    // Lấy danh sách sản phẩm liên quan cho section "Có thể bạn quan tâm"
-    $relatedProducts = \App\Models\LanCanGomSuCt::where('is_delete', 0)
-        ->where('lan_can_gom_su_ct_id', '!=', $product->lan_can_gom_su_ct_id)
-        ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)->orderBy('price')])
-        ->inRandomOrder()
-        ->take(6)
-        ->get();
 @endphp
 
 <x-client.layouts.main title="{{ $product->name }} - Lan Can Gốm Sứ | Gốm Sứ Thanh Hải" data-page="products"

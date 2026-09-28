@@ -2,20 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\DenGomSu;
-use App\Models\DenVuonGomSuCt;
-use App\Models\GachCoBatTrangCt;
-use App\Models\GachHoaThongGioCt;
-use App\Models\GachTrangTriCt;
-use App\Models\LanCanGomXu;
-use App\Models\LinhVatPhongThuyCt;
-use App\Models\NgoiAmDuongCt;
-use App\Models\NgoiHaiCoCt;
-use App\Models\NgoiHaiVanMieuCt;
-use App\Models\PhuKienNgoiCt;
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductTypeRegistry;
 use App\Domains\Content\Models\TinTuc;
 use App\Support\AssetPath;
-use Illuminate\Database\Eloquent\Model;
+use App\Support\ProductGallery;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 
@@ -107,30 +98,26 @@ class ViewHistoryService
         $items = collect();
 
         foreach ($sourceTypes as $type) {
-            $map = $this->productTypeMap();
-
-            if (! isset($map[$type])) {
-                continue;
-            }
-
-            $config = $map[$type];
-            $idColumn = (new $config['model'])->getKeyName();
-
-            $ids = $config['model']::query()
-                ->when($config['has_delete'], fn ($query) => $query->where('is_delete', false))
-                ->latest($idColumn)
+            $products = Product::query()
+                ->with(['variants' => fn ($q) => $q->where('is_delete', false), 'media', 'publicId'])
+                ->where('type_key', $type)
+                ->where('is_delete', false)
+                ->orderByDesc('priority')
+                ->orderByDesc('id')
                 ->limit($perType)
-                ->pluck($idColumn);
+                ->get();
 
-            foreach ($ids as $id) {
-                $resolved = $this->resolveProductItem([
-                    'type' => $type,
-                    'id' => (int) $id,
-                ]);
-
-                if ($resolved) {
-                    $items->push($resolved);
-                }
+            foreach ($products as $product) {
+                $routeName = ProductTypeRegistry::detailRoute($type, $product->category_type);
+                $firstImage = ProductGallery::firstImagePath($product->images);
+                $items->push($this->makeProductDto(
+                    type: $type,
+                    id: (int) $product->public_id,
+                    name: (string) $product->name,
+                    price: (float) ($product->price ?? 0),
+                    image: $firstImage,
+                    routeName: $routeName,
+                ));
             }
         }
 
@@ -146,66 +133,32 @@ class ViewHistoryService
             return null;
         }
 
-        if (in_array($type, ['phu_kien_ngoi', 'phu_kien_ngoi_ct'], true)) {
-            return $this->resolveAccessoryProduct($id, $item);
-        }
-
-        $map = $this->productTypeMap();
-
-        if (! isset($map[$type])) {
+        $config = ProductTypeRegistry::get($type);
+        if (! $config) {
             return null;
         }
 
-        $config = $map[$type];
-        $query = $config['model']::query()
-            ->when($config['has_delete'], fn ($query) => $query->where('is_delete', false));
+        $product = Product::query()
+            ->with(['variants' => fn ($q) => $q->where('is_delete', false), 'media', 'publicId'])
+            ->where('type_key', $type)
+            ->where('is_delete', false)
+            ->whereHas('publicId', fn ($p) => $p->where('type_key', $type)->where('public_id', $id))
+            ->first();
 
-        if ($type === 'den_vuon_gom_su_ct') {
-            $query
-                ->with(['phanLoais' => fn ($query) => $query->where('is_delete', 0)->orderBy('price')])
-                ->withMin(['phanLoais as min_price' => fn ($query) => $query->where('is_delete', 0)], 'price');
-        }
-
-        $model = $query->find($id);
-
-        if (! $model instanceof Model) {
+        if (! $product) {
             return null;
         }
+
+        $categoryType = $product->category_type;
+        $routeName = ProductTypeRegistry::detailRoute($type, $categoryType);
+        $firstImage = ProductGallery::firstImagePath($product->images);
 
         return $this->makeProductDto(
             type: $type,
-            id: $id,
-            name: $this->productName($model, $config['fallback_name']),
-            price: (float) data_get($model, 'min_price', data_get($model, 'price', 0)),
-            image: $this->productImage($model, $config['image_field']),
-            routeName: $config['route'],
-        );
-    }
-
-    private function resolveAccessoryProduct(int $id, array $item): ?object
-    {
-        $accessoryType = $item['accessory_type'] ?? null;
-
-        $product = PhuKienNgoiCt::query()
-            ->where('is_delete', false)
-            ->when($accessoryType, fn ($query) => $query->where('category_type', $accessoryType))
-            ->find($id);
-
-        if (! $product instanceof Model) {
-            return null;
-        }
-
-        $categoryType = (string) data_get($product, 'category_type');
-        $routeName = $categoryType === PhuKienNgoiCt::TYPE_CHU_VAN
-            ? 'client.products.phu-kien-ngoi.bo-noc-chu-van.detail'
-            : 'client.products.phu-kien-ngoi.ngoi-bo-noc.detail';
-
-        return $this->makeProductDto(
-            type: 'phu_kien_ngoi_ct',
-            id: $id,
-            name: $this->productName($product, $item['name'] ?? 'Phụ kiện ngói'),
-            price: (float) ($item['price'] ?? 0),
-            image: $this->productImage($product, 'images'),
+            id: (int) $product->public_id,
+            name: (string) $product->name,
+            price: (float) ($product->price ?? 0),
+            image: $firstImage,
             routeName: $routeName,
         );
     }
@@ -217,113 +170,19 @@ class ViewHistoryService
         float $price,
         ?string $image,
         string $routeName,
-        ?array $routeParams = null
     ): object {
+        $url = Route::has($routeName) ? route($routeName, $id) : '#';
+
         return (object) [
             'type' => $type,
             'id' => $id,
             'name' => $name,
             'price' => $price,
-            'image' => AssetPath::url($image, 'assets/images/ngoi-01.jpg'),
-            'url' => Route::has($routeName) ? route($routeName, $routeParams ?? $id) : '#',
-        ];
-    }
-
-    private function productName(Model $product, string $fallback): string
-    {
-        return (string) (data_get($product, 'name') ?: data_get($product, 'title') ?: $fallback);
-    }
-
-    private function productImage(Model $product, string $field): ?string
-    {
-        $value = data_get($product, $field);
-
-        if (is_array($value)) {
-            return $value[0] ?? null;
-        }
-
-        if (is_string($value)) {
-            $decoded = json_decode($value, true);
-
-            return is_array($decoded) ? ($decoded[0] ?? null) : $value;
-        }
-
-        return null;
-    }
-
-    private function productTypeMap(): array
-    {
-        return [
-            'ngoi_am_duong_ct' => [
-                'model' => NgoiAmDuongCt::class,
-                'route' => 'client.products.ngoi-am-duong.detail',
-                'image_field' => 'images',
-                'fallback_name' => 'Ngói âm dương',
-                'has_delete' => true,
-            ],
-            'ngoi_hai_van_mieu_ct' => [
-                'model' => NgoiHaiVanMieuCt::class,
-                'route' => 'client.products.ngoi-hai-van-mieu.detail',
-                'image_field' => 'images',
-                'fallback_name' => 'Ngói hài văn miếu',
-                'has_delete' => true,
-            ],
-            'ngoi_hai_co_ct' => [
-                'model' => NgoiHaiCoCt::class,
-                'route' => 'client.products.ngoi-hai-co.detail',
-                'image_field' => 'images',
-                'fallback_name' => 'Ngói hài cổ',
-                'has_delete' => true,
-            ],
-            'gach_hoa_thong_gio_ct' => [
-                'model' => GachHoaThongGioCt::class,
-                'route' => 'client.products.gach-hoa-thong-gio.detail',
-                'image_field' => 'images',
-                'fallback_name' => 'Gạch hoa thông gió',
-                'has_delete' => true,
-            ],
-            'gach_trang_tri_ct' => [
-                'model' => GachTrangTriCt::class,
-                'route' => 'client.products.gach-trang-tri.detail',
-                'image_field' => 'images',
-                'fallback_name' => 'Gạch trang trí',
-                'has_delete' => true,
-            ],
-            'gach_co_bat_trang_ct' => [
-                'model' => GachCoBatTrangCt::class,
-                'route' => 'client.products.gach-co-bat-trang.detail',
-                'image_field' => 'images',
-                'fallback_name' => 'Gạch cổ Bát Tràng',
-                'has_delete' => true,
-            ],
-            'linh_vat_phong_thuy_ct' => [
-                'model' => LinhVatPhongThuyCt::class,
-                'route' => 'client.products.linh-vat-phong-thuy.detail',
-                'image_field' => 'images',
-                'fallback_name' => 'Linh vật phong thủy',
-                'has_delete' => true,
-            ],
-            'lan_can_gom_xu' => [
-                'model' => LanCanGomXu::class,
-                'route' => 'client.products.lan-can-gom-su.detail',
-                'image_field' => 'thumbnail_main',
-                'fallback_name' => 'Lan can gốm sứ',
-                'has_delete' => false,
-            ],
-            'den_gom_su' => [
-                'model' => DenGomSu::class,
-                'route' => 'client.products.den-gom-su.detail',
-                'image_field' => 'thumbnail_main',
-                'fallback_name' => 'Đèn gốm sứ',
-                'has_delete' => false,
-            ],
-            'den_vuon_gom_su_ct' => [
-                'model' => DenVuonGomSuCt::class,
-                'route' => 'client.products.den-gom-su.detail',
-                'image_field' => 'images',
-                'fallback_name' => 'Đèn gốm sứ',
-                'has_delete' => true,
-            ],
+            'price_formatted' => $price > 0 ? number_format($price, 0, ',', '.') . ' đ' : 'Liên hệ',
+            'image' => $image,
+            'image_url' => $image ? AssetPath::url($image) : asset('assets/images/logo.png'),
+            'url' => $url,
+            'route_name' => $routeName,
         ];
     }
 }

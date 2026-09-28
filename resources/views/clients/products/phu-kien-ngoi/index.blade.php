@@ -30,7 +30,7 @@
         $assetUrl = fn(?string $path, ?string $fallback = null) => \App\Support\AssetPath::url($path, $fallback);
         $productImageUrl = fn($product, string $fallback) => $assetUrl(data_get($product, 'images.0'), $fallback);
         $productId = fn($product) => data_get($product, 'phu_kien_ngoi_ct_id');
-        $productType = fn($product) => data_get($product, 'category_type') === \App\Models\PhuKienNgoiCt::TYPE_CHU_VAN
+        $productType = fn($product) => data_get($product, 'category_type') === \App\Http\Controllers\Admin\PhuKienNgoiCtController::TYPE_CHU_VAN
             ? 'chu_van'
             : 'bo_noc';
         $productCode = fn($product) => $productType($product) === 'bo_noc'

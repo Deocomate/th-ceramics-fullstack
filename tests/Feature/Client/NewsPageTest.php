@@ -1,7 +1,7 @@
 <?php
 
 use App\Domains\Content\Models\DanhMucTinTuc;
-use App\Models\NgoiAmDuongCt;
+use App\Domains\Catalog\ProductWriter;
 use App\Domains\Content\Models\TinTuc;
 
 function createNewsArticle(DanhMucTinTuc $category, array $overrides = []): TinTuc
@@ -187,7 +187,7 @@ test('visited article appears in recent article history without duplicates', fun
 });
 
 test('visited product appears in recent product history without duplicates', function () {
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-001',
         'name' => 'Ngoi am duong test',
         'images' => ['assets/images/ngoi-01.jpg'],
@@ -200,7 +200,7 @@ test('visited product appears in recent product history without duplicates', fun
     $this->get(route('client.products.ngoi-am-duong.detail', $product->ngoi_am_duong_ct_id))->assertOk();
 
     $this->assertSame([
-        ['type' => 'ngoi_am_duong_ct', 'id' => $product->ngoi_am_duong_ct_id],
+        ['type' => 'ngoi_am_duong_ct', 'id' => (int) $product->ngoi_am_duong_ct_id],
     ], session('th_recent_products'));
 
     $this->get(route('client.news.index'))

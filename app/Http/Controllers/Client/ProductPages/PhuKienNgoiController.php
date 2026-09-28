@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Client\ProductPages;
 
+use App\Domains\Catalog\Services\CatalogQueryService;
 use App\Http\Controllers\Controller;
 use App\Models\PhuKienNgoi;
-use App\Models\PhuKienNgoiCt;
-use App\Services\PhuKienNgoiCtService;
 use App\Services\PhuKienNgoiService;
 use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
@@ -14,16 +13,19 @@ use Illuminate\Http\Request;
 
 class PhuKienNgoiController extends Controller
 {
+    public const TYPE_BO_NOC = 'ngoi_bo_noc';
+    public const TYPE_CHU_VAN = 'chu_van';
+
     public function __construct(
         private readonly PhuKienNgoiService $phuKienNgoiService,
-        private readonly PhuKienNgoiCtService $phuKienNgoiCtService,
+        private readonly CatalogQueryService $catalogQuery,
     ) {}
 
     public function index()
     {
         $config = $this->phuKienNgoiService->getFirstRecord();
-        $ngoiBoNocProducts = $this->phuKienNgoiCtService->getAll('active', PhuKienNgoiCt::TYPE_BO_NOC);
-        $boNocChuVanProducts = $this->phuKienNgoiCtService->getAll('active', PhuKienNgoiCt::TYPE_CHU_VAN);
+        $ngoiBoNocProducts = $this->catalogQuery->all('phu_kien_ngoi_ct', 'active', self::TYPE_BO_NOC);
+        $boNocChuVanProducts = $this->catalogQuery->all('phu_kien_ngoi_ct', 'active', self::TYPE_CHU_VAN);
 
         return view('clients.products.phu-kien-ngoi.index', compact(
             'config', 'ngoiBoNocProducts', 'boNocChuVanProducts'
@@ -32,63 +34,41 @@ class PhuKienNgoiController extends Controller
 
     public function detailNgoiBoNoc($id, ViewHistoryService $historyService)
     {
-        return $this->detailByType((int) $id, PhuKienNgoiCt::TYPE_BO_NOC, 'clients.products.phu-kien-ngoi.ngoi-bo-noc-detail', $historyService);
+        return $this->detailByType((int) $id, self::TYPE_BO_NOC, 'clients.products.phu-kien-ngoi.ngoi-bo-noc-detail', $historyService);
     }
 
     public function detailBoNocChuVan($id, ViewHistoryService $historyService)
     {
-        return $this->detailByType((int) $id, PhuKienNgoiCt::TYPE_CHU_VAN, 'clients.products.phu-kien-ngoi.bo-noc-chu-van-detail', $historyService);
+        return $this->detailByType((int) $id, self::TYPE_CHU_VAN, 'clients.products.phu-kien-ngoi.bo-noc-chu-van-detail', $historyService);
     }
 
     public function legacyDetailRedirect($id, Request $request)
     {
-        $type = $request->query('type') === 'chu_van' ? PhuKienNgoiCt::TYPE_CHU_VAN : PhuKienNgoiCt::TYPE_BO_NOC;
+        $type = $request->query('type') === 'chu_van' ? self::TYPE_CHU_VAN : self::TYPE_BO_NOC;
 
-        $product = config('product_catalog.read_unified')
-            ? app(UnifiedProductCatalog::class)->findByLegacyReference('phu_kien_ngoi_ct', (int) $id, $type)
-            : PhuKienNgoiCt::query()
-                ->where('category_type', $type)
-                ->where('legacy_type', $type)
-                ->where('legacy_id', $id)
-                ->first();
+        $product = app(UnifiedProductCatalog::class)->findByLegacyReference('phu_kien_ngoi_ct', (int) $id, $type);
 
         if (! $product) {
-            $product = PhuKienNgoiCt::query()
-                ->where('category_type', $type)
-                ->where('phu_kien_ngoi_ct_id', $id)
-                ->firstOrFail();
+            $product = $this->catalogQuery->find('phu_kien_ngoi_ct', (int) $id);
         }
 
-        $routeName = $type === PhuKienNgoiCt::TYPE_CHU_VAN
+        $routeName = $type === self::TYPE_CHU_VAN
             ? 'client.products.phu-kien-ngoi.bo-noc-chu-van.detail'
             : 'client.products.phu-kien-ngoi.ngoi-bo-noc.detail';
 
-        return redirect()->route($routeName, $product->phu_kien_ngoi_ct_id, 301);
+        return redirect()->route($routeName, $product->public_id, 301);
     }
 
     private function detailByType(int $id, string $type, string $view, ViewHistoryService $historyService)
     {
-        $product = config('product_catalog.read_unified')
-            ? $this->phuKienNgoiCtService->findById($id)
-            : PhuKienNgoiCt::query()
-                ->with(['phanLoais' => fn ($query) => $query->where('is_delete', 0)->orderBy('price')])
-                ->where('category_type', $type)
-                ->where('is_delete', 0)
-                ->findOrFail($id);
-        abort_if($product->category_type !== $type || $product->is_delete, 404);
+        $product = $this->catalogQuery->findActive('phu_kien_ngoi_ct', $id);
+        abort_if($product->category_type !== $type, 404);
 
-        $historyService->trackProduct('phu_kien_ngoi_ct', (int) $product->phu_kien_ngoi_ct_id, ['accessory_type' => $type]);
+        $historyService->trackProduct('phu_kien_ngoi_ct', (int) $product->public_id, ['accessory_type' => $type]);
 
-        $phanLoais = $product->phanLoais;
+        $phanLoais = $product->variants->where('is_default', false)->where('is_delete', false);
         $pageConfig = PhuKienNgoi::query()->first();
-        $relatedProducts = config('product_catalog.read_unified')
-            ? app(UnifiedProductCatalog::class)->related('phu_kien_ngoi_ct', $product->phu_kien_ngoi_ct_id, null, 4)
-            : PhuKienNgoiCt::query()
-                ->where('is_delete', 0)
-                ->where('phu_kien_ngoi_ct_id', '!=', $product->phu_kien_ngoi_ct_id)
-                ->orderedByPriority()
-                ->take(4)
-                ->get();
+        $relatedProducts = $this->catalogQuery->related('phu_kien_ngoi_ct', (int) $product->public_id, null, 4);
 
         $journeyVideo = ProductJourneyVideo::resolve($product->video ?? null, $pageConfig);
 

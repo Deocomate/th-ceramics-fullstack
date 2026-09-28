@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Client\ProductPages;
 
+use App\Domains\Catalog\Models\ProductDisplayOption;
+use App\Domains\Catalog\Services\CatalogQueryService;
+use App\Domains\Content\Services\GiaTriVuotTroiService;
 use App\Http\Controllers\Controller;
 use App\Models\NgoiAmDuong;
 use App\Services\DinhMucNgoiAmDuongService;
-use App\Domains\Content\Services\GiaTriVuotTroiService;
-use App\Services\MauSacNgoiAmDuongCtService;
-use App\Services\NgoiAmDuongCtService;
 use App\Services\NgoiAmDuongService;
-use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
-use App\Support\CollectionPaginator;
-use App\Support\ProductCollectionFilter;
 use App\Support\ProductJourneyVideo;
 use Illuminate\Http\Request;
 
@@ -20,31 +17,17 @@ class NgoiAmDuongController extends Controller
 {
     public function __construct(
         private readonly NgoiAmDuongService $ngoiAmDuongService,
-        private readonly NgoiAmDuongCtService $ngoiAmDuongCtService,
-        private readonly MauSacNgoiAmDuongCtService $mauSacService,
+        private readonly CatalogQueryService $catalogQuery,
         private readonly DinhMucNgoiAmDuongService $dinhMucService,
-        private readonly GiaTriVuotTroiService $giaTriVuotTroiService
+        private readonly GiaTriVuotTroiService $giaTriVuotTroiService,
     ) {}
 
-    /**
-     * Trang danh mục Ngói Âm Dương
-     */
     public function index(Request $request)
     {
-        // 1. Lấy cấu hình chung (Banner, Video trang ngói âm dương)
         $config = $this->ngoiAmDuongService->getFirstRecord();
-
-        // 2. Lấy danh sách sản phẩm (chỉ lấy các SP đang active)
-        $products = config('product_catalog.read_unified')
-            ? app(UnifiedProductCatalog::class)->paginate('ngoi_am_duong_ct', $request->only(['search', 'sort']))
-            : CollectionPaginator::paginate(ProductCollectionFilter::apply(
-                $this->ngoiAmDuongCtService->getAll('active'), $request->only(['search', 'sort'])
-            ), 8);
-
-        // 3. Lấy giá trị vượt trội chung
+        $products = $this->catalogQuery->paginate('ngoi_am_duong_ct', $request->only(['search', 'sort']), 8);
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();
 
-        // Trả data về View
         return view('clients.products.ngoi-am-duong.index', compact(
             'config',
             'products',
@@ -52,37 +35,22 @@ class NgoiAmDuongController extends Controller
         ));
     }
 
-    /**
-     * Trang chi tiết 1 sản phẩm Ngói Âm Dương cụ thể
-     */
     public function detail($id, ViewHistoryService $historyService)
     {
-        // 1. Lấy thông tin chi tiết của sản phẩm theo ID
-        $product = $this->ngoiAmDuongCtService->findById($id);
+        $product = $this->catalogQuery->findActive('ngoi_am_duong_ct', (int) $id);
+        $historyService->trackProduct('ngoi_am_duong_ct', (int) $product->public_id);
 
-        // Kiểm tra nếu sản phẩm đã bị xóa (is_delete = 1) thì báo lỗi 404
-        if ($product->is_delete == 1) {
-            abort(404, 'Sản phẩm không tồn tại hoặc đã bị gỡ.');
-        }
+        $colors = ProductDisplayOption::query()
+            ->where('type_key', 'ngoi_am_duong_ct')
+            ->orderBy('sort_order')
+            ->get();
 
-        $historyService->trackProduct('ngoi_am_duong_ct', (int) $product->ngoi_am_duong_ct_id);
-
-        // 2. Lấy danh sách màu sắc của ngói âm dương
-        $colors = $this->mauSacService->getAll();
-
-        // 3. Lấy bảng định mức thi công
         $dinhMuc = $this->dinhMucService->getAll();
-
-        // 4. Lấy sản phẩm liên quan (Gợi ý các sản phẩm Ngói Âm Dương khác)
-        // Lấy tất cả active và loại trừ sản phẩm hiện tại, lấy ngẫu nhiên 4 sản phẩm
-        $relatedProducts = config('product_catalog.read_unified')
-            ? app(UnifiedProductCatalog::class)->related('ngoi_am_duong_ct', (int) $id, null, 4)
-            : $this->ngoiAmDuongCtService->getAll('active')->where('ngoi_am_duong_ct_id', '!=', $id)->take(4);
+        $relatedProducts = $this->catalogQuery->related('ngoi_am_duong_ct', (int) $product->public_id, null, 4);
 
         $config = NgoiAmDuong::query()->first();
         $journeyVideo = ProductJourneyVideo::resolve($product->video ?? null, $config);
 
-        // Trả data về View
         return view('clients.products.ngoi-am-duong.detail', compact(
             'product',
             'colors',

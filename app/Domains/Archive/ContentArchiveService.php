@@ -3,7 +3,6 @@
 namespace App\Domains\Archive;
 
 use App\Domains\Catalog\PublicIdAllocator;
-use App\Services\ProductBackfillService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
@@ -173,6 +172,19 @@ class ContentArchiveService
             $referencedMedia = [];
             $planned = [];
             foreach ($manifest['tables'] as $table => $expected) {
+                if (($manifest['source_schema'] ?? '') === 'legacy' && \App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter::isLegacyCatalogTable($table)) {
+                    $seen = 0;
+                    $this->eachRow($zip, $table, function (array $row) use (&$seen, &$referencedMedia): void {
+                        $seen++;
+                        $this->collectMedia($row, $referencedMedia);
+                    });
+                    if ($seen !== $expected) {
+                        throw new RuntimeException("Số bản ghi của {$table} không khớp manifest.");
+                    }
+                    $report['add'] += $seen;
+                    continue;
+                }
+
                 if (! in_array($table, $this->tables(), true)) {
                     throw new RuntimeException("Bảng {$table} không được hỗ trợ ở schema này.");
                 }
@@ -230,6 +242,18 @@ class ContentArchiveService
             DB::transaction(function () use ($zip, $manifest, $rewrites, &$result): void {
                 $planned = [];
                 foreach ($manifest['tables'] as $table => $_count) {
+                    if (($manifest['source_schema'] ?? '') === 'legacy' && \App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter::isLegacyCatalogTable($table)) {
+                        app(\App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter::class)->importTable(
+                            $zip,
+                            $table,
+                            $manifest,
+                            $rewrites,
+                            $result,
+                            fn (mixed $val, array $rw) => $this->rewriteMedia($val, $rw)
+                        );
+                        continue;
+                    }
+
                     $key = $this->primaryKey($table);
                     $this->eachRow($zip, $table, function (array $row) use ($table, $key, $manifest, $rewrites, &$result, &$planned): void {
                         $row = $this->rewriteMedia($row, $rewrites);
@@ -259,9 +283,6 @@ class ContentArchiveService
                     app(PublicIdAllocator::class)->reconcileSequences();
                 }
             });
-            if ($manifest['source_schema'] === 'legacy' && Schema::hasTable('products')) {
-                app(ProductBackfillService::class)->backfill();
-            }
 
             return $result;
         } finally {

@@ -2,124 +2,34 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
-use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
-use App\Http\Controllers\Controller;
-use App\Rules\YoutubeUrl;
-use App\Services\DenVuonGomSuCtService;
+use App\Domains\Catalog\Http\Admin\BaseProductItemController;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
-class DenVuonGomSuCtController extends Controller
+class DenVuonGomSuCtController extends BaseProductItemController
 {
-    use DestroysProductGalleryMedia;
-    use UploadsProductGalleryMedia;
+    protected string $typeKey = 'den_vuon_gom_su_ct';
+    protected string $viewPrefix = 'admin.den-vuon-gom-su-ct';
+    protected string $routePrefix = 'admin.den-vuon-gom-su-ct';
+    protected string $itemLabel = 'Đèn Vườn Gốm Sứ';
+    protected string $imageDirectory = 'den_vuon_gom_su_ct';
+    protected string $sizeDirectory = 'den_vuon_gom_su_ct/sizes';
 
-    public function __construct(private readonly DenVuonGomSuCtService $service) {}
-
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $status = $request->query('status', 'active');
         $categoryType = $request->query('category_type', 'all');
         abort_unless(in_array($categoryType, ['all', 'den_gom', 'den_su'], true), 404);
-        $products = $this->service->getAll($status, $categoryType);
+        $products = $this->queryService->all($this->typeKey, $status, $categoryType === 'all' ? null : $categoryType);
 
-        return view('admin.den-vuon-gom-su-ct.index', compact('products', 'status', 'categoryType'));
+        return view("{$this->viewPrefix}.index", compact('products', 'status', 'categoryType'));
     }
 
-    public function create(Request $request)
+    protected function customStoreRules(Request $request): array
     {
-        $copiedProduct = null;
-        if ($request->filled('copy_from')) {
-            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('den-vuon-gom-su-ct', (int) $request->query('copy_from'));
-        }
-
-        return view('admin.den-vuon-gom-su-ct.create', compact('copiedProduct'));
-    }
-
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'], 'color' => ['nullable', 'string', 'max:100'], 'category_type' => ['required', 'in:den_gom,den_su'], 'size' => ['nullable', 'string', 'max:255'],
-            'des' => ['nullable', 'array'], 'des.*' => ['nullable', 'string', 'max:500'],
-            'size_des' => ['nullable', 'array'], 'size_des.*' => ['nullable', 'string', 'max:500'],
-            'images' => ['nullable', 'required_without:cover_image', 'array', 'min:1'], 'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'cover_image' => ['nullable', 'required_without:images', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'size_image' => ['nullable', 'image', 'max:5120'],
-            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            'video_urls' => ['nullable', 'array'],
-            'video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            'videos' => ['nullable', 'array'],
-            'videos.*' => ['file', 'mimes:mp4,webm', 'max:51200'],
-        ]);
-        $this->service->create($data);
-
-        return redirect()->route('admin.den-vuon-gom-su-ct.index')->with('success', 'Thêm mới Đèn Vườn Gốm Sứ thành công.');
-    }
-
-    public function edit(int $id)
-    {
-        $product = $this->service->findById($id);
-
-        return view('admin.den-vuon-gom-su-ct.edit', compact('product'));
-    }
-
-    public function update(Request $request, int $id)
-    {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'], 'color' => ['nullable', 'string', 'max:100'], 'category_type' => ['required', 'in:den_gom,den_su'], 'size' => ['nullable', 'string', 'max:255'],
-            'des' => ['nullable', 'array'], 'des.*' => ['nullable', 'string', 'max:500'],
-            'size_des' => ['nullable', 'array'], 'size_des.*' => ['nullable', 'string', 'max:500'],
-            'new_images' => ['nullable', 'array'], 'new_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'gallery_order' => ['nullable', 'array'], 'gallery_order.*' => ['string'],
-            'size_image' => ['nullable', 'image', 'max:5120'],
-            'video' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            'new_video_urls' => ['nullable', 'array'],
-            'new_video_urls.*' => ['nullable', 'string', 'max:500', 'url', new YoutubeUrl],
-            'new_videos' => ['nullable', 'array'],
-            'new_videos.*' => ['file', 'mimes:mp4,webm', 'max:51200'],
-        ]);
-        $this->service->update($id, $data);
-
-        return back()->with('success', 'Cập nhật thành công.');
-    }
-
-    public function destroy(int $id)
-    {
-        $this->service->toggleStatus($id, 1);
-
-        return back()->with('success', 'Đã tạm ẩn sản phẩm.');
-    }
-
-    public function restore(int $id)
-    {
-        $this->service->toggleStatus($id, 0);
-
-        return back()->with('success', 'Khôi phục sản phẩm thành công.');
-    }
-
-    public function destroyImage(Request $request, int $id)
-    {
-        return $this->destroyGalleryMediaResponse(
-            $request,
-            fn (array $imagePaths, array $videoUrls, array $videoPaths = []) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls, $videoPaths)
-        );
-    }
-
-    public function storeImages(Request $request, int $id)
-    {
-        return $this->storeGalleryImagesResponse(
-            $request,
-            fn (array $images, array $videoUrls, array $videoFiles) => $this->service->appendMediaToGallery($id, $images, $videoUrls, $videoFiles)
-        );
-    }
-
-    public function reorderGallery(Request $request, int $id)
-    {
-        return $this->reorderGalleryResponse(
-            $request,
-            fn (array $tokens) => $this->service->reorderGalleryItems($id, $tokens),
-            fn (string $imagePath) => $this->service->promoteCoverImage($id, $imagePath)
-        );
+        return [
+            'category_type' => ['required', Rule::in(['den_gom', 'den_su'])],
+        ];
     }
 }

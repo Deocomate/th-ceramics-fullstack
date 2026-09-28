@@ -1,12 +1,12 @@
 <?php
 
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\Models\ProductVariant;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Catalog\PublicIdAllocator;
 use App\Models\DinhMucNgoiHaiCo;
 use App\Models\DinhMucNgoiHaiVanMieu;
-use App\Models\MauSacNgoiHaiCoCt;
-use App\Models\MauSacNgoiHaiVanMieuCt;
-use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieu;
-use App\Models\NgoiHaiVanMieuCt;
 use Illuminate\Support\Facades\Blade;
 
 beforeEach(function () {
@@ -23,39 +23,47 @@ beforeEach(function () {
     ]);
 });
 
-function createNgoiHaiVanMieuProduct(array $overrides = []): NgoiHaiVanMieuCt
+function createNgoiHaiVanMieuProduct(array $overrides = []): Product
 {
-    return NgoiHaiVanMieuCt::query()->create(array_merge([
+    return app(ProductWriter::class)->create('ngoi_hai_van_mieu_ct', array_merge([
         'name' => 'Ngói Hài Dynamic',
         'color' => 'Tự chọn',
         'images' => ['ngoi-hai/product-main.jpg'],
         'price' => 0,
         'des' => ['Mô tả động 1', 'Mô tả động 2'],
-        'mau_sac_id' => 0,
         'size' => 'L280 x W280 x H54mm',
         'size_image' => 'ngoi-hai/size-image.jpg',
         'is_delete' => 0,
     ], $overrides));
 }
 
+function createVariant(Product $product, array $attributes): ProductVariant
+{
+    $variant = $product->variants()->create(array_merge([
+        'is_default' => false,
+        'is_delete' => false,
+    ], $attributes));
+    app(PublicIdAllocator::class)->variant($variant->setRelation('product', $product));
+
+    return $variant;
+}
+
 test('ngoi hai van mieu detail renders dynamic gallery variants calculator fabrication and compare table', function () {
     $product = createNgoiHaiVanMieuProduct();
 
-    MauSacNgoiHaiVanMieuCt::query()->create([
+    createVariant($product, [
         'name' => 'Men xanh',
         'image' => 'ngoi-hai/variant-blue.jpg',
-        'code' => 'NHVM-BLUE',
+        'sku' => 'NHVM-BLUE',
         'price' => 675000,
-        'ngoi_hai_van_mieu_ct_id' => $product->ngoi_hai_van_mieu_ct_id,
         'is_delete' => 0,
     ]);
 
-    MauSacNgoiHaiVanMieuCt::query()->create([
+    createVariant($product, [
         'name' => 'Men đã xóa',
         'image' => 'ngoi-hai/deleted.jpg',
-        'code' => 'NHVM-DELETED',
+        'sku' => 'NHVM-DELETED',
         'price' => 1,
-        'ngoi_hai_van_mieu_ct_id' => $product->ngoi_hai_van_mieu_ct_id,
         'is_delete' => 1,
     ]);
 
@@ -87,7 +95,7 @@ test('ngoi hai van mieu detail renders dynamic gallery variants calculator fabri
 });
 
 test('ngoi hai co detail uses hai co identifiers and filters deleted variants', function () {
-    $product = NgoiHaiCoCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_hai_co_ct', [
         'name' => 'Ngói Hài Cổ Dynamic',
         'color' => 'Tự chọn',
         'images' => ['ngoi-hai-co/product.jpg'],
@@ -97,21 +105,19 @@ test('ngoi hai co detail uses hai co identifiers and filters deleted variants', 
         'is_delete' => 0,
     ]);
 
-    MauSacNgoiHaiCoCt::query()->create([
+    createVariant($product, [
         'name' => 'Men cổ',
         'image' => 'ngoi-hai-co/variant.jpg',
-        'code' => 'NHC-ACTIVE',
+        'sku' => 'NHC-ACTIVE',
         'price' => 333000,
-        'ngoi_hai_co_ct_id' => $product->ngoi_hai_co_ct_id,
         'is_delete' => 0,
     ]);
 
-    MauSacNgoiHaiCoCt::query()->create([
+    createVariant($product, [
         'name' => 'Men cổ đã xóa',
         'image' => 'ngoi-hai-co/deleted.jpg',
-        'code' => 'NHC-DELETED',
+        'sku' => 'NHC-DELETED',
         'price' => 1,
-        'ngoi_hai_co_ct_id' => $product->ngoi_hai_co_ct_id,
         'is_delete' => 1,
     ]);
 

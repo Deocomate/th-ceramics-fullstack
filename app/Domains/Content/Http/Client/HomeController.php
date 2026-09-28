@@ -2,38 +2,26 @@
 
 namespace App\Domains\Content\Http\Client;
 
+use App\Domains\Catalog\Services\CatalogQueryService;
 use App\Domains\Content\Models\DuAn;
 use App\Domains\Content\Models\TrangChu;
 use App\Http\Controllers\Controller;
-use App\Models\GachHoaThongGioCt;
-use App\Models\NgoiAmDuongCt;
-use App\Models\NgoiHaiVanMieuCt;
 
 class HomeController extends Controller
 {
+    public function __construct(private readonly CatalogQueryService $catalogQuery) {}
+
     public function index()
     {
         $trangChu = TrangChu::first();
 
         $projects = DuAn::latest()->take(10)->get();
 
-        $ngoiAmDuongs = NgoiAmDuongCt::where('is_delete', 0)
-            ->orderedByPriority()
-            ->take(8)
-            ->get();
+        $ngoiAmDuongs = $this->catalogQuery->forHome('ngoi_am_duong_ct', 8);
 
-        $ngoiHais = NgoiHaiVanMieuCt::with(['mauSacs' => function ($query) {
-            $query->where('is_delete', 0);
-        }])
-            ->where('is_delete', 0)
-            ->orderedByPriority()
-            ->take(8)
-            ->get();
+        $ngoiHais = $this->catalogQuery->forHome('ngoi_hai_van_mieu_ct', 8);
 
-        $gachHoas = GachHoaThongGioCt::where('is_delete', 0)
-            ->orderedByPriority()
-            ->take(8)
-            ->get();
+        $gachHoas = $this->catalogQuery->forHome('gach_hoa_thong_gio_ct', 8);
 
         return view('clients.home.index', compact(
             'trangChu',

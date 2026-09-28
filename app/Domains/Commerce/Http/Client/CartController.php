@@ -65,8 +65,8 @@ class CartController extends Controller
                 'cart_total' => $cartService->getTotal(),
                 'item' => $item ? [
                     'name' => $item['name'],
-                    'variant_name' => $item['variant_name'],
-                    'quantity' => $item['quantity'],
+                    'variant_name' => $item['variantName'] ?? $item['variant_name'] ?? null,
+                    'quantity' => $item['qty'] ?? $item['quantity'] ?? 1,
                     'price_formatted' => number_format($item['price'], 0, ',', '.').' đ',
                 ] : null,
             ]);
@@ -103,13 +103,13 @@ class CartController extends Controller
         $items = collect($cartService->getCart())
             ->take(5)
             ->map(fn (array $item) => [
-                'row_id' => $item['row_id'],
-                'name' => $item['name'],
-                'variant_name' => $item['variant_name'],
-                'quantity' => $item['quantity'],
-                'price_formatted' => number_format($item['price'], 0, ',', '.').' đ',
-                'line_total_formatted' => number_format($item['price'] * $item['quantity'], 0, ',', '.').' đ',
-                'image_url' => AssetPath::url($item['image']),
+                'row_id' => $item['row_id'] ?? $item['rowId'] ?? '',
+                'name' => $item['name'] ?? '',
+                'variant_name' => $item['variant_name'] ?? $item['variantName'] ?? null,
+                'quantity' => (int) ($item['quantity'] ?? $item['qty'] ?? 1),
+                'price_formatted' => number_format((int) ($item['price'] ?? 0), 0, ',', '.').' đ',
+                'line_total_formatted' => number_format((int) (($item['price'] ?? 0) * ($item['quantity'] ?? $item['qty'] ?? 1)), 0, ',', '.').' đ',
+                'image_url' => AssetPath::url($item['image'] ?? null),
             ])
             ->values()
             ->all();

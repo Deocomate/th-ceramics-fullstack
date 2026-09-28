@@ -2,8 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\PhuKienNgoiCt;
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Catalog\Models\Product;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -26,19 +25,26 @@ class ProductBulkRenameService
             throw new InvalidArgumentException('Tên sản phẩm không được để trống.');
         }
 
-        $modelClass = $config['model'];
-        $query = $modelClass::query()->whereIn($config['pk'], $ids);
+        $typeKey = $config['type_key'];
 
-        if ($modelClass === PhuKienNgoiCt::class) {
-            if (! in_array($categoryType, [PhuKienNgoiCt::TYPE_BO_NOC, PhuKienNgoiCt::TYPE_CHU_VAN], true)) {
+        if ($typeKey === 'phu_kien_ngoi_ct') {
+            if (! in_array($categoryType, ['ngoi_bo_noc', 'chu_van'], true)) {
                 throw new InvalidArgumentException('Loại phụ kiện ngói không hợp lệ.');
             }
-
-            $query->where('category_type', $categoryType);
         }
 
-        return DB::transaction(function () use ($query, $ids, $baseName, $config): int {
-            $products = $query->lockForUpdate()->get()->keyBy($config['pk']);
+        return DB::transaction(function () use ($typeKey, $ids, $baseName, $categoryType): int {
+            $products = Product::query()
+                ->with('publicId')
+                ->where('type_key', $typeKey)
+                ->where(function ($q) use ($typeKey, $ids) {
+                    $q->whereHas('publicId', fn ($p) => $p->where('type_key', $typeKey)->whereIn('public_id', $ids))
+                        ->orWhereIn('id', $ids);
+                })
+                ->when($categoryType !== null, fn ($q) => $q->where('category_type', $categoryType))
+                ->lockForUpdate()
+                ->get()
+                ->keyBy(fn (Product $p) => (int) $p->public_id);
 
             if ($products->count() !== count($ids)) {
                 throw new InvalidArgumentException('Một hoặc nhiều sản phẩm không tồn tại trong danh sách này.');
@@ -47,7 +53,7 @@ class ProductBulkRenameService
             $names = [];
             $total = count($ids);
             foreach ($ids as $index => $id) {
-                $name = $baseName.' '.($index + 1);
+                $name = $baseName . ' ' . ($index + 1);
                 if (mb_strlen($name) > 255) {
                     throw new InvalidArgumentException('Tên sản phẩm sau khi thêm số thứ tự không được vượt quá 255 ký tự.');
                 }
@@ -55,7 +61,7 @@ class ProductBulkRenameService
             }
 
             foreach ($ids as $id) {
-                /** @var Model $product */
+                /** @var Product $product */
                 $product = $products->get($id);
                 $product->forceFill(['name' => $names[$id]])->save();
             }

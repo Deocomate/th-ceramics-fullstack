@@ -2,13 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\MauSacNgoiAmDuongCt;
 use App\Domains\Content\Models\PageContact;
 use App\Domains\Content\Models\TrangChu;
-use App\Observers\LegacyColorObserver;
-use App\Observers\LegacyProductObserver;
-use App\Observers\LegacyVariantObserver;
-use App\Domains\Catalog\ProductTypeRegistry;
 use App\Domains\Commerce\Services\CartService;
 use App\Domains\Content\Services\GiaTriVuotTroiService;
 use Illuminate\Support\Facades\Cache;
@@ -50,16 +45,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        foreach (ProductTypeRegistry::all() as $type) {
-            $model = $type['model'];
-            $model::observe(LegacyProductObserver::class);
-            if ($type['variant_model']) {
-                $variant = $type['variant_model'];
-                $variant::observe(LegacyVariantObserver::class);
-            }
-        }
-        MauSacNgoiAmDuongCt::observe(LegacyColorObserver::class);
-
         View::composer('components.client.layouts.header', function ($view) {
             $view->with('cartCount', app(CartService::class)->getCount());
         });

@@ -54,11 +54,14 @@ final class ClientProductType
     public static function variantRelationConfig(?string $productType): ?array
     {
         $config = $productType ? ProductTypeRegistry::get($productType) : null;
-        if (! $config || ! $config['relation']) {
+        if (! $config || ! ($config['has_variants'] ?? false)) {
             return null;
         }
 
-        return ['relation' => $config['relation'], 'pk' => $config['variant_pk']];
+        $relation = $config['relation'] ?? 'variants';
+        $pk = $config['variant_pk'] ?? 'public_id';
+
+        return ['relation' => $relation, 'pk' => $pk];
     }
 
     public static function requiresVariantSelection(string $productType): bool
@@ -84,23 +87,50 @@ final class ClientProductType
 
         $first = $variants->sortBy(fn ($variant) => (float) data_get($variant, 'price', 0))->first();
 
-        $id = data_get($first, $pk);
+        $id = data_get($first, $pk)
+            ?? data_get($first, 'public_id')
+            ?? data_get($first, 'phan_loai_lan_can_gom_su_ct_id')
+            ?? data_get($first, 'mau_sac_ngoi_hai_van_mieu_ct_id')
+            ?? data_get($first, 'mau_sac_ngoi_hai_co_ct_id')
+            ?? data_get($first, 'phan_loai_den_vuon_gom_su_ct_id')
+            ?? data_get($first, 'phan_loai_phu_kien_ngoi_ct_id')
+            ?? data_get($first, 'id');
 
         return $id !== null ? (int) $id : null;
     }
 
     private static function activeVariants(object $product, string $relation): Collection
     {
-        if (method_exists($product, 'relationLoaded') && $product->relationLoaded($relation)) {
-            return collect($product->{$relation})->filter(fn ($variant) => (int) data_get($variant, 'is_delete', 0) === 0)->values();
+        if (isset($product->phanLoais)) {
+            return collect($product->phanLoais)->filter(fn ($variant) => ! (bool) data_get($variant, 'is_delete', false))->values();
         }
 
-        if (isset($product->{$relation})) {
-            return collect($product->{$relation})->filter(fn ($variant) => (int) data_get($variant, 'is_delete', 0) === 0)->values();
+        if ($relation !== 'variants') {
+            if (method_exists($product, 'relationLoaded') && $product->relationLoaded($relation)) {
+                return collect($product->{$relation})->filter(fn ($variant) => ! (bool) data_get($variant, 'is_delete', false))->values();
+            }
+
+            if (isset($product->{$relation})) {
+                return collect($product->{$relation})->filter(fn ($variant) => ! (bool) data_get($variant, 'is_delete', false))->values();
+            }
+
+            if (method_exists($product, $relation)) {
+                return $product->{$relation}()->where('is_delete', false)->get();
+            }
         }
 
-        if (method_exists($product, $relation)) {
-            return $product->{$relation}()->where('is_delete', 0)->get();
+        if (method_exists($product, 'relationLoaded') && $product->relationLoaded('variants')) {
+            $filtered = collect($product->variants)->filter(fn ($variant) => ! (bool) data_get($variant, 'is_delete', false));
+            $nonDefault = $filtered->where('is_default', false);
+
+            return $nonDefault->isNotEmpty() ? $nonDefault->values() : $filtered->values();
+        }
+
+        if (method_exists($product, 'variants')) {
+            $all = $product->variants()->where('is_delete', false)->get();
+            $nonDefault = $all->where('is_default', false);
+
+            return $nonDefault->isNotEmpty() ? $nonDefault->values() : $all->values();
         }
 
         return collect();

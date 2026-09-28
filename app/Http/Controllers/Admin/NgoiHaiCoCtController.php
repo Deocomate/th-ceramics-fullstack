@@ -2,97 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
-use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreNgoiHaiCoCtRequest;
-use App\Http\Requests\UpdateNgoiHaiCoCtRequest;
-use App\Services\NgoiHaiCoCtService;
-use Illuminate\Http\Request;
+use App\Domains\Catalog\Http\Admin\BaseProductItemController;
 
-class NgoiHaiCoCtController extends Controller
+class NgoiHaiCoCtController extends BaseProductItemController
 {
-    use DestroysProductGalleryMedia;
-    use UploadsProductGalleryMedia;
-
-    public function __construct(private readonly NgoiHaiCoCtService $service) {}
-
-    public function index(Request $request)
-    {
-        $status = $request->query('status', 'active');
-        $products = $this->service->getAll($status);
-
-        return view('admin.ngoi-hai-co-ct.index', compact('products', 'status'));
-    }
-
-    public function create(Request $request)
-    {
-        $copiedProduct = null;
-        if ($request->filled('copy_from')) {
-            $copiedProduct = app(\App\Services\ProductCopyService::class)->getProductDetailForCopy('ngoi-hai-co-ct', (int) $request->query('copy_from'));
-        }
-
-        return view('admin.ngoi-hai-co-ct.create', compact('copiedProduct'));
-    }
-
-    public function store(StoreNgoiHaiCoCtRequest $request)
-    {
-        $this->service->create($request->validated());
-
-        return redirect()->route('admin.ngoi-hai-co-ct.index')
-            ->with('success', 'Thêm mới Ngói Hài Cổ thành công.');
-    }
-
-    public function edit(int $id)
-    {
-        $product = $this->service->findById($id);
-
-        return view('admin.ngoi-hai-co-ct.edit', compact('product'));
-    }
-
-    public function update(UpdateNgoiHaiCoCtRequest $request, int $id)
-    {
-        $this->service->update($id, $request->validated());
-
-        return back()->with('success', 'Cập nhật thành công.');
-    }
-
-    public function destroy(int $id)
-    {
-        $this->service->toggleStatus($id, 1);
-
-        return back()->with('success', 'Đã tạm ẩn sản phẩm.');
-    }
-
-    public function restore(int $id)
-    {
-        $this->service->toggleStatus($id, 0);
-
-        return back()->with('success', 'Khôi phục sản phẩm thành công.');
-    }
-
-    public function destroyImage(Request $request, int $id)
-    {
-        return $this->destroyGalleryMediaResponse(
-            $request,
-            fn (array $imagePaths, array $videoUrls, array $videoPaths = []) => $this->service->removeGalleryItemsFromJson($id, $imagePaths, $videoUrls, $videoPaths)
-        );
-    }
-
-    public function storeImages(Request $request, int $id)
-    {
-        return $this->storeGalleryImagesResponse(
-            $request,
-            fn (array $images, array $videoUrls, array $videoFiles) => $this->service->appendMediaToGallery($id, $images, $videoUrls, $videoFiles)
-        );
-    }
-
-    public function reorderGallery(Request $request, int $id)
-    {
-        return $this->reorderGalleryResponse(
-            $request,
-            fn (array $tokens) => $this->service->reorderGalleryItems($id, $tokens),
-            fn (string $imagePath) => $this->service->promoteCoverImage($id, $imagePath)
-        );
-    }
+    protected string $typeKey = 'ngoi_hai_co_ct';
+    protected string $viewPrefix = 'admin.ngoi-hai-co-ct';
+    protected string $routePrefix = 'admin.ngoi-hai-co-ct';
+    protected string $itemLabel = 'Ngói Hài Cổ';
+    protected string $imageDirectory = 'ngoi_hai_co_ct';
+    protected string $sizeDirectory = 'ngoi_hai_co_ct/sizes';
 }

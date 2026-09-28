@@ -52,7 +52,7 @@
                                 </div>
                                 <div>
                                     <div class="font-bold text-gray-800 text-sm mb-1 {{ $product->is_delete ? 'text-gray-400 line-through' : '' }}">{{ $product->name }}</div>
-                                    <div class="text-xs text-gray-400">{{ \App\Models\PhuKienNgoiCt::categoryCodePrefix($product->category_type) }}{{ $product->phu_kien_ngoi_ct_id }}</div>
+                                    <div class="text-xs text-gray-400">{{ \App\Http\Controllers\Admin\PhuKienNgoiCtController::categoryCodePrefix($product->category_type) }}{{ $product->phu_kien_ngoi_ct_id }}</div>
                                 </div>
                             </div>
                         </td>

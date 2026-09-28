@@ -1,9 +1,10 @@
 <?php
 
-use App\Models\DenGomSu;
-use App\Models\DenVuonGomSuCt;
-use App\Models\PhanLoaiDenVuonGomSuCt;
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\Models\ProductVariant;
+use App\Domains\Catalog\PublicIdAllocator;
 use App\Domains\Identity\Models\User;
+use App\Models\DenGomSu;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,43 +21,54 @@ beforeEach(function () {
     ]);
 });
 
-test('den gom pages can read the unified product projection after backfill', function () {
+test('den gom pages can read the canonical product catalog', function () {
     $product = createDenGomSuProduct(['name' => 'Đèn từ schema mới'], [
         ['code' => 'UNIFIED-DEN-001', 'price' => 280000],
     ]);
-    app(\App\Services\ProductBackfillService::class)->backfill();
-    config()->set('product_catalog.read_unified', true);
 
     $this->get(route('client.products.den-gom-su.index'))
         ->assertOk()->assertSee('Đèn từ schema mới');
-    $this->get(route('client.products.den-gom-su.detail', $product->getKey()))
+    $this->get(route('client.products.den-gom-su.detail', $product->public_id))
         ->assertOk()->assertSee('UNIFIED-DEN-001');
 });
 
-function createDenGomSuProduct(array $overrides = [], array $variants = []): DenVuonGomSuCt
+function createDenGomSuProduct(array $overrides = [], array $variants = []): Product
 {
-    $product = DenVuonGomSuCt::query()->create(array_merge([
+    $product = Product::query()->create(array_merge([
+        'type_key' => 'den_vuon_gom_su_ct',
         'name' => 'Đèn test',
-        'category_type' => DenVuonGomSuCt::CATEGORY_DEN_GOM,
-        'images' => ['assets/images/den-gom-01.png'],
+        'category_type' => 'den_gom',
+        'color' => 'Tự chọn',
         'des' => ['Mô tả sản phẩm'],
         'size' => 'H500 x D200 mm',
         'size_image' => null,
         'size_des' => ['Kích thước test'],
         'is_delete' => 0,
+        'priority' => 0,
     ], $overrides));
 
+    $product->media()->create([
+        'kind' => 'image',
+        'path' => 'assets/images/den-gom-01.png',
+        'sort_order' => 0,
+        'is_cover' => true,
+    ]);
+
+    app(PublicIdAllocator::class)->product($product);
+
     foreach ($variants as $index => $variant) {
-        PhanLoaiDenVuonGomSuCt::query()->create(array_merge([
+        $sku = $variant['code'] ?? ('DGS-'.$product->public_id.'-'.($index + 1));
+        $v = $product->variants()->create([
             'name' => $product->name.' - Phân loại '.($index + 1),
-            'code' => 'DGS-'.$product->den_vuon_gom_su_ct_id.'-'.($index + 1),
-            'price' => 100000 + ($index * 10000),
-            'den_vuon_gom_su_ct_id' => $product->den_vuon_gom_su_ct_id,
-            'is_delete' => 0,
-        ], $variant));
+            'sku' => $sku,
+            'price' => $variant['price'] ?? (100000 + ($index * 10000)),
+            'is_default' => false,
+            'is_delete' => (bool) ($variant['is_delete'] ?? false),
+        ]);
+        app(PublicIdAllocator::class)->variant($v->setRelation('product', $product));
     }
 
-    return $product;
+    return $product->refresh();
 }
 
 function fakePngUpload(string $name): UploadedFile
@@ -138,14 +150,14 @@ test('detail page resolves active den vuon product and tracks history', function
         ['code' => 'DETAIL-HIGH', 'price' => 456000],
     ]);
 
-    $this->get(route('client.products.den-gom-su.detail', $product->den_vuon_gom_su_ct_id))
+    $this->get(route('client.products.den-gom-su.detail', $product->public_id))
         ->assertOk()
         ->assertSee('Đèn Chi Tiết')
         ->assertSee('DETAIL-LOW')
         ->assertSee('Từ 123.000 đ');
 
     expect(session('th_recent_products.0.type'))->toBe('den_vuon_gom_su_ct');
-    expect(session('th_recent_products.0.id'))->toBe($product->den_vuon_gom_su_ct_id);
+    expect(session('th_recent_products.0.id'))->toBe($product->public_id);
 });
 
 test('hidden den vuon product returns not found', function () {
@@ -153,7 +165,7 @@ test('hidden den vuon product returns not found', function () {
         ['code' => 'HIDDEN-001', 'price' => 123000],
     ]);
 
-    $this->get(route('client.products.den-gom-su.detail', $product->den_vuon_gom_su_ct_id))
+    $this->get(route('client.products.den-gom-su.detail', $product->public_id))
         ->assertNotFound();
 });
 
@@ -162,21 +174,21 @@ test('cart accepts only active variants belonging to den vuon product', function
         ['code' => 'CART-001', 'price' => 222000],
         ['code' => 'CART-HIDDEN', 'price' => 333000, 'is_delete' => 1],
     ]);
-    $activeVariant = $product->phanLoais()->where('code', 'CART-001')->firstOrFail();
-    $hiddenVariant = $product->phanLoais()->where('code', 'CART-HIDDEN')->firstOrFail();
+    $activeVariant = $product->variants()->where('sku', 'CART-001')->firstOrFail();
+    $hiddenVariant = $product->variants()->where('sku', 'CART-HIDDEN')->firstOrFail();
 
     $this->postJson(route('client.cart.add'), [
         'product_type' => 'den_vuon_gom_su_ct',
-        'product_id' => $product->den_vuon_gom_su_ct_id,
-        'variant_id' => $activeVariant->phan_loai_den_vuon_gom_su_ct_id,
+        'product_id' => $product->public_id,
+        'variant_id' => $activeVariant->public_id,
         'qty' => 2,
     ])->assertSuccessful()
         ->assertJsonPath('status', 'success');
 
     $this->postJson(route('client.cart.add'), [
         'product_type' => 'den_vuon_gom_su_ct',
-        'product_id' => $product->den_vuon_gom_su_ct_id,
-        'variant_id' => $hiddenVariant->phan_loai_den_vuon_gom_su_ct_id,
+        'product_id' => $product->public_id,
+        'variant_id' => $hiddenVariant->public_id,
         'qty' => 1,
     ])->assertUnprocessable()
         ->assertJsonPath('status', 'error');
@@ -195,10 +207,10 @@ test('admin can store update and preview den vuon category type', function () {
         'images' => [fakePngUpload('den-su.png')],
     ])->assertRedirect(route('admin.den-vuon-gom-su-ct.index'));
 
-    $product = DenVuonGomSuCt::query()->where('name', 'Admin Đèn Sứ')->firstOrFail();
+    $product = Product::query()->where('type_key', 'den_vuon_gom_su_ct')->where('name', 'Admin Đèn Sứ')->firstOrFail();
     expect($product->category_type)->toBe('den_su');
 
-    $this->put(route('admin.den-vuon-gom-su-ct.update', $product->den_vuon_gom_su_ct_id), [
+    $this->put(route('admin.den-vuon-gom-su-ct.update', $product->public_id), [
         'name' => 'Admin Đèn Gốm',
         'category_type' => 'den_gom',
         'size' => 'H400',
@@ -208,7 +220,7 @@ test('admin can store update and preview den vuon category type', function () {
 
     expect($product->fresh()->category_type)->toBe('den_gom');
 
-    $this->get(route('admin.den-vuon-gom-su-ct.edit', $product->den_vuon_gom_su_ct_id))
+    $this->get(route('admin.den-vuon-gom-su-ct.edit', $product->public_id))
         ->assertOk()
-        ->assertSee(route('client.products.den-gom-su.detail', $product->den_vuon_gom_su_ct_id));
+        ->assertSee(route('client.products.den-gom-su.detail', $product->public_id));
 });
