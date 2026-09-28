@@ -18,6 +18,9 @@ class PhuKienNgoiCtService
 
     public function getAll(string $status = 'active', ?string $categoryType = null)
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->all('phu_kien_ngoi_ct', $status, $categoryType);
+        }
         $query = PhuKienNgoiCt::query()
             ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)->orderBy('price')])
             ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
@@ -38,6 +41,9 @@ class PhuKienNgoiCtService
 
     public function findById(int $id): PhuKienNgoiCt
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->find('phu_kien_ngoi_ct', $id);
+        }
         return PhuKienNgoiCt::query()->findOrFail($id);
     }
 

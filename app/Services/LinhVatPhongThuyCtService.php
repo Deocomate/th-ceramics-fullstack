@@ -21,6 +21,9 @@ class LinhVatPhongThuyCtService
 
     public function getAll(string $status = 'active')
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->all('linh_vat_phong_thuy_ct', $status);
+        }
         $query = LinhVatPhongThuyCt::query()->orderedByPriority();
 
         if ($status === 'active') {
@@ -34,6 +37,9 @@ class LinhVatPhongThuyCtService
 
     public function findById(int $id): LinhVatPhongThuyCt
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->find('linh_vat_phong_thuy_ct', $id);
+        }
         return LinhVatPhongThuyCt::findOrFail($id);
     }
 

@@ -18,6 +18,9 @@ class LanCanGomSuCtService
 
     public function getAll(string $status = 'active')
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->all('lan_can_gom_su_ct', $status);
+        }
         $query = LanCanGomSuCt::query()
             ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
             ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
@@ -33,6 +36,9 @@ class LanCanGomSuCtService
 
     public function findById(int $id): LanCanGomSuCt
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->find('lan_can_gom_su_ct', $id);
+        }
         return LanCanGomSuCt::query()
             ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
             ->findOrFail($id);

@@ -8,6 +8,7 @@ use App\Services\GiaTriVuotTroiService;
 use App\Services\MauSacNgoiAmDuongCtService;
 use App\Services\NgoiAmDuongCtService;
 use App\Services\NgoiAmDuongService;
+use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
@@ -32,11 +33,11 @@ class NgoiAmDuongController extends Controller
         $config = $this->ngoiAmDuongService->getFirstRecord();
 
         // 2. Lấy danh sách sản phẩm (chỉ lấy các SP đang active)
-        $products = ProductCollectionFilter::apply(
-            $this->ngoiAmDuongCtService->getAll('active'),
-            $request->only(['search', 'sort'])
-        );
-        $products = CollectionPaginator::paginate($products, 8);
+        $products = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->paginate('ngoi_am_duong_ct', $request->only(['search', 'sort']))
+            : CollectionPaginator::paginate(ProductCollectionFilter::apply(
+                $this->ngoiAmDuongCtService->getAll('active'), $request->only(['search', 'sort'])
+            ), 8);
 
         // 3. Lấy giá trị vượt trội chung
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();

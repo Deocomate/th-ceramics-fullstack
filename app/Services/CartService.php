@@ -20,6 +20,7 @@ use App\Models\PhanLoaiDenVuonGomSuCt;
 use App\Models\PhanLoaiLanCanGomSuCt;
 use App\Models\PhanLoaiPhuKienNgoiCt;
 use App\Models\PhuKienNgoiCt;
+use App\Products\ProductTypeRegistry;
 use Exception;
 
 class CartService
@@ -33,6 +34,9 @@ class CartService
     /** @return array{name: string, variant_name: ?string, sku: ?string, price: int, image: ?string} */
     public function getProductDetails(string $productType, int $productId, ?int $variantId): array
     {
+        if (config('product_catalog.read_unified') && ProductTypeRegistry::get($productType)) {
+            return app(UnifiedProductCatalog::class)->cartDetails($productType, $productId, $variantId);
+        }
         return match ($productType) {
             'ngoi_am_duong_ct' => $this->getNgoiAmDuongDetails($productId, $variantId),
             'ngoi_hai_van_mieu_ct' => $this->getNgoiHaiVanMieuDetails($productId, $variantId),

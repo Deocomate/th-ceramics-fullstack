@@ -18,6 +18,9 @@ return [
         'danh_muc_du_an', 'du_an', 'danh_muc_tin_tuc', 'tin_tuc', 'thi_cong', 'catalog',
         'trang_chu', 've_chung_toi', 'giai_thuong_thanh_tuu', 'gia_tri_vuot_troi',
         'page_factory', 'page_contact', 'page_faq', 'faqs', 'trang_du_an',
+        // The refactor keeps legacy rows during the compatibility window.
+        'products', 'product_variants', 'product_media', 'product_display_options',
+        'product_legacy_ids', 'variant_legacy_ids',
     ],
     'excluded_tables' => [
         'users', 'password_reset_tokens', 'sessions', 'cache', 'cache_locks',

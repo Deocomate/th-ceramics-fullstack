@@ -9,6 +9,7 @@ use App\Services\GachHoaThongGioService;
 use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
+use App\Services\UnifiedProductCatalog;
 use Illuminate\Http\Request;
 
 class GachHoaThongGioController extends Controller
@@ -22,11 +23,11 @@ class GachHoaThongGioController extends Controller
     public function index(Request $request)
     {
         $config = $this->gachHoaThongGioService->getFirstRecord();
-        $products = ProductCollectionFilter::apply(
-            $this->gachHoaThongGioCtService->getAll('active'),
-            $request->only(['search', 'sort'])
-        );
-        $products = CollectionPaginator::paginate($products, 8);
+        $products = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->paginate('gach_hoa_thong_gio_ct', $request->only(['search', 'sort']))
+            : CollectionPaginator::paginate(ProductCollectionFilter::apply(
+                $this->gachHoaThongGioCtService->getAll('active'), $request->only(['search', 'sort'])
+            ), 8);
 
         return view('clients.products.gach-hoa-thong-gio.index', compact(
             'config', 'products'

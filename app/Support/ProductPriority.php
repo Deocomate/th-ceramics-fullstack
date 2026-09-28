@@ -55,6 +55,9 @@ class ProductPriority
                     ->where($group['key'], $id)
                     ->where('is_delete', 0)
                     ->update(['priority' => count($normalizedIds) - $index]);
+                if (config('product_catalog.shadow_write')) {
+                    app(\App\Services\ProductBackfillService::class)->sync($group['table'], $id);
+                }
             }
         });
     }

@@ -21,6 +21,9 @@ class GachHoaThongGioCtService
 
     public function getAll(string $status = 'active')
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->all('gach_hoa_thong_gio_ct', $status);
+        }
         $query = GachHoaThongGioCt::query()->orderedByPriority();
 
         if ($status === 'active') {
@@ -34,6 +37,9 @@ class GachHoaThongGioCtService
 
     public function findById(int $id): GachHoaThongGioCt
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->find('gach_hoa_thong_gio_ct', $id);
+        }
         return GachHoaThongGioCt::findOrFail($id);
     }
 

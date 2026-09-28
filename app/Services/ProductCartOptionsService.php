@@ -15,6 +15,7 @@ use App\Models\NgoiAmDuongCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\PhuKienNgoiCt;
+use App\Products\ProductTypeRegistry;
 use App\Support\AssetPath;
 use App\Support\ClientProductType;
 use Exception;
@@ -25,6 +26,9 @@ class ProductCartOptionsService
 {
     public function getOptions(string $productType, int $productId): array
     {
+        if (config('product_catalog.read_unified') && ProductTypeRegistry::get($productType)) {
+            return app(UnifiedProductCatalog::class)->cartOptions($productType, $productId);
+        }
         return match ($productType) {
             'ngoi_am_duong_ct' => $this->buildNgoiAmDuongOptions($productId),
             'ngoi_hai_van_mieu_ct' => $this->buildVariantOptions($productType, NgoiHaiVanMieuCt::class, $productId, 'Màu sắc', false),
