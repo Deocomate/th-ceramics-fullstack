@@ -32,3 +32,13 @@ Trong giai đoạn có thể quay lại, giữ `PRODUCT_SHADOW_WRITE=true`, bả
 ## 4. Điều kiện thu gọn
 
 Chỉ xóa bảng và code cũ trong một đợt riêng sau khi thử nhập lại ZIP, phục hồi SQL trên MariaDB, đối soát bằng dữ liệu thật, kiểm thử URL/giỏ hàng/đơn hàng và theo dõi ổn định. Bước này không được tự động kích hoạt bởi migration thêm schema.
+
+## 5. Kết quả thử trên bản sao cục bộ (2026-09-28)
+
+- Sao chép 65 bảng từ database MySQL cục bộ sang schema thử nghiệm riêng. Hai migration mới chạy thành công; database gốc không thay đổi.
+- Backfill 174 sản phẩm thuộc 10 nhóm và 8 lựa chọn màu hiển thị. Chạy lại backfill và đối soát đều thành công: không thiếu bản ghi, không lệch trường/biến thể/gallery và không có mã hàng trùng.
+- Xuất ZIP schema `hybrid`, xem trước trên schema không có nội dung: 2.445 bản ghi cần thêm, 0 xung đột, 0 media thiếu. Sau nhập và chạy lại, cả 2.445 bản ghi được nhận diện là không đổi.
+- Phục hồi `database.sql` trên một schema MySQL 8.4 thử nghiệm cùng phiên bản: số bản ghi của cả 58 bảng trong manifest khớp; đối soát product vẫn đạt 174/174. Cần thử riêng trên MariaDB trước khi phát hành.
+- Bộ kiểm thử archive trên nhánh refactor: 12 bài qua. Lần chạy toàn bộ trước thay đổi nhỏ về định dạng JSON: 273 bài qua, 3 bài lỗi giao diện cũng xuất hiện trên `main` (`NewsPageTest` và `NgoiAmDuongDetailViewTest`).
+
+Các schema thử nghiệm và ZIP thử đã được xóa sau khi đối soát. Hai migration mới vẫn ở trạng thái chưa chạy trên database gốc.
