@@ -27,5 +27,6 @@ return [
         'jobs', 'job_batches', 'failed_jobs', 'orders', 'order_items',
         'coupons', 'consultation_requests', 'migrations', 'content_archive_record_maps',
     ],
-    'max_uncompressed_bytes' => 2_000_000_000,
+    'max_files' => (int) env('CONTENT_ARCHIVE_MAX_FILES', 100_000),
+    'max_uncompressed_bytes' => (int) env('CONTENT_ARCHIVE_MAX_UNCOMPRESSED_BYTES', 20_000_000_000),
 ];
