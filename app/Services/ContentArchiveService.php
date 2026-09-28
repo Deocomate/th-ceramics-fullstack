@@ -254,6 +254,7 @@ class ContentArchiveService
                     });
                 }
             });
+
             return $result;
         } finally {
             $zip->close();
@@ -451,6 +452,9 @@ class ContentArchiveService
 
     private function rewriteMedia(mixed $value, array $rewrites): mixed
     {
+        if ($rewrites === []) {
+            return $value;
+        }
         if (is_array($value)) {
             return array_map(fn ($item) => $this->rewriteMedia($item, $rewrites), $value);
         }
@@ -462,7 +466,11 @@ class ContentArchiveService
         }
         $decoded = json_decode($value, true);
         if (is_array($decoded)) {
-            return json_encode($this->rewriteMedia($decoded, $rewrites), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $rewritten = $this->rewriteMedia($decoded, $rewrites);
+
+            return $rewritten === $decoded
+                ? $value
+                : json_encode($rewritten, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         }
 
         if (str_contains($value, '<')) {
