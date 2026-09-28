@@ -139,3 +139,67 @@ it('exports the complete allowlisted schema without business tables', function (
         @unlink($path);
     }
 });
+
+it('tracks an external source so repeated imports stay idempotent', function () {
+    DB::table('archive_test_items')->insert([
+        'id' => 12, 'name' => 'Remote item', 'image' => null,
+        'created_at' => '2026-01-01 00:00:00', 'updated_at' => '2026-01-01 00:00:00',
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        $zip = new ZipArchive;
+        $zip->open($path);
+        $manifest = json_decode($zip->getFromName('manifest.json'), true);
+        $manifest['source_id'] = '0db61d20-2acf-4f4f-b0fe-52b4b588fe68';
+        $zip->addFromString('manifest.json', json_encode($manifest));
+        $zip->close();
+        DB::table('archive_test_items')->delete();
+
+        expect($archive->preview($path)['add'])->toBe(1);
+        expect($archive->import($path)['added'])->toBe(1);
+        expect($archive->preview($path)['unchanged'])->toBe(1);
+        expect($archive->import($path)['skipped'])->toBe(1);
+        expect(DB::table('content_archive_record_maps')->where('source_id', $manifest['source_id'])->count())->toBe(1);
+    } finally {
+        @unlink($path);
+    }
+});
+it('does not attach an external child to a different local parent with the same ID', function () {
+    Schema::create('archive_test_parents', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->timestamps();
+    });
+    Schema::create('archive_test_children', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('archive_test_parent_id')->constrained('archive_test_parents');
+        $table->string('name');
+        $table->timestamps();
+    });
+    config()->set('content_archive.tables', ['archive_test_parents', 'archive_test_children']);
+    DB::table('archive_test_parents')->insert(['id' => 1, 'name' => 'Source', 'created_at' => now(), 'updated_at' => now()]);
+    DB::table('archive_test_children')->insert(['id' => 1, 'archive_test_parent_id' => 1, 'name' => 'Child', 'created_at' => now(), 'updated_at' => now()]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        $zip = new ZipArchive;
+        $zip->open($path);
+        $manifest = json_decode($zip->getFromName('manifest.json'), true);
+        $manifest['source_id'] = 'db088089-57dc-4521-bd48-e15d93f9193a';
+        $zip->addFromString('manifest.json', json_encode($manifest));
+        $zip->close();
+        DB::table('archive_test_children')->delete();
+        DB::table('archive_test_parents')->where('id', 1)->update(['name' => 'Destination']);
+
+        $report = $archive->preview($path);
+        expect($report['conflict'])->toBe(2);
+        expect($report['conflicts'][1]['reason'])->toBe('unmapped_parent');
+        expect($archive->import($path)['skipped'])->toBe(2);
+        expect(DB::table('archive_test_children')->count())->toBe(0);
+    } finally {
+        @unlink($path);
+        Schema::dropIfExists('archive_test_children');
+        Schema::dropIfExists('archive_test_parents');
+    }
+});
