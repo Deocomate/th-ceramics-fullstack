@@ -2,27 +2,13 @@
 
 namespace App\Providers;
 
-use App\Models\PageContact;
-use App\Models\DenVuonGomSuCt;
-use App\Models\GachCoBatTrangCt;
-use App\Models\GachHoaThongGioCt;
-use App\Models\GachTrangTriCt;
-use App\Models\LanCanGomSuCt;
-use App\Models\LinhVatPhongThuyCt;
-use App\Models\MauSacNgoiHaiCoCt;
 use App\Models\MauSacNgoiAmDuongCt;
-use App\Models\MauSacNgoiHaiVanMieuCt;
-use App\Models\NgoiAmDuongCt;
-use App\Models\NgoiHaiCoCt;
-use App\Models\NgoiHaiVanMieuCt;
-use App\Models\PhanLoaiDenVuonGomSuCt;
-use App\Models\PhanLoaiLanCanGomSuCt;
-use App\Models\PhanLoaiPhuKienNgoiCt;
-use App\Models\PhuKienNgoiCt;
-use App\Observers\LegacyProductObserver;
-use App\Observers\LegacyColorObserver;
-use App\Observers\LegacyVariantObserver;
+use App\Models\PageContact;
 use App\Models\TrangChu;
+use App\Observers\LegacyColorObserver;
+use App\Observers\LegacyProductObserver;
+use App\Observers\LegacyVariantObserver;
+use App\Products\ProductTypeRegistry;
 use App\Services\CartService;
 use App\Services\GiaTriVuotTroiService;
 use Illuminate\Support\Facades\Cache;
@@ -57,20 +43,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        foreach ([
-            NgoiAmDuongCt::class, NgoiHaiCoCt::class, NgoiHaiVanMieuCt::class,
-            GachHoaThongGioCt::class, GachTrangTriCt::class, GachCoBatTrangCt::class,
-            LinhVatPhongThuyCt::class, LanCanGomSuCt::class, DenVuonGomSuCt::class,
-            PhuKienNgoiCt::class,
-        ] as $model) {
+        foreach (ProductTypeRegistry::all() as $type) {
+            $model = $type['model'];
             $model::observe(LegacyProductObserver::class);
-        }
-        foreach ([
-            MauSacNgoiHaiCoCt::class, MauSacNgoiHaiVanMieuCt::class,
-            PhanLoaiLanCanGomSuCt::class, PhanLoaiDenVuonGomSuCt::class,
-            PhanLoaiPhuKienNgoiCt::class,
-        ] as $model) {
-            $model::observe(LegacyVariantObserver::class);
+            if ($type['variant_model']) {
+                $variant = $type['variant_model'];
+                $variant::observe(LegacyVariantObserver::class);
+            }
         }
         MauSacNgoiAmDuongCt::observe(LegacyColorObserver::class);
 
