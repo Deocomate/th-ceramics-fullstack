@@ -164,6 +164,42 @@ it('exports the complete allowlisted schema without business tables', function (
     }
 });
 
+it('round trips a hybrid archive through an empty product catalog', function () {
+    config()->set('content_archive.tables', (require config_path('content_archive.php'))['tables']);
+    $legacyId = DB::table('ngoi_am_duong_ct')->insertGetId([
+        'code' => 'HYBRID-001', 'name' => 'Ngói hybrid', 'images' => '[]', 'price' => 41000,
+        'is_delete' => 0, 'created_at' => now(), 'updated_at' => now(),
+    ]);
+    app(\App\Services\ProductBackfillService::class)->backfill();
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        DB::table('product_legacy_ids')->delete();
+        DB::table('product_media')->delete();
+        DB::table('product_variants')->delete();
+        DB::table('products')->delete();
+        DB::table('ngoi_am_duong_ct')->delete();
+        expect($archive->preview($path)['add'])->toBeGreaterThanOrEqual(4);
+        $archive->import($path);
+        expect(DB::table('ngoi_am_duong_ct')->where('ngoi_am_duong_ct_id', $legacyId)->value('name'))->toBe('Ngói hybrid');
+        expect(DB::table('product_variants')->where('sku', 'HYBRID-001')->value('price'))->toBe(41000);
+        expect($archive->import($path)['added'])->toBe(0);
+        $again = $archive->export();
+        try {
+            $zip = new ZipArchive;
+            $zip->open($again);
+            $manifest = json_decode($zip->getFromName('manifest.json'), true);
+            expect($manifest['source_schema'])->toBe('hybrid');
+            expect($manifest['tables']['products'])->toBe(1);
+            $zip->close();
+        } finally {
+            @unlink($again);
+        }
+    } finally {
+        @unlink($path);
+    }
+});
+
 it('tracks an external source so repeated imports stay idempotent', function () {
     DB::table('archive_test_items')->insert([
         'id' => 12, 'name' => 'Remote item', 'image' => null,
