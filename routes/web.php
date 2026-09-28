@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\StagedImageUploadController;
 use App\Http\Controllers\Admin\CatalogController;
 use App\Http\Controllers\Admin\ConsultationRequestController;
+use App\Http\Controllers\Admin\ContentArchiveController;
 use App\Http\Controllers\Admin\ContactPageController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CustomerController;
@@ -507,6 +508,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // ── Superadmin-only: account management ──────────────────────────────
         Route::middleware('role:superadmin')->group(function () {
+            Route::get('content-archive', [ContentArchiveController::class, 'index'])->name('content-archive.index');
+            Route::post('content-archive/export', [ContentArchiveController::class, 'export'])->name('content-archive.export');
+            Route::post('content-archive/upload', [ContentArchiveController::class, 'upload'])->name('content-archive.upload');
+            Route::post('content-archive/apply', [ContentArchiveController::class, 'apply'])->name('content-archive.apply');
+            Route::get('content-archive/download/{name}', [ContentArchiveController::class, 'download'])->name('content-archive.download');
             Route::get('users', [UserController::class, 'index'])->name('users.index');
             Route::get('users/create', [UserController::class, 'create'])->name('users.create');
             Route::post('users', [UserController::class, 'store'])->name('users.store');
