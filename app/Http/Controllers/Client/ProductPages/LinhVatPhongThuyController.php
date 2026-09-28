@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
+use App\Models\LinhVatPhongThuy;
 use App\Services\LinhVatPhongThuyCtService;
 use App\Services\LinhVatPhongThuyService;
+use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
-use App\Services\UnifiedProductCatalog;
+use App\Support\ProductJourneyVideo;
 use Illuminate\Http\Request;
 
 class LinhVatPhongThuyController extends Controller
@@ -42,12 +44,12 @@ class LinhVatPhongThuyController extends Controller
 
         $historyService->trackProduct('linh_vat_phong_thuy_ct', (int) $product->linh_vat_phong_thuy_ct_id);
 
-        $relatedProducts = $this->linhVatPhongThuyCtService->getAll('active')
-            ->where('linh_vat_phong_thuy_ct_id', '!=', $id)
-            ->take(4);
+        $relatedProducts = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->related('linh_vat_phong_thuy_ct', (int) $id, null, 4)
+            : $this->linhVatPhongThuyCtService->getAll('active')->where('linh_vat_phong_thuy_ct_id', '!=', $id)->take(4);
 
-        $config = \App\Models\LinhVatPhongThuy::query()->first();
-        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+        $config = LinhVatPhongThuy::query()->first();
+        $journeyVideo = ProductJourneyVideo::resolve($product->video ?? null, $config);
 
         return view('clients.products.linh-vat-phong-thuy.detail', compact(
             'product', 'relatedProducts', 'config', 'journeyVideo'

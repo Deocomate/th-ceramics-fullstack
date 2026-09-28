@@ -1,14 +1,14 @@
 <?php
 
+use App\Models\MauSacNgoiHaiCoCt;
 use App\Models\NgoiAmDuongCt;
 use App\Models\NgoiHaiCoCt;
-use App\Models\MauSacNgoiHaiCoCt;
 use App\Models\Product;
-use App\Services\ProductBackfillService;
-use App\Services\NgoiAmDuongCtService;
-use App\Services\UnifiedProductCatalog;
 use App\Services\CartService;
+use App\Services\NgoiAmDuongCtService;
+use App\Services\ProductBackfillService;
 use App\Services\ProductCartOptionsService;
+use App\Services\UnifiedProductCatalog;
 use Illuminate\Support\Facades\DB;
 
 it('backfills direct products, variants, media and updates without duplicates', function () {
@@ -66,6 +66,13 @@ it('filters and paginates active unified products in the database', function () 
     $catalog = app(UnifiedProductCatalog::class);
     expect($catalog->paginate('ngoi_am_duong_ct', [], 8)->total())->toBe(12);
     expect($catalog->paginate('ngoi_am_duong_ct', ['search' => 'PAGINATE-012'], 8)->total())->toBe(1);
+
+    DB::enableQueryLog();
+    DB::flushQueryLog();
+    $catalog->paginate('ngoi_am_duong_ct', [], 12);
+    $queries = count(DB::getQueryLog());
+    DB::disableQueryLog();
+    expect($queries)->toBeLessThanOrEqual(8);
 });
 
 it('resolves legacy cart identifiers through unified variants', function () {

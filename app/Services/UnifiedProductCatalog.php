@@ -18,12 +18,14 @@ use App\Models\PhanLoaiLanCanGomSuCt;
 use App\Models\PhanLoaiPhuKienNgoiCt;
 use App\Models\PhuKienNgoiCt;
 use App\Models\Product;
+use App\Models\ProductDisplayOption;
+use App\Models\ProductVariant;
 use App\Products\ProductTypeRegistry;
 use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class UnifiedProductCatalog
 {
@@ -57,8 +59,12 @@ class UnifiedProductCatalog
         } elseif ($status === 'deleted') {
             $query->where('is_delete', true);
         }
-        if ($categoryType !== null) {
+        if ($categoryType !== null && $categoryType !== 'all') {
             $query->where('category_type', $categoryType);
+        }
+
+        if (in_array($type, ['gach_co_bat_trang_ct', 'den_vuon_gom_su_ct'], true)) {
+            $query->orderBy('category_type');
         }
 
         return $query->orderByDesc('priority')->orderByDesc('id')->get()
@@ -82,7 +88,7 @@ class UnifiedProductCatalog
             ->withMin(['variants as min_active_price' => fn ($q) => $q->where('is_delete', false)], 'price')
             ->where('type_key', $type)
             ->where('is_delete', false);
-        if ($categoryType !== null) {
+        if ($categoryType !== null && $categoryType !== 'all') {
             $query->where('category_type', $categoryType);
         }
         $search = trim((string) ($filters['search'] ?? ''));
@@ -113,6 +119,39 @@ class UnifiedProductCatalog
     }
 
     /** @return Collection<int, Model> */
+    public function filtered(string $type, array $filters, ?string $categoryType = null): Collection
+    {
+        $query = Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])
+            ->withMin(['variants as min_active_price' => fn ($q) => $q->where('is_delete', false)], 'price')
+            ->where('type_key', $type)->where('is_delete', false);
+        if ($categoryType !== null && $categoryType !== 'all') {
+            $query->where('category_type', $categoryType);
+        }
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search !== '') {
+            $like = '%'.str_replace(['%', '_'], ['\\%', '\\_'], $search).'%';
+            $query->where(fn ($q) => $q->where('name', 'like', $like)
+                ->orWhere('size', 'like', $like)
+                ->orWhereHas('variants', fn ($v) => $v->where('sku', 'like', $like)));
+        }
+        switch ($filters['sort'] ?? '') {
+            case 'price_asc':
+                $query->orderByRaw('min_active_price IS NULL')->orderBy('min_active_price');
+                break;
+            case 'price_desc':
+                $query->orderByDesc('min_active_price');
+                break;
+            case 'name_asc':
+                $query->orderBy('name');
+                break;
+            default:
+                $query->orderBy('category_type')->orderByDesc('priority');
+        }
+
+        return $query->orderByDesc('id')->get()->map(fn (Product $product) => $this->project($product));
+    }
+
+    /** @return Collection<int, Model> */
     public function related(string $type, int $legacyId, ?string $categoryType, int $limit): Collection
     {
         return Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])
@@ -128,26 +167,35 @@ class UnifiedProductCatalog
     public function search(string $keyword, int $limit = 8): Collection
     {
         $like = '%'.str_replace(['%', '_'], ['\\%', '\\_'], trim($keyword)).'%';
+        $directTypes = array_keys(array_filter(ProductTypeRegistry::all(), fn ($config) => $config['variant_table'] === null));
 
-        return Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])
+        return ProductVariant::query()->with(['product.media', 'product.legacyIds'])
             ->where('is_delete', false)
+            ->whereHas('product', fn ($q) => $q->where('is_delete', false))
+            ->where(fn ($q) => $q->where('is_default', false)
+                ->orWhereHas('product', fn ($p) => $p->whereIn('type_key', $directTypes)))
             ->where(function ($q) use ($like) {
-                $q->where('name', 'like', $like)
-                    ->orWhereHas('variants', fn ($v) => $v->where('is_delete', false)->where('sku', 'like', $like));
+                $q->where('name', 'like', $like)->orWhere('sku', 'like', $like)
+                    ->orWhereHas('product', fn ($p) => $p->where('name', 'like', $like));
             })
-            ->orderByDesc('priority')->orderByDesc('id')->limit($limit)->get()
-            ->map(function (Product $product) {
+            ->orderByDesc('id')->limit($limit)->get()
+            ->map(function (ProductVariant $variant) {
+                $product = $variant->product;
                 $config = ProductTypeRegistry::get($product->type_key);
                 $id = (int) $product->legacyIds->firstWhere('source_table', $product->type_key)?->source_id;
-                $variant = $product->variants->where('is_delete', false)->sortBy('price')->first();
                 $image = $variant?->image ?: $product->media->firstWhere('kind', 'image')?->path;
                 $price = (int) ($variant?->price ?? 0);
+                $category = $config['label'];
+                if ($product->type_key === 'phu_kien_ngoi_ct') {
+                    $category = $product->category_type === 'chu_van' ? 'Bờ Nóc Chữ Vạn' : 'Ngói Bờ Nóc';
+                }
 
                 return [
                     'id' => $id,
-                    'name' => $product->name,
+                    'name' => $variant->is_default || ! $variant->name
+                        ? $product->name : trim($product->name.' - '.$variant->name),
                     'code' => $variant?->sku ?? '',
-                    'category' => $config['label'],
+                    'category' => $category,
                     'image' => AssetPath::url($image, 'assets/images/logo.png'),
                     'url' => route(ProductTypeRegistry::detailRoute($product->type_key, $product->category_type), $id),
                     'price' => $price,
@@ -165,14 +213,14 @@ class UnifiedProductCatalog
         $variant = null;
         $option = null;
         if ($legacyVariantId !== null && $type === 'ngoi_am_duong_ct') {
-            $option = \App\Models\ProductDisplayOption::query()
+            $option = ProductDisplayOption::query()
                 ->where('type_key', $type)->where('legacy_id', $legacyVariantId)->firstOrFail();
         } elseif ($legacyVariantId !== null && $config['variant_table']) {
             $variant = $product->variants->first(fn ($item) => ! $item->is_delete
                 && $item->legacyIds->contains(fn ($id) => $id->source_table === $config['variant_table']
                     && (int) $id->source_id === $legacyVariantId));
             if (! $variant) {
-                throw (new ModelNotFoundException)->setModel(\App\Models\ProductVariant::class, [$legacyVariantId]);
+                throw (new ModelNotFoundException)->setModel(ProductVariant::class, [$legacyVariantId]);
             }
         }
         if ($config['requires_variant'] && $variant === null) {
@@ -197,7 +245,7 @@ class UnifiedProductCatalog
         $cover = $product->media->firstWhere('kind', 'image')?->path;
         $default = $product->variants->firstWhere('is_default', true);
         if ($type === 'ngoi_am_duong_ct') {
-            $variants = \App\Models\ProductDisplayOption::query()->where('type_key', $type)->orderBy('sort_order')->get()
+            $variants = ProductDisplayOption::query()->where('type_key', $type)->orderBy('sort_order')->get()
                 ->map(fn ($item) => [
                     'id' => (int) $item->legacy_id,
                     'name' => $item->name,

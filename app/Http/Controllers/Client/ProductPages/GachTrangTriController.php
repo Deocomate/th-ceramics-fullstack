@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Client\ProductPages;
 
 use App\Http\Controllers\Controller;
 use App\Models\DuAn;
+use App\Models\GachTrangTri;
 use App\Services\DinhMucGachTrangTriService;
 use App\Services\GachTrangTriCtService;
 use App\Services\GachTrangTriService;
+use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
-use App\Services\UnifiedProductCatalog;
+use App\Support\ProductJourneyVideo;
 use Illuminate\Http\Request;
 
 class GachTrangTriController extends Controller
@@ -48,12 +50,12 @@ class GachTrangTriController extends Controller
 
         $dinhMuc = $this->dinhMucService->getAll();
 
-        $relatedProducts = $this->gachTrangTriCtService->getAll('active')
-            ->where('gach_trang_tri_ct_id', '!=', $id)
-            ->take(4);
+        $relatedProducts = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->related('gach_trang_tri_ct', (int) $id, null, 4)
+            : $this->gachTrangTriCtService->getAll('active')->where('gach_trang_tri_ct_id', '!=', $id)->take(4);
 
-        $config = \App\Models\GachTrangTri::query()->first();
-        $journeyVideo = \App\Support\ProductJourneyVideo::resolve($product->video ?? null, $config);
+        $config = GachTrangTri::query()->first();
+        $journeyVideo = ProductJourneyVideo::resolve($product->video ?? null, $config);
 
         return view('clients.products.gach-trang-tri.detail', compact(
             'product', 'dinhMuc', 'relatedProducts', 'config', 'journeyVideo'
