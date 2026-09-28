@@ -15,7 +15,7 @@ use App\Models\NgoiAmDuongCt;
 use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieuCt;
 use App\Models\PhuKienNgoiCt;
-use App\Products\ProductTypeRegistry;
+use App\Domains\Catalog\ProductTypeRegistry;
 use App\Support\AssetPath;
 use App\Support\ClientProductType;
 use Exception;

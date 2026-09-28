@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Product;
-use App\Products\ProductTypeRegistry;
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductTypeRegistry;
 use App\Support\ProductGallery;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;

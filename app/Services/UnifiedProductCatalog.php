@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Product;
-use App\Models\ProductDisplayOption;
-use App\Models\ProductVariant;
-use App\Products\ProductTypeRegistry;
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\Models\ProductDisplayOption;
+use App\Domains\Catalog\Models\ProductVariant;
+use App\Domains\Catalog\ProductTypeRegistry;
 use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Products\ProductTypeRegistry;
+use App\Domains\Catalog\ProductTypeRegistry;
 use Illuminate\Support\Facades\DB;
 
 class GlobalProductCodeService

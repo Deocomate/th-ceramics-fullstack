@@ -22,6 +22,16 @@ return [
         'products', 'product_variants', 'product_media', 'product_display_options',
         'product_legacy_ids', 'variant_legacy_ids',
     ],
+    // Used only to identify an export from a mixed schema. Keep this explicit:
+    // page configuration tables are shared by both schema generations.
+    'legacy_product_tables' => [
+        'ngoi_am_duong_ct', 'ngoi_hai_van_mieu_ct', 'ngoi_hai_co_ct',
+        'gach_hoa_thong_gio_ct', 'gach_trang_tri_ct', 'gach_co_bat_trang_ct',
+        'linh_vat_phong_thuy_ct', 'lan_can_gom_su_ct', 'den_vuon_gom_su_ct',
+        'phu_kien_ngoi_ct', 'mau_sac_ngoi_am_duong_ct', 'mau_sac_ngoi_hai_co_ct',
+        'mau_sac_ngoi_hai_van_mieu_ct', 'phan_loai_lan_can_gom_su_ct',
+        'phan_loai_den_vuon_gom_su_ct', 'phan_loai_phu_kien_ngoi_ct',
+    ],
     'excluded_tables' => [
         'users', 'password_reset_tokens', 'sessions', 'cache', 'cache_locks',
         'jobs', 'job_batches', 'failed_jobs', 'orders', 'order_items',

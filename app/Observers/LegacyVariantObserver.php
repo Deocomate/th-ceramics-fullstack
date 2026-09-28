@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Products\ProductTypeRegistry;
+use App\Domains\Catalog\ProductTypeRegistry;
 use App\Services\ProductBackfillService;
 use Illuminate\Database\Eloquent\Model;
 

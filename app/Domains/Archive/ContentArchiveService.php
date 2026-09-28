@@ -129,7 +129,7 @@ class ContentArchiveService
             }
             $manifest = [
                 'format_version' => self::FORMAT_VERSION,
-                'source_schema' => Schema::hasTable('products') ? 'hybrid' : 'legacy',
+                'source_schema' => $this->sourceSchema(),
                 'source_id' => $this->sourceId(),
                 'exported_at_utc' => now('UTC')->toIso8601String(),
                 'export_timezone' => 'Asia/Ho_Chi_Minh',
@@ -279,7 +279,7 @@ class ContentArchiveService
             $raw = $zip->getFromName('manifest.json');
             $manifest = json_decode((string) $raw, true, flags: JSON_THROW_ON_ERROR);
             if (($manifest['format_version'] ?? null) !== self::FORMAT_VERSION
-                || ! in_array(($manifest['source_schema'] ?? null), ['legacy', 'hybrid'], true)
+                || ! in_array(($manifest['source_schema'] ?? null), ['legacy', 'hybrid', 'canonical'], true)
                 || ! is_array($manifest['tables'] ?? null)
                 || ! is_array($manifest['files'] ?? null)
                 || ! is_string($manifest['source_id'] ?? null)
@@ -554,9 +554,10 @@ class ContentArchiveService
         if (preg_match('~^https?://~i', $path)) {
             $base = parse_url((string) config('app.url'));
             $url = parse_url($path);
-            if (($base['host'] ?? null) === ($url['host'] ?? null)) {
-                $path = ltrim((string) ($url['path'] ?? ''), '/');
+            if (($base['host'] ?? null) !== ($url['host'] ?? null)) {
+                return;
             }
+            $path = ltrim((string) ($url['path'] ?? ''), '/');
         }
         $path = (string) (parse_url($path, PHP_URL_PATH) ?: $path);
         if (str_starts_with($path, 'assets/') || str_starts_with($path, 'storage/')) {
@@ -609,5 +610,20 @@ class ContentArchiveService
         }, array_values($row)));
 
         return "INSERT INTO `{$table}` ({$columns}) VALUES ({$values})";
+    }
+
+    private function sourceSchema(): string
+    {
+        if (! Schema::hasTable('products')) {
+            return 'legacy';
+        }
+
+        foreach (config('content_archive.legacy_product_tables', []) as $table) {
+            if (Schema::hasTable($table)) {
+                return 'hybrid';
+            }
+        }
+
+        return 'canonical';
     }
 }

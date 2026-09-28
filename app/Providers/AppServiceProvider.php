@@ -8,7 +8,7 @@ use App\Models\TrangChu;
 use App\Observers\LegacyColorObserver;
 use App\Observers\LegacyProductObserver;
 use App\Observers\LegacyVariantObserver;
-use App\Products\ProductTypeRegistry;
+use App\Domains\Catalog\ProductTypeRegistry;
 use App\Services\CartService;
 use App\Services\GiaTriVuotTroiService;
 use Illuminate\Support\Facades\Cache;
