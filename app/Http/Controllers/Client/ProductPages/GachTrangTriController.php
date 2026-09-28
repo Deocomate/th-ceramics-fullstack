@@ -10,6 +10,7 @@ use App\Services\GachTrangTriService;
 use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
+use App\Services\UnifiedProductCatalog;
 use Illuminate\Http\Request;
 
 class GachTrangTriController extends Controller
@@ -24,11 +25,11 @@ class GachTrangTriController extends Controller
     {
         $config = $this->gachTrangTriService->getFirstRecord();
         $projects = DuAn::query()->latest()->take(6)->get();
-        $products = ProductCollectionFilter::apply(
-            $this->gachTrangTriCtService->getAll('active'),
-            $request->only(['search', 'sort'])
-        );
-        $products = CollectionPaginator::paginate($products, 8);
+        $products = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->paginate('gach_trang_tri_ct', $request->only(['search', 'sort']))
+            : CollectionPaginator::paginate(ProductCollectionFilter::apply(
+                $this->gachTrangTriCtService->getAll('active'), $request->only(['search', 'sort'])
+            ), 8);
 
         return view('clients.products.gach-trang-tri.index', compact(
             'config', 'products', 'projects'

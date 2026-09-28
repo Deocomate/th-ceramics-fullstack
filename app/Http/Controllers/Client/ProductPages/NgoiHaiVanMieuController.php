@@ -13,6 +13,7 @@ use App\Services\NgoiHaiVanMieuService;
 use App\Services\ViewHistoryService;
 use App\Support\CollectionPaginator;
 use App\Support\ProductCollectionFilter;
+use App\Services\UnifiedProductCatalog;
 use Illuminate\Http\Request;
 
 class NgoiHaiVanMieuController extends Controller
@@ -30,11 +31,11 @@ class NgoiHaiVanMieuController extends Controller
     public function index(Request $request)
     {
         $config = $this->ngoiHaiVanMieuService->getFirstRecord();
-        $products = ProductCollectionFilter::apply(
-            $this->ngoiHaiVanMieuCtService->getAll('active'),
-            $request->only(['search', 'sort'])
-        );
-        $products = CollectionPaginator::paginate($products, 8);
+        $products = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->paginate('ngoi_hai_van_mieu_ct', $request->only(['search', 'sort']))
+            : CollectionPaginator::paginate(ProductCollectionFilter::apply(
+                $this->ngoiHaiVanMieuCtService->getAll('active'), $request->only(['search', 'sort'])
+            ), 8);
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();
 
         return view('clients.products.ngoi-hai-van-mieu.index', compact(
@@ -53,7 +54,9 @@ class NgoiHaiVanMieuController extends Controller
 
         $historyService->trackProduct('ngoi_hai_van_mieu_ct', (int) $product->ngoi_hai_van_mieu_ct_id);
 
-        $colors = $product->mauSacs()->where('is_delete', 0)->get();
+        $colors = config('product_catalog.read_unified')
+            ? $product->mauSacs->where('is_delete', 0)
+            : $product->mauSacs()->where('is_delete', 0)->get();
 
         $dinhMuc = $this->dinhMucService->getAll();
 
@@ -96,7 +99,9 @@ class NgoiHaiVanMieuController extends Controller
 
         $historyService->trackProduct('ngoi_hai_co_ct', (int) $product->ngoi_hai_co_ct_id);
 
-        $colors = $product->mauSacs()->where('is_delete', 0)->get();
+        $colors = config('product_catalog.read_unified')
+            ? $product->mauSacs->where('is_delete', 0)
+            : $product->mauSacs()->where('is_delete', 0)->get();
         $dinhMuc = $this->dinhMucNgoiHaiCoService->getAll();
         $relatedProducts = $this->ngoiHaiCoCtService->getAll('active')
             ->where('ngoi_hai_co_ct_id', '!=', $id)

@@ -13,6 +13,7 @@ use App\Models\NgoiAmDuongCt;
 use App\Models\PhanLoaiPhuKienNgoiCt;
 use App\Models\PhuKienNgoiCt;
 use App\Support\AssetPath;
+use App\Services\UnifiedProductCatalog;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,6 +30,10 @@ class GlobalSearchController extends Controller
 
         if (mb_strlen($keyword) < 2) {
             return response()->json(['products' => []]);
+        }
+
+        if (config('product_catalog.read_unified')) {
+            return response()->json(['products' => app(UnifiedProductCatalog::class)->search($keyword)->values()]);
         }
 
         $limit = 8;

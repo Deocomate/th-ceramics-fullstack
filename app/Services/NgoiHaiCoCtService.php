@@ -18,6 +18,9 @@ class NgoiHaiCoCtService
 
     public function getAll(string $status = 'active')
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->all('ngoi_hai_co_ct', $status);
+        }
         $query = NgoiHaiCoCt::query()->withCount(['mauSacs' => function ($q) {
             $q->where('is_delete', 0);
         }])->orderedByPriority();
@@ -33,6 +36,9 @@ class NgoiHaiCoCtService
 
     public function findById(int $id): NgoiHaiCoCt
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->find('ngoi_hai_co_ct', $id);
+        }
         return NgoiHaiCoCt::query()->findOrFail($id);
     }
 

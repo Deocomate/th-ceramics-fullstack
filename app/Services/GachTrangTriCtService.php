@@ -21,6 +21,9 @@ class GachTrangTriCtService
 
     public function getAll(string $status = 'active')
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->all('gach_trang_tri_ct', $status);
+        }
         $query = GachTrangTriCt::query()->orderedByPriority();
 
         if ($status === 'active') {
@@ -34,6 +37,9 @@ class GachTrangTriCtService
 
     public function findById(int $id): GachTrangTriCt
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->find('gach_trang_tri_ct', $id);
+        }
         return GachTrangTriCt::findOrFail($id);
     }
 

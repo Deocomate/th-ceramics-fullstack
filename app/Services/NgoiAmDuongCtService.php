@@ -23,6 +23,9 @@ class NgoiAmDuongCtService
 
     public function getAll(string $status = 'active')
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->all('ngoi_am_duong_ct', $status);
+        }
         $query = NgoiAmDuongCt::query()->orderedByPriority();
 
         if ($status === 'active') {
@@ -36,6 +39,9 @@ class NgoiAmDuongCtService
 
     public function findById(int $id): NgoiAmDuongCt
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->find('ngoi_am_duong_ct', $id);
+        }
         return NgoiAmDuongCt::findOrFail($id);
     }
 

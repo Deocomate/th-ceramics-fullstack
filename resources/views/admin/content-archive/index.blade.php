@@ -25,11 +25,26 @@
             @if ($preview)
                 <div class="text-sm space-y-2">
                     <p>Thêm: {{ $preview['add'] }} · Cập nhật: {{ $preview['update'] }} · Không đổi: {{ $preview['unchanged'] }} · Xung đột: {{ $preview['conflict'] }}</p>
+                    @if (! empty($preview['conflicts']))
+                        <details class="text-amber-800"><summary>Xem các bản ghi xung đột (tối đa 100)</summary>
+                            <ul class="list-disc pl-5">@foreach ($preview['conflicts'] as $conflict)
+                                <li>{{ $conflict['table'] }} #{{ $conflict['id'] }}: {{ $conflict['reason'] === 'destination_newer' ? 'Bản đích mới hơn' : 'Trùng ID từ nguồn khác' }}</li>
+                            @endforeach</ul>
+                        </details>
+                    @endif
+                    @if (! empty($preview['missing_media']))
+                        <p class="text-red-700">ZIP thiếu {{ count($preview['missing_media']) }} file media được tham chiếu. Cần tạo lại ZIP trước khi nhập.</p>
+                        <ul class="list-disc pl-5 text-red-700">@foreach (array_slice($preview['missing_media'], 0, 20) as $missing)
+                            <li>{{ $missing }}</li>
+                        @endforeach</ul>
+                    @endif
                     <p>Xuất lúc: {{ $preview['manifest']['exported_at_utc'] }}</p>
-                    <form method="post" action="{{ route('admin.content-archive.apply') }}">
-                        @csrf
-                        <button class="px-4 py-2 rounded bg-red-800 text-white">Xác nhận nhập</button>
-                    </form>
+                    @if (empty($preview['missing_media']))
+                        <form method="post" action="{{ route('admin.content-archive.apply') }}">
+                            @csrf
+                            <button class="px-4 py-2 rounded bg-red-800 text-white">Xác nhận nhập</button>
+                        </form>
+                    @endif
                 </div>
             @endif
         </div>

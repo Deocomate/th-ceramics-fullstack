@@ -20,6 +20,19 @@ beforeEach(function () {
     ]);
 });
 
+test('den gom pages can read the unified product projection after backfill', function () {
+    $product = createDenGomSuProduct(['name' => 'Đèn từ schema mới'], [
+        ['code' => 'UNIFIED-DEN-001', 'price' => 280000],
+    ]);
+    app(\App\Services\ProductBackfillService::class)->backfill();
+    config()->set('product_catalog.read_unified', true);
+
+    $this->get(route('client.products.den-gom-su.index'))
+        ->assertOk()->assertSee('Đèn từ schema mới');
+    $this->get(route('client.products.den-gom-su.detail', $product->getKey()))
+        ->assertOk()->assertSee('UNIFIED-DEN-001');
+});
+
 function createDenGomSuProduct(array $overrides = [], array $variants = []): DenVuonGomSuCt
 {
     $product = DenVuonGomSuCt::query()->create(array_merge([

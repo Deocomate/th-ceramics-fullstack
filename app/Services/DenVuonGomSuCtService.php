@@ -20,6 +20,9 @@ class DenVuonGomSuCtService
 
     public function getAll(string $status = 'active', ?string $categoryType = null)
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->all('den_vuon_gom_su_ct', $status, $categoryType === 'all' ? null : $categoryType);
+        }
         $query = DenVuonGomSuCt::query()
             ->with(['phanLoais' => fn ($q) => $q->where('is_delete', 0)->orderBy('price')])
             ->withCount(['phanLoais' => fn ($q) => $q->where('is_delete', 0)])
@@ -40,11 +43,20 @@ class DenVuonGomSuCtService
 
     public function findById(int $id): DenVuonGomSuCt
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->find('den_vuon_gom_su_ct', $id);
+        }
         return DenVuonGomSuCt::findOrFail($id);
     }
 
     public function findActiveForClient(int $id): DenVuonGomSuCt
     {
+        if (config('product_catalog.read_unified')) {
+            $product = app(UnifiedProductCatalog::class)->find('den_vuon_gom_su_ct', $id);
+            abort_if($product->is_delete, 404);
+
+            return $product;
+        }
         return $this->clientBaseQuery()
             ->whereKey($id)
             ->firstOrFail();
@@ -52,6 +64,9 @@ class DenVuonGomSuCtService
 
     public function paginatedForClient(string $categoryType, array $filters = [], string $pageName = 'page'): LengthAwarePaginator
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->paginate('den_vuon_gom_su_ct', $filters, 8, $categoryType, $pageName);
+        }
         $query = $this->clientBaseQuery()
             ->where('category_type', $categoryType);
 
@@ -83,6 +98,9 @@ class DenVuonGomSuCtService
 
     public function relatedForClient(int $productId, string $categoryType, int $limit = 4)
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->related('den_vuon_gom_su_ct', $productId, $categoryType, $limit);
+        }
         return $this->clientBaseQuery()
             ->where('category_type', $categoryType)
             ->whereKeyNot($productId)

@@ -21,6 +21,9 @@ class GachCoBatTrangCtService
 
     public function getAll(string $status = 'active', ?string $categoryType = null)
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->all('gach_co_bat_trang_ct', $status, $categoryType);
+        }
         $query = GachCoBatTrangCt::query()->orderBy('category_type')->orderedByPriority();
 
         if ($categoryType !== null && $categoryType !== 'all') {
@@ -38,6 +41,9 @@ class GachCoBatTrangCtService
 
     public function findById(int $id): GachCoBatTrangCt
     {
+        if (config('product_catalog.read_unified')) {
+            return app(UnifiedProductCatalog::class)->find('gach_co_bat_trang_ct', $id);
+        }
         return GachCoBatTrangCt::findOrFail($id);
     }
 

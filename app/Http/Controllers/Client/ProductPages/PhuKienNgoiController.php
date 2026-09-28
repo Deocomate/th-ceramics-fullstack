@@ -7,6 +7,7 @@ use App\Models\PhuKienNgoi;
 use App\Models\PhuKienNgoiCt;
 use App\Services\PhuKienNgoiCtService;
 use App\Services\PhuKienNgoiService;
+use App\Services\UnifiedProductCatalog;
 use App\Services\ViewHistoryService;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,10 @@ class PhuKienNgoiController extends Controller
     {
         $type = $request->query('type') === 'chu_van' ? PhuKienNgoiCt::TYPE_CHU_VAN : PhuKienNgoiCt::TYPE_BO_NOC;
 
-        $product = PhuKienNgoiCt::query()
+        $product = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->all('phu_kien_ngoi_ct', 'all', $type)
+                ->first(fn ($item) => (int) $item->legacy_id === (int) $id || (int) $item->phu_kien_ngoi_ct_id === (int) $id)
+            : PhuKienNgoiCt::query()
             ->where('category_type', $type)
             ->where('legacy_type', $type)
             ->where('legacy_id', $id)
@@ -64,17 +68,22 @@ class PhuKienNgoiController extends Controller
 
     private function detailByType(int $id, string $type, string $view, ViewHistoryService $historyService)
     {
-        $product = PhuKienNgoiCt::query()
+        $product = config('product_catalog.read_unified')
+            ? $this->phuKienNgoiCtService->findById($id)
+            : PhuKienNgoiCt::query()
             ->with(['phanLoais' => fn ($query) => $query->where('is_delete', 0)->orderBy('price')])
             ->where('category_type', $type)
             ->where('is_delete', 0)
             ->findOrFail($id);
+        abort_if($product->category_type !== $type || $product->is_delete, 404);
 
         $historyService->trackProduct('phu_kien_ngoi_ct', (int) $product->phu_kien_ngoi_ct_id, ['accessory_type' => $type]);
 
         $phanLoais = $product->phanLoais;
         $pageConfig = PhuKienNgoi::query()->first();
-        $relatedProducts = PhuKienNgoiCt::query()
+        $relatedProducts = config('product_catalog.read_unified')
+            ? app(UnifiedProductCatalog::class)->related('phu_kien_ngoi_ct', $product->phu_kien_ngoi_ct_id, null, 4)
+            : PhuKienNgoiCt::query()
             ->where('is_delete', 0)
             ->where('phu_kien_ngoi_ct_id', '!=', $product->phu_kien_ngoi_ct_id)
             ->orderedByPriority()
