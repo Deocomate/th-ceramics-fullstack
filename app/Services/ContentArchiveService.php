@@ -68,7 +68,7 @@ class ContentArchiveService
                         throw new RuntimeException("Không thể tạo dữ liệu cho {$table}.");
                     }
                     try {
-                        fwrite($sql, "\n-- {$table}\n".$this->createTableSql($table).";\n");
+                        fwrite($sql, "\n-- {$table}\nDROP TABLE IF EXISTS `{$table}`;\n".$this->createTableSql($table).";\n");
                         $count = 0;
                         $key = $this->primaryKey($table);
                         foreach (DB::table($table)->orderBy($key)->cursor() as $row) {
@@ -137,21 +137,23 @@ class ContentArchiveService
         }
     }
 
-    /** @return array{manifest: array, add: int, update: int, conflict: int, unchanged: int} */
+    /** @return array<string, mixed> */
     public function preview(string $path): array
     {
         $zip = $this->openVerified($path);
         try {
             $manifest = json_decode((string) $zip->getFromName('manifest.json'), true, flags: JSON_THROW_ON_ERROR);
-            $report = ['manifest' => $manifest, 'add' => 0, 'update' => 0, 'conflict' => 0, 'unchanged' => 0];
+            $report = ['manifest' => $manifest, 'add' => 0, 'update' => 0, 'conflict' => 0, 'unchanged' => 0, 'conflicts' => [], 'missing_media' => []];
+            $referencedMedia = [];
             foreach ($manifest['tables'] as $table => $expected) {
                 if (! in_array($table, $this->tables(), true)) {
                     throw new RuntimeException("Bảng {$table} không được hỗ trợ ở schema này.");
                 }
                 $key = $this->primaryKey($table);
                 $seen = 0;
-                $this->eachRow($zip, $table, function (array $row) use ($table, $key, $manifest, &$report, &$seen): void {
+                $this->eachRow($zip, $table, function (array $row) use ($table, $key, $manifest, &$report, &$seen, &$referencedMedia): void {
                     $seen++;
+                    $this->collectMedia($row, $referencedMedia);
                     if (! array_key_exists($key, $row)) {
                         throw new RuntimeException("Thiếu khóa chính của {$table}.");
                     }
@@ -161,6 +163,13 @@ class ContentArchiveService
                     } elseif ($manifest['source_id'] !== $this->sourceId()
                         || (isset($existing->updated_at, $row['updated_at']) && $existing->updated_at > $row['updated_at'])) {
                         $report['conflict']++;
+                        if (count($report['conflicts']) < 100) {
+                            $report['conflicts'][] = [
+                                'table' => $table,
+                                'id' => $row[$key],
+                                'reason' => $manifest['source_id'] !== $this->sourceId() ? 'different_source_same_id' : 'destination_newer',
+                            ];
+                        }
                     } elseif ((array) $existing == $row) {
                         $report['unchanged']++;
                     } else {
@@ -169,6 +178,12 @@ class ContentArchiveService
                 });
                 if ($seen !== $expected) {
                     throw new RuntimeException("Số bản ghi của {$table} không khớp manifest.");
+                }
+            }
+
+            foreach (array_keys($referencedMedia) as $mediaPath) {
+                if (! isset($manifest['files']['media/'.$mediaPath])) {
+                    $report['missing_media'][] = $mediaPath;
                 }
             }
 
@@ -182,6 +197,9 @@ class ContentArchiveService
     public function import(string $path): array
     {
         $report = $this->preview($path);
+        if ($report['missing_media'] !== []) {
+            throw new RuntimeException('ZIP thiếu media được nội dung tham chiếu: '.implode(', ', array_slice($report['missing_media'], 0, 20)));
+        }
         $zip = $this->openVerified($path);
         $manifest = $report['manifest'];
         $result = ['added' => 0, 'updated' => 0, 'skipped' => 0];
@@ -209,7 +227,6 @@ class ContentArchiveService
                     });
                 }
             });
-
             return $result;
         } finally {
             $zip->close();
@@ -223,6 +240,9 @@ class ContentArchiveService
             throw new RuntimeException('ZIP không hợp lệ.');
         }
         try {
+            if ($zip->numFiles > 10000 || ($zip->statName('manifest.json')['size'] ?? PHP_INT_MAX) > 1_000_000) {
+                throw new RuntimeException('ZIP có quá nhiều file hoặc manifest quá lớn.');
+            }
             $raw = $zip->getFromName('manifest.json');
             $manifest = json_decode((string) $raw, true, flags: JSON_THROW_ON_ERROR);
             if (($manifest['format_version'] ?? null) !== self::FORMAT_VERSION
@@ -233,13 +253,16 @@ class ContentArchiveService
                 throw new RuntimeException('Phiên bản archive không được hỗ trợ.');
             }
             $total = 0;
+            $seenNames = [];
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $stat = $zip->statIndex($i);
                 $name = $stat['name'];
                 if (str_contains($name, '\\') || str_starts_with($name, '/')
-                    || str_contains('/'.$name, '/../') || str_contains($name, ':')) {
+                    || str_contains('/'.$name, '/../') || str_contains($name, ':')
+                    || str_ends_with($name, '/') || isset($seenNames[$name])) {
                     throw new RuntimeException('ZIP chứa đường dẫn không an toàn.');
                 }
+                $seenNames[$name] = true;
                 $total += $stat['size'];
                 if ($total > config('content_archive.max_uncompressed_bytes')) {
                     throw new RuntimeException('ZIP vượt quá giới hạn giải nén.');
@@ -264,6 +287,15 @@ class ContentArchiveService
             }
             if (count($manifest['files']) !== $zip->numFiles - 1) {
                 throw new RuntimeException('Danh sách file trong ZIP không khớp manifest.');
+            }
+            if (! isset($seenNames['database.sql']) || ! isset($seenNames['manifest.json'])) {
+                throw new RuntimeException('ZIP thiếu SQL hoặc manifest.');
+            }
+            foreach ($manifest['tables'] as $table => $_count) {
+                if (! preg_match('/^[a-z][a-z0-9_]*$/', (string) $table)
+                    || ! isset($seenNames['data/'.$table.'.ndjson'])) {
+                    throw new RuntimeException("ZIP thiếu dữ liệu bảng {$table}.");
+                }
             }
 
             return $zip;
@@ -306,7 +338,10 @@ class ContentArchiveService
             if (is_file($local) && hash_file('sha256', $local) === $info['sha256']) {
                 continue;
             }
-            $target = 'imports/'.$info['sha256'].'/'.basename($original);
+            $conflict = is_file($local) || str_starts_with($original, 'assets/');
+            $target = $conflict
+                ? 'imports/'.$info['sha256'].'/'.basename($original)
+                : substr($original, 8);
             if (! Storage::disk('public')->exists($target)) {
                 $stream = $zip->getStream($name);
                 if (! $stream) {
@@ -315,9 +350,11 @@ class ContentArchiveService
                 Storage::disk('public')->put($target, $stream);
                 fclose($stream);
             }
-            $rewrites[$original] = $target;
-            if (str_starts_with($original, 'storage/')) {
-                $rewrites[substr($original, 8)] = $target;
+            if ($conflict) {
+                $rewrites[$original] = $target;
+                if (str_starts_with($original, 'storage/')) {
+                    $rewrites[substr($original, 8)] = $target;
+                }
             }
         }
 
@@ -361,7 +398,19 @@ class ContentArchiveService
 
             return;
         }
+        if (is_string($decoded) && $decoded !== $value) {
+            $this->collectMedia($decoded, $media);
+
+            return;
+        }
         $path = ltrim(str_replace('\\', '/', trim($value)), '/');
+        if (preg_match('~^https?://~i', $path)) {
+            $base = parse_url((string) config('app.url'));
+            $url = parse_url($path);
+            if (($base['host'] ?? null) === ($url['host'] ?? null)) {
+                $path = ltrim((string) ($url['path'] ?? ''), '/');
+            }
+        }
         if (str_starts_with($path, 'assets/') || str_starts_with($path, 'storage/')) {
             if (str_contains('/'.$path, '/../')) {
                 throw new RuntimeException('Đường dẫn media không an toàn.');
