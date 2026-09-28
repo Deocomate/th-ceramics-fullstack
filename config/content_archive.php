@@ -22,7 +22,7 @@ return [
     'excluded_tables' => [
         'users', 'password_reset_tokens', 'sessions', 'cache', 'cache_locks',
         'jobs', 'job_batches', 'failed_jobs', 'orders', 'order_items',
-        'coupons', 'consultation_requests', 'migrations',
+        'coupons', 'consultation_requests', 'migrations', 'content_archive_record_maps',
     ],
     'max_uncompressed_bytes' => 2_000_000_000,
 ];
