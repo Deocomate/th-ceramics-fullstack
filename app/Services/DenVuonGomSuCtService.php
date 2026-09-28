@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Helpers\FileUploadHelper;
+use App\Domains\Media\FileUploadHelper;
 use App\Models\DenVuonGomSuCt;
 use App\Services\Concerns\ManagesProductGalleryMedia;
 use Illuminate\Database\Eloquent\Builder;

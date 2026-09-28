@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Helpers\FileUploadHelper;
+use App\Domains\Media\FileUploadHelper;
 use App\Models\PageFaq;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Domains\Media;
 
-use App\Services\ImageOptimizerService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 

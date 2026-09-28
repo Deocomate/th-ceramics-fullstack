@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Helpers\FileUploadHelper;
+use App\Domains\Media\FileUploadHelper;
 use App\Services\Concerns\ManagesProductGalleryMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;

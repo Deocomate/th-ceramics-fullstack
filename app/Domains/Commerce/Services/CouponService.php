@@ -3,7 +3,7 @@
 namespace App\Domains\Commerce\Services;
 
 use App\Domains\Commerce\Models\Coupon;
-use App\Helpers\FileUploadHelper;
+use App\Domains\Media\FileUploadHelper;
 use Illuminate\Http\UploadedFile;
 
 class CouponService

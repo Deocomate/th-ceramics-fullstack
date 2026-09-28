@@ -1,7 +1,6 @@
 <?php
 
 use App\Domains\Identity\Http\Admin\AuthController;
-use App\Http\Controllers\Admin\StagedImageUploadController;
 use Illuminate\Support\Facades\Route;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -30,7 +29,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', fn () => redirect()->route('admin.dashboard'))->name('home');
         Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
         Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
-        Route::post('media/staged-images', [StagedImageUploadController::class, 'store'])->name('media.staged-images.store');
+        require __DIR__.'/domains/media.php';
 
         require __DIR__.'/domains/content-sections.php';
 

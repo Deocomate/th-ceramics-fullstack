@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\ImageOptimizerService;
+use App\Domains\Media\ImageOptimizerService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
