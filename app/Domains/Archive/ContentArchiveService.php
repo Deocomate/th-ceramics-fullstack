@@ -2,6 +2,7 @@
 
 namespace App\Domains\Archive;
 
+use App\Domains\Catalog\PublicIdAllocator;
 use App\Services\ProductBackfillService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -253,6 +254,9 @@ class ContentArchiveService
                         ], ['target_record_id' => $targetId, 'updated_at' => now(), 'created_at' => now()]);
                         $planned[$table][(string) $sourceId] = true;
                     });
+                }
+                if (Schema::hasTable('product_public_ids')) {
+                    app(PublicIdAllocator::class)->reconcileSequences();
                 }
             });
             if ($manifest['source_schema'] === 'legacy' && Schema::hasTable('products')) {

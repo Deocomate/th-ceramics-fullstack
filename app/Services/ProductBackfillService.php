@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\Models\ProductVariant;
 use App\Domains\Catalog\ProductTypeRegistry;
+use App\Domains\Catalog\PublicIdAllocator;
 use App\Support\ProductGallery;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -82,6 +84,8 @@ class ProductBackfillService
 
             $this->syncVariants($productId, $row, $config);
             $this->syncMedia($productId, $row->images ?? null);
+
+            app(PublicIdAllocator::class)->product(Product::findOrFail($productId), $legacyId);
 
             return Product::query()->with(['variants', 'media'])->findOrFail($productId);
         });
@@ -200,6 +204,7 @@ class ProductBackfillService
     {
         $table = $config['variant_table'];
         $seen = [];
+        $preferredIds = [];
         if ($table !== null) {
             $variants = DB::table($table)->where($config['variant_fk'], $row->{$config['pk']})->orderBy($config['variant_pk'])->get();
             foreach ($variants as $variant) {
@@ -223,6 +228,7 @@ class ProductBackfillService
                     DB::table('variant_legacy_ids')->insert(['source_table' => $table, 'source_id' => $sourceId, 'product_variant_id' => $id]);
                 }
                 $seen[] = $id;
+                $preferredIds[$id] = $sourceId;
             }
         }
 
@@ -250,6 +256,9 @@ class ProductBackfillService
         }
 
         DB::table('product_variants')->where('product_id', $productId)->whereNotIn('id', $seen)->delete();
+        foreach ($seen as $id) {
+            app(PublicIdAllocator::class)->variant(ProductVariant::with('product')->findOrFail($id), $preferredIds[$id] ?? null);
+        }
     }
 
     private function syncMedia(int $productId, mixed $gallery): void

@@ -17,7 +17,7 @@ class UnifiedProductCatalog
     /** @return Collection<int, Model> */
     public function all(string $type, string $status = 'active', ?string $categoryType = null): Collection
     {
-        $query = Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])->where('type_key', $type);
+        $query = Product::query()->with(['variants.publicId', 'media', 'publicId'])->where('type_key', $type);
         if ($status === 'active') {
             $query->where('is_delete', false);
         } elseif ($status === 'deleted') {
@@ -37,9 +37,9 @@ class UnifiedProductCatalog
 
     public function find(string $type, int $legacyId): Model
     {
-        $product = Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])
+        $product = Product::query()->with(['variants.publicId', 'media', 'publicId'])
             ->where('type_key', $type)
-            ->whereHas('legacyIds', fn ($query) => $query->where('source_table', $type)->where('source_id', $legacyId))
+            ->whereHas('publicId', fn ($query) => $query->where('type_key', $type)->where('public_id', $legacyId))
             ->firstOrFail();
 
         return $this->project($product);
@@ -47,13 +47,13 @@ class UnifiedProductCatalog
 
     public function findByLegacyReference(string $type, int $legacyReference, string $categoryType): ?Model
     {
-        $product = Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])
+        $product = Product::query()->with(['variants.publicId', 'media', 'publicId'])
             ->where('type_key', $type)
             ->where('category_type', $categoryType)
             ->where(function ($query) use ($type, $legacyReference) {
                 $query->where('legacy_id', $legacyReference)
-                    ->orWhereHas('legacyIds', fn ($ids) => $ids->where('source_table', $type)
-                        ->where('source_id', $legacyReference));
+                    ->orWhereHas('publicId', fn ($ids) => $ids->where('type_key', $type)
+                        ->where('public_id', $legacyReference));
             })->first();
 
         return $product ? $this->project($product) : null;
@@ -62,7 +62,7 @@ class UnifiedProductCatalog
     public function paginate(string $type, array $filters, int $perPage = 8, ?string $categoryType = null, string $pageName = 'page'): LengthAwarePaginator
     {
         $query = Product::query()
-            ->with(['variants.legacyIds', 'media', 'legacyIds'])
+            ->with(['variants.publicId', 'media', 'publicId'])
             ->withMin(['variants as min_active_price' => fn ($q) => $q->where('is_delete', false)], 'price')
             ->where('type_key', $type)
             ->where('is_delete', false);
@@ -99,7 +99,7 @@ class UnifiedProductCatalog
     /** @return Collection<int, Model> */
     public function filtered(string $type, array $filters, ?string $categoryType = null): Collection
     {
-        $query = Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])
+        $query = Product::query()->with(['variants.publicId', 'media', 'publicId'])
             ->withMin(['variants as min_active_price' => fn ($q) => $q->where('is_delete', false)], 'price')
             ->where('type_key', $type)->where('is_delete', false);
         if ($categoryType !== null && $categoryType !== 'all') {
@@ -132,11 +132,11 @@ class UnifiedProductCatalog
     /** @return Collection<int, Model> */
     public function related(string $type, int $legacyId, ?string $categoryType, int $limit): Collection
     {
-        return Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])
+        return Product::query()->with(['variants.publicId', 'media', 'publicId'])
             ->where('type_key', $type)
             ->where('is_delete', false)
             ->when($categoryType !== null, fn ($q) => $q->where('category_type', $categoryType))
-            ->whereDoesntHave('legacyIds', fn ($q) => $q->where('source_table', $type)->where('source_id', $legacyId))
+            ->whereDoesntHave('publicId', fn ($q) => $q->where('type_key', $type)->where('public_id', $legacyId))
             ->orderByDesc('priority')->orderByDesc('id')->limit($limit)->get()
             ->map(fn (Product $product) => $this->project($product));
     }
@@ -147,7 +147,7 @@ class UnifiedProductCatalog
         $like = '%'.str_replace(['%', '_'], ['\\%', '\\_'], trim($keyword)).'%';
         $directTypes = array_keys(array_filter(ProductTypeRegistry::all(), fn ($config) => $config['variant_table'] === null));
 
-        return ProductVariant::query()->with(['product.media', 'product.legacyIds'])
+        return ProductVariant::query()->with(['product.media', 'product.publicId'])
             ->where('is_delete', false)
             ->whereHas('product', fn ($q) => $q->where('is_delete', false))
             ->where(fn ($q) => $q->where('is_default', false)
@@ -160,7 +160,7 @@ class UnifiedProductCatalog
             ->map(function (ProductVariant $variant) {
                 $product = $variant->product;
                 $config = ProductTypeRegistry::get($product->type_key);
-                $id = (int) $product->legacyIds->firstWhere('source_table', $product->type_key)?->source_id;
+                $id = (int) $product->publicId?->public_id;
                 $image = $variant?->image ?: $product->media->firstWhere('kind', 'image')?->path;
                 $price = (int) ($variant?->price ?? 0);
                 $category = $config['label'];
@@ -195,8 +195,7 @@ class UnifiedProductCatalog
                 ->where('type_key', $type)->where('legacy_id', $legacyVariantId)->firstOrFail();
         } elseif ($legacyVariantId !== null && $config['variant_table']) {
             $variant = $product->variants->first(fn ($item) => ! $item->is_delete
-                && $item->legacyIds->contains(fn ($id) => $id->source_table === $config['variant_table']
-                    && (int) $id->source_id === $legacyVariantId));
+                && (int) $item->publicId?->public_id === $legacyVariantId);
             if (! $variant) {
                 throw (new ModelNotFoundException)->setModel(ProductVariant::class, [$legacyVariantId]);
             }
@@ -234,8 +233,8 @@ class UnifiedProductCatalog
                 ])->all();
         } else {
             $variants = $product->variants->where('is_default', false)->where('is_delete', false)
-                ->map(function ($item) use ($config, $cover) {
-                    $id = $item->legacyIds->firstWhere('source_table', $config['variant_table'])?->source_id;
+                ->map(function ($item) use ($cover) {
+                    $id = $item->publicId?->public_id;
 
                     return [
                         'id' => (int) $id,
@@ -268,10 +267,10 @@ class UnifiedProductCatalog
 
     private function findProduct(string $type, int $legacyId): Product
     {
-        return Product::query()->with(['variants.legacyIds', 'media', 'legacyIds'])
+        return Product::query()->with(['variants.publicId', 'media', 'publicId'])
             ->where('type_key', $type)
             ->where('is_delete', false)
-            ->whereHas('legacyIds', fn ($query) => $query->where('source_table', $type)->where('source_id', $legacyId))
+            ->whereHas('publicId', fn ($query) => $query->where('type_key', $type)->where('public_id', $legacyId))
             ->firstOrFail();
     }
 
@@ -280,7 +279,7 @@ class UnifiedProductCatalog
         $type = $product->type_key;
         $config = ProductTypeRegistry::get($type);
         $legacyClass = $config['model'];
-        $legacyId = $product->legacyIds->firstWhere('source_table', $type)?->source_id;
+        $legacyId = $product->publicId?->public_id;
         $default = $product->variants->firstWhere('is_default', true);
         $images = $product->media->map(function ($item) {
             if ($item->kind === 'image') {
@@ -321,11 +320,11 @@ class UnifiedProductCatalog
         if ($config['variant_table']) {
             $variantClass = $config['variant_model'];
             $variants = $product->variants->where('is_default', false)->map(function ($variant) use ($product, $config, $variantClass) {
-                $legacyId = $variant->legacyIds->firstWhere('source_table', $config['variant_table'])?->source_id;
+                $legacyId = $variant->publicId?->public_id;
                 $record = new $variantClass;
                 $record->setRawAttributes([
                     $config['variant_pk'] => $legacyId,
-                    $config['variant_fk'] => $product->legacyIds->firstWhere('source_table', $product->type_key)?->source_id,
+                    $config['variant_fk'] => $product->publicId?->public_id,
                     'name' => $variant->name,
                     'code' => $variant->sku,
                     'price' => $variant->price,

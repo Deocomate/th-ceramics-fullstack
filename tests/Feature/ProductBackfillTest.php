@@ -32,6 +32,7 @@ it('backfills direct products, variants, media and updates without duplicates', 
     expect($product->media)->toHaveCount(2);
     expect($product->media->first()->is_cover)->toBeTrue();
     expect(DB::table('product_legacy_ids')->where('source_id', $legacy->getKey())->count())->toBe(1);
+    expect($product->publicId?->public_id)->toBe($legacy->getKey());
 
     config()->set('product_catalog.shadow_write', true);
     $legacy->update(['name' => 'Ngói đã sửa', 'is_delete' => true]);
