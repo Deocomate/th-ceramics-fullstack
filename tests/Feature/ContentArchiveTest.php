@@ -37,6 +37,7 @@ it('exports a verified zip and imports content idempotently', function () {
         $zip = new ZipArchive;
         expect($zip->open($path))->toBeTrue();
         expect($zip->getFromName('database.sql'))->toContain('archive_test_items');
+        expect($zip->getFromName('database.sql'))->toContain('DROP TABLE IF EXISTS `archive_test_items`');
         expect($zip->getFromName('media/storage/uploads/sample.webp'))->toBe('image bytes');
         $zip->close();
 
@@ -47,7 +48,28 @@ it('exports a verified zip and imports content idempotently', function () {
         expect($archive->import($path)['added'])->toBe(1);
         expect($archive->import($path)['skipped'])->toBe(1);
         expect(DB::table('archive_test_items')->value('name'))->toBe('Original');
-        expect(Storage::disk('public')->exists('imports/'.hash('sha256', 'image bytes').'/sample.webp'))->toBeTrue();
+        expect(Storage::disk('public')->exists('uploads/sample.webp'))->toBeTrue();
+    } finally {
+        @unlink($path);
+    }
+});
+
+it('preserves destination media when a path has different bytes', function () {
+    Storage::disk('public')->put('uploads/sample.webp', 'original bytes');
+    DB::table('archive_test_items')->insert([
+        'id' => 8, 'name' => 'Media conflict', 'image' => 'uploads/sample.webp',
+        'created_at' => '2026-01-01 00:00:00', 'updated_at' => '2026-01-01 00:00:00',
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        DB::table('archive_test_items')->delete();
+        Storage::disk('public')->put('uploads/sample.webp', 'destination bytes');
+        expect($archive->import($path)['added'])->toBe(1);
+        $replacement = 'imports/'.hash('sha256', 'original bytes').'/sample.webp';
+        expect(DB::table('archive_test_items')->value('image'))->toBe($replacement);
+        expect(Storage::disk('public')->get('uploads/sample.webp'))->toBe('destination bytes');
+        expect(Storage::disk('public')->get($replacement))->toBe('original bytes');
     } finally {
         @unlink($path);
     }
