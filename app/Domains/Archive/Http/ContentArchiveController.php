@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Domains\Archive\Http;
 
+use App\Domains\Archive\ContentArchiveService;
+use App\Domains\Archive\Jobs\ContentArchiveJob;
 use App\Http\Controllers\Controller;
-use App\Jobs\ContentArchiveJob;
-use App\Services\ContentArchiveService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
