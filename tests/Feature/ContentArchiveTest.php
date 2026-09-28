@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\ContentArchiveService;
+use App\Services\ProductBackfillService;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -49,6 +50,25 @@ it('exports a verified zip and imports content idempotently', function () {
         expect($archive->import($path)['skipped'])->toBe(1);
         expect(DB::table('archive_test_items')->value('name'))->toBe('Original');
         expect(Storage::disk('public')->exists('uploads/sample.webp'))->toBeTrue();
+    } finally {
+        @unlink($path);
+    }
+});
+
+it('preserves unchanged JSON text during import', function () {
+    $json = '{ "gallery" : [ "first.jpg", "second.jpg" ] }';
+    DB::table('archive_test_items')->insert([
+        'id' => 31, 'name' => 'JSON formatting', 'image' => $json,
+        'created_at' => '2026-01-01 00:00:00', 'updated_at' => '2026-01-01 00:00:00',
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        DB::table('archive_test_items')->delete();
+        expect($archive->import($path)['added'])->toBe(1);
+        expect(DB::table('archive_test_items')->value('image'))->toBe($json);
+        expect($archive->preview($path)['unchanged'])->toBe(1);
+        expect($archive->import($path)['skipped'])->toBe(1);
     } finally {
         @unlink($path);
     }
@@ -170,7 +190,7 @@ it('round trips a hybrid archive through an empty product catalog', function () 
         'code' => 'HYBRID-001', 'name' => 'Ngói hybrid', 'images' => '[]', 'price' => 41000,
         'is_delete' => 0, 'created_at' => now(), 'updated_at' => now(),
     ]);
-    app(\App\Services\ProductBackfillService::class)->backfill();
+    app(ProductBackfillService::class)->backfill();
     $archive = app(ContentArchiveService::class);
     $path = $archive->export();
     try {
