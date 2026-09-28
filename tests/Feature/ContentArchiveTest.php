@@ -79,7 +79,7 @@ it('includes media embedded in HTML and rewrites a conflicting reference', funct
     Storage::disk('public')->put('uploads/manual.pdf', 'source PDF');
     DB::table('archive_test_items')->insert([
         'id' => 9, 'name' => 'Catalog link',
-        'image' => '<a href="/storage/uploads/manual.pdf">PDF</a>',
+        'image' => '<a href="/storage/uploads/manual.pdf?v=2">PDF</a>',
         'created_at' => '2026-01-01 00:00:00', 'updated_at' => '2026-01-01 00:00:00',
     ]);
     $archive = app(ContentArchiveService::class);
@@ -93,7 +93,7 @@ it('includes media embedded in HTML and rewrites a conflicting reference', funct
         Storage::disk('public')->put('uploads/manual.pdf', 'destination PDF');
         expect($archive->import($path)['added'])->toBe(1);
         expect(DB::table('archive_test_items')->value('image'))
-            ->toContain('/storage/imports/'.hash('sha256', 'source PDF').'/manual.pdf');
+            ->toContain('/storage/imports/'.hash('sha256', 'source PDF').'/manual.pdf?v=2');
     } finally {
         @unlink($path);
     }
