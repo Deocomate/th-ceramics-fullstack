@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Client;
 
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 use App\Notifications\VerifyEmailQueued;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Testing\RefreshDatabase;

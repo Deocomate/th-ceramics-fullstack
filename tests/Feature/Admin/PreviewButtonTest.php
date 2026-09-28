@@ -8,7 +8,7 @@ use App\Models\NgoiHaiCoCt;
 use App\Models\NgoiHaiVanMieu;
 use App\Models\PhuKienNgoiCt;
 use App\Models\TinTuc;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 

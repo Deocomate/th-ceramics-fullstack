@@ -2,7 +2,7 @@
 
 use App\Models\GachHoaThongGioCt;
 use App\Models\NgoiAmDuongCt;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 
 test('guest cannot access product copy api', function () {
     $this->getJson(route('admin.product-copy.list', ['type' => 'ngoi-am-duong-ct']))

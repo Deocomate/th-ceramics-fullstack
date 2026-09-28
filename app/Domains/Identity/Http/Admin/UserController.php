@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Domains\Identity\Http\Admin;
 
+use App\Domains\Identity\Models\User;
+use App\Domains\Identity\Services\UserService;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;

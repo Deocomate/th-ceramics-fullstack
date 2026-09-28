@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Client\AboutController;
-use App\Http\Controllers\Client\AuthController;
+use App\Domains\Identity\Http\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ConsultationController;
 use App\Http\Controllers\Client\ContactController;

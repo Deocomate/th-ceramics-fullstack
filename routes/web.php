@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\AuthController;
+use App\Domains\Identity\Http\Admin\AuthController;
 use App\Http\Controllers\Admin\StagedImageUploadController;
 use Illuminate\Support\Facades\Route;
 

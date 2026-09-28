@@ -2,7 +2,7 @@
 
 use App\Models\Faq;
 use App\Models\PageFaq;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use function Pest\Laravel\actingAs;

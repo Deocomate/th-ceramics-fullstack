@@ -2,7 +2,7 @@
 
 use App\Models\DenVuonGomSuCt;
 use App\Models\GachHoaThongGioCt;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;

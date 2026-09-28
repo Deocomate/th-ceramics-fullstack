@@ -2,7 +2,7 @@
 
 use App\Models\NgoiAmDuong;
 use App\Models\NgoiAmDuongCt;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 use App\Services\ProductCartOptionsService;
 use App\Support\ProductGallery;
 use Illuminate\Http\UploadedFile;

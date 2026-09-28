@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Client;
+namespace App\Domains\Identity\Http\Client;
 
+use App\Domains\Identity\Models\User;
+use App\Domains\Identity\Services\AuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Client\Auth\LoginRequest;
 use App\Http\Requests\Client\Auth\RegisterRequest;
 use App\Http\Requests\Client\Auth\ResetPasswordRequest;
-use App\Models\User;
-use App\Services\AuthService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;

@@ -2,7 +2,7 @@
 
 use App\Models\NgoiAmDuongCt;
 use App\Models\PhuKienNgoiCt;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 
 function makePriorityProduct(string $code, string $name, bool $hidden = false): NgoiAmDuongCt
 {

@@ -2,7 +2,7 @@
 
 use App\Http\Middleware\SubstituteStagedImages;
 use App\Models\NgoiAmDuongCt;
-use App\Models\User;
+use App\Domains\Identity\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
