@@ -2,17 +2,18 @@
 
 namespace App\Domains\Content\Http\Client;
 
-use App\Domains\Content\Models\GiaiThuongThanhTuu;
-use App\Domains\Content\Models\VeChungToi;
+use App\Domains\Content\Infrastructure\Models\AboutPageConfig;
+use App\Domains\Content\Infrastructure\Models\AwardAchievement;
 use App\Http\Controllers\Controller;
+use Illuminate\View\View;
 
 class AboutController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        return view('clients.about.index', [
-            'about' => VeChungToi::first(),
-            'giaiThuongThanhTuu' => GiaiThuongThanhTuu::latest()->get(),
+        return view('clients.content.about.index', [
+            'about' => AboutPageConfig::first(),
+            'giaiThuongThanhTuu' => AwardAchievement::latest()->get(),
         ]);
     }
 }

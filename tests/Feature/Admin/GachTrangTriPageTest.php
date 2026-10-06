@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\GachTrangTri;
 use App\Domains\Identity\Models\User;
+use App\Models\GachTrangTri;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 

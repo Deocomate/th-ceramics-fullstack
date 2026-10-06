@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\PhuKienNgoi;
 use App\Domains\Identity\Models\User;
+use App\Models\PhuKienNgoi;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 

@@ -27,7 +27,7 @@ class ContentArchiveController extends Controller
             ->map(fn ($file) => json_decode((string) file_get_contents($file->getPathname()), true))
             ->filter();
 
-        return view('admin.content-archive.index', [
+        return view('admin.archive.content-archive.index', [
             'files' => $files,
             'statuses' => $statuses,
             'preview' => $request->session()->get('content_archive_preview'),

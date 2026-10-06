@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Client;
 
+use App\Domains\Identity\Infrastructure\Notifications\VerifyEmailQueued;
 use App\Domains\Identity\Models\User;
-use App\Notifications\VerifyEmailQueued;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -25,7 +25,7 @@ class AuthenticationTest extends TestCase
         $response = $this->get(route('client.auth.login'));
 
         $response->assertStatus(200);
-        $response->assertViewIs('clients.auth.login');
+        $response->assertViewIs('clients.identity.auth.login');
     }
 
     /**
@@ -36,7 +36,7 @@ class AuthenticationTest extends TestCase
         $response = $this->get(route('client.auth.register'));
 
         $response->assertStatus(200);
-        $response->assertViewIs('clients.auth.register');
+        $response->assertViewIs('clients.identity.auth.register');
     }
 
     /**
@@ -408,7 +408,7 @@ class AuthenticationTest extends TestCase
         $response = $this->get(route('client.auth.forgot-password'));
 
         $response->assertStatus(200);
-        $response->assertViewIs('clients.auth.forgot-password');
+        $response->assertViewIs('clients.identity.auth.forgot-password');
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace App\Domains\Commerce\Http\Admin;
 
-use App\Domains\Commerce\Services\CouponService;
+use App\Domains\Commerce\Application\CouponService;
+use App\Domains\Commerce\Http\Requests\CouponRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CouponRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -20,14 +20,14 @@ class CouponController extends Controller
         $deletedCoupons = $this->couponService->getDeleted();
         $productTypes = CouponService::productTypes();
 
-        return view('admin.coupons.index', compact('coupons', 'deletedCoupons', 'productTypes'));
+        return view('admin.commerce.coupons.index', compact('coupons', 'deletedCoupons', 'productTypes'));
     }
 
     public function create(): View
     {
         $productTypes = CouponService::productTypes();
 
-        return view('admin.coupons.create', compact('productTypes'));
+        return view('admin.commerce.coupons.create', compact('productTypes'));
     }
 
     public function store(CouponRequest $request): RedirectResponse
@@ -43,7 +43,7 @@ class CouponController extends Controller
         $coupon = $this->couponService->findById($id);
         $productTypes = CouponService::productTypes();
 
-        return view('admin.coupons.edit', compact('coupon', 'productTypes'));
+        return view('admin.commerce.coupons.edit', compact('coupon', 'productTypes'));
     }
 
     public function update(CouponRequest $request, int $id): RedirectResponse

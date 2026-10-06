@@ -2,7 +2,7 @@
 
 namespace App\Domains\Identity\Http\Admin;
 
-use App\Domains\Identity\Models\User;
+use App\Domains\Identity\Infrastructure\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 
@@ -14,6 +14,6 @@ class CustomerController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('admin.customers.index', compact('customers'));
+        return view('admin.identity.customers.index', compact('customers'));
     }
 }

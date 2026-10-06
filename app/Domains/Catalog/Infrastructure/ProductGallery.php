@@ -1,0 +1,465 @@
+<?php
+
+namespace App\Domains\Catalog\Infrastructure;
+
+use App\Domains\Media\Infrastructure\FileUploadHelper;
+use App\Support\AssetPath;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
+
+class ProductGallery
+{
+    public const TYPE_IMAGE = 'image';
+
+    public const TYPE_VIDEO = 'video';
+
+    public const SOURCE_YOUTUBE = 'youtube';
+
+    public const SOURCE_FILE = 'file';
+
+    /**
+     * @return Collection<int, array{type: string, path?: string, url?: string, youtube_id?: string|null, thumb_url?: string|null, embed_url?: string|null}>
+     */
+    public static function normalize(mixed $images): Collection
+    {
+        if (is_string($images)) {
+            $decoded = json_decode($images, true);
+            $images = is_array($decoded) ? $decoded : [];
+        }
+
+        if (! is_array($images)) {
+            return collect();
+        }
+
+        return collect($images)
+            ->map(fn (mixed $item) => self::normalizeItem($item))
+            ->filter()
+            ->values();
+    }
+
+    public static function firstImagePath(mixed $images): ?string
+    {
+        $item = self::normalize($images)->firstWhere('type', self::TYPE_IMAGE);
+
+        return is_array($item) ? ($item['path'] ?? null) : null;
+    }
+
+    /**
+     * Stable token for reorder payloads: "image:{path}", "video:{url}", or "video-file:{path}".
+     */
+    public static function mediaToken(mixed $item): ?string
+    {
+        $normalized = self::normalizeItem($item);
+        if ($normalized === null) {
+            return null;
+        }
+
+        if (($normalized['type'] ?? null) === self::TYPE_VIDEO) {
+            if (($normalized['source'] ?? null) === self::SOURCE_FILE) {
+                $path = (string) ($normalized['path'] ?? '');
+
+                return $path !== '' ? 'video-file:'.$path : null;
+            }
+
+            $url = (string) ($normalized['url'] ?? '');
+
+            return $url !== '' ? 'video:'.$url : null;
+        }
+
+        $path = (string) ($normalized['path'] ?? '');
+
+        return $path !== '' ? 'image:'.$path : null;
+    }
+
+    public static function isFileVideo(array $item): bool
+    {
+        return ($item['type'] ?? null) === self::TYPE_VIDEO
+            && ($item['source'] ?? null) === self::SOURCE_FILE;
+    }
+
+    public static function videoDirectoryFromImageDirectory(string $imageDirectory): string
+    {
+        if (str_ends_with($imageDirectory, '/images')) {
+            return substr($imageDirectory, 0, -7).'/videos';
+        }
+
+        return rtrim($imageDirectory, '/').'/videos';
+    }
+
+    /**
+     * Move an existing image path to the front (cover position).
+     *
+     * @param  array<int, mixed>  $current
+     * @return array<int, mixed>
+     */
+    public static function promoteImageToCover(array $current, string $path): array
+    {
+        $path = trim($path);
+        if ($path === '') {
+            return array_values($current);
+        }
+
+        $coverItem = null;
+        $rest = [];
+
+        foreach ($current as $item) {
+            $normalized = self::normalizeItem($item);
+            if ($normalized !== null
+                && ($normalized['type'] ?? null) === self::TYPE_IMAGE
+                && ($normalized['path'] ?? null) === $path
+                && $coverItem === null
+            ) {
+                $coverItem = is_string($item) ? $path : $item;
+
+                continue;
+            }
+            $rest[] = $item;
+        }
+
+        if ($coverItem === null) {
+            return array_values($current);
+        }
+
+        return array_values(array_merge([$coverItem], $rest));
+    }
+
+    /**
+     * Reorder raw gallery items by media tokens. Unknown tokens ignored; leftovers appended.
+     *
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $tokens
+     * @return array<int, mixed>
+     */
+    public static function reorderMedia(array $current, array $tokens): array
+    {
+        $map = [];
+        foreach ($current as $item) {
+            $token = self::mediaToken($item);
+            if ($token === null || array_key_exists($token, $map)) {
+                continue;
+            }
+            $map[$token] = $item;
+        }
+
+        $ordered = [];
+        foreach ($tokens as $token) {
+            if (! is_string($token) || $token === '' || ! array_key_exists($token, $map)) {
+                continue;
+            }
+            $ordered[] = $map[$token];
+            unset($map[$token]);
+        }
+
+        foreach ($map as $item) {
+            $ordered[] = $item;
+        }
+
+        return array_values($ordered);
+    }
+
+    public static function extractYoutubeId(?string $url): ?string
+    {
+        if ($url === null || trim($url) === '') {
+            return null;
+        }
+
+        if (preg_match(
+            '~(?:youtube\.com/(?:watch\?v=|embed/|shorts/|live/)|youtu\.be/)([A-Za-z0-9_-]{6,})~i',
+            $url,
+            $matches
+        )) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    public static function embedUrl(string $id, array $params = []): string
+    {
+        $query = array_merge([
+            'enablejsapi' => '1',
+            'rel' => '0',
+            'playsinline' => '1',
+            'modestbranding' => '1',
+            // Minimal YouTube chrome — play video only.
+            'controls' => '0',
+            'fs' => '0',
+            'iv_load_policy' => '3',
+            'cc_load_policy' => '0',
+            'disablekb' => '1',
+            // Best-effort forced HD; client IFrame API also re-asserts hd1080.
+            'vq' => 'hd1080',
+            'hd' => '1',
+        ], $params);
+
+        if (! array_key_exists('origin', $query)) {
+            try {
+                $appUrl = config('app.url');
+                if (filled($appUrl)) {
+                    $query['origin'] = rtrim((string) $appUrl, '/');
+                }
+            } catch (\Throwable) {
+                // Unit tests may run without the Laravel container.
+            }
+        }
+
+        return 'https://www.youtube.com/embed/'.$id.'?'.http_build_query($query);
+    }
+
+    public static function thumbUrl(string $id): string
+    {
+        return 'https://img.youtube.com/vi/'.$id.'/maxresdefault.jpg';
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $files
+     * @return array<int, mixed>
+     */
+    public static function appendUploadedImages(array $current, array $files, string $directory): array
+    {
+        foreach ($files as $file) {
+            if ($file instanceof UploadedFile) {
+                $current[] = FileUploadHelper::upload($file, $directory);
+            }
+        }
+
+        return array_values($current);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $urls
+     * @return array<int, mixed>
+     */
+    public static function appendVideoUrls(array $current, array $urls): array
+    {
+        foreach ($urls as $url) {
+            if (! is_string($url)) {
+                continue;
+            }
+
+            $trimmed = trim($url);
+            if ($trimmed === '' || self::extractYoutubeId($trimmed) === null) {
+                continue;
+            }
+
+            $current[] = [
+                'type' => self::TYPE_VIDEO,
+                'url' => $trimmed,
+            ];
+        }
+
+        return array_values($current);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $files
+     * @return array<int, mixed>
+     */
+    public static function appendUploadedVideos(array $current, array $files, string $directory): array
+    {
+        foreach ($files as $file) {
+            if ($file instanceof UploadedFile) {
+                $current[] = [
+                    'type' => self::TYPE_VIDEO,
+                    'source' => self::SOURCE_FILE,
+                    'path' => FileUploadHelper::upload($file, $directory),
+                ];
+            }
+        }
+
+        return array_values($current);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @return array<int, mixed>
+     */
+    public static function removeImagePath(array $current, string $path): array
+    {
+        $filtered = array_filter($current, function (mixed $item) use ($path) {
+            if (is_string($item)) {
+                return $item !== $path;
+            }
+
+            if (is_array($item) && ($item['type'] ?? null) === self::TYPE_IMAGE) {
+                return ($item['path'] ?? null) !== $path;
+            }
+
+            return true;
+        });
+
+        return array_values($filtered);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $paths
+     * @return array<int, mixed>
+     */
+    public static function removeImagePaths(array $current, array $paths): array
+    {
+        foreach ($paths as $path) {
+            if (is_string($path) && $path !== '') {
+                $current = self::removeImagePath($current, $path);
+            }
+        }
+
+        return array_values($current);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @return array<int, mixed>
+     */
+    public static function removeVideoUrl(array $current, string $url): array
+    {
+        $targetId = self::extractYoutubeId($url);
+
+        $filtered = array_filter($current, function (mixed $item) use ($url, $targetId) {
+            if (! is_array($item) || ($item['type'] ?? null) !== self::TYPE_VIDEO) {
+                return true;
+            }
+
+            $itemUrl = (string) ($item['url'] ?? '');
+            if ($itemUrl === $url) {
+                return false;
+            }
+
+            if ($targetId !== null && self::extractYoutubeId($itemUrl) === $targetId) {
+                return false;
+            }
+
+            return true;
+        });
+
+        return array_values($filtered);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $urls
+     * @return array<int, mixed>
+     */
+    public static function removeVideoUrls(array $current, array $urls): array
+    {
+        foreach ($urls as $url) {
+            if (is_string($url) && $url !== '') {
+                $current = self::removeVideoUrl($current, $url);
+            }
+        }
+
+        return array_values($current);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @return array<int, mixed>
+     */
+    public static function removeVideoPath(array $current, string $path): array
+    {
+        $path = trim($path);
+        if ($path === '') {
+            return array_values($current);
+        }
+
+        $filtered = array_filter($current, function (mixed $item) use ($path) {
+            $normalized = self::normalizeItem($item);
+            if ($normalized === null || ! self::isFileVideo($normalized)) {
+                return true;
+            }
+
+            return ($normalized['path'] ?? null) !== $path;
+        });
+
+        return array_values($filtered);
+    }
+
+    /**
+     * @param  array<int, mixed>  $current
+     * @param  array<int, mixed>  $paths
+     * @return array<int, mixed>
+     */
+    public static function removeVideoPaths(array $current, array $paths): array
+    {
+        foreach ($paths as $path) {
+            if (is_string($path) && $path !== '') {
+                $current = self::removeVideoPath($current, $path);
+            }
+        }
+
+        return array_values($current);
+    }
+
+    /**
+     * @return array{type: string, source?: string, path?: string, url?: string, youtube_id?: string|null, thumb_url?: string|null, embed_url?: string|null, display_url?: string|null}|null
+     */
+    private static function normalizeItem(mixed $item): ?array
+    {
+        if (is_string($item)) {
+            $path = trim($item);
+            if ($path === '') {
+                return null;
+            }
+
+            return [
+                'type' => self::TYPE_IMAGE,
+                'path' => $path,
+            ];
+        }
+
+        if (! is_array($item)) {
+            return null;
+        }
+
+        $type = $item['type'] ?? null;
+        $source = $item['source'] ?? null;
+
+        if ($type === self::TYPE_VIDEO && ($source === self::SOURCE_FILE || (isset($item['path']) && ! isset($item['url'])))) {
+            $path = trim((string) ($item['path'] ?? ''));
+            if ($path === '') {
+                return null;
+            }
+
+            return [
+                'type' => self::TYPE_VIDEO,
+                'source' => self::SOURCE_FILE,
+                'path' => $path,
+                'display_url' => AssetPath::url($path),
+            ];
+        }
+
+        if ($type === self::TYPE_VIDEO || (isset($item['url']) && ! isset($item['path']))) {
+            $url = trim((string) ($item['url'] ?? ''));
+            $youtubeId = self::extractYoutubeId($url);
+            if ($url === '' || $youtubeId === null) {
+                return null;
+            }
+
+            return [
+                'type' => self::TYPE_VIDEO,
+                'source' => self::SOURCE_YOUTUBE,
+                'url' => $url,
+                'youtube_id' => $youtubeId,
+                'thumb_url' => self::thumbUrl($youtubeId),
+                'embed_url' => self::embedUrl($youtubeId),
+            ];
+        }
+
+        if ($type === self::TYPE_IMAGE || isset($item['path'])) {
+            $path = trim((string) ($item['path'] ?? ''));
+            if ($path === '') {
+                return null;
+            }
+
+            return [
+                'type' => self::TYPE_IMAGE,
+                'path' => $path,
+            ];
+        }
+
+        return null;
+    }
+}

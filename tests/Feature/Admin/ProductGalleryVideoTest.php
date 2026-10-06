@@ -4,8 +4,7 @@ use App\Domains\Catalog\Models\Product;
 use App\Domains\Catalog\ProductWriter;
 use App\Domains\Identity\Models\User;
 use App\Models\NgoiAmDuong;
-use App\Services\ProductCartOptionsService;
-use App\Support\ProductGallery;
+use App\Domains\Catalog\Infrastructure\ProductGallery;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -235,10 +234,12 @@ test('cart options use first image path when gallery starts with video', functio
 
     expect(ProductGallery::firstImagePath($product->images))->toBe('seeders/products/cover.png');
 
-    $payload = app(ProductCartOptionsService::class)->getOptions('ngoi_am_duong_ct', $product->ngoi_am_duong_ct_id);
-
-    expect($payload['image_url'])->toContain('cover.png')
-        ->and($payload['image_url'])->not->toContain('youtube');
+    $this->getJson(route('client.cart.product-options', [
+        'product_type' => 'ngoi_am_duong_ct',
+        'product_id' => $product->ngoi_am_duong_ct_id,
+    ]))
+        ->assertOk()
+        ->assertJsonPath('data.image_url', fn (string $url) => str_contains($url, 'cover.png') && ! str_contains($url, 'youtube'));
 });
 
 test('creating product can include gallery videos with images', function () {

@@ -2,18 +2,19 @@
 
 namespace App\Domains\Content\Http\Client;
 
-use App\Domains\Content\Services\ContactPageService;
+use App\Domains\Content\Http\Requests\ContactFormRequest;
+use App\Domains\Content\Infrastructure\Services\ContactPageService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ContactFormRequest;
 use App\Mail\ContactFormMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class ContactController extends Controller
 {
-    public function index(ContactPageService $service)
+    public function index(ContactPageService $service): View
     {
-        return view('clients.contact.index', [
+        return view('clients.content.contact.index', [
             'contact' => $service->getFirstRecord(),
         ]);
     }

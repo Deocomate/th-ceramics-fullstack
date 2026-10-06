@@ -2,10 +2,10 @@
 
 namespace App\Domains\Content\Http\Admin;
 
-use App\Domains\Content\Models\Faq;
-use App\Domains\Content\Services\FaqService;
+use App\Domains\Content\Http\Requests\FaqRequest;
+use App\Domains\Content\Infrastructure\Models\Faq;
+use App\Domains\Content\Infrastructure\Services\FaqService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FaqRequest;
 use Illuminate\Http\RedirectResponse;
 
 class FaqController extends Controller

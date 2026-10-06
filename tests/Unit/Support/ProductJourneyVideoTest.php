@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\ProductJourneyVideo;
+use App\Domains\Catalog\Domain\ProductJourneyVideo;
 
 test('product journey video resolve prefers product over config', function () {
     $config = (object) ['video' => 'https://www.youtube.com/watch?v=Win12rIicBI'];

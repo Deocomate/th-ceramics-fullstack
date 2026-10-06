@@ -2,7 +2,8 @@
 
 namespace App\Domains\Identity\Http\Admin;
 
-use App\Domains\Identity\Services\AuthService;
+use App\Domains\Identity\Domain\Role;
+use App\Domains\Identity\Infrastructure\Services\AuthService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class AuthController extends Controller
 
     public function showLogin(): View
     {
-        return view('admin.auth.login');
+        return view('admin.identity.auth.login');
     }
 
     public function login(Request $request): RedirectResponse
@@ -35,6 +36,15 @@ class AuthController extends Controller
                 ->withErrors(['email' => 'Email hoặc mật khẩu không đúng.']);
         }
 
+        $user = $request->user();
+        if (! $user || ! Role::isAdmin($user->role)) {
+            $this->authService->logout();
+
+            return back()
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors(['email' => 'Bạn không có quyền truy cập khu vực quản trị.']);
+        }
+
         return redirect()->route('admin.dashboard')
             ->with('success', 'Đăng nhập thành công. Chào mừng bạn!');
     }
@@ -43,7 +53,12 @@ class AuthController extends Controller
 
     public function dashboard(): View
     {
-        return view('admin.dashboard');
+        $user = auth()->user();
+        $adminCount = ($user && $user->isSuperAdmin()) ? \App\Domains\Identity\Infrastructure\Models\User::allAdmins()->count() : null;
+
+        return view('admin.identity.dashboard', [
+            'adminCount' => $adminCount,
+        ]);
     }
 
     // ─── Logout ──────────────────────────────────────────────────────────────
@@ -60,7 +75,7 @@ class AuthController extends Controller
 
     public function showForgotPassword(): View
     {
-        return view('admin.auth.forgot-password');
+        return view('admin.identity.auth.forgot-password');
     }
 
     public function forgotPassword(Request $request): RedirectResponse
@@ -84,7 +99,7 @@ class AuthController extends Controller
 
     public function showResetPassword(Request $request, string $token): View
     {
-        return view('admin.auth.reset', [
+        return view('admin.identity.auth.reset', [
             'token' => $token,
             'email' => $request->query('email', ''),
         ]);

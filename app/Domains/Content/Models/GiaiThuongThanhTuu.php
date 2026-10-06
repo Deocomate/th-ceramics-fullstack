@@ -2,16 +2,6 @@
 
 namespace App\Domains\Content\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Content\Infrastructure\Models\AwardAchievement;
 
-class GiaiThuongThanhTuu extends Model
-{
-    protected $table = 'giai_thuong_thanh_tuu';
-
-    protected $primaryKey = 'giai_thuong_thanh_tuu_id';
-
-    protected $fillable = [
-        'image',
-        'des',
-    ];
-}
+class_alias(AwardAchievement::class, __NAMESPACE__.'\\GiaiThuongThanhTuu');

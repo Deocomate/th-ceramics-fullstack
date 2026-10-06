@@ -2,8 +2,8 @@
 
 namespace App\Domains\Identity\Http\Admin;
 
-use App\Domains\Identity\Models\User;
-use App\Domains\Identity\Services\UserService;
+use App\Domains\Identity\Infrastructure\Models\User;
+use App\Domains\Identity\Infrastructure\Services\UserService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,14 +19,14 @@ class UserController extends Controller
     {
         $users = $this->userService->getAllAdmins();
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.identity.users.index', compact('users'));
     }
 
     // ─── Create ──────────────────────────────────────────────────────────────
 
     public function create(): View
     {
-        return view('admin.users.create');
+        return view('admin.identity.users.create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -47,7 +47,7 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        return view('admin.users.edit', compact('user'));
+        return view('admin.identity.users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user): RedirectResponse

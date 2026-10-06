@@ -9,15 +9,15 @@ class ProductDetailSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            NgoiAmDuongSeeder::class,
-            NgoiHaiSeeder::class,
-            GachThongGioSeeder::class,
-            GachTrangTriSeeder::class,
-            GachCoBatTrangSeeder::class,
-            PhuKienNgoiSeeder::class,
-            LanCanGomSuSeeder::class,
-            LinhVatPhongThuySeeder::class,
-            DenGomSuSeeder::class,
+            YinYangRoofTileSeeder::class,
+            FishScaleRoofTileSeeder::class,
+            BreezeBlockSeeder::class,
+            DecorativeTileSeeder::class,
+            BatTrangAntiqueBrickSeeder::class,
+            RoofTileAccessorySeeder::class,
+            CeramicBalustradeSeeder::class,
+            FengShuiCreatureSeeder::class,
+            CeramicLampSeeder::class,
         ]);
     }
 }

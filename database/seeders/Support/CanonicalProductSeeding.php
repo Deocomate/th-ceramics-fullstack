@@ -6,7 +6,6 @@ use App\Domains\Catalog\Models\Product;
 use App\Domains\Catalog\Models\ProductDisplayOption;
 use App\Domains\Catalog\Models\ProductVariant;
 use App\Domains\Catalog\PublicIdAllocator;
-use Illuminate\Support\Facades\DB;
 
 trait CanonicalProductSeeding
 {

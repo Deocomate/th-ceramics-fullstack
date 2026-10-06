@@ -2,7 +2,7 @@
 
 namespace App\Domains\Commerce\Http\Admin;
 
-use App\Domains\Commerce\Models\ConsultationRequest;
+use App\Domains\Commerce\Application\ConsultationRequestService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,41 +10,35 @@ use Illuminate\View\View;
 
 class ConsultationRequestController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request, ConsultationRequestService $consultations): View
     {
         $status = $request->query('status');
-        $requests = ConsultationRequest::query()
-            ->when($status, fn ($query, $value) => $query->where('status', $value))
-            ->latest()
-            ->paginate(20)
-            ->withQueryString();
+        ['requests' => $requests, 'pendingCount' => $pendingCount] = $consultations->listing($status);
 
-        $pendingCount = ConsultationRequest::pending()->count();
-
-        return view('admin.consultation-requests.index', compact('requests', 'pendingCount', 'status'));
+        return view('admin.commerce.consultation-requests.index', compact('requests', 'pendingCount', 'status'));
     }
 
-    public function show(ConsultationRequest $consultationRequest): View
+    public function show(int $consultationRequest, ConsultationRequestService $consultations): View
     {
-        return view('admin.consultation-requests.show', [
-            'consultationRequest' => $consultationRequest,
+        return view('admin.commerce.consultation-requests.show', [
+            'consultationRequest' => $consultations->find($consultationRequest),
         ]);
     }
 
-    public function updateStatus(Request $request, ConsultationRequest $consultationRequest): RedirectResponse
+    public function updateStatus(Request $request, int $consultationRequest, ConsultationRequestService $consultations): RedirectResponse
     {
         $validated = $request->validate([
             'status' => ['required', 'string', 'in:pending,processed'],
         ]);
 
-        $consultationRequest->update(['status' => $validated['status']]);
+        $consultations->updateStatus($consultationRequest, $validated['status']);
 
         return back()->with('success', 'Đã cập nhật trạng thái yêu cầu tư vấn.');
     }
 
-    public function destroy(ConsultationRequest $consultationRequest): RedirectResponse
+    public function destroy(int $consultationRequest, ConsultationRequestService $consultations): RedirectResponse
     {
-        $consultationRequest->delete();
+        $consultations->delete($consultationRequest);
 
         return redirect()
             ->route('admin.consultation-requests.index')

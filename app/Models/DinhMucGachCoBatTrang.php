@@ -2,16 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Catalog\Infrastructure\Models\UsageNormBatTrangAntiqueBrick;
 
-class DinhMucGachCoBatTrang extends Model
-{
-    protected $table = 'dinh_muc_gach_co_bat_trang';
-
-    protected $primaryKey = 'dinh_muc_gach_co_bat_trang_id';
-
-    protected $fillable = [
-        'brick_type',
-        'value',
-    ];
-}
+class_alias(UsageNormBatTrangAntiqueBrick::class, __NAMESPACE__.'\\DinhMucGachCoBatTrang');

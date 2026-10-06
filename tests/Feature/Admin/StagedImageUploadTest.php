@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\SubstituteStagedImages;
+use App\Domains\Media\Http\Middleware\SubstituteStagedImages;
 use App\Domains\Catalog\Models\Product;
 use App\Domains\Identity\Models\User;
 use Illuminate\Http\Request;

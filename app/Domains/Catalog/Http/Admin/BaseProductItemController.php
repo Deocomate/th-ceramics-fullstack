@@ -2,16 +2,16 @@
 
 namespace App\Domains\Catalog\Http\Admin;
 
-use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\Http\Admin\Concerns\DestroysProductGalleryMedia;
+use App\Domains\Catalog\Http\Admin\Concerns\UploadsProductGalleryMedia;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\Services\ProductCopyService;
 use App\Domains\Catalog\ProductWriter;
 use App\Domains\Catalog\Services\CatalogQueryService;
-use App\Domains\Media\FileUploadHelper;
-use App\Http\Controllers\Admin\Concerns\DestroysProductGalleryMedia;
-use App\Http\Controllers\Admin\Concerns\UploadsProductGalleryMedia;
+use App\Domains\Media\Infrastructure\FileUploadHelper;
 use App\Http\Controllers\Controller;
 use App\Rules\YoutubeUrl;
-use App\Services\ProductCopyService;
-use App\Support\ProductGallery;
+use App\Domains\Catalog\Infrastructure\ProductGallery;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,10 +26,15 @@ abstract class BaseProductItemController extends Controller
     use UploadsProductGalleryMedia;
 
     protected string $typeKey;
+
     protected string $viewPrefix;
+
     protected string $routePrefix;
+
     protected string $itemLabel;
+
     protected string $imageDirectory;
+
     protected string $sizeDirectory;
 
     public function __construct(
@@ -132,6 +137,7 @@ abstract class BaseProductItemController extends Controller
             $request,
             function (array $imagePaths, array $videoUrls, array $videoPaths = []) use ($id) {
                 $product = $this->queryService->find($this->typeKey, $id);
+
                 return $this->removeGalleryItems($product, $imagePaths, $videoUrls, $videoPaths);
             }
         );
@@ -143,6 +149,7 @@ abstract class BaseProductItemController extends Controller
             $request,
             function (array $images, array $videoUrls, array $videoFiles) use ($id) {
                 $product = $this->queryService->find($this->typeKey, $id);
+
                 return $this->appendMediaToGallery($product, $images, $videoUrls, $videoFiles, $this->imageDirectory);
             }
         );
@@ -154,10 +161,12 @@ abstract class BaseProductItemController extends Controller
             $request,
             function (array $tokens) use ($id) {
                 $product = $this->queryService->find($this->typeKey, $id);
+
                 return $this->reorderGalleryItems($product, $tokens);
             },
             function (string $imagePath) use ($id) {
                 $product = $this->queryService->find($this->typeKey, $id);
+
                 return $this->promoteCoverImage($product, $imagePath);
             }
         );
@@ -189,6 +198,7 @@ abstract class BaseProductItemController extends Controller
         ], $this->customStoreRules($request));
 
         $data = $request->validate($rules);
+
         return $this->sanitizePayload($data);
     }
 
@@ -217,6 +227,7 @@ abstract class BaseProductItemController extends Controller
         ], $this->customUpdateRules($request, $product));
 
         $data = $request->validate($rules);
+
         return $this->sanitizePayload($data);
     }
 

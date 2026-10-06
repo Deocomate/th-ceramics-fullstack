@@ -2,11 +2,8 @@
 
 namespace App\Domains\Catalog\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Catalog\Infrastructure\Models\VariantPublicId;
 
-class VariantPublicId extends Model
-{
-    public $timestamps = false;
-
-    protected $fillable = ['type_key', 'public_id', 'product_variant_id'];
+if (! class_exists('App\Domains\Catalog\Models\VariantPublicId', false)) {
+    class_alias(VariantPublicId::class, 'App\Domains\Catalog\Models\VariantPublicId');
 }

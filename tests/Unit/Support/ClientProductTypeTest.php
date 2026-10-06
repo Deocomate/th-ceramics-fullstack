@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\ClientProductType;
+use App\Domains\Catalog\Infrastructure\ClientProductType;
 
 test('resolves product type from detail route', function () {
     expect(ClientProductType::fromDetailRoute('client.products.lan-can-gom-su.detail'))

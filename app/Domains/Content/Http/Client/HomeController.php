@@ -2,20 +2,23 @@
 
 namespace App\Domains\Content\Http\Client;
 
-use App\Domains\Catalog\Services\CatalogQueryService;
-use App\Domains\Content\Models\DuAn;
-use App\Domains\Content\Models\TrangChu;
+use App\Domains\Catalog\Application\Ports\CatalogQueryPort;
+use App\Domains\Commerce\Infrastructure\Models\Coupon;
+use App\Domains\Content\Infrastructure\Models\AwardAchievement;
+use App\Domains\Content\Infrastructure\Models\HomePageConfig;
+use App\Domains\Content\Infrastructure\Models\Project;
 use App\Http\Controllers\Controller;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function __construct(private readonly CatalogQueryService $catalogQuery) {}
+    public function __construct(private readonly CatalogQueryPort $catalogQuery) {}
 
-    public function index()
+    public function index(): View
     {
-        $trangChu = TrangChu::first();
+        $trangChu = HomePageConfig::first();
 
-        $projects = DuAn::latest()->take(10)->get();
+        $projects = Project::latest()->take(10)->get();
 
         $ngoiAmDuongs = $this->catalogQuery->forHome('ngoi_am_duong_ct', 8);
 
@@ -23,12 +26,27 @@ class HomeController extends Controller
 
         $gachHoas = $this->catalogQuery->forHome('gach_hoa_thong_gio_ct', 8);
 
-        return view('clients.home.index', compact(
+        $bannerCoupons = Coupon::query()
+            ->where('show_banner', true)
+            ->where('is_active', true)
+            ->where('is_delete', 0)
+            ->where('start_date', '<=', now())
+            ->where(function ($query) {
+                $query->whereNull('end_date')->orWhere('end_date', '>=', now());
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $awards = AwardAchievement::latest()->get();
+
+        return view('clients.content.home.index', compact(
             'trangChu',
             'projects',
             'ngoiAmDuongs',
             'ngoiHais',
-            'gachHoas'
+            'gachHoas',
+            'bannerCoupons',
+            'awards'
         ));
     }
 }

@@ -25,7 +25,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     // ── Authenticated routes ──────────────────────────────────────────────────
-    Route::middleware(['auth', 'staged.images', 'content.writes'])->group(function () {
+    Route::middleware(['auth', 'role:superadmin,admin', 'staged.images', 'content.writes'])->group(function () {
         Route::get('/', fn () => redirect()->route('admin.dashboard'))->name('home');
         Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
         Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');

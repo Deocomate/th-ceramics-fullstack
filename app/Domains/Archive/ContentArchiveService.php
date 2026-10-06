@@ -2,7 +2,8 @@
 
 namespace App\Domains\Archive;
 
-use App\Domains\Catalog\PublicIdAllocator;
+use App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter;
+use App\Domains\Archive\Application\Ports\CatalogArchivePort;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
@@ -172,7 +173,7 @@ class ContentArchiveService
             $referencedMedia = [];
             $planned = [];
             foreach ($manifest['tables'] as $table => $expected) {
-                if (($manifest['source_schema'] ?? '') === 'legacy' && \App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter::isLegacyCatalogTable($table)) {
+                if (($manifest['source_schema'] ?? '') === 'legacy' && LegacyV1ArchiveAdapter::isLegacyCatalogTable($table)) {
                     $seen = 0;
                     $this->eachRow($zip, $table, function (array $row) use (&$seen, &$referencedMedia): void {
                         $seen++;
@@ -182,6 +183,7 @@ class ContentArchiveService
                         throw new RuntimeException("Số bản ghi của {$table} không khớp manifest.");
                     }
                     $report['add'] += $seen;
+
                     continue;
                 }
 
@@ -242,8 +244,8 @@ class ContentArchiveService
             DB::transaction(function () use ($zip, $manifest, $rewrites, &$result): void {
                 $planned = [];
                 foreach ($manifest['tables'] as $table => $_count) {
-                    if (($manifest['source_schema'] ?? '') === 'legacy' && \App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter::isLegacyCatalogTable($table)) {
-                        app(\App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter::class)->importTable(
+                    if (($manifest['source_schema'] ?? '') === 'legacy' && LegacyV1ArchiveAdapter::isLegacyCatalogTable($table)) {
+                        app(LegacyV1ArchiveAdapter::class)->importTable(
                             $zip,
                             $table,
                             $manifest,
@@ -251,6 +253,7 @@ class ContentArchiveService
                             $result,
                             fn (mixed $val, array $rw) => $this->rewriteMedia($val, $rw)
                         );
+
                         continue;
                     }
 
@@ -279,9 +282,7 @@ class ContentArchiveService
                         $planned[$table][(string) $sourceId] = true;
                     });
                 }
-                if (Schema::hasTable('product_public_ids')) {
-                    app(PublicIdAllocator::class)->reconcileSequences();
-                }
+                app(CatalogArchivePort::class)->reconcileSequences();
             });
 
             return $result;

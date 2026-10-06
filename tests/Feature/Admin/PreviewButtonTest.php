@@ -1,12 +1,12 @@
 <?php
 
+use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
 use App\Domains\Catalog\ProductWriter;
 use App\Domains\Content\Models\DanhMucDuAn;
 use App\Domains\Content\Models\DanhMucTinTuc;
 use App\Domains\Content\Models\DuAn;
 use App\Domains\Content\Models\TinTuc;
 use App\Domains\Identity\Models\User;
-use App\Http\Controllers\Admin\PhuKienNgoiCtController;
 use App\Models\NgoiHaiVanMieu;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
@@ -126,8 +126,8 @@ test('ngoi hai co detail route renders active products and hides deleted product
 test('phu kien legacy detail redirects by type to avoid id collisions', function () {
     $boNoc = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Ngói bò nóc trùng id',
-        'category_type' => PhuKienNgoiCtController::TYPE_BO_NOC,
-        'legacy_type' => PhuKienNgoiCtController::TYPE_BO_NOC,
+        'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
+        'legacy_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
         'legacy_id' => 1,
         'images' => [],
         'is_delete' => 0,
@@ -135,8 +135,8 @@ test('phu kien legacy detail redirects by type to avoid id collisions', function
 
     $chuVan = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Bò nóc chữ vạn đúng',
-        'category_type' => PhuKienNgoiCtController::TYPE_CHU_VAN,
-        'legacy_type' => PhuKienNgoiCtController::TYPE_CHU_VAN,
+        'category_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
+        'legacy_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
         'legacy_id' => 1,
         'images' => [],
         'is_delete' => 0,

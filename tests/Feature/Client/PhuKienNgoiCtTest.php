@@ -1,14 +1,13 @@
 <?php
 
-use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
 use App\Domains\Catalog\ProductWriter;
 use App\Domains\Catalog\PublicIdAllocator;
-use App\Http\Controllers\Admin\PhuKienNgoiCtController;
 
 test('phu kien detail routes only render products from the matching category', function () {
     $boNoc = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Ngói bò nóc đúng',
-        'category_type' => PhuKienNgoiCtController::TYPE_BO_NOC,
+        'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
         'images' => [],
         'des' => ['Mô tả bò nóc'],
         'is_delete' => 0,
@@ -16,7 +15,7 @@ test('phu kien detail routes only render products from the matching category', f
 
     $chuVan = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Bò nóc chữ vạn đúng',
-        'category_type' => PhuKienNgoiCtController::TYPE_CHU_VAN,
+        'category_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
         'images' => ['assets/images/chu-van-1.png'],
         'des' => ['Mô tả chữ vạn'],
         'is_delete' => 0,
@@ -33,7 +32,7 @@ test('phu kien detail routes only render products from the matching category', f
 test('cart accepts active phu kien variants and rejects inactive variants', function () {
     $product = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Phụ kiện có giỏ',
-        'category_type' => PhuKienNgoiCtController::TYPE_BO_NOC,
+        'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
         'images' => ['assets/images/bo-noc.png'],
         'is_delete' => 0,
     ]);
@@ -76,8 +75,8 @@ test('cart accepts active phu kien variants and rejects inactive variants', func
 test('legacy accessory URL resolves from the unified catalog', function () {
     $product = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Phụ kiện URL cũ',
-        'category_type' => PhuKienNgoiCtController::TYPE_CHU_VAN,
-        'legacy_type' => PhuKienNgoiCtController::TYPE_CHU_VAN,
+        'category_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
+        'legacy_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
         'legacy_id' => 901,
         'images' => [],
         'is_delete' => 0,

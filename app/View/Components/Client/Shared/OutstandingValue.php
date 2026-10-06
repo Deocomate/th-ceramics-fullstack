@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Client\Shared;
 
-use App\Domains\Content\Services\GiaTriVuotTroiService;
+use App\Domains\Content\Infrastructure\Services\CoreValueService;
 use App\Support\AssetPath;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -15,7 +15,7 @@ class OutstandingValue extends Component
     public array $fallbackImages = ['value-01.png', 'value-02.png', 'value-03.png', 'value-04.png'];
 
     public function __construct(
-        GiaTriVuotTroiService $giaTriVuotTroiService,
+        CoreValueService $giaTriVuotTroiService,
         mixed $giaTriVuotTroi = null,
     ) {
         $values = $giaTriVuotTroi !== null
@@ -44,6 +44,6 @@ class OutstandingValue extends Component
 
     public function render(): View
     {
-        return view('components.client.shared.outstanding-value');
+        return view('components.client.content.shared.outstanding-value');
     }
 }

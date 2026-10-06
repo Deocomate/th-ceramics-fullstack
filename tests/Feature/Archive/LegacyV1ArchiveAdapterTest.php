@@ -1,6 +1,8 @@
 <?php
 
+use App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter;
 use App\Domains\Archive\ContentArchiveService;
+use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
 use App\Domains\Catalog\Models\Product;
 use App\Domains\Catalog\Models\ProductDisplayOption;
 use App\Domains\Catalog\Models\ProductVariant;
@@ -11,12 +13,42 @@ beforeEach(function () {
     Storage::fake('public');
 });
 
+it('maps the original roof accessory category to the current category without changing its public ID', function () {
+    $path = tempnam(sys_get_temp_dir(), 'legacy_accessory_');
+    $zip = new ZipArchive;
+    $zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+    $zip->addFromString('data/phu_kien_ngoi_ct.ndjson', json_encode([
+        'phu_kien_ngoi_ct_id' => 45,
+        'name' => 'Ngói Bờ Nóc cũ',
+        'category_type' => 'bo_noc',
+        'created_at' => '2026-01-01 00:00:00',
+        'updated_at' => '2026-01-01 00:00:00',
+    ])."\n");
+    $zip->close();
+    $zip->open($path);
+
+    try {
+        $result = ['added' => 0, 'updated' => 0, 'skipped' => 0];
+        app(LegacyV1ArchiveAdapter::class)->importTable(
+            $zip, 'phu_kien_ngoi_ct', ['source_id' => (string) Str::uuid()], [], $result, fn ($row) => $row,
+        );
+
+        $product = Product::where('type_key', 'phu_kien_ngoi_ct')->where('legacy_id', 45)->firstOrFail();
+        expect($product->category_type)->toBe(RoofTileAccessoryCategory::TYPE_BO_NOC)
+            ->and($product->public_id)->toBe(45)
+            ->and($result['added'])->toBe(1);
+    } finally {
+        $zip->close();
+        unlink($path);
+    }
+});
+
 it('imports legacy format archive directly into canonical catalog tables', function () {
     Storage::disk('public')->put('uploads/legacy-nad.webp', 'legacy nad image');
     Storage::disk('public')->put('uploads/legacy-den.webp', 'legacy den image');
 
-    $zipPath = tempnam(sys_get_temp_dir(), 'legacy_archive_test_') . '.zip';
-    $zip = new ZipArchive();
+    $zipPath = tempnam(sys_get_temp_dir(), 'legacy_archive_test_').'.zip';
+    $zip = new ZipArchive;
     expect($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE))->toBeTrue();
 
     $nadData = json_encode([
@@ -30,7 +62,7 @@ it('imports legacy format archive directly into canonical catalog tables', funct
         'is_delete' => 0,
         'created_at' => '2026-01-01 00:00:00',
         'updated_at' => '2026-01-01 00:00:00',
-    ]) . "\n";
+    ])."\n";
 
     $nadColorData = json_encode([
         'mau_sac_ngoi_am_duong_ct_id' => 10,
@@ -38,7 +70,7 @@ it('imports legacy format archive directly into canonical catalog tables', funct
         'image' => 'storage/uploads/color-do.webp',
         'created_at' => '2026-01-01 00:00:00',
         'updated_at' => '2026-01-01 00:00:00',
-    ]) . "\n";
+    ])."\n";
 
     $denData = json_encode([
         'den_vuon_gom_su_ct_id' => 88,
@@ -50,7 +82,7 @@ it('imports legacy format archive directly into canonical catalog tables', funct
         'is_delete' => 0,
         'created_at' => '2026-01-01 00:00:00',
         'updated_at' => '2026-01-01 00:00:00',
-    ]) . "\n";
+    ])."\n";
 
     $denVariantData = json_encode([
         'phan_loai_den_vuon_gom_su_ct_id' => 201,
@@ -62,7 +94,7 @@ it('imports legacy format archive directly into canonical catalog tables', funct
         'is_delete' => 0,
         'created_at' => '2026-01-01 00:00:00',
         'updated_at' => '2026-01-01 00:00:00',
-    ]) . "\n";
+    ])."\n";
 
     $sqlData = '-- mock legacy sql dump';
     $mediaNad = 'legacy nad image';
@@ -122,11 +154,15 @@ it('imports legacy format archive directly into canonical catalog tables', funct
         expect($nadProduct->name)->toBe('Ngói Âm Dương Legacy 99');
         expect($nadProduct->public_id)->toBe(99);
         expect($nadProduct->price)->toBe(50000);
+        expect($nadProduct->getRawOriginal('created_at'))->toBe('2026-01-01 00:00:00');
+        expect($nadProduct->getRawOriginal('updated_at'))->toBe('2026-01-01 00:00:00');
+        expect((int) $nadProduct->priority)->toBe(0);
 
         // Verify display options
         $displayOption = ProductDisplayOption::where('type_key', 'ngoi_am_duong_ct')->first();
         expect($displayOption)->not->toBeNull();
         expect($displayOption->name)->toBe('Màu Đỏ Gốm');
+        expect($displayOption->getRawOriginal('created_at'))->toBe('2026-01-01 00:00:00');
 
         // Verify den vuon product & variant
         $denProduct = Product::where('type_key', 'den_vuon_gom_su_ct')->first();
@@ -138,11 +174,14 @@ it('imports legacy format archive directly into canonical catalog tables', funct
         expect($variant)->not->toBeNull();
         expect($variant->price)->toBe(250000);
         expect($variant->product_id)->toBe($denProduct->id);
+        expect($variant->getRawOriginal('created_at'))->toBe('2026-01-01 00:00:00');
+        expect($variant->getRawOriginal('updated_at'))->toBe('2026-01-01 00:00:00');
 
         // Verify idempotency on second import
         $secondResult = $archive->import($zipPath);
         expect($secondResult['added'])->toBe(0);
         expect($secondResult['updated'])->toBeGreaterThanOrEqual(2);
+        expect($nadProduct->fresh()->getRawOriginal('updated_at'))->toBe('2026-01-01 00:00:00');
     } finally {
         @unlink($zipPath);
     }

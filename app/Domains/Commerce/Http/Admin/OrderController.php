@@ -2,46 +2,36 @@
 
 namespace App\Domains\Commerce\Http\Admin;
 
-use App\Domains\Commerce\Models\Order;
+use App\Domains\Commerce\Application\OrderAdminService;
+use App\Domains\Commerce\Domain\OrderStatus;
 use App\Http\Controllers\Controller;
-use App\Mail\OrderStatusUpdatedMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class OrderController extends Controller
 {
-    public function index(): View
+    public function index(OrderAdminService $orders): View
     {
-        $orders = Order::with('user')
-            ->latest()
-            ->paginate(15);
+        $orders = $orders->listing();
 
-        return view('admin.orders.index', compact('orders'));
+        return view('admin.commerce.orders.index', compact('orders'));
     }
 
-    public function show(Order $order): View
+    public function show(int $order, OrderAdminService $orders): View
     {
-        $order->load(['items', 'user']);
+        $order = $orders->find($order);
 
-        return view('admin.orders.show', compact('order'));
+        return view('admin.commerce.orders.show', compact('order'));
     }
 
-    public function update(Request $request, Order $order): RedirectResponse
+    public function update(Request $request, int $order, OrderAdminService $orders): RedirectResponse
     {
         $validated = $request->validate([
-            'status' => ['required', 'string', 'in:pending_payment,processing,shipping,completed,canceled,returned'],
+            'status' => ['required', 'string', 'in:'.implode(',', OrderStatus::values())],
         ]);
 
-        $oldStatus = $order->status;
-        $order->update(['status' => $validated['status']]);
-
-        if ($validated['status'] !== $oldStatus && $order->email) {
-            Mail::to($order->email)->send(
-                new OrderStatusUpdatedMail($order->load('items'))
-            );
-        }
+        $orders->updateStatus($order, $validated['status']);
 
         return redirect()
             ->route('admin.orders.show', $order)

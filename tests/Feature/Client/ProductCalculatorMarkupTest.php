@@ -7,7 +7,7 @@ use App\Models\NgoiHaiVanMieu;
 use Illuminate\Support\Facades\Blade;
 
 test('shape area block partial renders standardized shape calculator markup', function () {
-    $html = Blade::render('<x-client.shared.shape-area-block :index="1" variant="weight" />');
+    $html = Blade::render('<x-client.catalog.shared.shape-area-block :index="1" variant="weight" />');
 
     expect($html)
         ->toContain('data-area-block')
@@ -25,7 +25,7 @@ test('shape area block partial renders standardized shape calculator markup', fu
 });
 
 test('quantity calculator partial keeps rectangle-only multi-area markup', function () {
-    $html = Blade::render('<x-client.shared.quantity-calculator />');
+    $html = Blade::render('<x-client.catalog.shared.quantity-calculator />');
 
     expect($html)
         ->toContain('data-quantity-calculator')

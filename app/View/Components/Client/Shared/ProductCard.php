@@ -2,8 +2,8 @@
 
 namespace App\View\Components\Client\Shared;
 
-use App\Support\ClientProductType;
-use App\Support\ProductPrice;
+use App\Domains\Catalog\Infrastructure\ClientProductType;
+use App\Domains\Catalog\Domain\ValueObjects\ProductPrice;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -85,6 +85,6 @@ class ProductCard extends Component
 
     public function render(): View|Closure|string
     {
-        return view('components.client.shared.product-card');
+        return view('components.client.catalog.shared.product-card');
     }
 }

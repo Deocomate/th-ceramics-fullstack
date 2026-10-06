@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Domains\Media\FileUploadHelper;
+use App\Domains\Media\Infrastructure\FileUploadHelper;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;

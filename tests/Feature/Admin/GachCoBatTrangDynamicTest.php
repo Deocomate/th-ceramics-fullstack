@@ -2,8 +2,8 @@
 
 use App\Domains\Catalog\Models\Product;
 use App\Domains\Catalog\ProductWriter;
-use App\Models\GachCoBatTrang;
 use App\Domains\Identity\Models\User;
+use App\Models\GachCoBatTrang;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 

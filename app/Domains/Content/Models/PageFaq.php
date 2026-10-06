@@ -2,15 +2,6 @@
 
 namespace App\Domains\Content\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Content\Infrastructure\Models\FaqPageConfig;
 
-class PageFaq extends Model
-{
-    protected $table = 'page_faq';
-
-    protected $primaryKey = 'page_faq_id';
-
-    protected $fillable = [
-        'banner_image',
-    ];
-}
+class_alias(FaqPageConfig::class, __NAMESPACE__.'\\PageFaq');

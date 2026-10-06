@@ -2,21 +2,21 @@
 
 namespace App\Domains\Content\Http\Admin;
 
-use App\Domains\Content\Services\ContactPageService;
+use App\Domains\Content\Http\Requests\ContactPageRequest;
+use App\Domains\Content\Infrastructure\Services\ContactPageConfigService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ContactPageRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class ContactPageController extends Controller
 {
-    public function __construct(private readonly ContactPageService $service) {}
+    public function __construct(private readonly ContactPageConfigService $service) {}
 
     public function edit(): View
     {
         $contactPage = $this->service->getFirstRecord();
 
-        return view('admin.pages.contact.edit', compact('contactPage'));
+        return view('admin.content.pages.contact.edit', compact('contactPage'));
     }
 
     public function update(ContactPageRequest $request): RedirectResponse

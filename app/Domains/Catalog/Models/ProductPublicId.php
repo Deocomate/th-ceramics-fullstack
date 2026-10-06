@@ -2,11 +2,8 @@
 
 namespace App\Domains\Catalog\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Catalog\Infrastructure\Models\ProductPublicId;
 
-class ProductPublicId extends Model
-{
-    public $timestamps = false;
-
-    protected $fillable = ['type_key', 'public_id', 'product_id'];
+if (! class_exists('App\Domains\Catalog\Models\ProductPublicId', false)) {
+    class_alias(ProductPublicId::class, 'App\Domains\Catalog\Models\ProductPublicId');
 }

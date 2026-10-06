@@ -48,8 +48,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 5H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             Yêu cầu tư vấn
-            @php $pendingConsult = \App\Domains\Commerce\Models\ConsultationRequest::where('status', 'pending')->count(); @endphp
-            @if ($pendingConsult > 0)
+            @if (($pendingConsult ?? 0) > 0)
                 <span class="ml-auto bg-[#A31D1D] text-white text-[10px] rounded-full px-1.5 py-0.5">{{ $pendingConsult }}</span>
             @endif
         </a>

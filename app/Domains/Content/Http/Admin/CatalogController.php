@@ -2,7 +2,7 @@
 
 namespace App\Domains\Content\Http\Admin;
 
-use App\Domains\Content\Services\CatalogService;
+use App\Domains\Content\Infrastructure\Services\CatalogService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,7 +17,7 @@ class CatalogController extends Controller
     {
         $catalogs = $this->service->getAll();
 
-        return view('admin.catalog.index', compact('catalogs'));
+        return view('admin.content.catalog.index', compact('catalogs'));
     }
 
     public function store(Request $request): RedirectResponse|JsonResponse

@@ -2,41 +2,43 @@
 
 namespace App\Domains\Commerce\Http\Client;
 
-use App\Domains\Commerce\Models\Order;
-use App\Domains\Commerce\Services\CartService;
-use App\Domains\Commerce\Services\CouponService;
+use App\Domains\Commerce\Application\CartService;
+use App\Domains\Commerce\Application\CheckoutService;
+use App\Domains\Commerce\Application\CouponService;
+use App\Domains\Commerce\Application\Ports\ProductCartOptionsPort;
+use App\Domains\Commerce\Http\Requests\Cart\AddToCartRequest;
+use App\Domains\Commerce\Http\Requests\Cart\CheckoutRequest;
+use App\Domains\Commerce\Http\Requests\Cart\ProductCartOptionsRequest;
+use App\Domains\Commerce\Http\Requests\Cart\UpdateCartRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Cart\AddToCartRequest;
-use App\Http\Requests\Cart\CheckoutRequest;
-use App\Http\Requests\Cart\ProductCartOptionsRequest;
-use App\Http\Requests\Cart\UpdateCartRequest;
-use App\Mail\OrderCreatedMail;
-use App\Services\ProductCartOptionsService;
 use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class CartController extends Controller
 {
     public function cart(CartService $cartService)
     {
-        return view('clients.cart.gio-hang', [
-            'cartItems' => $cartService->getCart(),
+        $cartItems = $cartService->getCheckoutItems();
+
+        return view('clients.commerce.cart.gio-hang', [
+            'cartItems' => $cartItems,
+            'subtotal' => $cartService->getSubtotal(),
             'total' => $cartService->getTotal(),
+            'currentCoupon' => $cartService->getCouponCode(),
+            'currentDiscount' => $cartService->getDiscountAmount(),
         ]);
     }
 
     public function checkout(CartService $cartService)
     {
-        $cartItems = $cartService->getCart();
+        $cartItems = $cartService->getCheckoutItems();
         if (empty($cartItems)) {
             return redirect()->route('client.cart.index');
         }
 
-        return view('clients.cart.thanh-toan', [
+        return view('clients.commerce.cart.thanh-toan', [
             'cartItems' => $cartItems,
             'total' => $cartService->getTotal(),
             'couponCode' => $cartService->getCouponCode(),
@@ -78,12 +80,14 @@ class CartController extends Controller
         }
     }
 
-    public function productOptions(ProductCartOptionsRequest $request, ProductCartOptionsService $optionsService): JsonResponse
+    public function productOptions(ProductCartOptionsRequest $request, ProductCartOptionsPort $optionsService): JsonResponse
     {
         try {
             return response()->json([
                 'status' => 'success',
-                'data' => $optionsService->getOptions($request->product_type, (int) $request->product_id),
+                'data' => $this->presentCartOptions(
+                    $optionsService->get($request->product_type, (int) $request->product_id)
+                ),
             ]);
         } catch (ModelNotFoundException) {
             return response()->json([
@@ -169,7 +173,7 @@ class CartController extends Controller
             ]);
         }
 
-        $result = $couponService->validateAndCalculate($code, $cartItems);
+        $result = $couponService->validateAndCalculate($code, $cartService->getCheckoutItems());
 
         if (! $result['valid']) {
             return response()->json([
@@ -199,77 +203,38 @@ class CartController extends Controller
         ]);
     }
 
-    public function processCheckout(CheckoutRequest $request, CartService $cartService, CouponService $couponService)
+    public function processCheckout(CheckoutRequest $request, CartService $cartService, CheckoutService $checkoutService)
     {
-        $cartItems = $cartService->getCart();
-        if (empty($cartItems)) {
+        $cartItems = $cartService->getCheckoutItems();
+        $orderCode = $checkoutService->placeOrder(
+            $request->validated(),
+            $cartItems,
+            $cartService->getCouponCode(),
+            auth()->id(),
+        );
+        if ($orderCode === null) {
             return redirect()->route('client.cart.index');
-        }
-
-        // Re-validate coupon server-side
-        $couponCode = $cartService->getCouponCode();
-        $discount = 0;
-
-        if ($couponCode) {
-            $result = $couponService->validateAndCalculate($couponCode, $cartItems);
-            if ($result['valid']) {
-                $discount = $result['discount'];
-            } else {
-                $cartService->removeCoupon();
-                $couponCode = null;
-            }
-        }
-
-        $subtotal = $cartService->getSubtotal();
-        $shippingFee = 0;
-        $totalAmount = max(0, $subtotal - $discount + $shippingFee);
-        $order = null;
-
-        DB::transaction(function () use ($request, $cartItems, $couponCode, $subtotal, $shippingFee, $discount, $totalAmount, $couponService, &$order) {
-            $order = Order::create([
-                'user_id' => auth()->id(),
-                'order_code' => Order::generateOrderCode(),
-                'customer_name' => $request->customer_name,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'address' => $request->address,
-                'note' => $request->note,
-                'subtotal' => $subtotal,
-                'shipping_fee' => $shippingFee,
-                'discount' => $discount,
-                'total_amount' => $totalAmount,
-                'status' => 'processing',
-                'payment_method' => $request->payment_method,
-                'coupon_code' => $couponCode,
-            ]);
-
-            foreach ($cartItems as $item) {
-                $order->items()->create([
-                    'product_type' => $item['product_type'],
-                    'product_id' => $item['product_id'],
-                    'variant_id' => $item['variant_id'],
-                    'product_name' => $item['name'],
-                    'variant_name' => $item['variant_name'],
-                    'sku' => $item['sku'],
-                    'price' => $item['price'],
-                    'quantity' => $item['quantity'],
-                    'total' => $item['price'] * $item['quantity'],
-                ]);
-            }
-
-            if ($couponCode) {
-                $couponService->incrementUsage($couponCode);
-            }
-        });
-
-        if ($order->email) {
-            Mail::to($order->email)->send(new OrderCreatedMail($order->load('items')));
         }
 
         $cartService->clear();
         $cartService->removeCoupon();
 
         return redirect()->route('client.home')
-            ->with('success', 'Đặt hàng thành công! Mã đơn hàng: '.$order->order_code);
+            ->with('success', 'Đặt hàng thành công! Mã đơn hàng: '.$orderCode);
+    }
+
+    /** @param array<string, mixed> $options */
+    private function presentCartOptions(array $options): array
+    {
+        foreach ($options['variants'] as &$variant) {
+            $variant['image_url'] = AssetPath::url($variant['image'] ?? null);
+            unset($variant['image']);
+        }
+        unset($variant);
+
+        $options['image_url'] = AssetPath::url($options['image'] ?? null);
+        unset($options['image']);
+
+        return $options;
     }
 }

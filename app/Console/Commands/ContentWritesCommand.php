@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Middleware\EnsureContentWritesOpen;
+use App\Domains\Content\Infrastructure\Services\ContentWriteLock;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
 
 class ContentWritesCommand extends Command
 {
@@ -14,35 +13,41 @@ class ContentWritesCommand extends Command
 
     public function handle(): int
     {
-        $path = storage_path(EnsureContentWritesOpen::LOCK_FILE);
         return match ($this->argument('state')) {
-            'lock' => $this->lock($path),
-            'unlock' => $this->unlock($path),
-            'status' => $this->status($path),
+            'lock' => $this->lock(),
+            'unlock' => $this->unlock(),
+            'status' => $this->status(),
             default => self::INVALID,
         };
     }
 
-    private function lock(string $path): int
+    private function lock(): int
     {
-        File::ensureDirectoryExists(dirname($path));
-        file_put_contents($path, now('UTC')->toIso8601String(), LOCK_EX);
+        if (! ContentWriteLock::manualLock()) {
+            $this->error('Không thể khóa: thao tác sửa nội dung đang bị khóa bởi tiến trình khác.');
+
+            return self::FAILURE;
+        }
         $this->info('Đã khóa thao tác sửa nội dung trong quản trị.');
 
         return self::SUCCESS;
     }
 
-    private function unlock(string $path): int
+    private function unlock(): int
     {
-        @unlink($path);
+        if (! ContentWriteLock::manualUnlock()) {
+            $this->error('Không thể mở khóa: khóa đang thuộc về tiến trình khác.');
+
+            return self::FAILURE;
+        }
         $this->info('Đã mở thao tác sửa nội dung.');
 
         return self::SUCCESS;
     }
 
-    private function status(string $path): int
+    private function status(): int
     {
-        $this->line(is_file($path) ? 'locked' : 'open');
+        $this->line(ContentWriteLock::isLocked() ? 'locked' : 'open');
 
         return self::SUCCESS;
     }

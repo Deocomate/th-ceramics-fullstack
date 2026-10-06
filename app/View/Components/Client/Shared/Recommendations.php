@@ -3,8 +3,8 @@
 namespace App\View\Components\Client\Shared;
 
 use App\Support\AssetPath;
-use App\Support\ClientProductType;
-use App\Support\ProductPrice;
+use App\Domains\Catalog\Infrastructure\ClientProductType;
+use App\Domains\Catalog\Domain\ValueObjects\ProductPrice;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
@@ -43,7 +43,7 @@ class Recommendations extends Component
 
     public function render(): View
     {
-        return view('components.client.shared.recommendations');
+        return view('components.client.catalog.shared.recommendations');
     }
 
     private function normalizeProduct(mixed $product): array

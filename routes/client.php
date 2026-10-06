@@ -1,35 +1,35 @@
 <?php
 
-use App\Domains\Content\Http\Client\AboutController;
-use App\Domains\Identity\Http\Client\AuthController;
+use App\Domains\Catalog\Http\Client\BatTrangAntiqueBrickController;
+use App\Domains\Catalog\Http\Client\BreezeBlockController;
+use App\Domains\Catalog\Http\Client\CeramicBalustradeController;
+use App\Domains\Catalog\Http\Client\CeramicLampController;
+use App\Domains\Catalog\Http\Client\DecorativeTileController;
+use App\Domains\Catalog\Http\Client\FengShuiCreatureController;
+use App\Domains\Catalog\Http\Client\GlobalSearchController;
+use App\Domains\Catalog\Http\Client\RoofTileAccessoryController;
+use App\Domains\Catalog\Http\Client\VanMieuFishScaleRoofTileController;
+use App\Domains\Catalog\Http\Client\YinYangRoofTileController;
 use App\Domains\Commerce\Http\Client\CartController;
 use App\Domains\Commerce\Http\Client\ConsultationController;
+use App\Domains\Commerce\Http\Client\OrderTrackingController;
+use App\Domains\Content\Http\Client\AboutController;
+use App\Domains\Content\Http\Client\CatalogController;
 use App\Domains\Content\Http\Client\ContactController;
 use App\Domains\Content\Http\Client\CustomerServiceController;
-use App\Http\Controllers\Client\DichVuKhachHang\BaoMatThongTinController;
-use App\Http\Controllers\Client\DichVuKhachHang\CatalogController;
-use App\Http\Controllers\Client\DichVuKhachHang\ChinhSachDoiTraController;
-use App\Http\Controllers\Client\DichVuKhachHang\ChinhSachVanChuyenController;
-use App\Http\Controllers\Client\DichVuKhachHang\HuongDanThiCongController;
-use App\Http\Controllers\Client\DichVuKhachHang\QuyTrinhDatHangController;
-use App\Http\Controllers\Client\DichVuKhachHang\TaiKhoanCuaToiController;
-use App\Http\Controllers\Client\DichVuKhachHang\TrangThaiDonHangController;
 use App\Domains\Content\Http\Client\FactoryController;
 use App\Domains\Content\Http\Client\FaqController;
-use App\Http\Controllers\Client\GlobalSearchController;
 use App\Domains\Content\Http\Client\HomeController;
+use App\Domains\Content\Http\Client\InstallationGuideController;
 use App\Domains\Content\Http\Client\NewsController;
-use App\Http\Controllers\Client\ProductPages\DenGomSuController;
-use App\Http\Controllers\Client\ProductPages\GachCoBatTrangController;
-use App\Http\Controllers\Client\ProductPages\GachHoaThongGioController;
-use App\Http\Controllers\Client\ProductPages\GachTrangTriController;
-use App\Http\Controllers\Client\ProductPages\LanCanGomSuController;
-use App\Http\Controllers\Client\ProductPages\LinhVatPhongThuyController;
-use App\Http\Controllers\Client\ProductPages\NgoiAmDuongController;
-use App\Http\Controllers\Client\ProductPages\NgoiHaiVanMieuController;
-use App\Http\Controllers\Client\ProductPages\PhuKienNgoiController;
+use App\Domains\Content\Http\Client\OrderingProcessController;
+use App\Domains\Content\Http\Client\PrivacyPolicyController;
 use App\Domains\Content\Http\Client\ProjectController;
+use App\Domains\Content\Http\Client\ReturnPolicyController;
+use App\Domains\Content\Http\Client\ShippingPolicyController;
 use App\Domains\Content\Http\Client\ShowroomController;
+use App\Domains\Identity\Http\Client\AuthController;
+use App\Domains\Identity\Http\Client\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -95,16 +95,16 @@ Route::name('client.')->group(function () {
 
     // Chính sách & Dịch vụ khách hàng — route tĩnh phải khai báo TRƯỚC catch-all `/{page}`
     Route::prefix('dich-vu')->name('dich-vu.')->group(function () {
-        Route::get('/trang-thai-don-hang', [TrangThaiDonHangController::class, 'index'])
+        Route::get('/trang-thai-don-hang', [OrderTrackingController::class, 'index'])
             ->middleware('ecommerce')
             ->name('trang-thai-don-hang');
         Route::get('/tai-catalog', [CatalogController::class, 'index'])->name('tai-catalog');
         Route::get('/tai-catalog/doc/{id}', [CatalogController::class, 'read'])->name('tai-catalog.read');
-        Route::get('/quy-trinh-dat-hang', [QuyTrinhDatHangController::class, 'index'])->name('quy-trinh-dat-hang');
-        Route::get('/huong-dan-thi-cong', [HuongDanThiCongController::class, 'index'])->name('huong-dan-thi-cong');
-        Route::get('/chinh-sach-van-chuyen', [ChinhSachVanChuyenController::class, 'index'])->name('chinh-sach-van-chuyen');
-        Route::get('/chinh-sach-doi-tra', [ChinhSachDoiTraController::class, 'index'])->name('chinh-sach-doi-tra');
-        Route::get('/bao-mat-thong-tin', [BaoMatThongTinController::class, 'index'])->name('bao-mat-thong-tin');
+        Route::get('/quy-trinh-dat-hang', [OrderingProcessController::class, 'index'])->name('quy-trinh-dat-hang');
+        Route::get('/huong-dan-thi-cong', [InstallationGuideController::class, 'index'])->name('huong-dan-thi-cong');
+        Route::get('/chinh-sach-van-chuyen', [ShippingPolicyController::class, 'index'])->name('chinh-sach-van-chuyen');
+        Route::get('/chinh-sach-doi-tra', [ReturnPolicyController::class, 'index'])->name('chinh-sach-doi-tra');
+        Route::get('/bao-mat-thong-tin', [PrivacyPolicyController::class, 'index'])->name('bao-mat-thong-tin');
     });
 
     Route::prefix('dich-vu')->name('customer-service.')->group(function () {
@@ -114,43 +114,43 @@ Route::name('client.')->group(function () {
     // Sản phẩm (Products)
     Route::prefix('san-pham')->name('products.')->group(function () {
         // Ngói Âm Dương
-        Route::get('/ngoi-am-duong', [NgoiAmDuongController::class, 'index'])->name('ngoi-am-duong.index');
-        Route::get('/ngoi-am-duong/{id}', [NgoiAmDuongController::class, 'detail'])->name('ngoi-am-duong.detail');
+        Route::get('/ngoi-am-duong', [YinYangRoofTileController::class, 'index'])->name('ngoi-am-duong.index');
+        Route::get('/ngoi-am-duong/{id}', [YinYangRoofTileController::class, 'detail'])->name('ngoi-am-duong.detail');
 
         // Ngói Hài Văn Miếu
-        Route::get('/ngoi-hai-van-mieu', [NgoiHaiVanMieuController::class, 'index'])->name('ngoi-hai-van-mieu.index');
-        Route::get('/ngoi-hai-van-mieu/{id}', [NgoiHaiVanMieuController::class, 'detail'])->name('ngoi-hai-van-mieu.detail');
-        Route::get('/ngoi-hai-co/{id}', [NgoiHaiVanMieuController::class, 'detailNgoiHaiCo'])->name('ngoi-hai-co.detail');
+        Route::get('/ngoi-hai-van-mieu', [VanMieuFishScaleRoofTileController::class, 'index'])->name('ngoi-hai-van-mieu.index');
+        Route::get('/ngoi-hai-van-mieu/{id}', [VanMieuFishScaleRoofTileController::class, 'detail'])->name('ngoi-hai-van-mieu.detail');
+        Route::get('/ngoi-hai-co/{id}', [VanMieuFishScaleRoofTileController::class, 'detailNgoiHaiCo'])->name('ngoi-hai-co.detail');
 
         // Gạch Hoa Thông Gió
-        Route::get('/gach-hoa-thong-gio', [GachHoaThongGioController::class, 'index'])->name('gach-hoa-thong-gio.index');
-        Route::get('/gach-hoa-thong-gio/{id}', [GachHoaThongGioController::class, 'detail'])->name('gach-hoa-thong-gio.detail');
+        Route::get('/gach-hoa-thong-gio', [BreezeBlockController::class, 'index'])->name('gach-hoa-thong-gio.index');
+        Route::get('/gach-hoa-thong-gio/{id}', [BreezeBlockController::class, 'detail'])->name('gach-hoa-thong-gio.detail');
 
         // Gạch Trang Trí
-        Route::get('/gach-trang-tri', [GachTrangTriController::class, 'index'])->name('gach-trang-tri.index');
-        Route::get('/gach-trang-tri/{id}', [GachTrangTriController::class, 'detail'])->name('gach-trang-tri.detail');
+        Route::get('/gach-trang-tri', [DecorativeTileController::class, 'index'])->name('gach-trang-tri.index');
+        Route::get('/gach-trang-tri/{id}', [DecorativeTileController::class, 'detail'])->name('gach-trang-tri.detail');
 
         // Lan Can Gốm Sứ
-        Route::get('/lan-can-gom-su', [LanCanGomSuController::class, 'index'])->name('lan-can-gom-su.index');
-        Route::get('/lan-can-gom-su/{id}', [LanCanGomSuController::class, 'detail'])->name('lan-can-gom-su.detail');
+        Route::get('/lan-can-gom-su', [CeramicBalustradeController::class, 'index'])->name('lan-can-gom-su.index');
+        Route::get('/lan-can-gom-su/{id}', [CeramicBalustradeController::class, 'detail'])->name('lan-can-gom-su.detail');
 
         // Gạch Cổ Bát Tràng
-        Route::get('/gach-co-bat-trang', [GachCoBatTrangController::class, 'index'])->name('gach-co-bat-trang.index');
-        Route::get('/gach-co-bat-trang/{id}', [GachCoBatTrangController::class, 'detail'])->name('gach-co-bat-trang.detail');
+        Route::get('/gach-co-bat-trang', [BatTrangAntiqueBrickController::class, 'index'])->name('gach-co-bat-trang.index');
+        Route::get('/gach-co-bat-trang/{id}', [BatTrangAntiqueBrickController::class, 'detail'])->name('gach-co-bat-trang.detail');
 
         // Linh Vật Phong Thủy
-        Route::get('/linh-vat-phong-thuy', [LinhVatPhongThuyController::class, 'index'])->name('linh-vat-phong-thuy.index');
-        Route::get('/linh-vat-phong-thuy/{id}', [LinhVatPhongThuyController::class, 'detail'])->name('linh-vat-phong-thuy.detail');
+        Route::get('/linh-vat-phong-thuy', [FengShuiCreatureController::class, 'index'])->name('linh-vat-phong-thuy.index');
+        Route::get('/linh-vat-phong-thuy/{id}', [FengShuiCreatureController::class, 'detail'])->name('linh-vat-phong-thuy.detail');
 
         // Đèn Gốm Sứ
-        Route::get('/den-gom-su', [DenGomSuController::class, 'index'])->name('den-gom-su.index');
-        Route::get('/den-gom-su/{id}', [DenGomSuController::class, 'detail'])->name('den-gom-su.detail');
+        Route::get('/den-gom-su', [CeramicLampController::class, 'index'])->name('den-gom-su.index');
+        Route::get('/den-gom-su/{id}', [CeramicLampController::class, 'detail'])->name('den-gom-su.detail');
 
         // Phụ Kiện Ngói
-        Route::get('/phu-kien-ngoi', [PhuKienNgoiController::class, 'index'])->name('phu-kien-ngoi.index');
-        Route::get('/phu-kien-ngoi/ngoi-bo-noc/{id}', [PhuKienNgoiController::class, 'detailNgoiBoNoc'])->name('phu-kien-ngoi.ngoi-bo-noc.detail');
-        Route::get('/phu-kien-ngoi/bo-noc-chu-van/{id}', [PhuKienNgoiController::class, 'detailBoNocChuVan'])->name('phu-kien-ngoi.bo-noc-chu-van.detail');
-        Route::get('/phu-kien-ngoi/{id}', [PhuKienNgoiController::class, 'legacyDetailRedirect'])->name('phu-kien-ngoi.detail');
+        Route::get('/phu-kien-ngoi', [RoofTileAccessoryController::class, 'index'])->name('phu-kien-ngoi.index');
+        Route::get('/phu-kien-ngoi/ngoi-bo-noc/{id}', [RoofTileAccessoryController::class, 'detailNgoiBoNoc'])->name('phu-kien-ngoi.ngoi-bo-noc.detail');
+        Route::get('/phu-kien-ngoi/bo-noc-chu-van/{id}', [RoofTileAccessoryController::class, 'detailBoNocChuVan'])->name('phu-kien-ngoi.bo-noc-chu-van.detail');
+        Route::get('/phu-kien-ngoi/{id}', [RoofTileAccessoryController::class, 'legacyDetailRedirect'])->name('phu-kien-ngoi.detail');
     });
 
     /*
@@ -191,11 +191,11 @@ Route::name('client.')->group(function () {
 
         // Only for verified authenticated users
         Route::middleware(['auth', 'verified'])->group(function () {
-            // --- THÊM MỚI ROUTE CHO TRANG TÀI KHOẢN CỦA TÔI ---
-            Route::get('/cua-toi', [TaiKhoanCuaToiController::class, 'index'])->name('profile');
-            Route::post('/cua-toi/cap-nhat-thong-tin', [TaiKhoanCuaToiController::class, 'updateProfile'])->name('profile.update');
-            Route::post('/cua-toi/doi-mat-khau', [TaiKhoanCuaToiController::class, 'updatePassword'])->name('password.update');
-            Route::post('/cua-toi/cap-nhat-anh', [TaiKhoanCuaToiController::class, 'updateAvatar'])->name('profile.update-avatar');
+            // --- TRANG TÀI KHOẢN CỦA TÔI ---
+            Route::get('/cua-toi', [UserProfileController::class, 'index'])->name('profile');
+            Route::post('/cua-toi/cap-nhat-thong-tin', [UserProfileController::class, 'updateProfile'])->name('profile.update');
+            Route::post('/cua-toi/doi-mat-khau', [UserProfileController::class, 'updatePassword'])->name('password.update');
+            Route::post('/cua-toi/cap-nhat-anh', [UserProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
         });
     });
 });

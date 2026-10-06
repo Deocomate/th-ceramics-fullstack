@@ -2,15 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Catalog\Infrastructure\Models\UsageNormAncientFishScaleRoofTile;
 
-class DinhMucNgoiHaiCo extends Model
-{
-    protected $table = 'dinh_muc_ngoi_hai_co';
-
-    protected $primaryKey = 'dinh_muc_ngoi_hai_co_id';
-
-    protected $fillable = [
-        'roof_type', 'ngoi_tren_mai_go', 'ngoi_tren_mai_be_tong',
-    ];
-}
+class_alias(UsageNormAncientFishScaleRoofTile::class, __NAMESPACE__.'\\DinhMucNgoiHaiCo');

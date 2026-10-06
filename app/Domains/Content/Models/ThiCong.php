@@ -2,17 +2,6 @@
 
 namespace App\Domains\Content\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Content\Infrastructure\Models\InstallationGuide;
 
-class ThiCong extends Model
-{
-    protected $table = 'thi_cong';
-
-    protected $primaryKey = 'thi_cong';
-
-    protected $fillable = [
-        'tieu_de',
-        'anh',
-        'link_youtube',
-    ];
-}
+class_alias(InstallationGuide::class, __NAMESPACE__.'\\ThiCong');

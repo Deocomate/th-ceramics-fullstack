@@ -2,11 +2,11 @@
 
 namespace App\Domains\Catalog\Http\Admin;
 
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\Models\ProductVariant;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\Models\ProductVariant;
 use App\Domains\Catalog\ProductWriter;
 use App\Domains\Catalog\Services\CatalogQueryService;
-use App\Domains\Media\FileUploadHelper;
+use App\Domains\Media\Infrastructure\FileUploadHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,9 +16,13 @@ use InvalidArgumentException;
 abstract class BaseProductVariantController extends Controller
 {
     protected string $typeKey;
+
     protected string $viewPrefix;
+
     protected string $routePrefix;
+
     protected string $foreignKey;
+
     protected string $imageDirectory;
 
     public function __construct(

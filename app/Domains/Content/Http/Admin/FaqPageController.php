@@ -2,17 +2,17 @@
 
 namespace App\Domains\Content\Http\Admin;
 
-use App\Domains\Content\Services\FaqPageService;
-use App\Domains\Content\Services\FaqService;
+use App\Domains\Content\Http\Requests\FaqPageRequest;
+use App\Domains\Content\Infrastructure\Services\FaqPageConfigService;
+use App\Domains\Content\Infrastructure\Services\FaqService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FaqPageRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class FaqPageController extends Controller
 {
     public function __construct(
-        private readonly FaqPageService $faqPageService,
+        private readonly FaqPageConfigService $faqPageService,
         private readonly FaqService $faqService,
     ) {}
 
@@ -21,7 +21,7 @@ class FaqPageController extends Controller
         $faqPage = $this->faqPageService->getFirstRecord();
         $faqs = $this->faqService->getAll();
 
-        return view('admin.pages.faq.edit', compact('faqPage', 'faqs'));
+        return view('admin.content.pages.faq.edit', compact('faqPage', 'faqs'));
     }
 
     public function update(FaqPageRequest $request): RedirectResponse

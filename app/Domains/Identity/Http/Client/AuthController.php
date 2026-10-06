@@ -2,13 +2,15 @@
 
 namespace App\Domains\Identity\Http\Client;
 
-use App\Domains\Identity\Models\User;
-use App\Domains\Identity\Services\AuthService;
+use App\Domains\Identity\Domain\IdentityPolicy;
+use App\Domains\Identity\Domain\Role;
+use App\Domains\Identity\Http\Requests\Client\ForgotPasswordRequest;
+use App\Domains\Identity\Http\Requests\Client\LoginRequest;
+use App\Domains\Identity\Http\Requests\Client\RegisterRequest;
+use App\Domains\Identity\Http\Requests\Client\ResetPasswordRequest;
+use App\Domains\Identity\Infrastructure\Models\User;
+use App\Domains\Identity\Infrastructure\Services\AuthService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Client\Auth\ForgotPasswordRequest;
-use App\Http\Requests\Client\Auth\LoginRequest;
-use App\Http\Requests\Client\Auth\RegisterRequest;
-use App\Http\Requests\Client\Auth\ResetPasswordRequest;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -25,7 +27,7 @@ class AuthController extends Controller
      */
     public function showLogin()
     {
-        return view('clients.auth.login');
+        return view('clients.identity.auth.login');
     }
 
     /**
@@ -53,7 +55,7 @@ class AuthController extends Controller
      */
     public function showRegister()
     {
-        return view('clients.auth.register');
+        return view('clients.identity.auth.register');
     }
 
     /**
@@ -84,7 +86,7 @@ class AuthController extends Controller
      */
     public function showForgotPassword()
     {
-        return view('clients.auth.forgot-password');
+        return view('clients.identity.auth.forgot-password');
     }
 
     /**
@@ -104,7 +106,7 @@ class AuthController extends Controller
      */
     public function showResetPassword(string $token, Request $request)
     {
-        return view('clients.auth.reset-password', [
+        return view('clients.identity.auth.reset-password', [
             'token' => $token,
             'email' => $request->email,
         ]);
@@ -144,6 +146,11 @@ class AuthController extends Controller
             $user = User::where('google_id', $googleId)->first();
 
             if ($user) {
+                if (! IdentityPolicy::canLinkGoogleAccount($user->role)) {
+                    return redirect()->route('client.auth.login')
+                        ->withErrors(['error' => 'Tài khoản quản trị không thể đăng nhập hoặc liên kết qua luồng Google của khách hàng.']);
+                }
+
                 Auth::login($user);
 
                 return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
@@ -152,6 +159,11 @@ class AuthController extends Controller
             $existingUser = User::where('email', $email)->first();
 
             if ($existingUser) {
+                if (! IdentityPolicy::canLinkGoogleAccount($existingUser->role)) {
+                    return redirect()->route('client.auth.login')
+                        ->withErrors(['error' => 'Tài khoản quản trị không thể đăng nhập hoặc liên kết qua luồng Google của khách hàng.']);
+                }
+
                 $wasVerified = $existingUser->hasVerifiedEmail();
 
                 $existingUser->forceFill([
@@ -198,8 +210,19 @@ class AuthController extends Controller
                 ->withErrors(['error' => 'Phiên đăng nhập Google đã hết hạn. Vui lòng thử lại.']);
         }
 
-        return view('clients.auth.complete-google-registration', [
-            'googleUser' => session('google_user'),
+        $googleUser = session('google_user');
+        if (! empty($googleUser['user_id'])) {
+            $user = User::find($googleUser['user_id']);
+            if ($user && ! IdentityPolicy::canLinkGoogleAccount($user->role)) {
+                session()->forget('google_user');
+
+                return redirect()->route('client.auth.login')
+                    ->withErrors(['error' => 'Tài khoản quản trị không thể đăng nhập hoặc liên kết qua luồng Google của khách hàng.']);
+            }
+        }
+
+        return view('clients.identity.auth.complete-google-registration', [
+            'googleUser' => $googleUser,
         ]);
     }
 
@@ -210,6 +233,16 @@ class AuthController extends Controller
         if (! $googleUser) {
             return redirect()->route('client.auth.login')
                 ->withErrors(['error' => 'Phiên đăng nhập Google đã hết hạn. Vui lòng thử lại.']);
+        }
+
+        if (! empty($googleUser['user_id'])) {
+            $user = User::find($googleUser['user_id']);
+            if (! $user || ! IdentityPolicy::canLinkGoogleAccount($user->role)) {
+                session()->forget('google_user');
+
+                return redirect()->route('client.auth.login')
+                    ->withErrors(['error' => 'Tài khoản quản trị không thể đăng nhập hoặc liên kết qua luồng Google của khách hàng.']);
+            }
         }
 
         $validated = $request->validate(
@@ -237,7 +270,7 @@ class AuthController extends Controller
                 'phone' => $validated['phone'],
                 'google_id' => $googleUser['google_id'],
                 'avatar' => $googleUser['avatar'] ?? null,
-                'role' => 'customer',
+                'role' => Role::CUSTOMER,
                 'password' => null,
                 'email_verified_at' => now(),
             ]);
@@ -256,7 +289,7 @@ class AuthController extends Controller
                 ->with('success', 'Email đã được xác thực thành công.');
         }
 
-        return view('clients.auth.verify-email');
+        return view('clients.identity.auth.verify-email');
     }
 
     public function verifyEmail(EmailVerificationRequest $request)

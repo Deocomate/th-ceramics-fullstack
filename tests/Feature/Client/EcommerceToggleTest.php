@@ -1,9 +1,9 @@
 <?php
 
 use App\Domains\Catalog\ProductWriter;
-use App\Models\LinhVatPhongThuy;
+use App\Domains\Content\Infrastructure\Services\HomePageConfigService;
 use App\Domains\Content\Models\TrangChu;
-use App\Domains\Content\Services\TrangChuService;
+use App\Models\LinhVatPhongThuy;
 use Illuminate\Support\Facades\Cache;
 
 function ensureTrangChuRecord(): TrangChu
@@ -112,7 +112,7 @@ test('home page shows mini cart when ecommerce is enabled', function () {
 test('updating trang chu busts ecommerce cache', function () {
     setEcommerceEnabled(true);
 
-    app(TrangChuService::class)->update([
+    app(HomePageConfigService::class)->update([
         'is_ecommerce_enabled' => false,
     ]);
 

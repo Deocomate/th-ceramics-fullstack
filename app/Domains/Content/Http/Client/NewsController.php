@@ -2,10 +2,10 @@
 
 namespace App\Domains\Content\Http\Client;
 
-use App\Domains\Content\Models\DanhMucTinTuc;
-use App\Domains\Content\Models\TinTuc;
+use App\Domains\Content\Infrastructure\Models\NewsArticle;
+use App\Domains\Content\Infrastructure\Models\NewsCategory;
 use App\Http\Controllers\Controller;
-use App\Services\ViewHistoryService;
+use App\Infrastructure\ViewHistoryService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -19,11 +19,11 @@ class NewsController extends Controller
         $news = null;
 
         if ($categoryId > 0) {
-            $currentCategory = DanhMucTinTuc::query()
+            $currentCategory = NewsCategory::query()
                 ->where('is_delete', false)
                 ->findOrFail($categoryId);
 
-            $news = TinTuc::query()
+            $news = NewsArticle::query()
                 ->with('danhMuc')
                 ->where('danh_muc_tin_tuc_id', $currentCategory->danh_muc_tin_tuc_id)
                 ->whereIn('trang_thai', ['published', 'active'])
@@ -31,7 +31,7 @@ class NewsController extends Controller
                 ->paginate(10)
                 ->withQueryString();
         } else {
-            $categoriesWithNews = DanhMucTinTuc::query()
+            $categoriesWithNews = NewsCategory::query()
                 ->where('is_delete', false)
                 ->with(['tinTucs' => function ($query) {
                     $query->with('danhMuc')
@@ -41,7 +41,7 @@ class NewsController extends Controller
                 }])
                 ->orderBy('ten_danh_muc')
                 ->get()
-                ->filter(fn (DanhMucTinTuc $category) => $category->tinTucs->isNotEmpty())
+                ->filter(fn (NewsCategory $category) => $category->tinTucs->isNotEmpty())
                 ->values();
         }
 
@@ -55,7 +55,7 @@ class NewsController extends Controller
             $recentProducts = $historyService->defaultProducts(4);
         }
 
-        return view('clients.news.index', compact(
+        return view('clients.content.news.index', compact(
             'categoryId',
             'currentCategory',
             'categoriesWithNews',
@@ -67,13 +67,13 @@ class NewsController extends Controller
 
     public function detail(string $slug, ViewHistoryService $historyService): View
     {
-        $article = TinTuc::query()
+        $article = NewsArticle::query()
             ->with('danhMuc')
             ->where('slug', $slug)
             ->whereIn('trang_thai', ['published', 'active'])
             ->firstOrFail();
 
-        $relatedNews = TinTuc::query()
+        $relatedNews = NewsArticle::query()
             ->with('danhMuc')
             ->where('danh_muc_tin_tuc_id', $article->danh_muc_tin_tuc_id)
             ->where('tin_tuc_id', '!=', $article->tin_tuc_id)
@@ -84,6 +84,6 @@ class NewsController extends Controller
 
         $historyService->trackArticle($article->tin_tuc_id);
 
-        return view('clients.news.detail', compact('article', 'relatedNews'));
+        return view('clients.content.news.detail', compact('article', 'relatedNews'));
     }
 }
