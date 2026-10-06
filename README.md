@@ -19,7 +19,6 @@ A Laravel 12 e-commerce website for Thanh Hai Ceramics, a traditional Vietnamese
 - PHP 8.2+
 - Composer
 - MariaDB / MySQL
-- Node.js (for Vite asset builds, required for production deployment)
 
 ## Setup
 
@@ -37,16 +36,13 @@ cp .env.example .env
 # 4. Generate application key
 php artisan key:generate
 
-# 5. Run migrations (creates 44 tables)
+# 5. Run migrations (creates tables)
 php artisan migrate
 
 # 6. Seed initial data (admin user + product data)
 php artisan db:seed
 
-# 7. Build frontend assets (required for production)
-npm install && npm run build
-
-# 8. (Optional) Create storage symlink for file uploads
+# 7. (Optional) Create storage symlink for file uploads
 php artisan storage:link
 ```
 
@@ -68,6 +64,8 @@ php artisan queue:listen --tries=1
 php artisan test
 ```
 
+`composer run dev` starts the web server and queue listener together using `npx concurrently`; this optional runner requires Node.js/npm and may download `concurrently`. The separate PHP commands above do not require Node.js. Frontend assets have no npm build step.
+
 ## Default Admin Access
 
 After seeding:
@@ -80,28 +78,27 @@ After seeding:
 
 ```
 app/
-├── Http/Controllers/Admin/   # 51 admin CRUD controllers
-├── Http/Controllers/Client/  # 29 public page controllers
-├── Http/Middleware/           # RoleMiddleware (RBAC)
-├── Http/Requests/             # 31 form request classes
-├── Models/                    # 55 Eloquent models
-├── Services/                  # 53 service classes (business logic)
-├── Helpers/                   # FileUploadHelper
-├── Mail/                      # 2 ShouldQueue mailables (order + status)
-├── Notifications/             # 1 ResetPasswordNotification (ShouldQueue)
-├── Providers/                 # AppServiceProvider
+├── Domains/                   # Bounded contexts (Domain, Application, Infrastructure, Http)
+│   ├── Catalog/               # Unified products, variants, media, product admin & client pages
+│   ├── Commerce/              # Carts, orders, coupons, consultation requests, checkout
+│   ├── Content/               # CMS pages, projects, showroom, factory, news, FAQs, policies
+│   ├── Identity/              # Authentication, customer profile, RBAC
+│   ├── Media/                 # Staged image uploads, WebP optimization
+│   └── Archive/               # Database backup and restore
+├── Infrastructure/            # Cross-cutting infrastructure
+├── Providers/                 # AppServiceProvider (bindings, aliases, view composers)
+└── View/Components/           # Class-backed Blade components
 database/
-├── migrations/                # 15 migration files
-├── seeders/                   # 26 seeders
+├── migrations/                # Database migrations
+└── seeders/                   # Initial data fixtures
 resources/views/
-├── admin/                     # 86 admin view files
-├── clients/                   # 142 client view files
-├── components/                # 32 shared Blade components
-├── emails/                    # 4 email templates
+├── admin/                     # Admin views by domain (catalog, content, commerce, identity, archive)
+├── clients/                   # Client storefront views by domain (catalog, content, commerce, identity)
+└── components/                # Reusable Blade components (admin, client, emails, vendor/mail)
 routes/
 ├── web.php                    # Admin routes (/admin/*)
-├── client.php                 # Public routes (Vietnamese URLs)
-└── console.php                # Console commands
+├── client.php                 # Public SEO routes (Vietnamese URLs)
+└── console.php                # Scheduled and console commands
 ```
 
 ## Key Features

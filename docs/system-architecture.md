@@ -1,169 +1,37 @@
 # System Architecture
 
-## Architecture Overview (Modular Domain Architecture)
+## Architecture Overview
 
-The system is architected as a **Modular Domain-Driven Monolith** built on **Laravel 12**, transitioning from a legacy flat layered structure into distinct **Bounded Contexts** under `app/Domains/`, while retaining thin HTTP delivery endpoints in `app/Http/`.
+The Laravel application groups delivery, use cases, business rules, and adapters by six contexts in `app/Domains/`: `Catalog`, `Commerce`, `Content`, `Identity`, `Media`, and `Archive`. Route files in `routes/` preserve public URIs and names while dispatching to context-owned HTTP controllers. The composition root in `bootstrap/app.php` and `app/Providers/AppServiceProvider.php` wires middleware aliases and ports to adapters.
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                              HTTP Request                              │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-┌───────────────────────────────────▼────────────────────────────────────┐
-│                           Laravel Router                               │
-│  ┌───────────────────────┐  ┌───────────────────────┐  ┌────────────┐  │
-│  │ routes/web.php        │  │ routes/client.php     │  │ console.php│  │
-│  │ (Admin, requires auth)│  │ (Public SEO routes)   │  │ (Artisan)  │  │
-│  └───────────┬───────────┘  └───────────┬───────────┘  └────────────┘  │
-│              │                          │                              │
-│              └─────────► routes/domains/◄──────────────────────────────┘
-│               (catalog, commerce, content, identity, media, archive)
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-┌───────────────────────────────────▼────────────────────────────────────┐
-│                          Middleware Stack                              │
-│  ┌───────────┐ ┌──────────────┐ ┌──────────────┐ ┌───────────────────┐ │
-│  │ web group │ │ auth / guest │ │ role:admin   │ │ ecommerce toggle  │ │
-│  │ (session) │ │ (redirect)   │ │ superadmin   │ │ (EnsureEcommerce) │ │
-│  └───────────┘ └──────────────┘ └──────────────┘ └───────────────────┘ │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-┌───────────────────────────────────▼────────────────────────────────────┐
-│                    Delivery / Controller Layer                         │
-│                                                                        │
-│  ┌─────────────────────────────────┐ ┌──────────────────────────────┐  │
-│  │ Domain HTTP (Embedded)          │ │ Application HTTP (app/Http)  │  │
-│  │ - Identity: Admin & Client Auth │ │ - Admin: Thin Product Stubs  │  │
-│  │ - Commerce: Cart & Checkout     │ │   extending Base Controllers │  │
-│  │ - Media: Staged uploads         │ │ - Client: 9 Dedicated Blade  │  │
-│  │ - Archive: Export/Import/Writes │ │   Product Page View Runners  │  │
-│  │ - Catalog: Base Controllers     │ │ - DichVuKhachHang View Ctrls │  │
-│  └────────────────┬────────────────┘ └──────────────┬───────────────┘  │
-└───────────────────┼─────────────────────────────────┼──────────────────┘
-                    │                                 │
-┌───────────────────▼─────────────────────────────────▼──────────────────┐
-│                   Domain Logic & Service Layer                         │
-│                                                                        │
-│  ┌───────────────────┐ ┌────────────────────┐ ┌─────────────────────┐  │
-│  │  Catalog Domain   │ │  Commerce Domain   │ │   Content Domain    │  │
-│  │ - ProductWriter   │ │ - CartService      │ │ - TrangChu / DuAn   │  │
-│  │ - CatalogQuerySvc │ │ - OrderService     │ │ - Page configs      │  │
-│  │ - TypeRegistry    │ │ - CouponService    │ │ - GiaiThuong / Faq  │  │
-│  │ - PublicIdAlloc   │ └────────────────────┘ └─────────────────────┘  │
-│  └───────────────────┘ ┌────────────────────┐ ┌─────────────────────┐  │
-│  ┌───────────────────┐ │    Media Domain    │ │   Archive Domain    │  │
-│  │  Identity Domain  │ │ - Upload Pipeline  │ │ - ContentArchiveSvc │  │
-│  │ - AuthService     │ │ - WebP Image Opt   │ │ - LegacyV1Adapter   │  │
-│  │ - Role RBAC       │ │ - Staged file temp │ │ - Canonical ZIP     │  │
-│  └───────────────────┘ └────────────────────┘ └─────────────────────┘  │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-┌───────────────────────────────────▼────────────────────────────────────┐
-│                    Canonical Model / Data Layer                        │
-│                                                                        │
-│  - Catalog Core: Product, ProductVariant, ProductMedia, DisplayOption  │
-│  - Commerce: Order, OrderItem, Coupon                                  │
-│  - Content: TrangChu, DuAn, DanhMucDuAn, ThiCong, Catalog, Page*       │
-│  - Identity: User                                                      │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-┌───────────────────────────────────▼────────────────────────────────────┐
-│                           Database Layer                               │
-│  - MariaDB (th_ceramics_fullstack): 24 migrations, unified schema      │
-│  - Session, Cache, Queue: database driver                              │
-└────────────────────────────────────────────────────────────────────────┘
-```
+| Layer | Responsibility | Dependency direction |
+|---|---|---|
+| `Domain` | Framework-free business rules | No Laravel, HTTP, Eloquent, or other context |
+| `Application` | Use cases and ports | Own `Domain` and declared ports |
+| `Infrastructure` | Eloquent, storage, queue, mail, and cross-context adapters | Implements inward contracts |
+| `Http` and `Console` | Requests, controllers, middleware, commands | Invokes application services |
 
----
+`app/Models`, `app/Mail`, and `app/Jobs` retain aliases needed for old serialized payloads. Shared `AssetPath` remains in `app/Support`; shared view history lives in `app/Infrastructure`. Catalog services, gallery helpers, and product presenters live in Catalog. Queued mail and archive job aliases must remain available until old serialized payloads have drained. The dependency rules are checked by `tests/Unit/Architecture`.
 
-## Bounded Contexts (Domains) Breakdown
+## Context ownership
 
-The application business logic is segmented into 6 domain contexts under `app/Domains/`:
+- **Catalog:** products, variants, media, public IDs, search, product administration, client product storefront pages (`clients/catalog/products/*`), and catalog reusable components (`components/client/catalog/*`, `components/admin/catalog/*`).
+- **Commerce:** carts, checkout, coupons, orders, consultations, order tracking (`clients/commerce/*`), admin commerce views (`admin/commerce/*`), commerce modals (`components/client/commerce/*`), and commerce mail templates (`components/emails/commerce/*`).
+- **Content:** CMS pages, projects, news, FAQs, policies, showroom, factory (`clients/content/*`), admin CMS editors (`admin/content/*`), content section components (`components/client/content/*`), contact mail templates (`components/emails/content/*`), and the admin content-write gate.
+- **Identity:** users, authentication, role gate, admin dashboard/user management (`admin/identity/*`), client auth/profile (`clients/identity/*`), and auth notification email templates (`components/emails/identity/*`).
+- **Media:** image optimization, staged uploads, and media commands.
+- **Archive:** export/import, legacy archive adaptation, content archive admin view (`admin/archive/*`), and the import job. The job owns a tokenized content-write lock for its write window.
+- **Shared / Layouts:** Cross-domain layout shells (`components/client/layouts/`, `components/admin/layouts/`), generic UI (`components/client/shared/`, `components/admin/shared/`), and retained vendor mail overrides (`components/vendor/mail/`).
 
-### 1. Catalog Domain (`app/Domains/Catalog`)
-The single source of truth for all product data, variants, media galleries, display options, and pricing:
-- **`Models/`**:
-  - `Product`: Central entity storing common attributes (`type_key`, `category_type`, dimensions, weight, rating criteria, priority, status).
-  - `ProductVariant`: SKU (`code`), selling price, classification, default variant flag.
-  - `ProductMedia`: Polymorphic media gallery (cover images, gallery photos, uploaded MP4 videos, external YouTube links, with strict `sort_order`).
-  - `ProductDisplayOption`: Category or product-level color swatches and display materials.
-- **`Services/ & Logic`**:
-  - `ProductWriter`: Atomic mutation engine for creating, updating, deleting/restoring products, validating SKU uniqueness, processing gallery reordering, and attaching media.
-  - `CatalogQueryService`: Optimized query engine for pagination, price sorting, search, filtering, and cross-category recommendations.
-  - `ProductTypeRegistry`: Static registry defining all 10 product groups, their route names, views, table aliases, and variant configurations.
-  - `PublicIdAllocator`: Maintains deterministic public identifiers (`public_id`) per product type, guaranteeing 100% backward compatibility for existing SEO URLs.
-- **`Http/Admin/`**:
-  - `BaseProductItemController`: Abstract controller providing robust CRUD, gallery management, video embeds, drag-drop ordering, and restore actions for standard product items.
-  - `BaseProductVariantController`: Abstract controller handling multi-variant product groups (e.g., Ngói Hài Văn Miếu, Ngói Hài Cổ).
+The root HTTP controller base and compatibility classes are not the owners of domain behavior. Product administration and client controllers live under `app/Domains/Catalog/Http`.
 
-### 2. Commerce Domain (`app/Domains/Commerce`)
-Handles shopping cart, checkout, coupon validation, and order management:
-- **`Models/`**: `Order`, `OrderItem` (records snapshot of product title, price, code at time of purchase), `Coupon`.
-- **`Services/`**: `CartService` (session-based cart, mini-cart, option calculations), `CouponService` (percent/fixed discount calculation, validity, usage limits).
-- **`Http/`**: `CartController` (AJAX add/update/remove, coupon application), `OrderController` (admin fulfillment, status workflow).
+### Presentation Layer & View Delivery Ownership
 
-### 3. Content Domain (`app/Domains/Content`)
-Manages marketing pages, dynamic home page blocks, and CMS sections:
-- **`Models/`**: `TrangChu` (home hero banner, partners, stats, showroom JSON arrays), `DuAn` & `DanhMucDuAn` (project showcase with categories), `ThiCong` (installation guides), `Catalog` (PDF flipbook brochures), `GiaiThuongThanhTuu` (awards), `GiaTriVuotTroi` (brand value propositions), `PageFactory`, `PageContact`, `PageFaq`.
-- **`Services/`**: `TrangChuService`, `DuAnService`, `CatalogService`, `ThiCongService`, etc.
-
-### 4. Identity Domain (`app/Domains/Identity`)
-Handles user authentication, password resets, and role-based access control:
-- **`Models/`**: `User` (with `role` field: `superadmin`, `admin`, `customer`).
-- **`Services/`**: `AuthService`.
-- **`Http/`**: `Admin\AuthController`, `Client\AuthController` (credentials + Google Socialite OAuth).
-
-### 5. Media Domain (`app/Domains/Media`)
-Manages media uploads, temporary staged uploads, and WebP image optimization:
-- **`Services/`**: `StagedImageUploadService`, `FileUploadHelper` (resize, format conversion to WebP).
-- **`Http/`**: Endpoints for handling chunked and asynchronous media uploads.
-
-### 6. Archive Domain (`app/Domains/Archive`)
-Provides complete data portability and content backup/restore:
-- **`Services/`**: `ContentArchiveService` exports/imports a single verified `database.zip` bundle.
-- **`Adapters/`**: `LegacyV1ArchiveAdapter` seamlessly reads archives from the legacy schema (from `main` branch) and backfills into canonical `Product` models without requiring legacy DB tables.
-
----
-
-## Architectural Analysis: Why Product Controllers are in `app/Http/`
-
-### 1. The Rationale for Current Controller Placement
-In the current project structure, while the core Catalog logic lives in `app/Domains/Catalog`, the individual product controllers remain in:
-- `app/Http/Controllers/Admin/*CtController.php` (e.g. `NgoiAmDuongCtController`, `GachCoBatTrangCtController`)
-- `app/Http/Controllers/Client/ProductPages/*.php` (e.g. `NgoiAmDuongController`, `LanCanGomSuController`)
-
-This structure exists due to 3 deliberate engineering reasons:
-
-1. **Separation of Domain Core vs Application Delivery**:
-   - The **Domain** contains business logic, database transactions, invariant enforcement, media attachments, and query rules (`ProductWriter`, `CatalogQueryService`, `BaseProductItemController`).
-   - The **Application HTTP layer** (`app/Http`) acts as the delivery mechanism for specific routes, form views, and Blade layouts.
-2. **Contract Preservation & Blast Radius Minimization**:
-   - The application has **385 registered routes** and **293 automated test cases**.
-   - Admin controllers in `app/Http/Controllers/Admin` were refactored into **declarative thin subclasses** extending `BaseProductItemController`. Each file is only ~20 lines long, defining only `$typeKey`, `$viewPrefix`, and custom rules.
-   - Leaving them in `app/Http/Controllers/Admin` preserved all route references (`routes/domains/catalog.php`), guest preview URLs (`@section('preview_url')`), and existing test namespaces without requiring an invasive rename across hundreds of files simultaneously.
-3. **Distinct Blade Client Templates**:
-   - Unlike generic e-commerce products, each ceramic product category (Ngói Âm Dương, Gạch Thông Gió, Đèn Vườn...) features a distinct page experience: custom tile calculators, installation diagrams, dynamic dimension matrices, and category video journeys. The client controllers in `app/Http/Controllers/Client/ProductPages` specifically orchestrate these diverse Blade presentations.
-
----
-
-## Is This Structure Optimal? (Evaluation & Roadmap)
-
-| Criteria | Status | Evaluation |
-| :--- | :---: | :--- |
-| **Business Logic DRY** | **Optimal** | Zero code duplication. 16 legacy services and 16 models were eliminated. All CRUD, image/video processing, priority, and SKU checking are centralized in `ProductWriter` and `BaseProductItemController`. |
-| **System Stability & Tests** | **Optimal** | **293/293 test cases pass (100% Green)**. 385 routes remain functional with zero regressions. |
-| **Directory Uniformity** | **Sub-optimal (Hybrid)** | Inconsistent with other domains. Domains like `Identity`, `Commerce`, and `Content` encapsulate their own `Http/` controllers, whereas `Catalog` has its base classes in `app/Domains/Catalog/Http/` while derived controllers remain in `app/Http/Controllers/`. |
-| **Controller Boilerplate** | **Acceptable (Transitional)** | Having 10 separate admin controllers that only declare `$typeKey` is safe and clear, but creates 10 boilerplate files where a single parameterized controller could suffice. |
-
-### Recommended Future Refinement (Phase 2):
-1. **Move Controllers into Domain Context**:
-   - Relocate `app/Http/Controllers/Admin/*CtController.php` to `app/Domains/Catalog/Http/Admin/`.
-   - Relocate `app/Http/Controllers/Client/ProductPages/` to `app/Domains/Catalog/Http/Client/`.
-   - Update `routes/domains/catalog.php` to point to the new domain namespace.
-2. **Consolidate Admin CRUD with Dynamic Parameterization**:
-   - For standard single-variant products, route `/admin/{type}` directly to a single `CatalogProductController` with route-model/type binding via `ProductTypeRegistry`.
-
----
+Data delivery into Blade templates follows strict boundary rules:
+- **No Blade Queries**: Blade templates are pure presentation layers. Direct Eloquent queries, `DB::` facade calls, and `@inject` service lookups are forbidden in `.blade.php` files.
+- **Data Preparation**: View data is prepared by Context HTTP Controllers, Presenters (`CatalogHttpPresenter`), ViewComposers (`ContentViewComposer` for cached contact config & core values; header composer for cart counts; sidebar composer for pending consultation badges), or class-backed ViewComponents (`ProductCard`, `ProductDetailContainer`, `Recommendations`, `Works`, `WorksSimple`, `OutstandingValue`, `CouponBanner`, `AwardsDeck`). Coupon and award components query only when their input is omitted or null; an explicitly supplied empty collection is preserved.
+- **Props Contracts**: Templates declare explicit parameters via `@props` with sensible defaults.
+- **Component Registrations**: Domain tags (e.g. `<x-client.catalog.shared.product-card />`) are primary; `AppServiceProvider` provides aliases and anonymous paths to ensure existing callers remain unbroken.
 
 ## Database ER Overview
 
@@ -215,29 +83,41 @@ Canonical Catalog Core Tables (Unified)
 
 ---
 
-## Request Flow Examples
+## Request flow examples
 
-### 1. Admin Product Update
-```
-1. Admin submits PUT /admin/ngoi-am-duong-ct/{id}
-2. Route matches -> NgoiAmDuongCtController@update (extends BaseProductItemController)
-3. BaseProductItemController delegates payload to ProductWriter::update($product, $data)
-4. ProductWriter:
-   - Validates unique SKU across product variants
-   - Updates `products` and default `product_variants` in DB::transaction()
-   - Reorders media gallery (applying +10000 sort_order offset to avoid UNIQUE collisions)
-   - Synchronizes new uploaded images and YouTube video URLs
-5. Fresh Product loaded, redirect back with flash message
-```
+- Admin product requests pass through the role and content-write middleware, then a Catalog HTTP controller and Catalog application/infrastructure services. The public route contract remains stable.
+- Client product requests enter Catalog HTTP controllers and render category-specific Blade views. Commerce accesses catalog data through its declared port and adapter.
+- Archive import runs from `ContentArchiveJob`. It acquires an owner-token lock before importing and releases only its own lock in `finally`. Manual lock commands cannot replace or release the job lock. Legacy catalog rows pass through Archive's `CatalogArchivePort`; its infrastructure adapter owns Catalog persistence and public-ID allocation.
 
-### 2. Client Product Page
-```
-1. Guest visits GET /san-pham/ngoi-am-duong/{id}
-2. Route matches -> Client\ProductPages\NgoiAmDuongController@detail
-3. Controller:
-   - Queries product via CatalogQueryService::findActive('ngoi_am_duong_ct', $id)
-   - Tracks recent view history via ViewHistoryService
-   - Queries category color swatches from ProductDisplayOption
-   - Resolves category-specific YouTube journey video via ProductJourneyVideo
-4. Renders Blade view `clients.products.ngoi-am-duong.detail` with structured JSON-LD
-```
+## Architecture Decision Records (ADR)
+
+### ADR-001: Clean Architecture Domain Refactor & Administrative Boundary Protection (2026-09-29)
+
+- **Status**: Accepted. Current behavior is checked by the test suite and route inventory; the plan acceptance criteria remain the completion authority.
+- **Context**:
+  - Codebase previously had business logic split between `app/Http/Controllers`, `app/Services`, `app/Models`, and `app/Domains/`.
+  - Class naming mixed Vietnamese and English with ambiguous abbreviations (e.g. `Ct`).
+  - Security audit identified that `customer` role was not gated on administrative routes (`routes/web.php`), and Google OAuth callback on client flow permitted auto-linking to administrative (`admin`, `superadmin`) accounts.
+- **Decisions**:
+  1. **Strict Clean Architecture Layering**: Within each bounded context (`Catalog`, `Commerce`, `Content`, `Identity`, `Media`, `Archive`), `Domain` contains pure PHP business rules (no Laravel dependencies); `Application` contains use cases and ports; `Infrastructure` contains Eloquent models and external adapters; `Http` contains controllers, requests, and presenters.
+  2. **English Class Naming**: All project-defined PHP classes will be standardized to English according to the approved glossary (`plans/260929-1002-clean-architecture-domain-refactor/reports/inventory-and-glossary.md`). Database tables, column names, route URIs, route names, and view keys remain strictly unchanged to preserve backward compatibility.
+  3. **Administrative Boundary Hardening**: Before any class moves, enforce role-based access control (`role:superadmin,admin`) on the authenticated admin route group in `routes/web.php` immediately following `auth` (preceding staged images and content write gates), deny `customer` access at admin login, and block Google OAuth client callback from auto-linking to privileged administrative accounts.
+- **Consequences**:
+  - Architecture dependency rules will be verified via automated Pest/PHP unit tests (`token_get_all`).
+  - Route contract baseline is snapshotted before and after authorization hardening.
+
+### ADR-002: Blade Views Architecture Optimization & Domain Organization (2026-10-02)
+
+- **Status**: Accepted.
+- **Context**:
+  - Codebase had 286 Blade views (42,254 lines) across flat directories (`resources/views/{admin,clients,components}`) that did not match the domain architecture.
+  - Hotspot templates contained heavy duplicate markup, inconsistent props bags, and direct database queries (e.g. coupon banner, awards deck, sidebar counts).
+- **Decisions**:
+  1. **Domain-Aligned View Topology**: Group views by domain under `resources/views/{admin,clients,components}/{catalog,content,commerce,identity,archive}/` while preserving all functional folder names, Vietnamese basenames, and public route URIs.
+  2. **Strict Query Extraction**: Relocate queries and service resolutions out of Blade templates into Domain HTTP controllers, presenters, ViewComposers (`ContentViewComposer`), or class-backed ViewComponents.
+  3. **Explicit Props & Component Contracts**: Replace monolithic prop bags with granular `@props` declarations. Retain class component bindings and anonymous component paths in `AppServiceProvider`.
+  4. **Zero Route Delta & Invariant Behavior**: Preserve all 385 routes, route names, middleware order, SEO URLs, DOM data hooks, and e-commerce snapshot semantics.
+- **Consequences**:
+  - Zero database queries remain in Blade files.
+  - Template compile caching (`php artisan view:cache`) verifies syntax cleanly across all 286 views.
+  - Full Pest test suite passes (370+ tests) with automated query-count and session-isolation verification.

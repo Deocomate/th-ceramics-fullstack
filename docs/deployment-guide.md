@@ -6,7 +6,31 @@
 - MariaDB 10.3+ or MySQL 8.0+
 - Composer 2.x
 - Web server: Nginx or Apache
-- Node.js (for Vite, only if asset building is required in the future)
+
+## Demo deployment on CyberPanel / LiteSpeed
+
+For the demo, use the deployment root and SSH identity recorded in the private deployment report. The server runs branch `main`; its public storage link targets `storage/app/public`, and media also exists in `public/assets`. Preserve the server `.env`, `APP_KEY`, `.user.ini`, media and storage link when pulling code.
+
+Keep full SQL, media, environment and code backups in a private directory outside the deployment root. Download SQL/media backups and compare SHA-256 before local replacement. Credentials belong in the existing server environment or a private temporary MySQL options file, never shell arguments or Git.
+
+For an existing legacy database, rehearse [catalog conversion](product-refactor-runbook.md) on a restored copy first. During deployment, enter maintenance, create a final full SQL snapshot, then:
+
+```bash
+cd "$DEPLOY_ROOT"
+git pull --ff-only origin main
+composer install --no-dev --optimize-autoloader --no-interaction
+php artisan optimize:clear
+php artisan migrate --force
+php scripts/migrate-legacy-catalog.php --apply --backup=/absolute/private/path/final-database.sql.gz
+php scripts/migrate-legacy-catalog.php --verify
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan queue:restart
+php artisan up
+```
+
+Do not run seeders on the demo database. Check `/up`, public catalog pages, representative image URLs and the deployed revision. Check old queued classes without dispatching jobs. For rollback, retain the prior revision, matching dependencies and verified full dump; follow the catalog runbook instead of migration rollback.
 
 ## Environment Configuration
 
@@ -74,10 +98,6 @@ mysql -u root -p -e "CREATE USER 'th_ceramics_user'@'localhost' IDENTIFIED BY '<
 mysql -u root -p -e "GRANT ALL PRIVILEGES ON th_ceramics_fullstack.* TO 'th_ceramics_user'@'localhost';"
 mysql -u root -p -e "FLUSH PRIVILEGES;"
 
-# Build frontend assets
-npm install --production
-npm run build
-
 # Run migrations and seeders
 php artisan migrate --force
 php artisan db:seed --force
@@ -94,10 +114,10 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Create queue table if not done already
-php artisan queue:table
-php artisan migrate
+# The initial migrations already create jobs and failed_jobs.
 ```
+
+Frontend assets are served from `public/assets/` and CDN endpoints; deployment has no npm build step. For an existing database, back it up before running migrations or seeders.
 
 ## Web Server Configuration
 
