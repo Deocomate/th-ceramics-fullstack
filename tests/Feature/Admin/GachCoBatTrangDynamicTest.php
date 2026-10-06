@@ -1,8 +1,9 @@
 <?php
 
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Identity\Models\User;
 use App\Models\GachCoBatTrang;
-use App\Models\GachCoBatTrangCt;
-use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -111,7 +112,7 @@ test('product create persists category type dinh muc and weight', function () {
         ->assertRedirect(route('admin.gach-co-bat-trang-ct.index'))
         ->assertSessionHas('success');
 
-    $product = GachCoBatTrangCt::query()->where('code', 'GCB-DYN-001')->first();
+    $product = Product::where('type_key', 'gach_co_bat_trang_ct')->whereHas('variants', fn ($q) => $q->where('sku', 'GCB-DYN-001'))->first();
 
     expect($product->category_type)->toBe('the')
         ->and($product->dinh_muc)->toBe('25')
@@ -119,7 +120,7 @@ test('product create persists category type dinh muc and weight', function () {
 });
 
 test('admin product index displays category labels', function () {
-    GachCoBatTrangCt::query()->create([
+    app(ProductWriter::class)->create('gach_co_bat_trang_ct', [
         'code' => 'GCB-DYN-002',
         'name' => 'Gạch Thất Dynamic',
         'category_type' => 'that',

@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\ProductGallery;
+use App\Domains\Catalog\Infrastructure\ProductGallery;
 
 test('extracts youtube id from common url formats', function (string $url, string $expected) {
     expect(ProductGallery::extractYoutubeId($url))->toBe($expected);

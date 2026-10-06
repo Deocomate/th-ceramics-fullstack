@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\DanhMucDuAn;
-use App\Models\DuAn;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Content\Models\DanhMucDuAn;
+use App\Domains\Content\Models\DuAn;
 use App\Models\GachTrangTri;
-use App\Models\GachTrangTriCt;
 
 test('gach trang tri page renders dynamic applications and global projects', function () {
     $category = DanhMucDuAn::query()->create([
@@ -53,7 +53,7 @@ test('gach trang tri product listing uses custom pagination and eight products p
     ]);
 
     for ($i = 1; $i <= 9; $i++) {
-        GachTrangTriCt::query()->create([
+        app(ProductWriter::class)->create('gach_trang_tri_ct', [
             'code' => 'GTT-PAGED-'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
             'name' => 'Sản phẩm giới hạn '.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
             'images' => ['assets/images/trang-tri-01.png'],

@@ -1,0 +1,332 @@
+<?php
+
+namespace App\Domains\Identity\Http\Client;
+
+use App\Domains\Identity\Domain\IdentityPolicy;
+use App\Domains\Identity\Domain\Role;
+use App\Domains\Identity\Http\Requests\Client\ForgotPasswordRequest;
+use App\Domains\Identity\Http\Requests\Client\LoginRequest;
+use App\Domains\Identity\Http\Requests\Client\RegisterRequest;
+use App\Domains\Identity\Http\Requests\Client\ResetPasswordRequest;
+use App\Domains\Identity\Infrastructure\Models\User;
+use App\Domains\Identity\Infrastructure\Services\AuthService;
+use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use Laravel\Socialite\Facades\Socialite;
+
+class AuthController extends Controller
+{
+    public function __construct(private readonly AuthService $authService) {}
+
+    /**
+     * Show login form
+     */
+    public function showLogin()
+    {
+        return view('clients.identity.auth.login');
+    }
+
+    /**
+     * Handle login
+     */
+    public function login(LoginRequest $request)
+    {
+        $credentials = [
+            'email' => $request->validated('email'),
+            'password' => $request->validated('password'),
+            'remember' => $request->boolean('remember'),
+        ];
+
+        if ($this->authService->login($credentials)) {
+            return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
+        }
+
+        return back()
+            ->withErrors(['error' => 'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.'])
+            ->withInput($request->only('email', 'remember'));
+    }
+
+    /**
+     * Show register form
+     */
+    public function showRegister()
+    {
+        return view('clients.identity.auth.register');
+    }
+
+    /**
+     * Handle registration
+     */
+    public function register(RegisterRequest $request)
+    {
+        $user = $this->authService->registerClient($request->validated());
+        event(new Registered($user));
+        Auth::login($user);
+
+        return redirect()->route('verification.notice')
+            ->with('success', 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản.');
+    }
+
+    /**
+     * Handle logout
+     */
+    public function logout()
+    {
+        $this->authService->logout();
+
+        return redirect()->route('client.home')->with('success', 'Đã đăng xuất');
+    }
+
+    /**
+     * Show forgot password form
+     */
+    public function showForgotPassword()
+    {
+        return view('clients.identity.auth.forgot-password');
+    }
+
+    /**
+     * Send password reset link
+     */
+    public function sendResetLink(ForgotPasswordRequest $request)
+    {
+        $status = $this->authService->forgotPassword($request->email);
+
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with('success', $this->passwordStatusMessage($status))
+            : back()->withErrors(['email' => $this->passwordStatusMessage($status)])->withInput();
+    }
+
+    /**
+     * Show reset password form
+     */
+    public function showResetPassword(string $token, Request $request)
+    {
+        return view('clients.identity.auth.reset-password', [
+            'token' => $token,
+            'email' => $request->email,
+        ]);
+    }
+
+    /**
+     * Handle password reset
+     */
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $status = $this->authService->resetPassword($request->validated());
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('client.auth.login')->with('success', $this->passwordStatusMessage($status))
+            : back()->withErrors(['email' => $this->passwordStatusMessage($status)])->withInput();
+    }
+
+    /**
+     * Redirect to Google OAuth
+     */
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Handle Google OAuth callback
+     */
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+            $googleId = $googleUser->getId();
+            $email = $googleUser->getEmail();
+            $avatar = $googleUser->getAvatar();
+
+            $user = User::where('google_id', $googleId)->first();
+
+            if ($user) {
+                if (! IdentityPolicy::canLinkGoogleAccount($user->role)) {
+                    return redirect()->route('client.auth.login')
+                        ->withErrors(['error' => 'Tài khoản quản trị không thể đăng nhập hoặc liên kết qua luồng Google của khách hàng.']);
+                }
+
+                Auth::login($user);
+
+                return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
+            }
+
+            $existingUser = User::where('email', $email)->first();
+
+            if ($existingUser) {
+                if (! IdentityPolicy::canLinkGoogleAccount($existingUser->role)) {
+                    return redirect()->route('client.auth.login')
+                        ->withErrors(['error' => 'Tài khoản quản trị không thể đăng nhập hoặc liên kết qua luồng Google của khách hàng.']);
+                }
+
+                $wasVerified = $existingUser->hasVerifiedEmail();
+
+                $existingUser->forceFill([
+                    'google_id' => $googleId,
+                    'avatar' => $existingUser->avatar ?: $avatar,
+                    'email_verified_at' => $existingUser->email_verified_at ?: now(),
+                ])->save();
+
+                if (! $wasVerified && empty($existingUser->phone)) {
+                    session()->put('google_user', [
+                        'user_id' => $existingUser->id,
+                        'name' => $existingUser->name,
+                        'email' => $existingUser->email,
+                        'google_id' => $googleId,
+                        'avatar' => $existingUser->avatar,
+                    ]);
+
+                    return redirect()->route('client.auth.google.complete');
+                }
+
+                Auth::login($existingUser);
+
+                return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
+            }
+
+            session()->put('google_user', [
+                'name' => $googleUser->getName() ?: $email,
+                'email' => $email,
+                'google_id' => $googleId,
+                'avatar' => $avatar,
+            ]);
+
+            return redirect()->route('client.auth.google.complete');
+        } catch (\Exception $e) {
+            return redirect()->route('client.auth.login')
+                ->withErrors(['error' => 'Đăng nhập bằng Google thất bại. Vui lòng thử lại.']);
+        }
+    }
+
+    public function showCompleteGoogleRegistration()
+    {
+        if (! session()->has('google_user')) {
+            return redirect()->route('client.auth.login')
+                ->withErrors(['error' => 'Phiên đăng nhập Google đã hết hạn. Vui lòng thử lại.']);
+        }
+
+        $googleUser = session('google_user');
+        if (! empty($googleUser['user_id'])) {
+            $user = User::find($googleUser['user_id']);
+            if ($user && ! IdentityPolicy::canLinkGoogleAccount($user->role)) {
+                session()->forget('google_user');
+
+                return redirect()->route('client.auth.login')
+                    ->withErrors(['error' => 'Tài khoản quản trị không thể đăng nhập hoặc liên kết qua luồng Google của khách hàng.']);
+            }
+        }
+
+        return view('clients.identity.auth.complete-google-registration', [
+            'googleUser' => $googleUser,
+        ]);
+    }
+
+    public function submitCompleteGoogleRegistration(Request $request)
+    {
+        $googleUser = session('google_user');
+
+        if (! $googleUser) {
+            return redirect()->route('client.auth.login')
+                ->withErrors(['error' => 'Phiên đăng nhập Google đã hết hạn. Vui lòng thử lại.']);
+        }
+
+        if (! empty($googleUser['user_id'])) {
+            $user = User::find($googleUser['user_id']);
+            if (! $user || ! IdentityPolicy::canLinkGoogleAccount($user->role)) {
+                session()->forget('google_user');
+
+                return redirect()->route('client.auth.login')
+                    ->withErrors(['error' => 'Tài khoản quản trị không thể đăng nhập hoặc liên kết qua luồng Google của khách hàng.']);
+            }
+        }
+
+        $validated = $request->validate(
+            [
+                'phone' => ['required', 'string', 'max:20'],
+            ],
+            [
+                'phone.required' => 'Vui lòng nhập số điện thoại.',
+                'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự.',
+            ]
+        );
+
+        if (! empty($googleUser['user_id'])) {
+            $user = User::findOrFail($googleUser['user_id']);
+            $user->forceFill([
+                'phone' => $validated['phone'],
+                'google_id' => $googleUser['google_id'],
+                'avatar' => $user->avatar ?: ($googleUser['avatar'] ?? null),
+                'email_verified_at' => $user->email_verified_at ?: now(),
+            ])->save();
+        } else {
+            $user = User::create([
+                'name' => $googleUser['name'],
+                'email' => $googleUser['email'],
+                'phone' => $validated['phone'],
+                'google_id' => $googleUser['google_id'],
+                'avatar' => $googleUser['avatar'] ?? null,
+                'role' => Role::CUSTOMER,
+                'password' => null,
+                'email_verified_at' => now(),
+            ]);
+        }
+
+        session()->forget('google_user');
+        Auth::login($user);
+
+        return redirect()->intended(route('client.home'))->with('success', 'Đăng nhập thành công');
+    }
+
+    public function verifyNotice()
+    {
+        if (auth()->user()->hasVerifiedEmail()) {
+            return redirect()->route('client.dich-vu.trang-thai-don-hang')
+                ->with('success', 'Email đã được xác thực thành công.');
+        }
+
+        return view('clients.identity.auth.verify-email');
+    }
+
+    public function verifyEmail(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+
+        return redirect()->route('client.dich-vu.trang-thai-don-hang')
+            ->with('success', 'Email đã được xác thực thành công.');
+    }
+
+    public function verificationStatus(Request $request)
+    {
+        return response()->json([
+            'verified' => $request->user()->hasVerifiedEmail(),
+        ]);
+    }
+
+    public function resendVerification(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->route('client.dich-vu.trang-thai-don-hang');
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('success', 'Email xác thực đã được gửi lại.');
+    }
+
+    private function passwordStatusMessage(string $status): string
+    {
+        return match ($status) {
+            Password::RESET_LINK_SENT => 'Chúng tôi đã gửi liên kết đặt lại mật khẩu đến email của bạn.',
+            Password::PASSWORD_RESET => 'Mật khẩu đã được đặt lại thành công. Bạn có thể đăng nhập ngay.',
+            Password::INVALID_USER => 'Không tìm thấy tài khoản với email này.',
+            Password::INVALID_TOKEN => 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.',
+            Password::RESET_THROTTLED => 'Vui lòng đợi trước khi yêu cầu đặt lại mật khẩu lần nữa.',
+            default => 'Đã xảy ra lỗi. Vui lòng thử lại.',
+        };
+    }
+}

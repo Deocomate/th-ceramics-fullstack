@@ -1,8 +1,9 @@
 <?php
 
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductWriter;
 use App\Models\LinhVat;
 use App\Models\LinhVatPhongThuy;
-use App\Models\LinhVatPhongThuyCt;
 
 function createLinhVatPhongThuyPageConfig(): LinhVatPhongThuy
 {
@@ -27,9 +28,9 @@ function createLinhVatPhongThuyPageConfig(): LinhVatPhongThuy
     return $config;
 }
 
-function createLinhVatPhongThuyProduct(array $overrides = []): LinhVatPhongThuyCt
+function createLinhVatPhongThuyProduct(array $overrides = []): Product
 {
-    return LinhVatPhongThuyCt::query()->create(array_merge([
+    return app(ProductWriter::class)->create('linh_vat_phong_thuy_ct', array_merge([
         'code' => fake()->unique()->bothify('LVPT-###'),
         'name' => 'Linh vật test',
         'images' => ['assets/images/ngoi-01.jpg'],

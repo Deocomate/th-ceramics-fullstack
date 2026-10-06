@@ -74,14 +74,14 @@ Loaded from Google Fonts with `display=swap`.
 ### Admin Layout Structure
 
 ```
-components/admin/layout/app.blade.php
+components/admin/layouts/app.blade.php
 ├── <head>
 │   ├── Tailwind CDN
 │   ├── Google Fonts: Inter
 │   └── Custom scrollbar styles
 ├── <body class="h-full" style="background:#F3F6F9">
 │   ├── Flex container (h-full min-h-screen)
-│   │   ├── <x-admin.layout.sidebar />     # Navigation sidebar
+│   │   ├── <x-admin.layouts.sidebar />    # Navigation sidebar
 │   │   └── Main content (ml-64, flex-1)
 │   │       ├── Header (sticky, white bg)   # Title + breadcrumb + date
 │   │       ├── Flash messages (success/error)
@@ -104,57 +104,60 @@ components/admin/layout/app.blade.php
 
 ### Component Patterns
 
-#### Shared Product Components (resources/views/components/products/)
+#### Catalog Shared Components (`resources/views/components/client/catalog/shared/`)
 
 | Component | Purpose |
 |-----------|---------|
-| `product-card.blade.php` | Reusable product listing card |
-| `mobile-product-card.blade.php` | Mobile-specific product card |
-| `desktop-product-card.blade.php` | Desktop-specific product card |
+| `product-card.blade.php` | Reusable product listing card with add-to-cart |
 | `product-grid.blade.php` | Grid layout for product listings |
-| `product-detail-container.blade.php` | Detail page wrapper |
+| `product-detail-container.blade.php` | Detail page wrapper with media swiper & options |
 | `product-image-swiper.blade.php` | Image carousel with Swiper |
-| `breadcrumb.blade.php` | Breadcrumb navigation |
-| `color-palette.blade.php` | Color selection UI |
+| `product-breadcrumb-filter.blade.php` | Breadcrumb and category filter navigation |
+| `color-palette.blade.php` | Color and finish selection UI |
 | `quantity-calculator.blade.php` | Quantity estimation tool |
-| `weight-calculator.blade.php` | Weight estimation tool |
-| `product-filter.blade.php` | Product filtering controls |
-| `recommendations.blade.php` | Related products section |
-| `applications.blade.php` | Product application info |
-| `fabrication-process.blade.php` | Manufacturing process |
-| `installation-guide.blade.php` | Installation instructions |
-| `faq-content.blade.php` | FAQ accordion |
-| `faq2.blade.php` | Alternate FAQ layout |
-| `works.blade.php` | How it works section |
-| `works-simple.blade.php` | Simplified works section |
-| `outstanding-value.blade.php` | Value proposition section |
-| `journey-video.blade.php` | Brand journey video |
-| `hai-vm-calculator.blade.php` | Ngoi Hai Van Mieu calculator |
-| `trang-tri-process.blade.php` | Gach Trang Tri process |
+| `weight-calculator-sticky-bar.blade.php` | Floating weight estimation sticky bar |
+| `recommendations.blade.php` | Related products recommendation section |
+| `journey-video.blade.php` | Brand and product journey video embed |
 
-#### Shared Site Components (resources/views/components/)
+#### Content Shared Components (`resources/views/components/client/content/shared/`)
 
 | Component | Purpose |
 |-----------|---------|
-| `header.blade.php` | Site navigation header |
-| `footer.blade.php` | Site footer with newsletter |
-| `newsletter.blade.php` | Email signup form |
-| `catalog-button.blade.php` | Catalog download CTA |
-| `home-awards.blade.php` | Awards/trust badges |
-| `faq-faq-contact.blade.php` | FAQ contact section |
+| `works.blade.php` | Process showcase section with dynamic items |
+| `works-simple.blade.php` | Simplified works section |
+| `outstanding-value.blade.php` | Core value proposition deck |
+| `fabrication-process.blade.php` | Manufacturing process gallery |
+| `custom-design-process.blade.php` | Custom architectural design process |
+| `faq-contact.blade.php` | FAQ and customer consultation CTA section |
+| `newsletter.blade.php` | Email subscription signup form |
+| `catalog-sticky-btn.blade.php` | Floating catalog download button |
+
+#### Commerce Shared Components (`resources/views/components/client/commerce/shared/`)
+
+| Component | Purpose |
+|-----------|---------|
+| `cart-modal.blade.php` | E-commerce shopping cart slideout/modal |
+| `cart-toast.blade.php` | Add-to-cart notification toast |
+| `coupon-banner.blade.php` | Promotional coupon announcement banner |
+| `consultation-modal.blade.php` | B2B product consultation modal |
+
+#### Layout & Navigation Components (`resources/views/components/client/layouts/`)
+
+| Component | Purpose |
+|-----------|---------|
+| `main.blade.php` | Public client HTML shell |
+| `header/` | Modular navigation header, mobile drawer, mini-cart |
+| `footer.blade.php` | Global website footer |
 
 ### Product Page Structure (Client)
 
-Each product category follows this view structure:
+Each product category follows this domain-first view structure:
 
 ```
-clients/products/{category}/
-├── index.blade.php          # Product listing page
+clients/catalog/products/{category}/
+├── index.blade.php          # Category product listing page
 ├── detail.blade.php         # Product detail page
-└── partials/
-    ├── banner.blade.php     # Hero/banner section
-    ├── hero.blade.php       # Alternative hero
-    └── ...                  # Category-specific sections
+└── partials/                # Category-specific sections (banners, calculators)
 ```
 
 ### JavaScript Libraries

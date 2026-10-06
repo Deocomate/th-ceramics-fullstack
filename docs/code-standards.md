@@ -4,17 +4,17 @@
 
 | Element | Convention | Example |
 |---------|-----------|---------|
-| Classes (PHP) | PascalCase | `NgoiAmDuongController`, `FileUploadHelper` |
-| Models | PascalCase, singular | `NgoiAmDuong`, `GachHoaThongGioCt` |
-| Controllers | PascalCase + descriptive suffix | `NgoiAmDuongController`, `AuthController` |
-| Services | PascalCase + `Service` suffix | `NgoiAmDuongService`, `AuthService` |
+| Classes (PHP) | English PascalCase for new classes | `YinYangRoofTileController`, `FileUploadHelper` |
+| Models | PascalCase, singular | `Product`, `YinYangRoofTile` |
+| Controllers | PascalCase + descriptive suffix | `YinYangRoofTileController`, `AuthController` |
+| Services | PascalCase + `Service` suffix | `CartService`, `AuthService` |
 | Methods/Functions | camelCase | `getFirstRecord()`, `isUnique()` |
 | Variables | camelCase | `$ngoiAmDuong`, `$fillable` |
 | DB Tables | snake_case, plural | `ngoi_am_duong`, `gach_hoa_thong_gio_ct` |
 | DB Columns | snake_case | `ngoi_am_duong_id`, `thumbnail_main` |
 | Primary Keys | `{table_name}_id` | `ngoi_am_duong_id` (not `id`) |
 | File names | kebab-case | `ngoi-am-duong-ct`, `gia-tri-vuot-troi` |
-| View directories | kebab-case | `gach-hoa-thong-gio-ct/`, `mau-sac-ngoi-am-duong-ct/` |
+| View directories | Domain-first, kebab-case | `admin/catalog/gach-hoa-thong-gio-ct/`, `clients/catalog/products/` |
 | Route names | dot-notation, kebab-case segments | `admin.ngoi-am-duong.index` |
 | Route prefixes | kebab-case | `/admin/gach-hoa-thong-gio` |
 | Environment vars | UPPER_SNAKE_CASE | `DB_CONNECTION`, `APP_ENV` |
@@ -28,7 +28,7 @@ Use PHP 8 promoted properties in constructors:
 
 ```php
 public function __construct(
-    private readonly NgoiAmDuongService $service
+    private readonly CoreValueService $service
 ) {}
 ```
 
@@ -39,12 +39,12 @@ Do not allow empty constructors with zero parameters (unless private).
 Always use explicit return type declarations:
 
 ```php
-public function getFirstRecord(): NgoiAmDuong
+public function findById(int $id): Product
 {
-    return NgoiAmDuong::query()->firstOrFail();
+    return Product::query()->findOrFail($id);
 }
 
-public function update(array $data): NgoiAmDuong
+public function update(int $id, array $data): Product
 {
     // ...
 }
@@ -137,16 +137,16 @@ $table->foreignId('gach_hoa_thong_gio_id')
 Always use proper relationship methods with return type hints:
 
 ```php
-public function colors(): HasMany
+public function displayOptions(): HasMany
 {
-    return $this->hasMany(MauSacNgoiAmDuongCt::class, 'ngoi_am_duong_ct_id');
+    return $this->hasMany(ProductDisplayOption::class)->orderBy('sort_order');
 }
 ```
 
 Use eager loading to prevent N+1 queries:
 
 ```php
-NgoiAmDuongCt::query()->with('colors')->where('is_delete', 0)->get();
+Product::query()->with('displayOptions')->where('is_delete', false)->get();
 ```
 
 ### 3.7 Migrations
@@ -191,26 +191,27 @@ Restore routes/actions bypass active filters to perform restoration.
 
 ## 4. Architecture Conventions
 
-### 4.1 Layered Architecture
+### 4.1 Context layers
 
 ```
-Route -> Controller -> Service -> Model
+Route -> Context Http -> Application use case / port -> Domain
+                                      Infrastructure implements ports
 ```
 
-- **Controllers**: Thin, handle HTTP concerns (request/response)
-- **Services**: Business logic, database operations, file uploads
-- **Models**: Eloquent definitions, relationships, scopes
-- No repository pattern
+- **Domain** contains framework-free business rules and cannot import another context.
+- **Application** owns use cases and ports; it does not import HTTP or Infrastructure.
+- **Infrastructure** contains Eloquent models and adapters for storage, mail, and cross-context access.
+- **HTTP** handles requests and responses. Add a port when it represents a real boundary, not for every model.
 
 ### 4.2 Dependency Injection
 
 Services are injected via constructor promoted properties:
 
 ```php
-class NgoiAmDuongController extends Controller
+class CoreValueController extends Controller
 {
     public function __construct(
-        private readonly NgoiAmDuongService $service
+        private readonly CoreValueService $service
     ) {}
 }
 ```
@@ -265,10 +266,9 @@ Registered in `bootstrap/app.php`:
 
 ```php
 $middleware->alias([
-    'role' => \App\Http\Middleware\RoleMiddleware::class,
+    'role' => \App\Domains\Identity\Http\Middleware\RoleMiddleware::class,
 ]);
-$middleware->redirectGuestsTo(fn() => route('admin.auth.login'));
-$middleware->redirectUsersTo(fn() => route('admin.dashboard'));
+// Role-aware guest & auth redirects (admin.* -> admin.auth.login / admin.dashboard; client -> client.auth.login / client.home)
 ```
 
 ## 6. Authentication & RBAC
@@ -298,24 +298,44 @@ Unauthorized access returns 403 with Vietnamese message.
 
 ## 7. Frontend Conventions
 
-### 7.1 Blade Templates
+### 7.1 Blade Templates & View Architecture
 
-- Use Blade components for reusable UI: `<x-product-card />`
-- Use `@props` directive for component parameters
-- Use `@stack('scripts')` and `@stack('styles')` for page-specific assets
-- Client layout in `components/client/layouts/main.blade.php`
-- Admin layout in `components/admin/layouts/app.blade.php`
+Views are organized by domain context under `resources/views/`:
+- `admin/{catalog,content,commerce,identity,archive}/`: Back-office pages by domain.
+- `clients/{catalog/products,content,commerce,identity}/`: Public-facing storefront pages.
+- `components/`: Reusable Blade components:
+  - `admin/{layouts,shared,catalog}/`: Admin layout shell and shared inputs/modals.
+  - `client/{layouts,shared,catalog,content,commerce,identity}/`: Client layouts, section partials, and domain components.
+  - `emails/{identity,commerce,content}/`: Markdown email templates organized by domain.
+  - `vendor/mail/`: Vendor overrides and CSS mail theme.
 
-### 7.2 JavaScript
+#### View Contracts & Props Guidelines
+- **Granular Props**: Components declare required parameters explicitly using `@props` with sensible defaults:
+  ```blade
+  @props([
+      'products' => collect(),
+      'routeName' => 'client.products.ngoi-am-duong.detail',
+      'productType' => 'ngoi_am_duong_ct',
+  ])
+  ```
+- **No Queries or Business Calculations in Blade**: Blade files must not execute Eloquent queries (`Model::query()`, `::where()`, `::all()`), database facades (`DB::`), or service container resolutions (`@inject`).
+- **Data Preparation Boundary**: All required view data is prepared upstream by Controllers, Presenters, ViewComposers (`ContentViewComposer`, header composer), or class-backed ViewComponents (`ProductCard`, `ProductDetailContainer`, `Recommendations`, `Works`, `WorksSimple`, `OutstandingValue`).
+- **PHP Fallbacks**: When ViewComponents or Composers support fallbacks (e.g. awards or related products), query execution is request-scoped and guarded against re-executing when an empty collection is explicitly provided.
+- **Component Tags & Backward-Compatibility**: New components use domain tags (e.g. `<x-client.catalog.shared.product-card />`), while `AppServiceProvider` maintains component aliases and anonymous component paths so legacy references remain fully functional.
 
-- **Alpine.js** (CDN) for admin interactive UI: tab navigation, auto-resize textareas, dynamic image galleries, repeater fields
-- **Swiper.js** for client image carousels
-- **AOS** for client scroll animations
-- Module script loaded from `public/assets/js/app.js`
+### 7.2 JavaScript & Assets
+
+- **Asset Path Resolution**: All asset URLs must be resolved through `\App\Support\AssetPath::url($path, $fallback)` to ensure consistent fallback handling.
+- **Modular JavaScript**: UI behaviors are separated into dedicated scripts under `public/assets/js/`:
+  - `admin-form-ui.js`: Admin image optimization, gallery uploads, auto-resize textareas, dynamic repeaters.
+  - `cart-ui.js`, `consultation-modal.js`: Commerce modals and mini-cart handlers.
+  - `product-calculators.js`, `product-detail.js`, `weight-calculator-sticky-bar.js`: Product estimation tools and tab controls.
+- **DOM Data Attributes**: JS hooks communicate via standard data attributes (`data-product-id`, `data-quantity-calculator`, `data-product-detail-container`), without inline `<script>` tags in leaf components.
+- **Third-Party Libraries**: Alpine.js (admin), Swiper.js, AOS, PDF.js, StPageFlip, and GLightbox loaded via CDN or local assets.
 
 #### 7.2.1 Alpine.js Auto-Resize Textarea Pattern
 
-All admin HTML-capable textareas use Alpine.js for automatic height adjustment. This replaces the former TinyMCE rich-text editor with a lightweight, native approach.
+All admin HTML-capable textareas use Alpine.js for automatic height adjustment:
 
 ```html
 <textarea name="description"
@@ -327,13 +347,11 @@ All admin HTML-capable textareas use Alpine.js for automatic height adjustment. 
 
 Key classes: `resize-none overflow-hidden min-h-[120px]` — prevents manual resize handles, hides scrollbar overflow, and sets a minimum height so the field never collapses below a usable size.
 
-### 7.3 CSS
+### 7.3 CSS & Build Architecture
 
-- Tailwind CSS via CDN (`cdn.tailwindcss.com`)
-- Custom config in layout `<script>` block (client and admin have separate configs)
-- Additional styles in `public/assets/css/main.css`
-
-> **Note on Vite & NPM**: The client main layout uses Tailwind CDN with no build step. Vite is used for the auth layout (`resources/views/layouts/app.blade.php` via `@vite`). The `vite.config.js` and `npm run build` pipeline are active for the auth-related entry points. Legacy frontend assets are served from `public/assets/`.
+- Tailwind CSS via CDN (`cdn.tailwindcss.com`) with custom layout configuration scripts.
+- Additional styling in `public/assets/css/main.css`.
+- **No NPM Build Step**: The repository does not include `package.json` or run `npm run build`. All frontend assets are served statically from `public/assets/` and CDN endpoints.
 
 ## 8. Testing Standards
 
@@ -349,22 +367,6 @@ Key classes: `resize-none overflow-hidden min-h-[120px]` — prevents manual res
 
 ## 9. Single-Record Pattern
 
-Product section tables are designed for single-row storage:
+Product section configuration tables use a single record. `HomePageConfigService::getFirstRecord()` creates the initial record when absent; the admin controller edits and updates that record.
 
-```php
-// Service
-public function getFirstRecord(): NgoiAmDuong
-{
-    return NgoiAmDuong::query()->firstOrFail();
-}
-
-// Controller
-public function update(Request $request): RedirectResponse
-{
-    $data = $request->validate([...]);
-    $this->service->update($data);
-    return back()->with('success', 'Updated successfully.');
-}
-```
-
-These tables have no create/destroy routes — only index (show form) and update.
+These configuration records have no create/destroy routes; the admin form reads the record and submits an update.

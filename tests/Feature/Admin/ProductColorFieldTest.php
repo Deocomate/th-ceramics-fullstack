@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\DenVuonGomSuCt;
-use App\Models\GachHoaThongGioCt;
-use App\Models\User;
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Identity\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -13,25 +13,12 @@ function productColorFakeImage(string $name): UploadedFile
     return UploadedFile::fake()->image($name, 1, 1);
 }
 
-test('ct tables expose color column', function () {
-    foreach ([
-        'ngoi_am_duong_ct',
-        'ngoi_hai_co_ct',
-        'ngoi_hai_van_mieu_ct',
-        'gach_hoa_thong_gio_ct',
-        'gach_trang_tri_ct',
-        'gach_co_bat_trang_ct',
-        'linh_vat_phong_thuy_ct',
-        'phu_kien_ngoi_ct',
-        'lan_can_gom_su_ct',
-        'den_vuon_gom_su_ct',
-    ] as $table) {
-        expect(Schema::hasColumn($table, 'color'))->toBeTrue();
-    }
+test('products table exposes color column', function () {
+    expect(Schema::hasColumn('products', 'color'))->toBeTrue();
 });
 
 test('recommendations render product color summary with fallback', function () {
-    $custom = GachHoaThongGioCt::query()->create([
+    $custom = app(ProductWriter::class)->create('gach_hoa_thong_gio_ct', [
         'code' => 'GHTG-COLOR-001',
         'name' => 'Gạch màu tùy chỉnh',
         'color' => 'Men đỏ cam',
@@ -41,7 +28,7 @@ test('recommendations render product color summary with fallback', function () {
         'is_delete' => 0,
     ]);
 
-    $fallback = GachHoaThongGioCt::query()->create([
+    $fallback = app(ProductWriter::class)->create('gach_hoa_thong_gio_ct', [
         'code' => 'GHTG-COLOR-002',
         'name' => 'Gạch màu rỗng',
         'color' => '',
@@ -74,7 +61,7 @@ test('form request backed ct admin store and update persist color', function () 
         'images' => [productColorFakeImage('gach-form.png')],
     ])->assertRedirect(route('admin.gach-hoa-thong-gio-ct.index'));
 
-    $product = GachHoaThongGioCt::query()->where('code', 'GHTG-COLOR-003')->firstOrFail();
+    $product = Product::where('type_key', 'gach_hoa_thong_gio_ct')->where('name', 'Gạch form request')->firstOrFail();
     expect($product->color)->toBe('Men xanh rêu');
 
     $this->put(route('admin.gach-hoa-thong-gio-ct.update', $product->gach_hoa_thong_gio_ct_id), [
@@ -100,7 +87,7 @@ test('inline validated ct admin store and update persist color fallback', functi
         'images' => [productColorFakeImage('den-inline.png')],
     ])->assertRedirect(route('admin.den-vuon-gom-su-ct.index'));
 
-    $product = DenVuonGomSuCt::query()->where('name', 'Đèn inline color')->firstOrFail();
+    $product = Product::where('type_key', 'den_vuon_gom_su_ct')->where('name', 'Đèn inline color')->firstOrFail();
     expect($product->color)->toBe('Men trắng sứ');
 
     $this->put(route('admin.den-vuon-gom-su-ct.update', $product->den_vuon_gom_su_ct_id), [

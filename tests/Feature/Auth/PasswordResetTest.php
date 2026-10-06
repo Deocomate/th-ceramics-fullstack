@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
-use App\Notifications\ResetPasswordNotification;
+use App\Domains\Identity\Infrastructure\Notifications\ResetPasswordNotification;
+use App\Domains\Identity\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;

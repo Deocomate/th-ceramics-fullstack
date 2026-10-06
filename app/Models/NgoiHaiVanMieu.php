@@ -2,30 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Catalog\Infrastructure\Models\VanMieuFishScaleRoofTile;
 
-class NgoiHaiVanMieu extends Model
-{
-    protected $table = 'ngoi_hai_van_mieu';
-
-    protected $primaryKey = 'ngoi_hai_van_mieu_id';
-
-    protected $fillable = [
-        'thumbnail_main',
-        'title1',
-        'thumbnail1',
-        'title2',
-        'thumbnail2',
-        'title3',
-        'thumbnail3',
-        'video',
-        'images',
-    ];
-
-    protected function casts(): array
-    {
-        return [
-            'images' => 'array',
-        ];
-    }
-}
+class_alias(VanMieuFishScaleRoofTile::class, __NAMESPACE__.'\\NgoiHaiVanMieu');

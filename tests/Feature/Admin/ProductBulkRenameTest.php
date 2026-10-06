@@ -1,12 +1,13 @@
 <?php
 
-use App\Models\NgoiAmDuongCt;
-use App\Models\PhuKienNgoiCt;
-use App\Models\User;
+use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Identity\Models\User;
 
-function createBulkRenameNgoiAmDuongProduct(string $code, string $name, bool $deleted = false): NgoiAmDuongCt
+function createBulkRenameNgoiAmDuongProduct(string $code, string $name, bool $deleted = false): Product
 {
-    return NgoiAmDuongCt::query()->create([
+    return app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => $code,
         'name' => $name,
         'images' => [],
@@ -32,20 +33,20 @@ test('admin renames selected products in submitted display order including hidde
 
 test('bulk rename rejects products outside the selected accessory category without partial changes', function () {
     $this->actingAs(User::factory()->create());
-    $bocNoc = PhuKienNgoiCt::query()->create([
+    $bocNoc = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Bò nóc',
-        'category_type' => PhuKienNgoiCt::TYPE_BO_NOC,
+        'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
     ]);
-    $chuVan = PhuKienNgoiCt::query()->create([
+    $chuVan = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Chữ vạn',
-        'category_type' => PhuKienNgoiCt::TYPE_CHU_VAN,
+        'category_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
     ]);
 
-    $this->from(route('admin.phu-kien-ngoi-ct.index', ['category_type' => PhuKienNgoiCt::TYPE_BO_NOC]))
+    $this->from(route('admin.phu-kien-ngoi-ct.index', ['category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC]))
         ->post(route('admin.products.bulk-rename', ['type' => 'phu-kien-ngoi-ct']), [
             'ids' => [$bocNoc->phu_kien_ngoi_ct_id, $chuVan->phu_kien_ngoi_ct_id],
             'base_name' => 'Phụ kiện',
-            'category_type' => PhuKienNgoiCt::TYPE_BO_NOC,
+            'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
         ])->assertRedirect()->assertSessionHasErrors('base_name');
 
     expect($bocNoc->fresh()->name)->toBe('Bò nóc')
@@ -122,7 +123,7 @@ test('all product detail lists render bulk selection controls', function () {
             ->assertSee('bulk-rename-product-checkbox', false);
     }
 
-    foreach ([PhuKienNgoiCt::TYPE_BO_NOC, PhuKienNgoiCt::TYPE_CHU_VAN] as $categoryType) {
+    foreach ([RoofTileAccessoryCategory::TYPE_BO_NOC, RoofTileAccessoryCategory::TYPE_CHU_VAN] as $categoryType) {
         $this->get(route('admin.phu-kien-ngoi-ct.index', ['category_type' => $categoryType]))
             ->assertOk()
             ->assertSee('data-bulk-rename-select-all', false)

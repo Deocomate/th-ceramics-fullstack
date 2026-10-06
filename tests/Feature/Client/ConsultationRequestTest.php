@@ -1,8 +1,8 @@
 <?php
 
-use App\Mail\ConsultationConfirmationMail;
-use App\Mail\ConsultationRequestedMail;
-use App\Models\ConsultationRequest;
+use App\Domains\Commerce\Infrastructure\Mail\ConsultationConfirmationMail;
+use App\Domains\Commerce\Infrastructure\Mail\ConsultationRequestedMail;
+use App\Domains\Commerce\Infrastructure\Models\ConsultationRequest;
 use Illuminate\Support\Facades\Mail;
 
 test('consultation submit saves record and queues admin mail', function () {

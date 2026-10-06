@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Domains\Content\Infrastructure\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class ContactFormMail extends Mailable implements ShouldQueue
+{
+    use Queueable, SerializesModels;
+
+    /** @param array<string, mixed> $data */
+    public function __construct(public array $data) {}
+
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Liên hệ mới từ website Thanh Hải',
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'components.emails.content.contact.form',
+            with: ['data' => $this->data],
+        );
+    }
+}

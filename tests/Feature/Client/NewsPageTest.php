@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\DanhMucTinTuc;
-use App\Models\NgoiAmDuongCt;
-use App\Models\TinTuc;
+use App\Domains\Content\Models\DanhMucTinTuc;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Content\Models\TinTuc;
 
 function createNewsArticle(DanhMucTinTuc $category, array $overrides = []): TinTuc
 {
@@ -60,11 +60,14 @@ test('news index groups newest articles by visible categories', function () {
         ->assertSee('Cam nang xay dung')
         ->assertSee('Bai moi nhat')
         ->assertSee('Bai moi thu hai')
-        ->assertDontSee('Bai cu thu ba')
         ->assertDontSee($emptyCategory->ten_danh_muc)
         ->assertDontSee($deletedCategory->ten_danh_muc)
         ->assertDontSee('Tin tức mới nhất')
         ->assertDontSee('Tất cả');
+
+    $categories = $response->viewData('categoriesWithNews');
+    expect($categories->pluck('ten_danh_muc')->all())->toBe(['Cam nang xay dung']);
+    expect($categories->first()->tinTucs->pluck('tieu_de')->all())->toBe(['Bai moi nhat', 'Bai moi thu hai']);
 });
 
 test('news category page paginates only articles in selected category', function () {
@@ -91,8 +94,9 @@ test('news category page paginates only articles in selected category', function
     $response
         ->assertOk()
         ->assertSee('Cong trinh du an')
-        ->assertSee('Bai trong category')
-        ->assertDontSee('Bai category khac');
+        ->assertSee('Bai trong category');
+
+    expect(collect($response->viewData('news')->items())->pluck('tieu_de')->all())->toBe(['Bai trong category']);
 });
 
 test('news category pagination uses custom pagination and preserves query string', function () {
@@ -183,7 +187,7 @@ test('visited article appears in recent article history without duplicates', fun
 });
 
 test('visited product appears in recent product history without duplicates', function () {
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-001',
         'name' => 'Ngoi am duong test',
         'images' => ['assets/images/ngoi-01.jpg'],
@@ -196,7 +200,7 @@ test('visited product appears in recent product history without duplicates', fun
     $this->get(route('client.products.ngoi-am-duong.detail', $product->ngoi_am_duong_ct_id))->assertOk();
 
     $this->assertSame([
-        ['type' => 'ngoi_am_duong_ct', 'id' => $product->ngoi_am_duong_ct_id],
+        ['type' => 'ngoi_am_duong_ct', 'id' => (int) $product->ngoi_am_duong_ct_id],
     ], session('th_recent_products'));
 
     $this->get(route('client.news.index'))

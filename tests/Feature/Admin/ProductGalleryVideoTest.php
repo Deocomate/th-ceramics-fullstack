@@ -1,10 +1,10 @@
 <?php
 
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Identity\Models\User;
 use App\Models\NgoiAmDuong;
-use App\Models\NgoiAmDuongCt;
-use App\Models\User;
-use App\Services\ProductCartOptionsService;
-use App\Support\ProductGallery;
+use App\Domains\Catalog\Infrastructure\ProductGallery;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -23,9 +23,9 @@ function galleryFakeWebp(string $name = 'batch.webp'): UploadedFile
     );
 }
 
-function makeNgoiAmDuongProduct(array $images = ['seeders/products/cover.png']): NgoiAmDuongCt
+function makeNgoiAmDuongProduct(array $images = ['seeders/products/cover.png']): Product
 {
-    return NgoiAmDuongCt::query()->create([
+    return app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-VIDEO-'.uniqid(),
         'name' => 'Ngói test gallery video',
         'color' => 'Tự chọn',
@@ -234,10 +234,12 @@ test('cart options use first image path when gallery starts with video', functio
 
     expect(ProductGallery::firstImagePath($product->images))->toBe('seeders/products/cover.png');
 
-    $payload = app(ProductCartOptionsService::class)->getOptions('ngoi_am_duong_ct', $product->ngoi_am_duong_ct_id);
-
-    expect($payload['image_url'])->toContain('cover.png')
-        ->and($payload['image_url'])->not->toContain('youtube');
+    $this->getJson(route('client.cart.product-options', [
+        'product_type' => 'ngoi_am_duong_ct',
+        'product_id' => $product->ngoi_am_duong_ct_id,
+    ]))
+        ->assertOk()
+        ->assertJsonPath('data.image_url', fn (string $url) => str_contains($url, 'cover.png') && ! str_contains($url, 'youtube'));
 });
 
 test('creating product can include gallery videos with images', function () {
@@ -254,7 +256,7 @@ test('creating product can include gallery videos with images', function () {
         'video_urls' => ['https://youtu.be/Win12rIicBI'],
     ])->assertRedirect(route('admin.ngoi-am-duong-ct.index'));
 
-    $product = NgoiAmDuongCt::query()->where('code', 'NAD-VIDEO-STORE-001')->firstOrFail();
+    $product = Product::where('type_key', 'ngoi_am_duong_ct')->whereHas('variants', fn ($q) => $q->where('sku', 'NAD-VIDEO-STORE-001'))->firstOrFail();
 
     expect($product->images)->toHaveCount(2)
         ->and($product->images[1]['type'])->toBe('video')
@@ -275,7 +277,7 @@ test('creating product can include an uploaded gallery video file', function () 
         'videos' => [UploadedFile::fake()->create('clip.webm', 120, 'video/webm')],
     ])->assertRedirect(route('admin.ngoi-am-duong-ct.index'));
 
-    $product = NgoiAmDuongCt::query()->where('code', 'NAD-VIDEO-FILE-001')->firstOrFail();
+    $product = Product::where('type_key', 'ngoi_am_duong_ct')->whereHas('variants', fn ($q) => $q->where('sku', 'NAD-VIDEO-FILE-001'))->firstOrFail();
 
     expect($product->images)->toHaveCount(2)
         ->and($product->images[1]['type'])->toBe('video')
@@ -297,7 +299,7 @@ test('admin can create product with dedicated cover image', function () {
         'images' => [galleryFakeImage('detail.png')],
     ])->assertRedirect(route('admin.ngoi-am-duong-ct.index'));
 
-    $product = NgoiAmDuongCt::query()->where('code', 'NAD-COVER-001')->firstOrFail();
+    $product = Product::where('type_key', 'ngoi_am_duong_ct')->whereHas('variants', fn ($q) => $q->where('sku', 'NAD-COVER-001'))->firstOrFail();
 
     expect($product->images)->toHaveCount(2)
         ->and($product->images[0])->toBeString()

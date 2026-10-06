@@ -1,7 +1,8 @@
 <?php
 
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\ProductWriter;
 use App\Models\GachCoBatTrang;
-use App\Models\GachCoBatTrangCt;
 
 beforeEach(function () {
     GachCoBatTrang::query()->create([
@@ -32,9 +33,9 @@ beforeEach(function () {
     ]);
 });
 
-function createGachCoBatTrangProduct(array $overrides = []): GachCoBatTrangCt
+function createGachCoBatTrangProduct(array $overrides = []): Product
 {
-    return GachCoBatTrangCt::query()->create(array_merge([
+    return app(ProductWriter::class)->create('gach_co_bat_trang_ct', array_merge([
         'code' => fake()->unique()->bothify('GCB-###'),
         'name' => 'Sản phẩm động',
         'category_type' => 'bat',

@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Domains\Commerce\Infrastructure\Mail;
+
+use App\Domains\Commerce\Infrastructure\Models\Order;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class OrderCreatedMail extends Mailable implements ShouldQueue
+{
+    use Queueable, SerializesModels;
+
+    public function __construct(public Order $order) {}
+
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Xác nhận đơn hàng #'.$this->order->order_code,
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'components.emails.commerce.orders.created',
+            with: ['order' => $this->order],
+        );
+    }
+}

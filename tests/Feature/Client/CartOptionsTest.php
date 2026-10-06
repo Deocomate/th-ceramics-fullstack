@@ -1,13 +1,11 @@
 <?php
 
-use App\Models\LanCanGomSuCt;
-use App\Models\LinhVatPhongThuyCt;
-use App\Models\MauSacNgoiAmDuongCt;
-use App\Models\NgoiAmDuongCt;
-use App\Models\PhanLoaiLanCanGomSuCt;
+use App\Domains\Catalog\Models\ProductDisplayOption;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Catalog\PublicIdAllocator;
 
 test('product options returns global color palette for ngoi am duong', function () {
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'name' => 'Ngói âm dương test',
         'code' => 'NAD-001',
         'price' => 320000,
@@ -15,7 +13,9 @@ test('product options returns global color palette for ngoi am duong', function 
         'is_delete' => 0,
     ]);
 
-    $color = MauSacNgoiAmDuongCt::query()->create([
+    $color = ProductDisplayOption::query()->create([
+        'type_key' => 'ngoi_am_duong_ct',
+        'scope' => 'global',
         'name' => 'Đỏ cờ',
         'image' => 'assets/images/red.png',
     ]);
@@ -28,24 +28,25 @@ test('product options returns global color palette for ngoi am duong', function 
         ->assertJsonPath('status', 'success')
         ->assertJsonPath('data.requires_variant', false)
         ->assertJsonPath('data.variant_label', 'Màu sắc')
-        ->assertJsonPath('data.variants.0.id', $color->mau_sac_ngoi_am_duong_ct_id)
+        ->assertJsonPath('data.variants.0.id', $color->id)
         ->assertJsonPath('data.unit_price', 320000);
 });
 
 test('product options returns variants for lan can gom su', function () {
-    $product = LanCanGomSuCt::query()->create([
+    $product = app(ProductWriter::class)->create('lan_can_gom_su_ct', [
         'name' => 'Lan can test',
         'images' => ['assets/images/lan-can.png'],
         'is_delete' => 0,
     ]);
 
-    $variant = PhanLoaiLanCanGomSuCt::query()->create([
-        'lan_can_gom_su_ct_id' => $product->lan_can_gom_su_ct_id,
+    $variant = $product->variants()->create([
         'name' => 'Phân loại A',
-        'code' => 'LC-001',
+        'sku' => 'LC-001',
         'price' => 250000,
         'is_delete' => 0,
+        'is_default' => false,
     ]);
+    app(PublicIdAllocator::class)->variant($variant->setRelation('product', $product));
 
     $this->getJson(route('client.cart.product-options', [
         'product_type' => 'lan_can_gom_su_ct',
@@ -55,7 +56,7 @@ test('product options returns variants for lan can gom su', function () {
         ->assertJsonPath('status', 'success')
         ->assertJsonPath('data.product_type', 'lan_can_gom_su_ct')
         ->assertJsonPath('data.requires_variant', true)
-        ->assertJsonPath('data.variants.0.id', $variant->phan_loai_lan_can_gom_su_ct_id);
+        ->assertJsonPath('data.variants.0.id', $variant->public_id);
 });
 
 test('product options rejects invalid product type', function () {
@@ -66,7 +67,7 @@ test('product options rejects invalid product type', function () {
 });
 
 test('product options returns simple product without variants', function () {
-    $product = LinhVatPhongThuyCt::query()->create([
+    $product = app(ProductWriter::class)->create('linh_vat_phong_thuy_ct', [
         'name' => 'Linh vật test',
         'code' => 'LV-001',
         'price' => 180000,

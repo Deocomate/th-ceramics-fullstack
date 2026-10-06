@@ -2,16 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Catalog\Infrastructure\Models\UsageNormDecorativeTile;
 
-class DinhMucGachTrangTri extends Model
-{
-    protected $table = 'dinh_muc_gach_trang_tri';
-
-    protected $primaryKey = 'dinh_muc_gach_trang_tri_id';
-
-    protected $fillable = [
-        'brick_type',
-        'value',
-    ];
-}
+class_alias(UsageNormDecorativeTile::class, __NAMESPACE__.'\\DinhMucGachTrangTri');

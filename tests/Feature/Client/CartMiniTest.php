@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\LinhVatPhongThuyCt;
+use App\Domains\Catalog\ProductWriter;
 
 test('mini cart returns empty payload when session cart is empty', function () {
     $this->getJson(route('client.cart.mini'))
@@ -11,7 +11,7 @@ test('mini cart returns empty payload when session cart is empty', function () {
 });
 
 test('mini cart returns items after adding to cart', function () {
-    $product = LinhVatPhongThuyCt::query()->create([
+    $product = app(ProductWriter::class)->create('linh_vat_phong_thuy_ct', [
         'name' => 'Linh vật mini cart',
         'code' => 'LV-MINI-001',
         'price' => 200000,
@@ -35,7 +35,7 @@ test('mini cart returns items after adding to cart', function () {
 });
 
 test('add to cart increments cart count in response', function () {
-    $product = LinhVatPhongThuyCt::query()->create([
+    $product = app(ProductWriter::class)->create('linh_vat_phong_thuy_ct', [
         'name' => 'Linh vật count',
         'code' => 'LV-COUNT-001',
         'price' => 150000,

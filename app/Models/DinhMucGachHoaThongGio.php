@@ -2,16 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Catalog\Infrastructure\Models\UsageNormBreezeBlock;
 
-class DinhMucGachHoaThongGio extends Model
-{
-    protected $table = 'dinh_muc_gach_hoa_thong_gio';
-
-    protected $primaryKey = 'dinh_muc_gach_hoa_thong_gio_id';
-
-    protected $fillable = [
-        'brick_type',
-        'value',
-    ];
-}
+class_alias(UsageNormBreezeBlock::class, __NAMESPACE__.'\\DinhMucGachHoaThongGio');

@@ -2,8 +2,8 @@
 
 namespace App\View\Components\Client\Shared;
 
-use App\Support\ClientProductType;
-use App\Support\ProductPrice;
+use App\Domains\Catalog\Infrastructure\ClientProductType;
+use App\Domains\Catalog\Domain\ValueObjects\ProductPrice;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -49,10 +49,12 @@ class ProductCard extends Component
         public string $addToCartVariant = 'outline',
     ) {
         $this->resolvedProductType = $this->productType
+            ?: data_get($this->product, 'type_key')
             ?: ClientProductType::fromDetailRoute($this->detailRouteName)
             ?: '';
 
         $displayProductType = $this->resolvedProductType
+            ?: data_get($this->product, 'type_key')
             ?: ($this->product ? (string) str($this->product::class)->classBasename()->snake() : null);
         $this->displayPrice = ProductPrice::withUnit($this->price, $displayProductType);
 
@@ -83,6 +85,6 @@ class ProductCard extends Component
 
     public function render(): View|Closure|string
     {
-        return view('components.client.shared.product-card');
+        return view('components.client.catalog.shared.product-card');
     }
 }

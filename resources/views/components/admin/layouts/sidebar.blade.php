@@ -24,6 +24,10 @@
             Tổng quan
         </a>
 
+        @if (auth()->user()->isSuperAdmin())
+            <a href="{{ route('admin.content-archive.index') }}" class="block px-3 py-2.5 rounded-lg text-[13px] font-medium {{ request()->routeIs('admin.content-archive.*') ? 'text-white bg-white/[0.08]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]' }}">Sao lưu nội dung</a>
+        @endif
+
         <!-- ================= BÁN HÀNG ================= -->
         <div class="pt-4 pb-1">
             <p class="px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500">Quản lý bán hàng</p>
@@ -44,8 +48,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 5H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             Yêu cầu tư vấn
-            @php $pendingConsult = \App\Models\ConsultationRequest::where('status', 'pending')->count(); @endphp
-            @if ($pendingConsult > 0)
+            @if (($pendingConsult ?? 0) > 0)
                 <span class="ml-auto bg-[#A31D1D] text-white text-[10px] rounded-full px-1.5 py-0.5">{{ $pendingConsult }}</span>
             @endif
         </a>
