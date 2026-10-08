@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\ProductPrice;
+use App\Domains\Catalog\Domain\ValueObjects\ProductPrice;
 
 test('maps product categories to their selling units', function () {
     expect(ProductPrice::unitForType('ngoi_am_duong_ct'))->toBe('m²')

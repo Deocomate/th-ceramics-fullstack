@@ -113,7 +113,7 @@ test('corrupt and unsupported files return understandable Vietnamese errors', as
 });
 
 test('product gallery script remains valid after Blade values are inserted', () => {
-    const template = fs.readFileSync(path.resolve(__dirname, '../../resources/views/admin/partials/product-gallery-manager.blade.php'), 'utf8');
+    const template = fs.readFileSync(path.resolve(__dirname, '../../resources/views/admin/catalog/partials/product-gallery-manager.blade.php'), 'utf8');
     const script = template.match(/<script>\s*(window\.__galleryVideoField[\s\S]*?)<\/script>/)?.[1]
         .replace(/@json\([^)]+\)/g, '"new_video_urls[]"')
         .replace(/\{\{[^}]+\}\}/g, 'true');

@@ -18,11 +18,26 @@ return [
         'danh_muc_du_an', 'du_an', 'danh_muc_tin_tuc', 'tin_tuc', 'thi_cong', 'catalog',
         'trang_chu', 've_chung_toi', 'giai_thuong_thanh_tuu', 'gia_tri_vuot_troi',
         'page_factory', 'page_contact', 'page_faq', 'faqs', 'trang_du_an',
+        // The refactor keeps legacy rows during the compatibility window.
+        'products', 'product_variants', 'product_media', 'product_display_options',
+        'product_legacy_ids', 'variant_legacy_ids',
+        'product_public_ids', 'variant_public_ids',
+    ],
+    // Used only to identify an export from a mixed schema. Keep this explicit:
+    // page configuration tables are shared by both schema generations.
+    'legacy_product_tables' => [
+        'ngoi_am_duong_ct', 'ngoi_hai_van_mieu_ct', 'ngoi_hai_co_ct',
+        'gach_hoa_thong_gio_ct', 'gach_trang_tri_ct', 'gach_co_bat_trang_ct',
+        'linh_vat_phong_thuy_ct', 'lan_can_gom_su_ct', 'den_vuon_gom_su_ct',
+        'phu_kien_ngoi_ct', 'mau_sac_ngoi_am_duong_ct', 'mau_sac_ngoi_hai_co_ct',
+        'mau_sac_ngoi_hai_van_mieu_ct', 'phan_loai_lan_can_gom_su_ct',
+        'phan_loai_den_vuon_gom_su_ct', 'phan_loai_phu_kien_ngoi_ct',
     ],
     'excluded_tables' => [
         'users', 'password_reset_tokens', 'sessions', 'cache', 'cache_locks',
         'jobs', 'job_batches', 'failed_jobs', 'orders', 'order_items',
         'coupons', 'consultation_requests', 'migrations', 'content_archive_record_maps',
+        'catalog_public_id_sequences',
     ],
     'max_files' => (int) env('CONTENT_ARCHIVE_MAX_FILES', 100_000),
     'max_uncompressed_bytes' => (int) env('CONTENT_ARCHIVE_MAX_UNCOMPRESSED_BYTES', 20_000_000_000),

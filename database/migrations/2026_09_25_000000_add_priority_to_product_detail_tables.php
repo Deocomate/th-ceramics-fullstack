@@ -23,12 +23,17 @@ return new class extends Migration
     public function up(): void
     {
         foreach ($this->groups as $table => [$primaryKey]) {
-            Schema::table($table, function (Blueprint $table) {
-                $table->unsignedInteger('priority')->default(0)->index();
-            });
+            if (Schema::hasTable($table)) {
+                Schema::table($table, function (Blueprint $table) {
+                    $table->unsignedInteger('priority')->default(0)->index();
+                });
+            }
         }
 
         foreach ($this->groups as $tableName => [$primaryKey, $categoryColumn]) {
+            if (! Schema::hasTable($tableName)) {
+                continue;
+            }
             $query = DB::table($tableName)->orderByDesc('created_at')->orderByDesc($primaryKey);
             $rows = $query->get([$primaryKey, ...($categoryColumn ? [$categoryColumn] : [])]);
             $buckets = $categoryColumn ? $rows->groupBy($categoryColumn) : collect(['all' => $rows]);

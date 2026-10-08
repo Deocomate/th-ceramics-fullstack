@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\DanhMucDuAn;
-use App\Models\DuAn;
+use App\Domains\Content\Models\DanhMucDuAn;
+use App\Domains\Content\Models\DuAn;
 
 test('project listing uses custom pagination and preserves category query string', function () {
     $category = DanhMucDuAn::query()->create([

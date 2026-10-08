@@ -1,14 +1,13 @@
 <?php
 
-use App\Models\DanhMucDuAn;
-use App\Models\DanhMucTinTuc;
-use App\Models\DuAn;
-use App\Models\GachHoaThongGioCt;
-use App\Models\NgoiHaiCoCt;
+use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Content\Models\DanhMucDuAn;
+use App\Domains\Content\Models\DanhMucTinTuc;
+use App\Domains\Content\Models\DuAn;
+use App\Domains\Content\Models\TinTuc;
+use App\Domains\Identity\Models\User;
 use App\Models\NgoiHaiVanMieu;
-use App\Models\PhuKienNgoiCt;
-use App\Models\TinTuc;
-use App\Models\User;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 
@@ -48,20 +47,23 @@ test('news and project edit pages expose slug preview urls', function () {
     $newsCategory = DanhMucTinTuc::create(['ten_danh_muc' => 'News']);
     $news = TinTuc::create([
         'danh_muc_tin_tuc_id' => $newsCategory->danh_muc_tin_tuc_id,
-        'tieu_de' => 'Tin preview',
-        'slug' => 'tin-preview',
-        'mo_ta_ngan' => 'Mo ta',
-        'trang_thai' => 'published',
+        'tieu_de' => 'News title',
+        'slug' => 'news-title',
+        'mo_ta_ngan' => 'Summary',
+        'noi_dung' => 'Content',
+        'is_delete' => 0,
     ]);
 
     $projectCategory = DanhMucDuAn::create(['ten_danh_muc' => 'Projects']);
     $project = DuAn::create([
-        'ten_du_an' => 'Du an preview',
-        'dia_diem' => 'Ha Noi',
-        'san_pham' => 'Gach',
-        'images' => [],
         'danh_muc_du_an_id' => $projectCategory->danh_muc_du_an_id,
-        'slug' => 'du-an-preview',
+        'ten_du_an' => 'Project title',
+        'slug' => 'project-title',
+        'dia_diem' => 'Ha Noi',
+        'san_pham' => 'Tiles',
+        'nam' => 2026,
+        'images' => ['assets/images/project.jpg'],
+        'is_delete' => 0,
     ]);
 
     $this->actingAs($user)
@@ -76,7 +78,7 @@ test('news and project edit pages expose slug preview urls', function () {
 });
 
 test('product edit page exposes id preview url', function () {
-    $product = GachHoaThongGioCt::create([
+    $product = app(ProductWriter::class)->create('gach_hoa_thong_gio_ct', [
         'code' => 'GHTG-001',
         'name' => 'Gach hoa preview',
         'images' => [],
@@ -101,13 +103,13 @@ test('ngoi hai co detail route renders active products and hides deleted product
         'thumbnail3' => 'assets/images/ngoi-hai-3.png',
     ]);
 
-    $active = NgoiHaiCoCt::create([
+    $active = app(ProductWriter::class)->create('ngoi_hai_co_ct', [
         'name' => 'Ngói hài cổ preview',
         'images' => [],
         'is_delete' => 0,
     ]);
 
-    $deleted = NgoiHaiCoCt::create([
+    $deleted = app(ProductWriter::class)->create('ngoi_hai_co_ct', [
         'name' => 'Ngói hài cổ deleted',
         'images' => [],
         'is_delete' => 1,
@@ -122,19 +124,19 @@ test('ngoi hai co detail route renders active products and hides deleted product
 });
 
 test('phu kien legacy detail redirects by type to avoid id collisions', function () {
-    $boNoc = PhuKienNgoiCt::create([
+    $boNoc = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Ngói bò nóc trùng id',
-        'category_type' => PhuKienNgoiCt::TYPE_BO_NOC,
-        'legacy_type' => PhuKienNgoiCt::TYPE_BO_NOC,
+        'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
+        'legacy_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
         'legacy_id' => 1,
         'images' => [],
         'is_delete' => 0,
     ]);
 
-    $chuVan = PhuKienNgoiCt::create([
+    $chuVan = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Bò nóc chữ vạn đúng',
-        'category_type' => PhuKienNgoiCt::TYPE_CHU_VAN,
-        'legacy_type' => PhuKienNgoiCt::TYPE_CHU_VAN,
+        'category_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
+        'legacy_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
         'legacy_id' => 1,
         'images' => [],
         'is_delete' => 0,

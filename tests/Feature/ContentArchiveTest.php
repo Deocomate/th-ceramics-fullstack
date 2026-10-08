@@ -1,6 +1,6 @@
 <?php
 
-use App\Services\ContentArchiveService;
+use App\Domains\Archive\ContentArchiveService;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -118,11 +118,144 @@ it('includes media embedded in HTML and rewrites a conflicting reference', funct
     }
 });
 
+it('keeps external media URLs as references without bundling remote files', function () {
+    DB::table('archive_test_items')->insert([
+        'id' => 10, 'name' => 'External catalog',
+        'image' => 'https://example.org/storage/catalog/manual.pdf',
+        'created_at' => '2026-01-01 00:00:00', 'updated_at' => '2026-01-01 00:00:00',
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        $zip = new ZipArchive;
+        expect($zip->open($path))->toBeTrue();
+        expect($zip->locateName('media/storage/catalog/manual.pdf'))->toBeFalse();
+        $zip->close();
+        expect($archive->preview($path)['missing_media'])->toBe([]);
+        DB::table('archive_test_items')->delete();
+        expect($archive->import($path)['added'])->toBe(1);
+        expect(DB::table('archive_test_items')->value('image'))
+            ->toBe('https://example.org/storage/catalog/manual.pdf');
+    } finally {
+        @unlink($path);
+    }
+});
+
+it('labels exports from a product-only schema as canonical and accepts them', function () {
+    config()->set('content_archive.legacy_product_tables', []);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        $zip = new ZipArchive;
+        expect($zip->open($path))->toBeTrue();
+        $manifest = json_decode($zip->getFromName('manifest.json'), true);
+        expect($manifest['source_schema'])->toBe('canonical');
+        $zip->close();
+        expect($archive->preview($path)['manifest']['source_schema'])->toBe('canonical');
+    } finally {
+        @unlink($path);
+    }
+});
+
 it('keeps business and identity tables outside the content allowlist', function () {
     $excluded = config('content_archive.excluded_tables');
     $tables = config('content_archive.tables');
     expect(array_intersect($excluded, $tables))->toBe([]);
     expect($excluded)->toContain('users', 'orders', 'order_items', 'coupons', 'consultation_requests');
+});
+
+it('accepts a legacy archive and backfills the unified product tables', function () {
+    config()->set('content_archive.tables', ['ngoi_am_duong_ct', 'products', 'product_variants', 'product_media', 'product_legacy_ids']);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->directory().DIRECTORY_SEPARATOR.'legacy-test-'.bin2hex(random_bytes(8)).'.zip';
+    $row = [
+        'ngoi_am_duong_ct_id' => 91,
+        'code' => 'ZIP-LEGACY-091',
+        'name' => 'Ngói từ ZIP cũ',
+        'images' => '[]',
+        'price' => 15000,
+        'is_delete' => 0,
+        'created_at' => '2026-01-01 00:00:00',
+        'updated_at' => '2026-01-01 00:00:00',
+    ];
+    $data = json_encode($row, JSON_UNESCAPED_UNICODE)."\n";
+    $sql = '-- test';
+    $manifest = [
+        'format_version' => 1,
+        'source_schema' => 'legacy',
+        'source_id' => $archive->sourceId(),
+        'exported_at_utc' => '2026-01-01T00:00:00Z',
+        'tables' => ['ngoi_am_duong_ct' => 1],
+        'files' => [
+            'data/ngoi_am_duong_ct.ndjson' => ['sha256' => hash('sha256', $data), 'bytes' => strlen($data)],
+            'database.sql' => ['sha256' => hash('sha256', $sql), 'bytes' => strlen($sql)],
+        ],
+    ];
+    $zip = new ZipArchive;
+    expect($zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE))->toBeTrue();
+    $zip->addFromString('data/ngoi_am_duong_ct.ndjson', $data);
+    $zip->addFromString('database.sql', $sql);
+    $zip->addFromString('manifest.json', json_encode($manifest));
+    $zip->close();
+    try {
+        expect($archive->import($path)['added'])->toBe(1);
+        expect(DB::table('products')->where('name', 'Ngói từ ZIP cũ')->count())->toBe(1);
+        expect(DB::table('product_variants')->where('sku', 'ZIP-LEGACY-091')->value('price'))->toBe(15000);
+    } finally {
+        @unlink($path);
+    }
+});
+
+it('exports the complete allowlisted schema without business tables', function () {
+    config()->set('content_archive.tables', (require config_path('content_archive.php'))['tables']);
+    $path = app(ContentArchiveService::class)->export();
+    try {
+        $zip = new ZipArchive;
+        expect($zip->open($path))->toBeTrue();
+        $manifest = json_decode($zip->getFromName('manifest.json'), true);
+        expect($manifest['tables'])->toHaveKey('products');
+        expect($manifest['tables'])->not->toHaveKey('users');
+        expect($manifest['tables'])->not->toHaveKey('orders');
+        $zip->close();
+    } finally {
+        @unlink($path);
+    }
+});
+
+it('round trips a canonical archive through an empty product catalog', function () {
+    config()->set('content_archive.tables', (require config_path('content_archive.php'))['tables']);
+    Storage::disk('public')->put('uploads/canon.webp', 'fake image bytes');
+    $product = app(\App\Domains\Catalog\ProductWriter::class)->create('ngoi_am_duong_ct', [
+        'code' => 'CANON-001', 'name' => 'Ngói canonical', 'images' => ['uploads/canon.webp'], 'price' => 41000,
+        'is_delete' => false,
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        DB::table('product_public_ids')->delete();
+        DB::table('variant_public_ids')->delete();
+        DB::table('product_media')->delete();
+        DB::table('product_variants')->delete();
+        DB::table('products')->delete();
+        expect($archive->preview($path)['add'])->toBeGreaterThanOrEqual(3);
+        $archive->import($path);
+        expect(DB::table('products')->where('id', $product->id)->value('name'))->toBe('Ngói canonical');
+        expect(DB::table('product_variants')->where('sku', 'CANON-001')->value('price'))->toBe(41000);
+        expect($archive->import($path)['added'])->toBe(0);
+        $again = $archive->export();
+        try {
+            $zip = new ZipArchive;
+            $zip->open($again);
+            $manifest = json_decode($zip->getFromName('manifest.json'), true);
+            expect($manifest['source_schema'])->toBe('canonical');
+            expect($manifest['tables']['products'])->toBe(1);
+            $zip->close();
+        } finally {
+            @unlink($again);
+        }
+    } finally {
+        @unlink($path);
+    }
 });
 
 it('tracks an external source so repeated imports stay idempotent', function () {
@@ -150,7 +283,6 @@ it('tracks an external source so repeated imports stay idempotent', function () 
         @unlink($path);
     }
 });
-
 it('does not attach an external child to a different local parent with the same ID', function () {
     Schema::create('archive_test_parents', function (Blueprint $table) {
         $table->id();

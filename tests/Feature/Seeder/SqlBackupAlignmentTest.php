@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Models\DuAn;
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Content\Models\DuAn;
 use App\Models\GachHoaThongGioAnh;
 use App\Models\GiaTriGachHoaThongGio;
-use App\Models\NgoiAmDuongCt;
-use App\Models\TrangChu;
-use App\Models\TrangDuAn;
-use App\Models\VeChungToi;
+use App\Domains\Content\Models\TrangChu;
+use App\Domains\Content\Models\TrangDuAn;
+use App\Domains\Content\Models\VeChungToi;
 use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function () {
@@ -17,7 +17,7 @@ beforeEach(function () {
 
 it('matches sql backup row counts', function () {
     expect(DuAn::count())->toBe(20);
-    expect(NgoiAmDuongCt::count())->toBe(16);
+    expect(Product::where('type_key', 'ngoi_am_duong_ct')->count())->toBe(16);
     expect(GiaTriGachHoaThongGio::count())->toBe(3);
     expect(GachHoaThongGioAnh::count())->toBe(10);
 });
@@ -52,7 +52,9 @@ it('seeds projects with seven gallery images each', function () {
 });
 
 it('uses deterministic product detail data from backup', function () {
-    $first = NgoiAmDuongCt::where('code', 'NAD-2026-001')->first();
+    $first = Product::where('type_key', 'ngoi_am_duong_ct')
+        ->whereHas('variants', fn ($q) => $q->where('sku', 'NAD-2026-001'))
+        ->first();
 
     expect($first)->not->toBeNull();
     expect($first->name)->toBe('Ngói Âm Dương Tráng Men Cao Cấp Bát Tràng - Phiên bản 1');

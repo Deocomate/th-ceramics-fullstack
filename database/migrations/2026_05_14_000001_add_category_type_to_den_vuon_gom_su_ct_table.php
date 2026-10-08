@@ -9,6 +9,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('den_vuon_gom_su_ct')) {
+            return;
+        }
+
         Schema::table('den_vuon_gom_su_ct', function (Blueprint $table) {
             $table->string('category_type', 20)->default('den_gom')->after('name')->index();
         });

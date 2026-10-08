@@ -1,9 +1,9 @@
 <?php
 
+use App\Domains\Catalog\ProductWriter;
+use App\Domains\Content\Infrastructure\Services\HomePageConfigService;
+use App\Domains\Content\Models\TrangChu;
 use App\Models\LinhVatPhongThuy;
-use App\Models\LinhVatPhongThuyCt;
-use App\Models\TrangChu;
-use App\Services\TrangChuService;
 use Illuminate\Support\Facades\Cache;
 
 function ensureTrangChuRecord(): TrangChu
@@ -38,7 +38,7 @@ test('ecommerce flag defaults to enabled after migrate', function () {
 test('cart routes work when ecommerce is enabled', function () {
     setEcommerceEnabled(true);
 
-    $product = LinhVatPhongThuyCt::query()->create([
+    $product = app(ProductWriter::class)->create('linh_vat_phong_thuy_ct', [
         'name' => 'Linh vật toggle on',
         'code' => 'LV-ON-001',
         'price' => 100000,
@@ -83,7 +83,7 @@ test('home page hides mini cart and shows consultation labels when ecommerce is 
         'video' => 'https://example.com/video.mp4',
     ]);
 
-    LinhVatPhongThuyCt::query()->create([
+    app(ProductWriter::class)->create('linh_vat_phong_thuy_ct', [
         'name' => 'Linh vật showcase',
         'code' => 'LV-SHOW-001',
         'price' => 100000,
@@ -112,7 +112,7 @@ test('home page shows mini cart when ecommerce is enabled', function () {
 test('updating trang chu busts ecommerce cache', function () {
     setEcommerceEnabled(true);
 
-    app(TrangChuService::class)->update([
+    app(HomePageConfigService::class)->update([
         'is_ecommerce_enabled' => false,
     ]);
 

@@ -2,18 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domains\Catalog\Infrastructure\Models\YinYangRoofTile;
 
-class NgoiAmDuong extends Model
-{
-    protected $table = 'ngoi_am_duong';
-
-    protected $primaryKey = 'ngoi_am_duong_id';
-
-    protected $fillable = [
-        'thumbnail_main',
-        'thumbnail1',
-        'thumbnail2',
-        'video',
-    ];
-}
+class_alias(YinYangRoofTile::class, __NAMESPACE__.'\\NgoiAmDuong');

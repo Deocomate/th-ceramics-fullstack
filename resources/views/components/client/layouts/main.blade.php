@@ -12,6 +12,8 @@
     <meta name="description" content="{{ $description }}" />
     @endif
 
+    @stack('head')
+
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/logo.png') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
@@ -104,10 +106,10 @@
 
     <x-client.layouts.footer :hide-newsletter="$hideNewsletter" />
 
-    <x-client.shared.cart-toast />
-    <x-client.shared.cart-modal />
+    <x-client.commerce.shared.cart-toast />
+    <x-client.commerce.shared.cart-modal />
     @unless ($isEcommerceEnabled ?? true)
-        <x-client.shared.consultation-modal />
+        <x-client.commerce.shared.consultation-modal />
     @endunless
 
     <!-- Global Lightbox -->

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\PageFactory;
-use App\Models\User;
+use App\Domains\Content\Models\PageFactory;
+use App\Domains\Identity\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -127,7 +127,7 @@ test('factory client process renders escaped blocks and responsive newlines', fu
         'process_bottom_desc' => [],
     ]);
 
-    $html = view('components.client.factory.manufacturing-process', ['factory' => $factory->fresh()])->render();
+    $html = view('components.client.content.factory.manufacturing-process', ['factory' => $factory->fresh()])->render();
 
     expect($html)
         ->toContain('QUY TRÌNH<br class="md:hidden" />KHOA HỌC')
@@ -145,7 +145,7 @@ test('factory gallery 2 renders gallery 2 images instead of gallery 1 images', f
         'gallery_2' => ['gallery-two.jpg'],
     ]);
 
-    $html = view('components.client.factory.gallery-secondary', ['factory' => $factory->fresh()])->render();
+    $html = view('components.client.content.factory.gallery-secondary', ['factory' => $factory->fresh()])->render();
 
     expect($html)
         ->toContain('/storage/gallery-two.jpg')

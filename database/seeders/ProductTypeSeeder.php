@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\DenGomSu;
-use App\Models\DenGomSuAnh;
-use App\Models\LanCanGomXu;
-use App\Models\LinhVat;
-use App\Models\LinhVatPhongThuy;
-use App\Models\LinhVatPhongThuyAnh;
+use App\Domains\Catalog\Infrastructure\Models\CeramicBalustrade;
+use App\Domains\Catalog\Infrastructure\Models\CeramicLamp;
+use App\Domains\Catalog\Infrastructure\Models\CeramicLampImage;
+use App\Domains\Catalog\Infrastructure\Models\FengShuiCreature;
+use App\Domains\Catalog\Infrastructure\Models\FengShuiCreatureImage;
+use App\Domains\Catalog\Infrastructure\Models\FengShuiCreatureLegacy;
 use Illuminate\Database\Seeder;
 
 class ProductTypeSeeder extends Seeder
@@ -23,7 +23,7 @@ class ProductTypeSeeder extends Seeder
 
     private function seedLanCanGomXu(): void
     {
-        LanCanGomXu::firstOrCreate(
+        CeramicBalustrade::firstOrCreate(
             ['lan_can_gom_xu_id' => 1],
             [
                 'thumbnail_main' => 'assets/images/lan-can-01.jpg',
@@ -34,7 +34,7 @@ class ProductTypeSeeder extends Seeder
 
     private function seedLinhVatPhongThuy(): void
     {
-        $parent = LinhVatPhongThuy::firstOrCreate(
+        $parent = FengShuiCreature::firstOrCreate(
             ['linh_vat_phong_thuy_id' => 1],
             [
                 'thumbnail_main' => 'assets/images/linh-vat-banner.png',
@@ -48,7 +48,7 @@ class ProductTypeSeeder extends Seeder
         ];
 
         foreach ($linhVats as $lv) {
-            LinhVat::firstOrCreate(
+            FengShuiCreatureLegacy::firstOrCreate(
                 ['title' => $lv['title']],
                 [
                     'image' => $lv['image'],
@@ -64,7 +64,7 @@ class ProductTypeSeeder extends Seeder
         ];
 
         foreach ($anhs as $anh) {
-            LinhVatPhongThuyAnh::firstOrCreate(
+            FengShuiCreatureImage::firstOrCreate(
                 ['image' => $anh['image']],
                 ['linh_vat_phong_thuy_id' => $parent->linh_vat_phong_thuy_id]
             );
@@ -73,7 +73,7 @@ class ProductTypeSeeder extends Seeder
 
     private function seedDenGomSu(): void
     {
-        $parent = DenGomSu::firstOrCreate(
+        $parent = CeramicLamp::firstOrCreate(
             ['den_gom_su_id' => 1], [
                 'thumbnail_main' => 'assets/images/den-gom-banner.png',
                 'video' => 'https://www.youtube.com/embed/Win12rIicBI',
@@ -92,7 +92,7 @@ class ProductTypeSeeder extends Seeder
         ];
 
         foreach ($anhs as $anh) {
-            DenGomSuAnh::firstOrCreate(
+            CeramicLampImage::firstOrCreate(
                 ['image' => $anh['image']],
                 ['den_gom_su_id' => $parent->den_gom_su_id]
             );

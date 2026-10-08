@@ -1,10 +1,10 @@
 <?php
 
+use App\Domains\Catalog\ProductWriter;
 use App\Models\DinhMucNgoiAmDuong;
-use App\Models\NgoiAmDuongCt;
 
 test('ngoi am duong detail renders local calculator applications and installation partials', function () {
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-PARTIALS-001',
         'name' => 'Ngói Âm Dương Partials',
         'images' => ['assets/images/ngoi-01.jpg'],
@@ -31,7 +31,7 @@ test('ngoi am duong detail renders local calculator applications and installatio
 });
 
 test('ngoi am duong detail main gallery has no box shadow or border', function () {
-    $product = NgoiAmDuongCt::query()->create([
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'NAD-GALLERY-FRAME-001',
         'name' => 'Ngói Âm Dương Gallery Frame',
         'images' => ['assets/images/ngoi-01.jpg'],

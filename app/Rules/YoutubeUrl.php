@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Support\ProductGallery;
+use App\Domains\Catalog\Infrastructure\ProductGallery;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 

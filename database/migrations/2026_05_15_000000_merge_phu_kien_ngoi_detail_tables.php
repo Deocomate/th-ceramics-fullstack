@@ -20,6 +20,10 @@ return new class extends Migration
 
     public function up(): void
     {
+        if (! Schema::hasTable('ngoi_bo_noc_ct') && ! Schema::hasTable('bo_noc_chu_van_ct')) {
+            return;
+        }
+
         $this->createUnifiedTables();
 
         $productMap = $this->copyProducts();

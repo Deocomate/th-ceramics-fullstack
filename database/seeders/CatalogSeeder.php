@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Catalog;
+use App\Domains\Content\Models\Catalog;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 

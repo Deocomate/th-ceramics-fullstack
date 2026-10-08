@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Middleware\EnsureEcommerceEnabled;
-use App\Http\Middleware\RoleMiddleware;
-use App\Http\Middleware\SubstituteStagedImages;
+use App\Domains\Commerce\Http\Middleware\EnsureEcommerceEnabled;
+use App\Domains\Content\Http\Middleware\EnsureContentWritesOpen;
+use App\Domains\Identity\Http\Middleware\RoleMiddleware;
+use App\Domains\Media\Http\Middleware\SubstituteStagedImages;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Application;
@@ -27,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => EnsureEmailIsVerified::class,
             'ecommerce' => EnsureEcommerceEnabled::class,
             'staged.images' => SubstituteStagedImages::class,
+            'content.writes' => EnsureContentWritesOpen::class,
         ]);
 
         $middleware->priority([

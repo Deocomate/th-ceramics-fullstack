@@ -2,31 +2,6 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
+use App\Domains\Content\Infrastructure\Mail\ContactFormMail as CanonicalContactFormMail;
 
-class ContactFormMail extends Mailable implements ShouldQueue
-{
-    use Queueable, SerializesModels;
-
-    public function __construct(public array $data) {}
-
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Liên hệ mới từ website Thanh Hải',
-        );
-    }
-
-    public function content(): Content
-    {
-        return new Content(
-            markdown: 'components.emails.contact.form',
-            with: ['data' => $this->data],
-        );
-    }
-}
+class ContactFormMail extends CanonicalContactFormMail {}

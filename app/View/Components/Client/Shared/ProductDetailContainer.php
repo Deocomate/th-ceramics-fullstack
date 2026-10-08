@@ -42,7 +42,7 @@ class ProductDetailContainer extends Component
 
     public function render(): View
     {
-        return view('components.client.shared.product-detail-container');
+        return view('components.client.catalog.shared.product-detail-container');
     }
 
     private function canAddToCart(): bool
