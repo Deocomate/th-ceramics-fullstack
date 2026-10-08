@@ -1,4 +1,34 @@
-<x-client.layouts.main title="Gạch Cổ Bát Tràng" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+@php
+    $productTitle = $product->name ?? 'Gạch Cổ Bát Tràng';
+    $sizeImage = \App\Support\AssetPath::url($product->size_image, 'assets/images/gtt-size.png');
+    $productImages = collect($product->images ?? [])->map(fn($img) => \App\Support\AssetPath::url($img))->values()->all();
+    $metaDesc = !empty($product->des) && is_array($product->des) ? implode('. ', $product->des) : $productTitle . ' - Gốm Sứ Thanh Hải';
+@endphp
+
+<x-client.layouts.main :title="$productTitle" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+
+@push('head')
+    <meta name="description" content="{{ $metaDesc }}">
+    <script type="application/ld+json">
+    {!! \Illuminate\Support\Js::encode([
+        '@context' => 'https://schema.org/',
+        '@type' => 'Product',
+        'name' => $productTitle,
+        'image' => $productImages,
+        'description' => $metaDesc,
+        'sku' => $product->code ?? '',
+        'brand' => ['@type' => 'Brand', 'name' => 'Gốm Sứ Thanh Hải'],
+        'offers' => [
+            '@type' => 'Offer',
+            'url' => route('client.products.gach-co-bat-trang.detail', $product->gach_co_bat_trang_ct_id),
+            'priceCurrency' => 'VND',
+            'price' => (string) ($product->price ?? 0),
+            'availability' => 'https://schema.org/InStock',
+            'seller' => ['@type' => 'Organization', 'name' => 'Gốm Sứ Thanh Hải'],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+@endpush
 
 @push('styles')
 <style>
@@ -10,26 +40,27 @@
 <!-- Sub Breadcrumb -->
 <div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
     <x-client.shared.breadcrumb text-class="font-semibold text-primary/60 uppercase text-[14px] md:text-base"
-    link-class="hover:text-primary transition-colors" separator-class="mx-1" parent-href="{{ route('client.products.gach-co-bat-trang.index') }}"
-    parent-label="Sản phẩm" current-class="text-primary font-semibold pb-1" current-label="Gạch Cổ Bát Tràng" />
+        link-class="hover:text-primary transition-colors" separator-class="mx-1" parent-href="{{ route('client.products.gach-co-bat-trang.index') }}"
+        parent-label="Sản phẩm" current-class="text-primary font-semibold pb-1" :current-label="$productTitle" />
     <hr class="border-t border-black/10 mt-4 w-full" />
 </div>
 
 <!-- Product Detail Container -->
 <x-client.catalog.shared.product-detail-container
-:title="$product->name"
-price="{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/viên' : 'Liên hệ' }}"
-rawPrice="{{ $product->price }}"
-sku="{{ $product->code }}"
-:features="$product->des"
-productType="gach_co_bat_trang_ct"
-productId="{{ $product->gach_co_bat_trang_ct_id }}"
+    :title="$productTitle"
+    price="{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/viên' : 'Liên hệ' }}"
+    rawPrice="{{ $product->price }}"
+    sku="{{ $product->code ?? '' }}"
+    :features="$product->des ?? []"
+    :images="$product->images ?? []"
+    productType="gach_co_bat_trang_ct"
+    productId="{{ $product->gach_co_bat_trang_ct_id }}"
 />
 
 <x-client.catalog.shared.journey-video :video="$journeyVideo ?? null" :hide-title="true" />
 <x-client.content.shared.works-simple :show-nav="true" />
 <x-client.catalog.shared.quantity-calculator
-    image="{{ !empty($product->size_image) ? asset('storage/' . $product->size_image) : asset('assets/images/gtt-size.png') }}"
+    :image="$sizeImage"
     :dinhMuc="$dinhMuc"
     :rate="$dinhMuc->first()?->value" />
 <x-client.content.shared.fabrication-process />

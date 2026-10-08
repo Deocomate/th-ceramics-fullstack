@@ -1,5 +1,6 @@
 @php
     $pageLabel = $pageLabel ?? 'Ngói Hài Văn Miếu';
+    $productTitle = $product->name ?? $pageLabel;
     $indexRouteName = $indexRouteName ?? 'client.products.ngoi-hai-van-mieu.index';
     $detailRouteName = $detailRouteName ?? 'client.products.ngoi-hai-van-mieu.detail';
     $productType = $productType ?? 'ngoi_hai_van_mieu_ct';
@@ -11,9 +12,34 @@
     $productSku = data_get($firstVariant, 'code') ?: data_get($product, 'code');
     $priceLabel = $productPrice > 0 ? number_format($productPrice, 0, ',', '.') . ' đ/m²' : 'Liên hệ';
     $sizeImage = \App\Support\AssetPath::url(data_get($product, 'size_image'), 'assets/images/gach-bat-size-1.png');
+    $productImages = collect($product->images ?? [])->map(fn($img) => \App\Support\AssetPath::url($img))->values()->all();
+    $metaDesc = !empty($product->des) && is_array($product->des) ? implode('. ', $product->des) : $productTitle . ' - Gốm Sứ Thanh Hải';
 @endphp
 
-<x-client.layouts.main title="{{ $pageLabel }}" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+<x-client.layouts.main :title="$productTitle" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+
+@push('head')
+    <meta name="description" content="{{ $metaDesc }}">
+    <script type="application/ld+json">
+    {!! \Illuminate\Support\Js::encode([
+        '@context' => 'https://schema.org/',
+        '@type' => 'Product',
+        'name' => $productTitle,
+        'image' => $productImages,
+        'description' => $metaDesc,
+        'sku' => $productSku ?: '',
+        'brand' => ['@type' => 'Brand', 'name' => 'Gốm Sứ Thanh Hải'],
+        'offers' => [
+            '@type' => 'Offer',
+            'url' => route($detailRouteName, $productDetailId),
+            'priceCurrency' => 'VND',
+            'price' => (string) $productPrice,
+            'availability' => 'https://schema.org/InStock',
+            'seller' => ['@type' => 'Organization', 'name' => 'Gốm Sứ Thanh Hải'],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+@endpush
 
 @push('styles')
 <style>
@@ -24,13 +50,13 @@
 
 <!-- Sub Breadcrumb -->
 <div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
-    <x-client.shared.breadcrumb current-label="{{ $pageLabel }}" parent-label="Sản phẩm" parent-href="{{ route($indexRouteName) }}" />
+    <x-client.shared.breadcrumb :current-label="$productTitle" parent-label="Sản phẩm" parent-href="{{ route($indexRouteName) }}" />
     <hr class="border-t border-black/10 mt-4 w-full" />
 </div>
 
 <!-- Product Detail Container -->
 <x-client.catalog.shared.product-detail-container
-    title="{{ $product->name ?? $pageLabel }}"
+    :title="$productTitle"
     sku="{{ $productSku ?: 'Đang cập nhật' }}"
     price="{{ $priceLabel }}"
     rawPrice="{{ $productPrice }}"

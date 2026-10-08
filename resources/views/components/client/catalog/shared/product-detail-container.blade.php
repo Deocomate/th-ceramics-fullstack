@@ -30,9 +30,9 @@
           <li>{{ $feature }}</li>
         @endforeach
       @else
-        <li>Timeless beauty to be treasured</li>
-        <li>High-quality and classic design, suitable for decoration</li>
-        <li>Beginner friendly and improves intelligence</li>
+        <li>Chất liệu gốm sứ cao cấp nung ở nhiệt độ cao, bền bỉ cùng thời gian.</li>
+        <li>Hoa văn sắc nét, phong cách cổ truyền kết hợp hiện đại trang nhã.</li>
+        <li>Đạt tiêu chuẩn kỹ thuật thi công cho mọi công trình kiến trúc.</li>
       @endif
     </ul>
 

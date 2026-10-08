@@ -36,7 +36,7 @@
     <x-client.shared.breadcrumb
       parent-href="{{ route('client.products.phu-kien-ngoi.index') }}"
       parent-label="Sản phẩm"
-      current-label="PHỤ KIỆN NGÓI" />
+      :current-label="$product->name" />
     <hr class="border-t border-black/10 mt-4 w-full" />
   </div>
 
@@ -71,9 +71,9 @@
           @forelse(($product->des ?? []) as $desc)
             <li>{{ $desc }}</li>
           @empty
-            <li>Timeless beauty to be treasured</li>
-            <li>High-quality and classic design, suitable for decoration</li>
-            <li>Beginner friendly and improves intelligence</li>
+            <li>Chất liệu gốm sứ nung ở nhiệt độ cao, bền bỉ theo thời gian.</li>
+            <li>Thiết kế tinh xảo, đậm đà bản sắc kiến trúc truyền thống Việt.</li>
+            <li>Chống thấm dột tối ưu, bảo vệ vững chắc cho công trình.</li>
           @endforelse
         </ul>
       </div>

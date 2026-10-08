@@ -11,7 +11,7 @@
       ->values();
 @endphp
 
-<x-client.layouts.main title="Chi tiết Đèn Gốm Sứ" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+<x-client.layouts.main :title="$product->name . ' - Đèn Gốm Sứ'" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
   <div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
     <x-client.shared.breadcrumb current-label="{{ $product->name }}" parent-label="Đèn Gốm Sứ" parent-href="{{ route('client.products.den-gom-su.index') }}" />
     <hr class="border-t border-black/10 mt-4 w-full" />

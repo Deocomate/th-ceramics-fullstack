@@ -5,31 +5,41 @@
     'label2' => null,
     'rate2' => '75 viên/m²',
 ])
-<!-- Ngoi Hai Van Mieu: bang kich thuoc -->
-<section id="bang-kich-thuoc" class="w-full pt-0 pb-8 md:pt-16 md:pb-16 bg-background-secondary" data-aos="fade-up">
-    <div class="w-[85%] max-w-[1320px] mx-auto">
-        <div class="flex flex-col items-center">
-            <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-6 md:mb-12 uppercase text-center">
-                KÍCH THƯỚC
-            </h2>
-            <div class="w-full max-w-[500px] flex justify-center">
-                <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
-                    alt="Kích thước sản phẩm" class="w-full h-auto object-contain" />
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- Ngoi Hai Van Mieu: cach tinh khoi luong -->
-<section id="cach-tinh-khoi-luong" class="w-full pt-0 pb-0 md:pt-0 md:pb-16 bg-background-secondary" data-aos="fade-up" data-hai-vm-calculator>
+<!-- Ngoi Hai Van Mieu: Kich thuoc va Cach tinh khoi luong (Desktop: chia 2 ben side) -->
+<div class="w-full pb-8 md:pb-16 lg:pb-20 bg-background-secondary" data-aos="fade-up">
     <div class="w-[85%] max-w-[1320px] mx-auto">
-        <div class="flex flex-col max-w-[720px] mx-auto">
-            <h2
-                class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-8 md:mb-7 uppercase text-center leading-[32px] md:leading-normal">
-                CÁCH TÍNH KHỐI LƯỢNG
-            </h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-16 items-start">
+            <!-- Cột trái: KÍCH THƯỚC -->
+            <section id="bang-kich-thuoc" class="w-full flex flex-col items-center">
+                <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-6 md:mb-10 uppercase text-center">
+                    KÍCH THƯỚC
+                </h2>
+                <div class="w-full max-w-[500px] flex justify-center mb-6">
+                    <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
+                        alt="Kích thước sản phẩm" class="w-full h-auto object-contain" />
+                </div>
 
-                <div class="md:hidden flex flex-col gap-8 mb-6">
+                <!-- Hình minh họa đo mái ở desktop -->
+                <div class="hidden lg:flex flex-col gap-8 w-full max-w-[420px] pt-4">
+                    <img src="{{ asset('assets/images/weight-01.svg') }}" alt="Cách đo mái chữ nhật"
+                        class="w-full h-auto object-contain" />
+                    <img src="{{ asset('assets/images/weight-02.svg') }}" alt="Cách đo mái hình thang"
+                        class="w-full h-auto object-contain" />
+                    <img src="{{ asset('assets/images/weight-03.svg') }}" alt="Cách đo diện tích mái"
+                        class="w-full h-auto object-contain" />
+                </div>
+            </section>
+
+            <!-- Cột phải: CÁCH TÍNH KHỐI LƯỢNG -->
+            <section id="cach-tinh-khoi-luong" class="w-full flex flex-col" data-hai-vm-calculator>
+                <h2
+                    class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-6 md:mb-7 uppercase text-center leading-[32px] md:leading-normal">
+                    CÁCH TÍNH KHỐI LƯỢNG
+                </h2>
+
+                <!-- Hình minh họa đo mái ở mobile -->
+                <div class="lg:hidden flex flex-col gap-8 mb-6">
                     <img src="{{ asset('assets/images/weight-01.svg') }}" alt="Cách đo mái chữ nhật"
                         class="w-full h-auto object-contain" />
                     <img src="{{ asset('assets/images/weight-02.svg') }}" alt="Cách đo mái hình thang"
@@ -38,7 +48,7 @@
                         class="w-full h-auto object-contain" />
                 </div>
 
-                <hr class="border-t border-black/10 w-full mb-4 block md:hidden" />
+                <hr class="border-t border-black/10 w-full mb-4 block lg:hidden" />
 
                 <div class="space-y-4">
                     <div class="flex justify-center">
@@ -62,8 +72,8 @@
                     </div>
 
                     <div class="space-y-6 lg:space-y-8" data-hai-vm-areas>
-                    <x-client.catalog.shared.shape-area-block :index="1" variant="hai-vm" />
-                    <x-client.catalog.shared.shape-area-block :index="2" default-shape="trapezoid" variant="hai-vm" />
+                        <x-client.catalog.shared.shape-area-block :index="1" variant="hai-vm" />
+                        <x-client.catalog.shared.shape-area-block :index="2" default-shape="trapezoid" variant="hai-vm" />
                     </div>
 
                     <div class="text-center">
@@ -171,7 +181,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
-    </section>
-
+    </div>
+</div>

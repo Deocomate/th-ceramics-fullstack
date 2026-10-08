@@ -1,4 +1,4 @@
-﻿@props(['image' => null, 'dinhMuc' => [], 'rate' => null])
+@props(['image' => null, 'dinhMuc' => [], 'rate' => null])
 
 @php
     $resolvedRate = $rate;
@@ -11,30 +11,28 @@
     $activeRate = (float) ($resolvedRate ?? 25);
 @endphp
 
-<!-- Gach va cac loai khac: bang kich thuoc -->
-<section id="bang-kich-thuoc" class="w-full pb-8 md:pb-16 lg:pb-20 bg-background-secondary" data-aos="fade-up">
+<!-- Gach va cac loai khac: Kich thuoc va Cach tinh khoi luong (Desktop: chia 2 ben side) -->
+<div class="w-full pb-8 md:pb-16 lg:pb-20 bg-background-secondary" data-aos="fade-up">
     <div class="w-[85%] max-w-[1320px] mx-auto">
-        <div class="flex flex-col items-center">
-            <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-6 md:mb-12 uppercase text-center md:tracking-normal">
-                KÍCH THƯỚC
-            </h2>
-            <div class="w-full max-w-[500px] flex justify-center">
-                <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
-                    alt="Kích thước sản phẩm" class="w-full h-auto object-contain px-4 md:px-0" />
-            </div>
-        </div>
-    </div>
-</section>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-16 items-start">
+            <!-- Cột trái: KÍCH THƯỚC -->
+            <section id="bang-kich-thuoc" class="w-full flex flex-col items-center">
+                <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-6 md:mb-10 uppercase text-center md:tracking-normal">
+                    KÍCH THƯỚC
+                </h2>
+                <div class="w-full max-w-[500px] flex justify-center">
+                    <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
+                        alt="Kích thước sản phẩm" class="w-full h-auto object-contain px-2 md:px-0" />
+                </div>
+            </section>
 
-<!-- Gach va cac loai khac: cach tinh khoi luong -->
-<section id="cach-tinh-khoi-luong" class="w-full pb-0 md:pb-16 lg:pb-20 bg-background-secondary" data-aos="fade-up" data-quantity-calculator data-default-rate="{{ $activeRate }}">
-    <div class="w-[85%] max-w-[1320px] mx-auto">
-        <div class="flex flex-col mt-4 md:mt-0 max-w-[720px] mx-auto">
-            <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-8 md:mb-12 uppercase text-center lg:text-center md:tracking-normal w-[85%] mx-auto md:w-full">
-                CÁCH TÍNH KHỐI LƯỢNG
-            </h2>
+            <!-- Cột phải: CÁCH TÍNH KHỐI LƯỢNG -->
+            <section id="cach-tinh-khoi-luong" class="w-full flex flex-col" data-quantity-calculator data-default-rate="{{ $activeRate }}">
+                <h2 class="text-[20px] md:text-3xl font-semibold text-[#C76E00] md:text-secondary mb-6 md:mb-10 uppercase text-center md:tracking-normal">
+                    CÁCH TÍNH KHỐI LƯỢNG
+                </h2>
 
-                <div class="space-y-4 md:space-y-6 w-[90%] md:w-full mx-auto md:mx-0" id="calculator-fields-container">
+                <div class="space-y-4 md:space-y-6 w-full" id="calculator-fields-container">
                     <div class="flex flex-row md:flex-row gap-4 md:gap-6 items-end justify-center md:justify-start area-block" data-area-block>
                         <div class="w-[111px] md:w-[120px] shrink-0 pb-2 md:pb-1 text-left flex flex-col items-start">
                             <span class="font-semibold text-[#2E2F2A] md:text-primary uppercase text-[11px] md:text-base area-title-label">DIỆN TÍCH 1</span>
@@ -62,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="space-y-4 md:space-y-6 w-[90%] md:w-full mx-auto md:mx-0 mt-4">
+                <div class="space-y-4 md:space-y-6 w-full mt-4">
                     <div class="text-center w-full pt-1">
                         <button type="button" id="btn-add-area"
                             class="text-[#C76E00] md:text-secondary font-semibold text-[10px] md:text-sm underline hover:opacity-80 transition-opacity leading-[20px]">+
@@ -145,7 +143,7 @@
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <div class="relative flex items-center justify-center">
-                                    <input type="radio" name="loss-rate" value="1.10" class="peer appearance-none w-[20px] h-[20px] border border-black/30 rounded-full checked:border-primary transition-all cursor-pointer" />
+                                    <input type="radio" name="loss-rate" value="1.10" class="peer appearance-none w-[20px] h-[20px] border border-black/30 md:border-black/30 rounded-full checked:border-primary transition-all cursor-pointer" />
                                     <div class="absolute w-2.5 h-2.5 rounded-full bg-[#C76E00] md:bg-primary scale-0 peer-checked:scale-100 transition-transform"></div>
                                 </div>
                                 <span class="text-[14px] text-[#2E2F2A] md:text-primary/70 font-medium tracking-tight">Thêm 10% (Đối với gạch dị hình)</span>
@@ -153,6 +151,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
-    </section>
+    </div>
+</div>

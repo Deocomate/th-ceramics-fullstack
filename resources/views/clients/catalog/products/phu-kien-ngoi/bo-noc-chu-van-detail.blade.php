@@ -37,7 +37,7 @@
     <x-client.shared.breadcrumb
       parent-href="{{ route('client.products.phu-kien-ngoi.index') }}"
       parent-label="Sản phẩm"
-      current-label="PHỤ KIỆN NGÓI" />
+      :current-label="$product->name" />
     <hr class="border-t border-black/10 mt-4 w-full" />
   </div>
 

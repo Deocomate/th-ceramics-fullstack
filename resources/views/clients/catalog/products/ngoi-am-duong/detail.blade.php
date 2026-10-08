@@ -1,4 +1,34 @@
-<x-client.layouts.main title="Ngói Âm Dương" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+@php
+    $productTitle = $product->name ?? 'Ngói Âm Dương';
+    $sizeImage = \App\Support\AssetPath::url($product->size_image, 'assets/images/ngoi-am-duong-size.png');
+    $productImages = collect($product->images ?? [])->map(fn($img) => \App\Support\AssetPath::url($img))->values()->all();
+    $metaDesc = !empty($product->des) && is_array($product->des) ? implode('. ', $product->des) : $productTitle . ' - Gốm Sứ Thanh Hải';
+@endphp
+
+<x-client.layouts.main :title="$productTitle" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
+
+@push('head')
+    <meta name="description" content="{{ $metaDesc }}">
+    <script type="application/ld+json">
+    {!! \Illuminate\Support\Js::encode([
+        '@context' => 'https://schema.org/',
+        '@type' => 'Product',
+        'name' => $productTitle,
+        'image' => $productImages,
+        'description' => $metaDesc,
+        'sku' => $product->code ?? '',
+        'brand' => ['@type' => 'Brand', 'name' => 'Gốm Sứ Thanh Hải'],
+        'offers' => [
+            '@type' => 'Offer',
+            'url' => route('client.products.ngoi-am-duong.detail', $product->ngoi_am_duong_ct_id),
+            'priceCurrency' => 'VND',
+            'price' => (string) ($product->price ?? 0),
+            'availability' => 'https://schema.org/InStock',
+            'seller' => ['@type' => 'Organization', 'name' => 'Gốm Sứ Thanh Hải'],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+@endpush
 
 @push('styles')
 <style>
@@ -11,19 +41,15 @@
 </style>
 @endpush
 
-@php
-    $sizeImage = \App\Support\AssetPath::url($product->size_image, 'assets/images/ngoi-am-duong-size.png');
-@endphp
-
 <!-- Sub Breadcrumb -->
 <div class="hidden md:block w-[85%] max-w-[1320px] mx-auto py-8">
-    <x-client.shared.breadcrumb current-label="NGÓI ÂM DƯƠNG" parent-label="Sản phẩm" parent-href="{{ route('client.products.ngoi-am-duong.index') }}" />
+    <x-client.shared.breadcrumb :current-label="$productTitle" parent-label="Sản phẩm" parent-href="{{ route('client.products.ngoi-am-duong.index') }}" />
     <hr class="border-t border-black/10 mt-4 w-full" />
 </div>
 
 <!-- Product Detail Container -->
 <x-client.catalog.shared.product-detail-container
-    title="{{ $product->name }}"
+    :title="$productTitle"
     price="{{ $product->price > 0 ? number_format($product->price, 0, ',', '.') . ' đ/m²' : 'Liên hệ' }}"
     rawPrice="{{ $product->price }}"
     sku="{{ $product->code ?? '' }}"
@@ -43,7 +69,7 @@
         Bảng kích thước
     </h2>
     <div class="size-options-scroll mobile-scroll-visible w-full pb-2 overflow-x-scroll md:overflow-x-hidden">
-        <img src="{{ $sizeImage }}" alt="Bảng kích thước {{ $product->name }}"
+        <img src="{{ $sizeImage }}" alt="Bảng kích thước {{ $productTitle }}"
             class="h-auto object-contain max-w-none w-[200%] md:w-full"
             onload="window.dispatchEvent(new Event('resize'))" />
     </div>
