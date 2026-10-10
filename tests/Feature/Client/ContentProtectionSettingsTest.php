@@ -131,6 +131,7 @@ test('listed crawlers are exempt from content protection', function (string $use
     'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
     'Mozilla/5.0 (compatible; Google-InspectionTool/1.0;)',
     'Mozilla/5.0 (Linux; Android 11) Chrome/141.0 Mobile Safari/537.36 Chrome-Lighthouse',
+    'Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36',
     'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
     'Mozilla/5.0 (compatible; coccocbot-web/1.0; +http://help.coccoc.com/searchengine)',
     'DuckDuckBot/1.1; (+http://duckduckgo.com/duckduckbot.html)',

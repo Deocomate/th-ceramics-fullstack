@@ -30,6 +30,8 @@ use App\Domains\Content\Http\Client\ShippingPolicyController;
 use App\Domains\Content\Http\Client\ShowroomController;
 use App\Domains\Identity\Http\Client\AuthController;
 use App\Domains\Identity\Http\Client\UserProfileController;
+use App\Domains\Protection\Http\Client\ProtectionNoticeController;
+use App\Domains\Protection\Http\Client\ViolationReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,6 +65,13 @@ Route::name('client.')->middleware('throttle:client-pages')->group(function () {
         ->name('consultation.store');
     Route::get('/cau-hoi-thuong-gap', [FaqController::class, 'index'])->name('faq');
     Route::get('/tim-kiem-nhanh', GlobalSearchController::class)->name('search.quick');
+
+    // Bảo vệ nội dung
+    Route::post('/bao-ve-noi-dung/ghi-nhan', ViolationReportController::class)
+        ->middleware('throttle:20,1')
+        ->name('protection.report');
+    Route::get('/noi-dung-duoc-bao-ve', [ProtectionNoticeController::class, 'notice'])->name('protection.notice');
+    Route::get('/canh-bao-ban-quyen', [ProtectionNoticeController::class, 'warning'])->name('protection.warning');
 
     // Showroom
     Route::get('/showroom', [ShowroomController::class, 'index'])->name('showroom');

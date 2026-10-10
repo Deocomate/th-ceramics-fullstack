@@ -42,6 +42,18 @@
     </section>
 
     <section class="space-y-5 md:space-y-4">
+      <h2 class="text-[18px] lg:text-lg font-bold text-primary leading-[28px]">Ghi nhận truy cập để bảo vệ nội dung</h2>
+      <p>
+        Hình ảnh, video, catalog và nội dung trên website thuộc quyền sở hữu trí tuệ của Gốm sứ Thanh Hải. Khi phát hiện công cụ
+        sao chép hoặc công cụ dành cho nhà phát triển đang mở trên trình duyệt, website ghi nhận địa chỉ IP, thời điểm truy cập,
+        thông tin trình duyệt và trang đang xem. Nếu bạn đang đăng nhập, tài khoản của bạn được ghi kèm.
+      </p>
+      <p>
+        Dữ liệu này chỉ dùng để bảo vệ quyền sở hữu trí tuệ của chúng tôi, được lưu tối đa 90 ngày rồi tự động xóa.
+      </p>
+    </section>
+
+    <section class="space-y-5 md:space-y-4">
       <h2 class="text-[18px] lg:text-lg font-bold text-primary leading-[28px]">Chia sẻ thông tin với bên thứ ba</h2>
       <p>
         Chúng tôi cam kết không bán, cho thuê hoặc chia sẻ thông tin cá nhân của bạn cho bất kỳ bên thứ ba nào, ngoại trừ các

@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ $catalog->tieu_de ?? 'Catalog' }} — Gốm sứ Thanh Hải</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <x-client.protection.guard />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>

@@ -7,6 +7,9 @@ return [
         'Googlebot',
         'Google-InspectionTool',
         'Chrome-Lighthouse',
+        // Lighthouse 12 and PageSpeed Insights emulate this phone and no longer
+        // send the Chrome-Lighthouse token.
+        'moto g power',
         'bingbot',
         'coccocbot',
         'DuckDuckBot',
@@ -18,4 +21,23 @@ return [
 
     // Requests per minute allowed from one IP address across client pages.
     'page_rate_limit' => (int) env('CONTENT_PROTECTION_PAGE_RATE_LIMIT', 120),
+
+    'devtools' => [
+        // Detections inside the window before the visitor is sent to the legal warning page.
+        'threshold' => 3,
+        'window_hours' => 24,
+
+        // disable-devtool detector types. 2 (Size) fires on browser side panels and
+        // 5 (Debugger) only works on Chrome for iOS, so both stay out.
+        'detectors' => [0, 1, 3, 4, 6, 7],
+        'interval_ms' => 1000,
+
+        // Count detections per IP address as well as per session. Turn off when
+        // visitors behind one carrier address reach the warning page too early.
+        'count_by_ip' => true,
+
+        // Violation records hold IP addresses and User-Agents; the privacy policy
+        // states this retention period.
+        'retention_days' => 90,
+    ],
 ];

@@ -34,6 +34,8 @@ use App\Domains\Commerce\Infrastructure\Session\LaravelCartSessionAdapter;
 use App\Domains\Content\Infrastructure\View\ContentViewComposer;
 use App\Domains\Media\Console\CleanStagedImagesCommand;
 use App\Domains\Media\Console\OptimizeMediaCommand;
+use App\Domains\Protection\Http\Support\ProtectionExemption;
+use App\Domains\Protection\Infrastructure\ProtectionSettings;
 use App\View\Components\Client\Shared\OutstandingValue;
 use App\View\Components\Client\Shared\ProductCard;
 use App\View\Components\Client\Shared\ProductDetailContainer;
@@ -120,6 +122,24 @@ class AppServiceProvider extends ServiceProvider
                 'pendingConsult',
                 ConsultationRequest::where('status', 'pending')->count()
             );
+        });
+
+        // Crawlers render JavaScript, so exempt visitors get no protection script at all.
+        View::composer('components.client.protection.guard', function ($view): void {
+            $settings = app(ProtectionSettings::class);
+            $deterrence = $settings->deterrenceEnabled();
+            $devtoolsGuard = $settings->devtoolsGuardEnabled();
+            $active = ($deterrence || $devtoolsGuard) && ! app(ProtectionExemption::class)->isExempt(request());
+
+            $view->with('protectionConfig', $active ? [
+                'deterrence' => $deterrence,
+                'devtools' => $devtoolsGuard ? [
+                    'reportUrl' => route('client.protection.report'),
+                    'noticeUrl' => route('client.protection.notice'),
+                    'detectors' => array_values((array) config('content_protection.devtools.detectors', [])),
+                    'interval' => (int) config('content_protection.devtools.interval_ms', 1000),
+                ] : null,
+            ] : null);
         });
 
         ContentViewComposer::boot();

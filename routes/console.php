@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Protection\Infrastructure\Models\ProtectionViolation;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -9,3 +10,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('images:clean-staged')->hourly();
+Schedule::command('model:prune', ['--model' => [ProtectionViolation::class]])->daily();

@@ -16,6 +16,7 @@
 
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/logo.png') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <x-client.protection.guard />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
