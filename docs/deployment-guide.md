@@ -13,7 +13,7 @@ For the demo, use the deployment root and SSH identity recorded in the private d
 
 Keep full SQL, media, environment and code backups in a private directory outside the deployment root. Download SQL/media backups and compare SHA-256 before local replacement. Credentials belong in the existing server environment or a private temporary MySQL options file, never shell arguments or Git.
 
-For an existing legacy database, rehearse [catalog conversion](product-refactor-runbook.md) on a restored copy first. During deployment, enter maintenance, create a final full SQL snapshot, then:
+During deployment, enter maintenance, create a final full SQL snapshot, then:
 
 ```bash
 cd "$DEPLOY_ROOT"
@@ -21,14 +21,16 @@ git pull --ff-only origin main
 composer install --no-dev --optimize-autoloader --no-interaction
 php artisan optimize:clear
 php artisan migrate --force
-php scripts/migrate-legacy-catalog.php --apply --backup=/absolute/private/path/final-database.sql.gz
-php scripts/migrate-legacy-catalog.php --verify
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan queue:restart
 php artisan up
 ```
+
+The legacy catalog conversion is a one-time step and the demo database was converted on 2026-10-07, so routine deployments skip `scripts/migrate-legacy-catalog.php`. Its `--verify` mode compares the canonical tables with the frozen legacy tables and reports a mismatch for every product edited in admin after the conversion; that output is expected and is not a deployment failure. Only a database that still has an empty `products` table needs the conversion: rehearse it on a restored copy with the [catalog runbook](product-refactor-runbook.md), then run `--apply --backup=/absolute/private/path/final-database.sql.gz` followed by `--verify` right after `migrate`.
+
+The demo has no Supervisor. The deployment account's crontab runs `php artisan queue:work database --stop-when-empty` and `php artisan schedule:run` every minute from the deployment root, logging to `storage/logs/queue-cron.log` and `storage/logs/scheduler-cron.log`. Both entries must `cd` into the deployment root; a wrong path fails silently and leaves mail queued, so after a deploy check that `queue-cron.log` is being written and the `jobs` table drains.
 
 Do not run seeders on the demo database. Check `/up`, public catalog pages, representative image URLs and the deployed revision. Before deploying a release that renames or moves queued classes, let the worker drain the `jobs` table and clear `failed_jobs`; legacy class aliases no longer exist, so payloads serialized under an old class name cannot be restored. For rollback, retain the prior revision, matching dependencies and verified full dump; follow the catalog runbook instead of migration rollback.
 
