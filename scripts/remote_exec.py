@@ -1,16 +1,10 @@
-import paramiko
 import sys
 
-hostname = "demo.thceramics.vn"
-username = "demot2342"
-password = "***REMOVED***"
+from deploy_connection import connect
 
-client = paramiko.SSHClient()
-client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+client = connect()
 
 try:
-    print(f"Connecting to {username}@{hostname}...")
-    client.connect(hostname, port=22, username=username, password=password, timeout=15)
     print("Connected successfully!")
     
     cmd = sys.argv[1] if len(sys.argv) > 1 else "uname -a; whoami; pwd; php -v"

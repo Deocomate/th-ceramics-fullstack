@@ -1,8 +1,6 @@
-import paramiko
+from deploy_connection import connect
 
-client = paramiko.SSHClient()
-client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-client.connect('demo.thceramics.vn', username='demot2342', password='***REMOVED***')
+client = connect()
 
 user_ini_content = """; PHP upload & execution limits for LiteSpeed / CyberPanel
 upload_max_filesize = 128M
@@ -25,8 +23,8 @@ with sftp.file('/home/demo.thceramics.vn/public_html/public/.user.ini', 'w') as 
 
 sftp.close()
 
-# 3. Kill demot2342 lsphp processes to force reload
-stdin, stdout, stderr = client.exec_command('pkill -u demot2342 lsphp || killall -u demot2342 lsphp || true')
+# 3. Kill the deploy user's lsphp processes to force reload
+stdin, stdout, stderr = client.exec_command('pkill -u "$(whoami)" lsphp || killall -u "$(whoami)" lsphp || true')
 print(stdout.read().decode())
 
 # 4. Check curl response

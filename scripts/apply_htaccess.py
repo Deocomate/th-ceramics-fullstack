@@ -1,8 +1,6 @@
-import paramiko
+from deploy_connection import connect
 
-client = paramiko.SSHClient()
-client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-client.connect('demo.thceramics.vn', username='demot2342', password='***REMOVED***')
+client = connect()
 
 htaccess_append = """
 php_value upload_max_filesize 128M
@@ -27,7 +25,7 @@ with sftp.file('/home/demo.thceramics.vn/public_html/public/.htaccess', 'w') as 
 
 sftp.close()
 
-stdin, stdout, stderr = client.exec_command('pkill -u demot2342 lsphp || killall -u demot2342 lsphp || true')
+stdin, stdout, stderr = client.exec_command('pkill -u "$(whoami)" lsphp || killall -u "$(whoami)" lsphp || true')
 print(stdout.read().decode())
 
 stdin, stdout, stderr = client.exec_command('curl -k -s https://127.0.0.1/php_info_test.php -H "Host: demo.thceramics.vn"')

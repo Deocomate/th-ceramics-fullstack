@@ -1,8 +1,6 @@
-import paramiko
+from deploy_connection import connect
 
-client = paramiko.SSHClient()
-client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-client.connect('demo.thceramics.vn', username='demot2342', password='***REMOVED***')
+client = connect()
 
 sftp = client.open_sftp()
 with sftp.file('/home/demo.thceramics.vn/public_html/public/php_info_test.php', 'w') as f:
