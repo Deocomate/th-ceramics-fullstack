@@ -3,16 +3,16 @@
 namespace App\Domains\Content\Http\Client;
 
 use App\Domains\Content\Http\Requests\ContactFormRequest;
-use App\Domains\Content\Infrastructure\Services\ContactPageService;
-use App\Http\Controllers\Controller;
 use App\Domains\Content\Infrastructure\Mail\ContactFormMail;
+use App\Domains\Content\Infrastructure\Services\ContactPageConfigService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class ContactController extends Controller
 {
-    public function index(ContactPageService $service): View
+    public function index(ContactPageConfigService $service): View
     {
         return view('clients.content.contact.index', [
             'contact' => $service->getFirstRecord(),
