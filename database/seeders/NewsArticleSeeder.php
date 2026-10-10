@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Models\DanhMucTinTuc;
-use App\Domains\Content\Models\TinTuc;
+use App\Domains\Content\Infrastructure\Models\NewsCategory;
+use App\Domains\Content\Infrastructure\Models\NewsArticle;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 
@@ -14,8 +14,8 @@ class NewsArticleSeeder extends Seeder
     public function run(): void
     {
         $this->truncateTables('tin_tuc', 'danh_muc_tin_tuc');
-        $this->seedFromData('danh_muc_tin_tuc', DanhMucTinTuc::class);
-        $this->seedFromData('tin_tuc', TinTuc::class);
+        $this->seedFromData('danh_muc_tin_tuc', NewsCategory::class);
+        $this->seedFromData('tin_tuc', NewsArticle::class);
         $this->seedRelatedPaginationArticles();
     }
 
@@ -36,7 +36,7 @@ class NewsArticleSeeder extends Seeder
         foreach ($relatedTitles as $index => $title) {
             $articleNumber = $index + 7;
 
-            TinTuc::query()->create([
+            NewsArticle::query()->create([
                 'danh_muc_tin_tuc_id' => 3,
                 'tieu_de' => $title,
                 'slug' => 'cong-trinh-du-an-lien-quan-'.$articleNumber,

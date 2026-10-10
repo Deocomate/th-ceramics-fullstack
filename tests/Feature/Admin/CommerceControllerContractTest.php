@@ -3,7 +3,7 @@
 use App\Domains\Commerce\Infrastructure\Models\ConsultationRequest;
 use App\Domains\Commerce\Infrastructure\Models\Order;
 use App\Domains\Content\Http\Middleware\EnsureContentWritesOpen;
-use App\Domains\Identity\Models\User;
+use App\Domains\Identity\Infrastructure\Models\User;
 
 beforeEach(function () {
     $this->withoutMiddleware(EnsureContentWritesOpen::class);

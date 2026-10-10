@@ -56,7 +56,7 @@
                 <select x-model="selectedCategory"
                     class="text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white focus:border-brand-red focus:ring-1 focus:ring-brand-red outline-none">
                     <option value="">Tất cả danh mục</option>
-                    @foreach (\App\Domains\Content\Models\Faq::CATEGORIES as $value => $label)
+                    @foreach (\App\Domains\Content\Infrastructure\Models\Faq::CATEGORIES as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
                     @endforeach
                 </select>
@@ -95,7 +95,7 @@
                                     {{ $faq->category === 'lắp-đặt' ? 'bg-purple-50 text-purple-700 border-purple-200' : '' }}
                                     {{ $faq->category === 'đổi-trả' ? 'bg-rose-50 text-rose-700 border-rose-200' : '' }}
                                     {{ !in_array($faq->category, ['sản-phẩm', 'báo-giá', 'vận-chuyển', 'lắp-đặt', 'đổi-trả']) ? 'bg-gray-100 text-gray-700 border-gray-200' : '' }}">
-                                    {{ \App\Domains\Content\Models\Faq::CATEGORIES[$faq->category] ?? $faq->category }}
+                                    {{ \App\Domains\Content\Infrastructure\Models\Faq::CATEGORIES[$faq->category] ?? $faq->category }}
                                 </span>
                             </td>
                             <td class="px-5 py-3 max-w-[300px]">
@@ -191,7 +191,7 @@
                             class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg
                                    focus:border-brand-red focus:ring-1 focus:ring-brand-red outline-none transition-all bg-white">
                             <option value="">-- Chọn danh mục --</option>
-                            @foreach (\App\Domains\Content\Models\Faq::CATEGORIES as $value => $label)
+                            @foreach (\App\Domains\Content\Infrastructure\Models\Faq::CATEGORIES as $value => $label)
                                 <option value="{{ $value }}">{{ $label }}</option>
                             @endforeach
                         </select>

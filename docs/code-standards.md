@@ -4,9 +4,10 @@
 
 | Element | Convention | Example |
 |---------|-----------|---------|
-| Classes (PHP) | English PascalCase for new classes | `YinYangRoofTileController`, `FileUploadHelper` |
-| Models | PascalCase, singular | `Product`, `YinYangRoofTile` |
-| Controllers | PascalCase + descriptive suffix | `YinYangRoofTileController`, `AuthController` |
+| Classes (PHP) | PascalCase; technical roles in English | `FileUploadHelper`, `CartService` |
+| Product-named classes | Unaccented Vietnamese product name (same wording as routes, views and tables) + English role suffix | `NgoiAmDuong`, `DinhMucNgoiAmDuongService`, `GachHoaThongGioAnh` |
+| Models | PascalCase, singular | `Product`, `NgoiAmDuong` |
+| Controllers | PascalCase + descriptive suffix; product item (`-ct`) admin controllers end in `CtController` | `NgoiAmDuongController`, `NgoiAmDuongCtController`, `AuthController` |
 | Services | PascalCase + `Service` suffix | `CartService`, `AuthService` |
 | Methods/Functions | camelCase | `getFirstRecord()`, `isUnique()` |
 | Variables | camelCase | `$ngoiAmDuong`, `$fillable` |

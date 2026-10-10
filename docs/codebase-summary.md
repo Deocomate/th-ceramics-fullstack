@@ -23,11 +23,7 @@ th-ceramics-fullstack/
 │   │   ├── Content/                      # CMS pages, projects, customer services (Domain, Application, Infrastructure, Http)
 │   │   ├── Identity/                     # Authentication & User Management (Domain, Application, Infrastructure, Http)
 │   │   └── Media/                        # Media upload pipeline & WebP optimization (Console, Http, Infrastructure)
-│   ├── Http/                             # Shared controller base and retained compatibility classes
-│   ├── Mail/                             # Compatibility aliases for queued Commerce mail payloads
-│   ├── Notifications/                    # Queued notification compatibility shims
-│   ├── Jobs/                             # Queue job compatibility shims (ContentArchiveJob)
-│   ├── Models/                           # Legacy Catalog model aliases for serialized payloads
+│   ├── Http/                             # Shared controller base
 │   ├── Infrastructure/                   # Shared infrastructure such as view history
 │   ├── Providers/                        # AppServiceProvider
 │   ├── Rules/                            # Custom rules (e.g., YoutubeUrl)
@@ -63,13 +59,13 @@ th-ceramics-fullstack/
 
 ### 2. CMS Section Models (`app/Domains/Catalog/Infrastructure/Models`)
 Single-row configuration records controlling the marketing intro and landing sections for each category:
-`YinYangRoofTile`, `VanMieuFishScaleRoofTile`, `BreezeBlock`, `RoofTileAccessory`, `DecorativeTile`, `CeramicBalustrade`, `BatTrangAntiqueBrick`, `FengShuiCreature`, `CeramicLamp`.
+`NgoiAmDuong`, `NgoiHaiVanMieu`, `GachHoaThongGio`, `PhuKienNgoi`, `GachTrangTri`, `LanCanGomSu`, `GachCoBatTrang`, `LinhVatPhongThuy`, `DenGomSu`.
 
 ### 3. Commerce Models (`app/Domains/Commerce/Infrastructure/Models`)
 - `Order`: Full order lifecycle tracking with auto-generated order codes (`THC-YYYYMMDD-XXXX`), status workflows, and email notifications.
 - `OrderItem`: Snapshot of ordered items (product_type, product_id, variant_id, price, quantity).
 - `Coupon`: Discount code engine (percentage / fixed discount, product-type restriction, usage limits).
-- `ConsultationRequest`: Submitted consultation snapshots. Legacy names under `Commerce/Models` remain aliases for queued payload compatibility.
+- `ConsultationRequest`: Submitted consultation snapshots.
 
 ### 4. Content & Showcase Models (`app/Domains/Content/Infrastructure/Models`)
 - `HomePageConfig`: Home page dynamic configuration (hero slides, partner logos, statistics, showroom gallery).

@@ -2,7 +2,7 @@
 
 namespace App\Domains\Catalog\Infrastructure\Services;
 
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
 use App\Domains\Catalog\Infrastructure\Models\Product;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
@@ -29,7 +29,7 @@ class ProductBulkRenameService
         $typeKey = $config['type_key'];
 
         if ($typeKey === 'phu_kien_ngoi_ct') {
-            if (! in_array($categoryType, [RoofTileAccessoryCategory::TYPE_BO_NOC, RoofTileAccessoryCategory::TYPE_CHU_VAN], true)) {
+            if (! in_array($categoryType, [PhuKienNgoiCategory::TYPE_BO_NOC, PhuKienNgoiCategory::TYPE_CHU_VAN], true)) {
                 throw new InvalidArgumentException('Loại phụ kiện ngói không hợp lệ.');
             }
         }

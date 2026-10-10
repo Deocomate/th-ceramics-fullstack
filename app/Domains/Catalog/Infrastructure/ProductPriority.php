@@ -12,11 +12,10 @@ class ProductPriority
     public static function groups(): array
     {
         $groups = [];
-        foreach (array_keys(ProductTypeRegistry::all()) as $type) {
+        foreach (ProductTypeRegistry::all() as $type => $config) {
             $groups[str_replace('_', '-', $type)] = [
                 'type_key' => $type,
-                'category' => in_array($type, ['gach_co_bat_trang_ct', 'phu_kien_ngoi_ct', 'den_vuon_gom_su_ct'], true)
-                    ? 'category_type' : null,
+                'category' => $config['has_categories'] ? 'category_type' : null,
             ];
         }
 

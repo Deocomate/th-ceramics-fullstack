@@ -11,7 +11,7 @@ The Laravel application groups delivery, use cases, business rules, and adapters
 | `Infrastructure` | Eloquent, storage, queue, mail, and cross-context adapters | Implements inward contracts |
 | `Http` and `Console` | Requests, controllers, middleware, commands | Invokes application services |
 
-`app/Models`, `app/Mail`, and `app/Jobs` retain aliases needed for old serialized payloads. Shared `AssetPath` remains in `app/Support`; shared view history lives in `app/Infrastructure`. Catalog services, gallery helpers, and product presenters live in Catalog. Queued mail and archive job aliases must remain available until old serialized payloads have drained. The dependency rules are checked by `tests/Unit/Architecture`.
+There is no class-alias layer: application code, tests, and seeders import the canonical class under `Infrastructure` or `Domain`. Per-type product rules (detail route, variants, category grouping, variant label, price display) live in `Catalog\Domain\ProductTypeRegistry`; request validation derives its type list from it, and Commerce reads the list through `SellableProductTypesPort`. Shared `AssetPath` remains in `app/Support`; shared view history lives in `app/Infrastructure`. Catalog services, gallery helpers, and product presenters live in Catalog. The dependency rules are checked by `tests/Unit/Architecture`.
 
 ## Context ownership
 

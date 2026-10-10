@@ -1,6 +1,6 @@
 <?php
 
-use App\Mail\ContactFormMail;
+use App\Domains\Content\Infrastructure\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 
 test('contact form queues email and redirects back to contact page', function () {

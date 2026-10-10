@@ -1,13 +1,13 @@
 <?php
 
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Content\Models\DanhMucDuAn;
-use App\Domains\Content\Models\DanhMucTinTuc;
-use App\Domains\Content\Models\DuAn;
-use App\Domains\Content\Models\TinTuc;
-use App\Domains\Identity\Models\User;
-use App\Models\NgoiHaiVanMieu;
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Content\Infrastructure\Models\ProjectCategory;
+use App\Domains\Content\Infrastructure\Models\NewsCategory;
+use App\Domains\Content\Infrastructure\Models\Project;
+use App\Domains\Content\Infrastructure\Models\NewsArticle;
+use App\Domains\Identity\Infrastructure\Models\User;
+use App\Domains\Catalog\Infrastructure\Models\NgoiHaiVanMieu;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 
@@ -44,8 +44,8 @@ test('preview button respects section override', function () {
 test('news and project edit pages expose slug preview urls', function () {
     $user = User::factory()->create();
 
-    $newsCategory = DanhMucTinTuc::create(['ten_danh_muc' => 'News']);
-    $news = TinTuc::create([
+    $newsCategory = NewsCategory::create(['ten_danh_muc' => 'News']);
+    $news = NewsArticle::create([
         'danh_muc_tin_tuc_id' => $newsCategory->danh_muc_tin_tuc_id,
         'tieu_de' => 'News title',
         'slug' => 'news-title',
@@ -54,8 +54,8 @@ test('news and project edit pages expose slug preview urls', function () {
         'is_delete' => 0,
     ]);
 
-    $projectCategory = DanhMucDuAn::create(['ten_danh_muc' => 'Projects']);
-    $project = DuAn::create([
+    $projectCategory = ProjectCategory::create(['ten_danh_muc' => 'Projects']);
+    $project = Project::create([
         'danh_muc_du_an_id' => $projectCategory->danh_muc_du_an_id,
         'ten_du_an' => 'Project title',
         'slug' => 'project-title',
@@ -126,8 +126,8 @@ test('ngoi hai co detail route renders active products and hides deleted product
 test('phu kien legacy detail redirects by type to avoid id collisions', function () {
     $boNoc = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Ngói bò nóc trùng id',
-        'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
-        'legacy_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
+        'category_type' => PhuKienNgoiCategory::TYPE_BO_NOC,
+        'legacy_type' => PhuKienNgoiCategory::TYPE_BO_NOC,
         'legacy_id' => 1,
         'images' => [],
         'is_delete' => 0,
@@ -135,8 +135,8 @@ test('phu kien legacy detail redirects by type to avoid id collisions', function
 
     $chuVan = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Bò nóc chữ vạn đúng',
-        'category_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
-        'legacy_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
+        'category_type' => PhuKienNgoiCategory::TYPE_CHU_VAN,
+        'legacy_type' => PhuKienNgoiCategory::TYPE_CHU_VAN,
         'legacy_id' => 1,
         'images' => [],
         'is_delete' => 0,

@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Identity\Models\User;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Identity\Infrastructure\Models\User;
 
 test('guest cannot access product copy api', function () {
     $this->getJson(route('admin.product-copy.list', ['type' => 'ngoi-am-duong-ct']))

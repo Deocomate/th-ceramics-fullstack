@@ -1,14 +1,14 @@
 <?php
 
-use App\Domains\Content\Models\DanhMucTinTuc;
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Content\Models\TinTuc;
+use App\Domains\Content\Infrastructure\Models\NewsCategory;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Content\Infrastructure\Models\NewsArticle;
 
-function createNewsArticle(DanhMucTinTuc $category, array $overrides = []): TinTuc
+function createNewsArticle(NewsCategory $category, array $overrides = []): NewsArticle
 {
     static $counter = 1;
 
-    return TinTuc::query()->create(array_merge([
+    return NewsArticle::query()->create(array_merge([
         'danh_muc_tin_tuc_id' => $category->danh_muc_tin_tuc_id,
         'tieu_de' => 'Bai viet '.$counter,
         'slug' => 'bai-viet-'.$counter++,
@@ -20,15 +20,15 @@ function createNewsArticle(DanhMucTinTuc $category, array $overrides = []): TinT
 }
 
 test('news index groups newest articles by visible categories', function () {
-    $visibleCategory = DanhMucTinTuc::query()->create([
+    $visibleCategory = NewsCategory::query()->create([
         'ten_danh_muc' => 'Cam nang xay dung',
         'is_delete' => false,
     ]);
-    $emptyCategory = DanhMucTinTuc::query()->create([
+    $emptyCategory = NewsCategory::query()->create([
         'ten_danh_muc' => 'Danh muc rong',
         'is_delete' => false,
     ]);
-    $deletedCategory = DanhMucTinTuc::query()->create([
+    $deletedCategory = NewsCategory::query()->create([
         'ten_danh_muc' => 'Danh muc da xoa',
         'is_delete' => true,
     ]);
@@ -71,11 +71,11 @@ test('news index groups newest articles by visible categories', function () {
 });
 
 test('news category page paginates only articles in selected category', function () {
-    $category = DanhMucTinTuc::query()->create([
+    $category = NewsCategory::query()->create([
         'ten_danh_muc' => 'Cong trinh du an',
         'is_delete' => false,
     ]);
-    $otherCategory = DanhMucTinTuc::query()->create([
+    $otherCategory = NewsCategory::query()->create([
         'ten_danh_muc' => 'Cam nang',
         'is_delete' => false,
     ]);
@@ -100,7 +100,7 @@ test('news category page paginates only articles in selected category', function
 });
 
 test('news category pagination uses custom pagination and preserves query string', function () {
-    $category = DanhMucTinTuc::query()->create([
+    $category = NewsCategory::query()->create([
         'ten_danh_muc' => 'Tin phan trang',
         'is_delete' => false,
     ]);
@@ -121,7 +121,7 @@ test('news category pagination uses custom pagination and preserves query string
 });
 
 test('deleted news category returns 404', function () {
-    $category = DanhMucTinTuc::query()->create([
+    $category = NewsCategory::query()->create([
         'ten_danh_muc' => 'Hidden category',
         'is_delete' => true,
     ]);
@@ -131,7 +131,7 @@ test('deleted news category returns 404', function () {
 });
 
 test('news detail paginates related articles in the same category', function () {
-    $category = DanhMucTinTuc::query()->create([
+    $category = NewsCategory::query()->create([
         'ten_danh_muc' => 'Cong trinh du an',
         'is_delete' => false,
     ]);
@@ -166,7 +166,7 @@ test('news detail paginates related articles in the same category', function () 
 });
 
 test('visited article appears in recent article history without duplicates', function () {
-    $category = DanhMucTinTuc::query()->create([
+    $category = NewsCategory::query()->create([
         'ten_danh_muc' => 'Tin tuc',
         'is_delete' => false,
     ]);

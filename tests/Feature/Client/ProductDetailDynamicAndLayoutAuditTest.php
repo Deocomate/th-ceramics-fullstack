@@ -1,11 +1,11 @@
 <?php
 
-use App\Domains\Catalog\Infrastructure\Models\BatTrangAntiqueBrick;
-use App\Domains\Catalog\Infrastructure\Models\BreezeBlock;
-use App\Domains\Catalog\Infrastructure\Models\RoofTileAccessory;
-use App\Domains\Catalog\ProductWriter;
-use App\Models\DinhMucNgoiHaiVanMieu;
-use App\Models\NgoiHaiVanMieu;
+use App\Domains\Catalog\Infrastructure\Models\GachCoBatTrang;
+use App\Domains\Catalog\Infrastructure\Models\GachHoaThongGio;
+use App\Domains\Catalog\Infrastructure\Models\PhuKienNgoi;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiHaiVanMieu;
+use App\Domains\Catalog\Infrastructure\Models\NgoiHaiVanMieu;
 use Illuminate\Support\Facades\Blade;
 
 test('quantity calculator renders side-by-side layout on desktop', function () {
@@ -29,7 +29,7 @@ test('ngoi hai van mieu calculator renders side-by-side layout on desktop', func
 });
 
 test('gach hoa thong gio detail renders dynamic title, breadcrumb, features, images and side-by-side layout', function () {
-    BreezeBlock::query()->firstOrCreate([], [
+    GachHoaThongGio::query()->firstOrCreate([], [
         'video_thumbnail' => 'ghtg/video-thumb.jpg',
     ]);
 
@@ -63,7 +63,7 @@ test('gach hoa thong gio detail renders dynamic title, breadcrumb, features, ima
 });
 
 test('gach co bat trang detail renders dynamic title, breadcrumb, features, images and side-by-side layout', function () {
-    BatTrangAntiqueBrick::query()->firstOrCreate([], [
+    GachCoBatTrang::query()->firstOrCreate([], [
         'thumbnail_main' => 'gcbt/main.jpg',
     ]);
 
@@ -140,7 +140,7 @@ test('ngoi hai van mieu detail renders dynamic title, breadcrumb and side-by-sid
 });
 
 test('ngoi bo noc accessory detail renders dynamic breadcrumb and no english placeholder text', function () {
-    RoofTileAccessory::query()->firstOrCreate([], [
+    PhuKienNgoi::query()->firstOrCreate([], [
         'thumbnail_main' => 'pk/main.jpg',
     ]);
 

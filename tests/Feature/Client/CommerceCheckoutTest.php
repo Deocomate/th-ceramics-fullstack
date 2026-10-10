@@ -1,10 +1,10 @@
 <?php
 
-use App\Domains\Catalog\ProductWriter;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
 use App\Domains\Commerce\Infrastructure\Mail\OrderCreatedMail;
 use App\Domains\Commerce\Infrastructure\Models\Coupon;
 use App\Domains\Commerce\Infrastructure\Models\Order;
-use App\Domains\Identity\Models\User;
+use App\Domains\Identity\Infrastructure\Models\User;
 use Illuminate\Support\Facades\Mail;
 
 test('checkout preserves cart product details in the order snapshot and sends its mail', function () {
@@ -49,31 +49,6 @@ test('checkout preserves cart product details in the order snapshot and sends it
 
     Mail::assertQueued(OrderCreatedMail::class);
     $this->getJson(route('client.cart.mini'))->assertJsonPath('cart_count', 0);
-});
-
-test('legacy queued order mail class names deserialize through the compatibility alias', function () {
-    $order = Order::factory()->create();
-    $serialized = serialize(new OrderCreatedMail($order));
-    $newClass = OrderCreatedMail::class;
-    $legacyClass = 'App\\Mail\\OrderCreatedMail';
-    $serialized = preg_replace(
-        '/O:\\d+:"'.preg_quote($newClass, '/').'"/',
-        'O:'.strlen($legacyClass).':"'.$legacyClass.'"',
-        $serialized,
-        1,
-    );
-    $newModelClass = Order::class;
-    $legacyModelClass = 'App\\Domains\\Commerce\\Models\\Order';
-    $serialized = preg_replace(
-        '/s:\\d+:"'.preg_quote($newModelClass, '/').'"/',
-        's:'.strlen($legacyModelClass).':"'.$legacyModelClass.'"',
-        $serialized,
-        1,
-    );
-
-    $restored = unserialize($serialized);
-    expect($restored)->toBeInstanceOf(OrderCreatedMail::class)
-        ->and($restored->order->getKey())->toBe($order->getKey());
 });
 
 test('coupon discount and usage are applied to the checkout snapshot', function () {

@@ -3,15 +3,19 @@
 namespace App\Domains\Commerce\Application;
 
 use App\Domains\Commerce\Application\Ports\CouponRepositoryPort;
-use App\Domains\Commerce\Domain\CouponProductTypes;
+use App\Domains\Commerce\Application\Ports\SellableProductTypesPort;
 
 class CouponService
 {
-    public function __construct(private readonly CouponRepositoryPort $coupons) {}
+    public function __construct(
+        private readonly CouponRepositoryPort $coupons,
+        private readonly SellableProductTypesPort $productTypes,
+    ) {}
 
-    public static function productTypes(): array
+    /** @return array<string, string> */
+    public function productTypes(): array
     {
-        return CouponProductTypes::all();
+        return $this->productTypes->labels();
     }
 
     public function getAll(): mixed

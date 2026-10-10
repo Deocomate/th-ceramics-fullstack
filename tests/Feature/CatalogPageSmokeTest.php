@@ -1,18 +1,18 @@
 <?php
 
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\ProductTypeRegistry;
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Identity\Models\User;
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Domain\ProductTypeRegistry;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Identity\Infrastructure\Models\User;
 use Database\Seeders\ProductDetailSeeder;
 
 test('accessory admin list and edit pages render canonical products in both categories', function () {
     $user = User::factory()->create();
 
     foreach ([
-        RoofTileAccessoryCategory::TYPE_BO_NOC => 'NBN-',
-        RoofTileAccessoryCategory::TYPE_CHU_VAN => 'BNCV-',
+        PhuKienNgoiCategory::TYPE_BO_NOC => 'NBN-',
+        PhuKienNgoiCategory::TYPE_CHU_VAN => 'BNCV-',
     ] as $category => $prefix) {
         $product = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
             'name' => 'Phụ kiện '.$category,
@@ -78,7 +78,7 @@ test('every catalog product group renders its admin and customer pages', functio
         $category = match ($type) {
             'gach_co_bat_trang_ct' => 'bat',
             'den_vuon_gom_su_ct' => 'den_gom',
-            'phu_kien_ngoi_ct' => RoofTileAccessoryCategory::TYPE_BO_NOC,
+            'phu_kien_ngoi_ct' => PhuKienNgoiCategory::TYPE_BO_NOC,
             default => null,
         };
         $name = 'Sản phẩm kiểm tra '.$index;

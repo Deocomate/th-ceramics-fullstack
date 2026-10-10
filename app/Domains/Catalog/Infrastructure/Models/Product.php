@@ -2,6 +2,7 @@
 
 namespace App\Domains\Catalog\Infrastructure\Models;
 
+use App\Domains\Catalog\Domain\ProductTypeRegistry;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -135,54 +136,41 @@ class Product extends Model
         return $activeVariants->isEmpty() ? null : (int) $activeVariants->min('price');
     }
 
+    /** @return array<string, mixed> */
+    private function typeConfig(): array
+    {
+        return ProductTypeRegistry::get((string) $this->type_key) ?? ProductTypeRegistry::defaults();
+    }
+
     public function getDisplayPriceAttribute(): string
     {
-        if ($this->type_key === 'den_vuon_gom_su_ct') {
-            $price = $this->min_price ?? $this->display_variant?->price ?? $this->price;
+        $config = $this->typeConfig();
+        $price = match ($config['price_source']) {
+            'min' => $this->min_price ?? $this->display_variant?->price ?? $this->price,
+            'variant' => $this->display_variant?->price ?? $this->price,
+            default => $this->price,
+        };
 
-            return ($price !== null && $price > 0) ? 'Từ '.number_format((float) $price, 0, ',', '.').' đ' : 'Liên hệ';
-        }
-
-        if ($this->type_key === 'lan_can_gom_su_ct') {
-            $price = $this->display_variant?->price ?? $this->price;
-
-            return ($price !== null && $price > 0) ? 'Giá: '.number_format((float) $price, 0, ',', '.').' đ/m²' : 'Liên hệ';
-        }
-
-        if ($this->type_key === 'phu_kien_ngoi_ct') {
-            $price = $this->display_variant?->price ?? $this->price;
-
-            return ($price !== null && $price > 0) ? 'Giá: '.number_format((float) $price, 0, ',', '.').' đ/m²' : 'Giá: Liên hệ';
-        }
-
-        $price = $this->price;
-
-        return ($price === null || $price <= 0) ? 'Liên hệ' : number_format($price, 0, ',', '.').' đ';
+        return ($price !== null && $price > 0)
+            ? sprintf($config['price_format'], number_format((float) $price, 0, ',', '.'))
+            : $config['price_empty'];
     }
 
     public function getDisplayCodeAttribute(): string
     {
-        if ($this->type_key === 'den_vuon_gom_su_ct') {
-            return (string) ($this->display_variant?->sku ?? $this->code ?? '');
+        $config = $this->typeConfig();
+        $code = $config['code_source'] === 'variant' ? $this->display_variant?->sku : $this->code;
+        if (filled($code)) {
+            return (string) $code;
         }
 
-        if ($this->type_key === 'lan_can_gom_su_ct') {
-            return (string) ($this->display_variant?->sku ?? 'Đang cập nhật');
+        if ($config['code_falls_back_to_default'] && filled($this->code)) {
+            return (string) $this->code;
         }
 
-        if ($this->type_key === 'phu_kien_ngoi_ct') {
-            $code = $this->display_variant?->sku;
-            if ($code) {
-                return $code;
-            }
+        $prefix = $config['code_prefixes'][$this->category_type] ?? $config['code_prefixes']['default'] ?? null;
 
-            return match ($this->category_type) {
-                'chu_van' => 'PKN-CV'.$this->public_id,
-                default => 'PKN-BN'.$this->public_id,
-            };
-        }
-
-        return (string) ($this->code ?? '');
+        return $prefix !== null ? $prefix.$this->public_id : $config['code_empty'];
     }
 
     public function getAttribute($key)

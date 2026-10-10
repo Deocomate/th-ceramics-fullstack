@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Models\VeChungToi;
+use App\Domains\Content\Infrastructure\Models\AboutPageConfig;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 
@@ -12,10 +12,10 @@ class AboutPageConfigSeeder extends Seeder
 
     public function run(): void
     {
-        VeChungToi::truncate();
+        AboutPageConfig::truncate();
 
         $row = $this->withoutTimestamps($this->seederDataFirst('ve_chung_toi') ?? []);
 
-        VeChungToi::create($row);
+        AboutPageConfig::create($row);
     }
 }

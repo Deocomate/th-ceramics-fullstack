@@ -1,9 +1,9 @@
 <?php
 
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Identity\Models\User;
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Identity\Infrastructure\Models\User;
 
 function createBulkRenameNgoiAmDuongProduct(string $code, string $name, bool $deleted = false): Product
 {
@@ -35,18 +35,18 @@ test('bulk rename rejects products outside the selected accessory category witho
     $this->actingAs(User::factory()->create());
     $bocNoc = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Bò nóc',
-        'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
+        'category_type' => PhuKienNgoiCategory::TYPE_BO_NOC,
     ]);
     $chuVan = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Chữ vạn',
-        'category_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
+        'category_type' => PhuKienNgoiCategory::TYPE_CHU_VAN,
     ]);
 
-    $this->from(route('admin.phu-kien-ngoi-ct.index', ['category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC]))
+    $this->from(route('admin.phu-kien-ngoi-ct.index', ['category_type' => PhuKienNgoiCategory::TYPE_BO_NOC]))
         ->post(route('admin.products.bulk-rename', ['type' => 'phu-kien-ngoi-ct']), [
             'ids' => [$bocNoc->phu_kien_ngoi_ct_id, $chuVan->phu_kien_ngoi_ct_id],
             'base_name' => 'Phụ kiện',
-            'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
+            'category_type' => PhuKienNgoiCategory::TYPE_BO_NOC,
         ])->assertRedirect()->assertSessionHasErrors('base_name');
 
     expect($bocNoc->fresh()->name)->toBe('Bò nóc')
@@ -123,7 +123,7 @@ test('all product detail lists render bulk selection controls', function () {
             ->assertSee('bulk-rename-product-checkbox', false);
     }
 
-    foreach ([RoofTileAccessoryCategory::TYPE_BO_NOC, RoofTileAccessoryCategory::TYPE_CHU_VAN] as $categoryType) {
+    foreach ([PhuKienNgoiCategory::TYPE_BO_NOC, PhuKienNgoiCategory::TYPE_CHU_VAN] as $categoryType) {
         $this->get(route('admin.phu-kien-ngoi-ct.index', ['category_type' => $categoryType]))
             ->assertOk()
             ->assertSee('data-bulk-rename-select-all', false)

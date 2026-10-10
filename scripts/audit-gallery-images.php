@@ -13,8 +13,8 @@ require __DIR__.'/../vendor/autoload.php';
 $app = require __DIR__.'/../bootstrap/app.php';
 $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
-use App\Models\DuAn;
-use App\Models\TrangChu;
+use App\Domains\Content\Infrastructure\Models\HomePageConfig as TrangChu;
+use App\Domains\Content\Infrastructure\Models\Project as DuAn;
 use Database\Seeders\Support\SeederDataContract;
 
 $failures = [];

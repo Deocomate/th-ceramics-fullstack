@@ -2,10 +2,10 @@
 
 use App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter;
 use App\Domains\Archive\ContentArchiveService;
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\Models\ProductDisplayOption;
-use App\Domains\Catalog\Models\ProductVariant;
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\Models\ProductDisplayOption;
+use App\Domains\Catalog\Infrastructure\Models\ProductVariant;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -34,7 +34,7 @@ it('maps the original roof accessory category to the current category without ch
         );
 
         $product = Product::where('type_key', 'phu_kien_ngoi_ct')->where('legacy_id', 45)->firstOrFail();
-        expect($product->category_type)->toBe(RoofTileAccessoryCategory::TYPE_BO_NOC)
+        expect($product->category_type)->toBe(PhuKienNgoiCategory::TYPE_BO_NOC)
             ->and($product->public_id)->toBe(45)
             ->and($result['added'])->toBe(1);
     } finally {

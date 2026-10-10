@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Catalog\ProductWriter;
-use App\Models\GachTrangTri;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\Models\GachTrangTri;
 
 test('gach trang tri detail page renders dynamic product data without static dummy content', function () {
     GachTrangTri::query()->create([

@@ -9,24 +9,11 @@ use App\Domains\Identity\Domain\UserProfileRules;
 use App\Domains\Identity\Infrastructure\Models\User;
 use App\Domains\Identity\Infrastructure\Notifications\ResetPasswordNotification;
 use App\Domains\Identity\Infrastructure\Notifications\VerifyEmailQueued;
-use App\Notifications\ResetPasswordNotification as LegacyResetPasswordNotification;
-use App\Notifications\VerifyEmailQueued as LegacyVerifyEmailQueued;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Tests\TestCase;
 
 class QueueCompatibilityAndDomainTest extends TestCase
 {
-    public function test_legacy_reset_password_notification_serializes_and_deserializes(): void
-    {
-        $legacy = new LegacyResetPasswordNotification('token-123');
-        $serialized = serialize($legacy);
-        $unserialized = unserialize($serialized);
-
-        $this->assertInstanceOf(LegacyResetPasswordNotification::class, $unserialized);
-        $this->assertInstanceOf(ResetPasswordNotification::class, $unserialized);
-        $this->assertSame('token-123', $unserialized->token);
-    }
-
     public function test_canonical_reset_password_notification_serializes_and_deserializes(): void
     {
         $canonical = new ResetPasswordNotification('token-456');
@@ -35,16 +22,6 @@ class QueueCompatibilityAndDomainTest extends TestCase
 
         $this->assertInstanceOf(ResetPasswordNotification::class, $unserialized);
         $this->assertSame('token-456', $unserialized->token);
-    }
-
-    public function test_legacy_verify_email_queued_serializes_and_deserializes(): void
-    {
-        $legacy = new LegacyVerifyEmailQueued;
-        $serialized = serialize($legacy);
-        $unserialized = unserialize($serialized);
-
-        $this->assertInstanceOf(LegacyVerifyEmailQueued::class, $unserialized);
-        $this->assertInstanceOf(VerifyEmailQueued::class, $unserialized);
     }
 
     public function test_canonical_verify_email_queued_serializes_and_deserializes(): void
@@ -67,7 +44,6 @@ class QueueCompatibilityAndDomainTest extends TestCase
         $unserialized = unserialize($serialized);
 
         $this->assertInstanceOf(User::class, $unserialized);
-        $this->assertInstanceOf(\App\Domains\Identity\Models\User::class, $unserialized);
         $this->assertSame('test@example.com', $unserialized->email);
     }
 

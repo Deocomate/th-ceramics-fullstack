@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Catalog\Infrastructure\Models\CeramicLamp;
-use App\Domains\Catalog\Infrastructure\Models\CeramicLampImage;
+use App\Domains\Catalog\Infrastructure\Models\DenGomSu;
+use App\Domains\Catalog\Infrastructure\Models\DenGomSuAnh;
 use Database\Seeders\Support\CanonicalProductSeeding;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
@@ -17,7 +17,7 @@ class CeramicLampSeeder extends Seeder
 
     public function run(): void
     {
-        $this->seedFromData('den_gom_su', CeramicLamp::class);
+        $this->seedFromData('den_gom_su', DenGomSu::class);
 
         $galleryRows = $this->seederData('den_gom_su_anh');
         $pool = array_column($galleryRows, 'image');
@@ -25,7 +25,7 @@ class CeramicLampSeeder extends Seeder
 
         Model::unguarded(function () use ($expanded): void {
             foreach ($expanded as $index => $image) {
-                CeramicLampImage::create([
+                DenGomSuAnh::create([
                     'den_gom_su_anh_id' => $index + 1,
                     'image' => $image,
                     'den_gom_su_id' => 1,

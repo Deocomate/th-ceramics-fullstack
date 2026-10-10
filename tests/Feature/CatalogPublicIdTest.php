@@ -1,9 +1,9 @@
 <?php
 
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\Models\ProductVariant;
-use App\Domains\Catalog\PublicIdAllocator;
-use App\Domains\Catalog\Services\CatalogQueryService;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\Models\ProductVariant;
+use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
+use App\Domains\Catalog\Infrastructure\Services\CatalogQueryService;
 use Illuminate\Support\Facades\DB;
 
 it('preserves imported IDs and allocates new public IDs within each product type', function () {

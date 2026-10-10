@@ -225,7 +225,7 @@ it('exports the complete allowlisted schema without business tables', function (
 it('round trips a canonical archive through an empty product catalog', function () {
     config()->set('content_archive.tables', (require config_path('content_archive.php'))['tables']);
     Storage::disk('public')->put('uploads/canon.webp', 'fake image bytes');
-    $product = app(\App\Domains\Catalog\ProductWriter::class)->create('ngoi_am_duong_ct', [
+    $product = app(\App\Domains\Catalog\Infrastructure\ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'CANON-001', 'name' => 'Ngói canonical', 'images' => ['uploads/canon.webp'], 'price' => 41000,
         'is_delete' => false,
     ]);

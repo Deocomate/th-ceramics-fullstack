@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Models\GiaTriVuotTroi;
+use App\Domains\Content\Infrastructure\Models\CoreValue;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 
@@ -12,7 +12,7 @@ class CoreValueSeeder extends Seeder
 
     public function run(): void
     {
-        GiaTriVuotTroi::truncate();
-        $this->seedFromData('gia_tri_vuot_troi', GiaTriVuotTroi::class);
+        CoreValue::truncate();
+        $this->seedFromData('gia_tri_vuot_troi', CoreValue::class);
     }
 }

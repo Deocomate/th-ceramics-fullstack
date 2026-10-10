@@ -18,14 +18,14 @@ class CouponController extends Controller
     {
         $coupons = $this->couponService->getAll();
         $deletedCoupons = $this->couponService->getDeleted();
-        $productTypes = CouponService::productTypes();
+        $productTypes = $this->couponService->productTypes();
 
         return view('admin.commerce.coupons.index', compact('coupons', 'deletedCoupons', 'productTypes'));
     }
 
     public function create(): View
     {
-        $productTypes = CouponService::productTypes();
+        $productTypes = $this->couponService->productTypes();
 
         return view('admin.commerce.coupons.create', compact('productTypes'));
     }
@@ -41,7 +41,7 @@ class CouponController extends Controller
     public function edit(int $id): View
     {
         $coupon = $this->couponService->findById($id);
-        $productTypes = CouponService::productTypes();
+        $productTypes = $this->couponService->productTypes();
 
         return view('admin.commerce.coupons.edit', compact('coupon', 'productTypes'));
     }

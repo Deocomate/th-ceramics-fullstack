@@ -1,16 +1,16 @@
 <?php
 
-use App\Domains\Content\Models\DanhMucDuAn;
-use App\Domains\Content\Models\DuAn;
+use App\Domains\Content\Infrastructure\Models\ProjectCategory;
+use App\Domains\Content\Infrastructure\Models\Project;
 
 test('project listing uses custom pagination and preserves category query string', function () {
-    $category = DanhMucDuAn::query()->create([
+    $category = ProjectCategory::query()->create([
         'ten_danh_muc' => 'Gốm Việt',
         'is_delete' => 0,
     ]);
 
     for ($i = 1; $i <= 9; $i++) {
-        DuAn::query()->create([
+        Project::query()->create([
             'ten_du_an' => 'Dự án phân trang '.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
             'dia_diem' => 'Hà Nội',
             'san_pham' => 'Gốm sứ',

@@ -1,9 +1,9 @@
 <?php
 
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\PublicIdAllocator;
-use App\Domains\Identity\Models\User;
-use App\Models\DenGomSu;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
+use App\Domains\Identity\Infrastructure\Models\User;
+use App\Domains\Catalog\Infrastructure\Models\DenGomSu;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 

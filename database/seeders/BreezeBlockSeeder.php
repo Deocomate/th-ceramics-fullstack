@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Catalog\Infrastructure\Models\AttributeValueBreezeBlock;
-use App\Domains\Catalog\Infrastructure\Models\BreezeBlock;
-use App\Domains\Catalog\Infrastructure\Models\BreezeBlockImage;
+use App\Domains\Catalog\Infrastructure\Models\GachHoaThongGio;
+use App\Domains\Catalog\Infrastructure\Models\GachHoaThongGioAnh;
+use App\Domains\Catalog\Infrastructure\Models\GiaTriGachHoaThongGio;
 use Database\Seeders\Support\CanonicalProductSeeding;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Eloquent\Model;
@@ -17,14 +17,14 @@ class BreezeBlockSeeder extends Seeder
 
     public function run(): void
     {
-        $this->seedFromData('gach_hoa_thong_gio', BreezeBlock::class);
-        $this->seedFromData('gia_tri_gach_hoa_thong_gio', AttributeValueBreezeBlock::class);
+        $this->seedFromData('gach_hoa_thong_gio', GachHoaThongGio::class);
+        $this->seedFromData('gia_tri_gach_hoa_thong_gio', GiaTriGachHoaThongGio::class);
 
         $galleryRows = array_slice($this->seederData('gach_hoa_thong_gio_anh'), 0, 10);
         Model::unguarded(function () use ($galleryRows): void {
             foreach ($galleryRows as $row) {
                 unset($row['created_at'], $row['updated_at']);
-                BreezeBlockImage::create($row);
+                GachHoaThongGioAnh::create($row);
             }
         });
 

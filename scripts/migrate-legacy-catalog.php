@@ -2,7 +2,7 @@
 
 use App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter;
 use App\Domains\Catalog\Domain\ProductTypeRegistry;
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
 use App\Domains\Catalog\Infrastructure\Models\Product;
 use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
 use Illuminate\Contracts\Console\Kernel;
@@ -75,7 +75,7 @@ try {
                 foreach (['name', 'category_type', 'size', 'size_image', 'video', 'dinh_muc', 'weight', 'created_at', 'updated_at'] as $field) {
                     $expected = $row[$field] ?? null;
                     if ($type === 'phu_kien_ngoi_ct' && $field === 'category_type') {
-                        $expected = RoofTileAccessoryCategory::normalizeLegacy($expected);
+                        $expected = PhuKienNgoiCategory::normalizeLegacy($expected);
                     }
                     $check($reference, $field, $expected, $product->getRawOriginal($field));
                 }

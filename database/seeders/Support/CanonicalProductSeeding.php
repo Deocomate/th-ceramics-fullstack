@@ -2,10 +2,10 @@
 
 namespace Database\Seeders\Support;
 
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\Models\ProductDisplayOption;
-use App\Domains\Catalog\Models\ProductVariant;
-use App\Domains\Catalog\PublicIdAllocator;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\Models\ProductDisplayOption;
+use App\Domains\Catalog\Infrastructure\Models\ProductVariant;
+use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
 
 trait CanonicalProductSeeding
 {

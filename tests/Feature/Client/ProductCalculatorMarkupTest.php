@@ -1,9 +1,9 @@
 <?php
 
-use App\Domains\Catalog\ProductWriter;
-use App\Models\DinhMucNgoiAmDuong;
-use App\Models\DinhMucNgoiHaiVanMieu;
-use App\Models\NgoiHaiVanMieu;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiAmDuong;
+use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiHaiVanMieu;
+use App\Domains\Catalog\Infrastructure\Models\NgoiHaiVanMieu;
 use Illuminate\Support\Facades\Blade;
 
 test('shape area block partial renders standardized shape calculator markup', function () {

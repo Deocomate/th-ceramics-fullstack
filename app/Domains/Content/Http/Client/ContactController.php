@@ -5,7 +5,7 @@ namespace App\Domains\Content\Http\Client;
 use App\Domains\Content\Http\Requests\ContactFormRequest;
 use App\Domains\Content\Infrastructure\Services\ContactPageService;
 use App\Http\Controllers\Controller;
-use App\Mail\ContactFormMail;
+use App\Domains\Content\Infrastructure\Mail\ContactFormMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;

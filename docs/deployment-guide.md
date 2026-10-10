@@ -30,7 +30,7 @@ php artisan queue:restart
 php artisan up
 ```
 
-Do not run seeders on the demo database. Check `/up`, public catalog pages, representative image URLs and the deployed revision. Check old queued classes without dispatching jobs. For rollback, retain the prior revision, matching dependencies and verified full dump; follow the catalog runbook instead of migration rollback.
+Do not run seeders on the demo database. Check `/up`, public catalog pages, representative image URLs and the deployed revision. Before deploying a release that renames or moves queued classes, let the worker drain the `jobs` table and clear `failed_jobs`; legacy class aliases no longer exist, so payloads serialized under an old class name cannot be restored. For rollback, retain the prior revision, matching dependencies and verified full dump; follow the catalog runbook instead of migration rollback.
 
 ## Environment Configuration
 

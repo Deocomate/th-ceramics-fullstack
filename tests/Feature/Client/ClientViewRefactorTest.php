@@ -1,8 +1,8 @@
 <?php
 
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\ProductWriter;
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
 use App\Domains\Commerce\Infrastructure\Mail\ConsultationConfirmationMail;
 use App\Domains\Commerce\Infrastructure\Mail\ConsultationRequestedMail;
 use App\Domains\Commerce\Infrastructure\Mail\OrderCreatedMail;
@@ -15,7 +15,7 @@ use App\Domains\Content\Infrastructure\Mail\ContactFormMail;
 use App\Domains\Content\Infrastructure\Models\Catalog;
 use App\Domains\Identity\Infrastructure\Notifications\ResetPasswordNotification;
 use App\Domains\Identity\Infrastructure\Notifications\VerifyEmailQueued;
-use App\Domains\Identity\Models\User;
+use App\Domains\Identity\Infrastructure\Models\User;
 use Illuminate\Mail\Markdown;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
@@ -274,7 +274,7 @@ test('ngoi hai co and accessory subtype detail routes render canonical products'
         'name' => 'Bờ Nóc Baseline',
         'code' => 'NBN-BASE',
         'price' => 50000,
-        'category_type' => RoofTileAccessoryCategory::TYPE_BO_NOC,
+        'category_type' => PhuKienNgoiCategory::TYPE_BO_NOC,
         'images' => [],
         'is_delete' => false,
     ]);
@@ -286,7 +286,7 @@ test('ngoi hai co and accessory subtype detail routes render canonical products'
         'name' => 'Chữ Vạn Baseline',
         'code' => 'BNCV-BASE',
         'price' => 60000,
-        'category_type' => RoofTileAccessoryCategory::TYPE_CHU_VAN,
+        'category_type' => PhuKienNgoiCategory::TYPE_CHU_VAN,
         'images' => [],
         'is_delete' => false,
     ]);

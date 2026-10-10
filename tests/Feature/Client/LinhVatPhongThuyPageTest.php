@@ -1,9 +1,9 @@
 <?php
 
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\ProductWriter;
-use App\Models\LinhVat;
-use App\Models\LinhVatPhongThuy;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\Models\LinhVat;
+use App\Domains\Catalog\Infrastructure\Models\LinhVatPhongThuy;
 
 function createLinhVatPhongThuyPageConfig(): LinhVatPhongThuy
 {

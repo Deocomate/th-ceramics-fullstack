@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Client\Shared;
 
-use App\Domains\Content\Models\DuAn;
+use App\Domains\Content\Infrastructure\Models\Project;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
@@ -18,7 +18,7 @@ class WorksSimple extends Component
         if ($projects !== null) {
             $this->works = $projects instanceof Collection ? $projects : collect($projects);
         } else {
-            $this->works = DuAn::query()->latest()->take(6)->get();
+            $this->works = Project::query()->latest()->take(6)->get();
         }
         $this->showNav = $showNav;
     }

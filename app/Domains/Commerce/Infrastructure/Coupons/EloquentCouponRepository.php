@@ -4,18 +4,13 @@ namespace App\Domains\Commerce\Infrastructure\Coupons;
 
 use App\Domains\Commerce\Application\Ports\CouponRepositoryPort;
 use App\Domains\Commerce\Domain\CouponDiscountCalculator;
-use App\Domains\Commerce\Domain\CouponProductTypes;
 use App\Domains\Commerce\Infrastructure\Models\Coupon;
 use App\Domains\Media\Infrastructure\FileUploadHelper;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Validation\ValidationException;
 
 class EloquentCouponRepository implements CouponRepositoryPort
 {
-    public static function productTypes(): array
-    {
-        return CouponProductTypes::all();
-    }
-
     // ──────────────────────────────────────
     // CRUD (Phase 2)
     // ──────────────────────────────────────
@@ -119,7 +114,13 @@ class EloquentCouponRepository implements CouponRepositoryPort
 
     public function incrementUsage(string $code): void
     {
-        Coupon::where('code', $code)->increment('used_count');
+        $claimed = Coupon::where('code', $code)
+            ->where(fn ($query) => $query->whereNull('usage_limit')->orWhereColumn('used_count', '<', 'usage_limit'))
+            ->increment('used_count');
+
+        if ($claimed === 0) {
+            throw ValidationException::withMessages(['coupon' => 'Mã giảm giá đã hết lượt sử dụng.']);
+        }
     }
 
     public function decrementUsage(string $code): void

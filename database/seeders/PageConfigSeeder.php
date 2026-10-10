@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Models\Faq;
-use App\Domains\Content\Models\PageContact;
-use App\Domains\Content\Models\PageFactory;
-use App\Domains\Content\Models\PageFaq;
+use App\Domains\Content\Infrastructure\Models\Faq;
+use App\Domains\Content\Infrastructure\Models\ContactPageConfig;
+use App\Domains\Content\Infrastructure\Models\FactoryPageConfig;
+use App\Domains\Content\Infrastructure\Models\FaqPageConfig;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
@@ -54,9 +54,9 @@ class PageConfigSeeder extends Seeder
             SeederDataContract::assertGallery($factory[$field], "page_factory.{$field}");
         }
 
-        PageFactory::create($factory);
-        $this->seedFromData('page_contact', PageContact::class);
-        $this->seedFromData('page_faq', PageFaq::class);
+        FactoryPageConfig::create($factory);
+        $this->seedFromData('page_contact', ContactPageConfig::class);
+        $this->seedFromData('page_faq', FaqPageConfig::class);
         $this->seedFromData('faqs', Faq::class);
     }
 }

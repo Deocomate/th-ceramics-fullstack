@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Content\Models\DuAn;
-use App\Models\GachHoaThongGioAnh;
-use App\Models\GiaTriGachHoaThongGio;
-use App\Domains\Content\Models\TrangChu;
-use App\Domains\Content\Models\TrangDuAn;
-use App\Domains\Content\Models\VeChungToi;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Content\Infrastructure\Models\Project;
+use App\Domains\Catalog\Infrastructure\Models\GachHoaThongGioAnh;
+use App\Domains\Catalog\Infrastructure\Models\GiaTriGachHoaThongGio;
+use App\Domains\Content\Infrastructure\Models\HomePageConfig;
+use App\Domains\Content\Infrastructure\Models\ProjectPageConfig;
+use App\Domains\Content\Infrastructure\Models\AboutPageConfig;
 use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function () {
@@ -16,14 +16,14 @@ beforeEach(function () {
 });
 
 it('matches sql backup row counts', function () {
-    expect(DuAn::count())->toBe(20);
+    expect(Project::count())->toBe(20);
     expect(Product::where('type_key', 'ngoi_am_duong_ct')->count())->toBe(16);
     expect(GiaTriGachHoaThongGio::count())->toBe(3);
     expect(GachHoaThongGioAnh::count())->toBe(10);
 });
 
 it('seeds home page with expanded banner gallery', function () {
-    $home = TrangChu::first();
+    $home = HomePageConfig::first();
 
     expect(count($home->banner))->toBeGreaterThanOrEqual(5);
     expect($home->banner)->toContain('assets/images/ngoi-am-duong-banner.jpg');
@@ -31,14 +31,14 @@ it('seeds home page with expanded banner gallery', function () {
 });
 
 it('seeds about page from sql backup', function () {
-    $about = VeChungToi::first();
+    $about = AboutPageConfig::first();
 
     expect($about->header_banner)->toBe('GỐM SỨ THANH HẢI');
     expect($about->body_banner)->toContain('40 NĂM');
 });
 
 it('seeds project page promo from sql backup', function () {
-    $page = TrangDuAn::first();
+    $page = ProjectPageConfig::first();
 
     expect($page->promo_title)->toBe("Gạch thông\ngió 300x300\nthường");
     expect($page->promo_cta_url)->toBe('/san-pham/gach-hoa-thong-gio');
@@ -46,7 +46,7 @@ it('seeds project page promo from sql backup', function () {
 
 it('seeds projects with seven gallery images each', function () {
     // Enhanced from SQL (3 images) to meet 5–10 gallery rule
-    DuAn::all()->each(function (DuAn $project) {
+    Project::all()->each(function (Project $project) {
         expect(count($project->images))->toBe(7);
     });
 });

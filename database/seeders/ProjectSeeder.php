@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Models\DanhMucDuAn;
-use App\Domains\Content\Models\DuAn;
+use App\Domains\Content\Infrastructure\Models\ProjectCategory;
+use App\Domains\Content\Infrastructure\Models\Project;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
@@ -34,7 +34,7 @@ class ProjectSeeder extends Seeder
 
         $this->truncateTables('du_an', 'danh_muc_du_an');
 
-        $this->seedFromData('danh_muc_du_an', DanhMucDuAn::class);
+        $this->seedFromData('danh_muc_du_an', ProjectCategory::class);
 
         foreach ($this->seederData('du_an') as $index => $row) {
             $row = $this->withoutTimestamps($row);
@@ -44,7 +44,7 @@ class ProjectSeeder extends Seeder
                 7
             );
             SeederDataContract::assertGallery($row['images'], "du_an.{$row['du_an_id']}.images");
-            DuAn::create($row);
+            Project::create($row);
         }
     }
 }

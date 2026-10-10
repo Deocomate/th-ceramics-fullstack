@@ -2,8 +2,8 @@
 
 namespace App\Domains\Catalog\Http\Presenters;
 
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
 use App\Domains\Catalog\Domain\ProductTypeRegistry;
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
 use App\Domains\Catalog\Infrastructure\Models\ProductVariant;
 use App\Support\AssetPath;
 use Illuminate\Support\Collection;
@@ -27,7 +27,7 @@ final class CatalogHttpPresenter
                 $price = (int) ($item->price ?? 0);
                 $category = $config['label'] ?? '';
                 if ($product->type_key === 'phu_kien_ngoi_ct') {
-                    $category = RoofTileAccessoryCategory::label($product->category_type ?? '');
+                    $category = PhuKienNgoiCategory::label($product->category_type ?? '');
                 }
 
                 $name = $item->is_default || ! $item->name

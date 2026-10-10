@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Models\ThiCong;
+use App\Domains\Content\Infrastructure\Models\InstallationGuide;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 
@@ -12,7 +12,7 @@ class InstallationGuideSeeder extends Seeder
 
     public function run(): void
     {
-        ThiCong::truncate();
-        $this->seedFromData('thi_cong', ThiCong::class);
+        InstallationGuide::truncate();
+        $this->seedFromData('thi_cong', InstallationGuide::class);
     }
 }

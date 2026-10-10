@@ -2,7 +2,7 @@
 
 namespace App\Domains\Catalog\Http\Admin;
 
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
 use App\Domains\Catalog\Infrastructure\Services\ProductBulkRenameService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -21,8 +21,8 @@ class ProductBulkRenameController extends Controller
             'ids.*' => ['required', 'integer', 'min:1', 'distinct'],
             'base_name' => ['required', 'string', 'max:255'],
             'category_type' => [Rule::requiredIf($type === 'phu-kien-ngoi-ct'), 'nullable', Rule::in([
-                RoofTileAccessoryCategory::TYPE_BO_NOC,
-                RoofTileAccessoryCategory::TYPE_CHU_VAN,
+                PhuKienNgoiCategory::TYPE_BO_NOC,
+                PhuKienNgoiCategory::TYPE_CHU_VAN,
             ])],
         ], [
             'ids.required' => 'Vui lòng chọn ít nhất một sản phẩm.',

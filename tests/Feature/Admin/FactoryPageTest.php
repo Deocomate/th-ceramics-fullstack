@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Content\Models\PageFactory;
-use App\Domains\Identity\Models\User;
+use App\Domains\Content\Infrastructure\Models\FactoryPageConfig;
+use App\Domains\Identity\Infrastructure\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -15,9 +15,9 @@ beforeEach(function () {
     $this->admin = User::where('role', 'superadmin')->first()
         ?? User::factory()->create(['role' => 'superadmin']);
 
-    // Ensure a PageFactory record exists for firstOrFail queries
-    if (PageFactory::query()->count() === 0) {
-        PageFactory::create([
+    // Ensure a FactoryPageConfig record exists for firstOrFail queries
+    if (FactoryPageConfig::query()->count() === 0) {
+        FactoryPageConfig::create([
             'intro_title' => 'Default Title',
         ]);
     }
@@ -30,7 +30,7 @@ test('factory edit page renders', function () {
 });
 
 test('factory edit page renders legacy string descriptions as block data', function () {
-    PageFactory::first()->forceFill([
+    FactoryPageConfig::first()->forceFill([
         'intro_description' => 'Legacy <b>intro</b>',
     ])->save();
 
@@ -54,7 +54,7 @@ test('factory page updates text fields', function () {
         ->assertRedirect()
         ->assertSessionHas('success');
 
-    expect(PageFactory::first()->intro_title)->toBe('Test Factory Title');
+    expect(FactoryPageConfig::first()->intro_title)->toBe('Test Factory Title');
 });
 
 test('factory page updates and cleans structured description blocks', function () {
@@ -88,7 +88,7 @@ test('factory page updates and cleans structured description blocks', function (
         ->assertSessionHasNoErrors()
         ->assertSessionHas('success');
 
-    expect(PageFactory::first()->process_description)->toBe([
+    expect(FactoryPageConfig::first()->process_description)->toBe([
         [
             'type' => 'paragraph',
             'content' => "First paragraph \n with line",
@@ -106,7 +106,7 @@ test('factory page updates and cleans structured description blocks', function (
 });
 
 test('factory client process renders escaped blocks and responsive newlines', function () {
-    $factory = PageFactory::first();
+    $factory = FactoryPageConfig::first();
     $factory->update([
         'process_title' => "QUY TRÌNH\nKHOA HỌC",
         'process_description' => [
@@ -139,7 +139,7 @@ test('factory client process renders escaped blocks and responsive newlines', fu
 });
 
 test('factory gallery 2 renders gallery 2 images instead of gallery 1 images', function () {
-    $factory = PageFactory::first();
+    $factory = FactoryPageConfig::first();
     $factory->update([
         'gallery_1' => ['gallery-one.jpg'],
         'gallery_2' => ['gallery-two.jpg'],
@@ -155,7 +155,7 @@ test('factory gallery 2 renders gallery 2 images instead of gallery 1 images', f
 test('factory gallery 2 uploads and deletes by original index', function () {
     Storage::fake('public');
 
-    PageFactory::first()->update([
+    FactoryPageConfig::first()->update([
         'gallery_2' => ['keep.jpg', 'delete-a.jpg', 'delete-b.jpg'],
     ]);
 
@@ -169,7 +169,7 @@ test('factory gallery 2 uploads and deletes by original index', function () {
         ->assertRedirect()
         ->assertSessionHasNoErrors();
 
-    $gallery = PageFactory::first()->gallery_2;
+    $gallery = FactoryPageConfig::first()->gallery_2;
 
     expect($gallery)->toHaveCount(2)
         ->and($gallery[0])->toBe('keep.jpg')

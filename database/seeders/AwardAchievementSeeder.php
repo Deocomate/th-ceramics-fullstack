@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Models\GiaiThuongThanhTuu;
+use App\Domains\Content\Infrastructure\Models\AwardAchievement;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 
@@ -12,7 +12,7 @@ class AwardAchievementSeeder extends Seeder
 
     public function run(): void
     {
-        GiaiThuongThanhTuu::truncate();
-        $this->seedFromData('giai_thuong_thanh_tuu', GiaiThuongThanhTuu::class);
+        AwardAchievement::truncate();
+        $this->seedFromData('giai_thuong_thanh_tuu', AwardAchievement::class);
     }
 }

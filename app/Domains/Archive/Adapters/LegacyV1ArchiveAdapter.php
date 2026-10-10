@@ -3,7 +3,7 @@
 namespace App\Domains\Archive\Adapters;
 
 use App\Domains\Archive\Application\Ports\CatalogArchivePort;
-use App\Domains\Catalog\Domain\RoofTileAccessoryCategory;
+use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
 use Illuminate\Support\Facades\DB;
 use ZipArchive;
 
@@ -108,7 +108,7 @@ class LegacyV1ArchiveAdapter
         $productData = [
             'type_key' => $table,
             'category_type' => $table === 'phu_kien_ngoi_ct'
-                ? RoofTileAccessoryCategory::normalizeLegacy($row['category_type'] ?? null)
+                ? PhuKienNgoiCategory::normalizeLegacy($row['category_type'] ?? null)
                 : ($row['category_type'] ?? null),
             'legacy_type' => $table,
             'legacy_id' => $legacyId,

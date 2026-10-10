@@ -4,8 +4,8 @@ namespace App\Domains\Catalog\Http\Admin;
 
 use App\Domains\Catalog\Infrastructure\Models\Product;
 use App\Domains\Catalog\Infrastructure\Models\ProductVariant;
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Catalog\Services\CatalogQueryService;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\Services\CatalogQueryService;
 use App\Domains\Media\Infrastructure\FileUploadHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -109,20 +109,26 @@ abstract class BaseProductVariantController extends Controller
         $data = $request->validate($rules);
         $data['sku'] = $data['code'];
 
+        $oldImage = $variant->image;
         if ($request->hasFile('image')) {
-            if ($variant->image) {
-                FileUploadHelper::delete($variant->image);
-            }
             $data['image'] = FileUploadHelper::upload($request->file('image'), $this->imageDirectory);
         }
 
         try {
             $this->writer->saveVariant($product, $data, $variant);
-
-            return back()->with('success', 'Cập nhật phân loại thành công.');
-        } catch (InvalidArgumentException $e) {
-            return back()->withInput()->withErrors(['code' => $e->getMessage()]);
+        } catch (\Throwable $e) {
+            FileUploadHelper::delete($data['image'] ?? null);
+            if ($e instanceof InvalidArgumentException) {
+                return back()->withInput()->withErrors(['code' => $e->getMessage()]);
+            }
+            throw $e;
         }
+
+        if (isset($data['image']) && $oldImage !== $data['image']) {
+            FileUploadHelper::delete($oldImage);
+        }
+
+        return back()->with('success', 'Cập nhật phân loại thành công.');
     }
 
     public function destroy(int $id): RedirectResponse

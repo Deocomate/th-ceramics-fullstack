@@ -1,10 +1,10 @@
 <?php
 
-use App\Domains\Content\Models\TrangDuAn;
-use App\Domains\Identity\Models\User;
+use App\Domains\Content\Infrastructure\Models\ProjectPageConfig;
+use App\Domains\Identity\Infrastructure\Models\User;
 
 test('admin can access trang du an config page', function () {
-    TrangDuAn::query()->create([
+    ProjectPageConfig::query()->create([
         'promo_title' => "Gạch thông\ngió 300x300\nthường",
         'promo_image' => 'assets/images/news-detail-5.png',
         'promo_cta_label' => 'XEM CATALOG',
@@ -19,7 +19,7 @@ test('admin can access trang du an config page', function () {
 });
 
 test('projects index renders promo from database not hardcoded strings', function () {
-    TrangDuAn::query()->create([
+    ProjectPageConfig::query()->create([
         'promo_title' => "Promo động\ntừ database",
         'promo_image' => 'assets/images/news-detail-5.png',
         'promo_cta_label' => 'XEM NGAY',

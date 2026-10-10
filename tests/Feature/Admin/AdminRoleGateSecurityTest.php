@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Domains\Identity\Models\User;
-use App\Http\Middleware\EnsureContentWritesOpen;
+use App\Domains\Identity\Infrastructure\Models\User;
+use App\Domains\Content\Http\Middleware\EnsureContentWritesOpen;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;

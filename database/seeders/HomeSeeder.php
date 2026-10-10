@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Models\TrangChu;
+use App\Domains\Content\Infrastructure\Models\HomePageConfig;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
@@ -13,7 +13,7 @@ class HomeSeeder extends Seeder
 
     public function run(): void
     {
-        TrangChu::truncate();
+        HomePageConfig::truncate();
 
         $row = $this->withoutTimestamps($this->seederDataFirst('trang_chu') ?? []);
 
@@ -48,6 +48,6 @@ class HomeSeeder extends Seeder
         SeederDataContract::assertGallery($row['banner'], 'trang_chu.banner');
         SeederDataContract::assertGallery($row['showroom_images'], 'trang_chu.showroom_images');
 
-        TrangChu::create($row);
+        HomePageConfig::create($row);
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\Models\ProductDisplayOption;
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Catalog\PublicIdAllocator;
-use App\Domains\Catalog\Services\CatalogQueryService;
-use App\Domains\Identity\Models\User;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\Models\ProductDisplayOption;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
+use App\Domains\Catalog\Infrastructure\Services\CatalogQueryService;
+use App\Domains\Identity\Infrastructure\Models\User;
 use Illuminate\Validation\ValidationException;
 
 test('variant admin actions are scoped to the public ID and product group', function () {

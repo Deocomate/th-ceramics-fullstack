@@ -1,17 +1,17 @@
 <?php
 
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Content\Models\DanhMucDuAn;
-use App\Domains\Content\Models\DuAn;
-use App\Models\GachTrangTri;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Content\Infrastructure\Models\ProjectCategory;
+use App\Domains\Content\Infrastructure\Models\Project;
+use App\Domains\Catalog\Infrastructure\Models\GachTrangTri;
 
 test('gach trang tri page renders dynamic applications and global projects', function () {
-    $category = DanhMucDuAn::query()->create([
+    $category = ProjectCategory::query()->create([
         'ten_danh_muc' => 'Gạch Trang Trí',
         'is_delete' => 0,
     ]);
 
-    DuAn::query()->create([
+    Project::query()->create([
         'ten_du_an' => 'Nhà hàng gốm Việt',
         'dia_diem' => 'Hà Nội',
         'san_pham' => 'Gạch trang trí men rạn',

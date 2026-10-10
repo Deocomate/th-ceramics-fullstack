@@ -1,14 +1,14 @@
 <?php
 
-use App\Domains\Catalog\ProductWriter;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
 use App\Domains\Content\Infrastructure\Services\HomePageConfigService;
-use App\Domains\Content\Models\TrangChu;
-use App\Models\LinhVatPhongThuy;
+use App\Domains\Content\Infrastructure\Models\HomePageConfig;
+use App\Domains\Catalog\Infrastructure\Models\LinhVatPhongThuy;
 use Illuminate\Support\Facades\Cache;
 
-function ensureTrangChuRecord(): TrangChu
+function ensureTrangChuRecord(): HomePageConfig
 {
-    return TrangChu::query()->first() ?? TrangChu::query()->create([
+    return HomePageConfig::query()->first() ?? HomePageConfig::query()->create([
         'banner' => [],
         'khach_hang_doi_tac' => [],
         'loi_tri_an' => [],

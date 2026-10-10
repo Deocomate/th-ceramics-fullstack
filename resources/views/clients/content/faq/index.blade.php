@@ -89,7 +89,7 @@
                 @foreach ($faqsGrouped->keys() as $category)
                     <a href="#{{ $category }}"
                         class="text-sm font-archivo font-medium text-primary uppercase leading-10 hover:text-secondary transition-colors">
-                        {{ \App\Domains\Content\Models\Faq::CATEGORIES[$category] ?? $category }}
+                        {{ \App\Domains\Content\Infrastructure\Models\Faq::CATEGORIES[$category] ?? $category }}
                     </a>
                 @endforeach
             </nav>
@@ -105,7 +105,7 @@
             </div>
 
             @foreach ($faqsGrouped as $category => $faqs)
-                @php $categoryTitle = \App\Domains\Content\Models\Faq::CATEGORIES[$category] ?? $category; @endphp
+                @php $categoryTitle = \App\Domains\Content\Infrastructure\Models\Faq::CATEGORIES[$category] ?? $category; @endphp
                 <div id="{{ $category }}" class="mt-12 md:mt-0 scroll-mt-24">
                     <div class="flex items-center gap-5 lg:gap-[12px] mb-8 pt-10">
                         <div class="w-[2px] h-8 bg-secondary"></div>

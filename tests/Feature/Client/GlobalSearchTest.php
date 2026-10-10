@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Catalog\PublicIdAllocator;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
 
 test('quick search returns direct product matches by name or code', function () {
     $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [

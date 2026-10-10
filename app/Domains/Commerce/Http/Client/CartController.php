@@ -133,6 +133,12 @@ class CartController extends Controller
     {
         $cartService->update($request->row_id, $request->qty);
         $cart = $cartService->getCart();
+        if (! isset($cart[$request->row_id])) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Sản phẩm không còn trong giỏ hàng. Hãy tải lại trang.',
+            ], 404);
+        }
         $itemTotal = $cart[$request->row_id]['price'] * $request->qty;
 
         return response()->json([
@@ -205,6 +211,11 @@ class CartController extends Controller
 
     public function processCheckout(CheckoutRequest $request, CartService $cartService, CheckoutService $checkoutService)
     {
+        if ($cartService->syncWithCatalog()) {
+            return redirect()->route('client.cart.index')
+                ->with('error', 'Giá hoặc tình trạng của một số sản phẩm trong giỏ đã thay đổi. Vui lòng kiểm tra lại giỏ hàng trước khi đặt.');
+        }
+
         $cartItems = $cartService->getCheckoutItems();
         $orderCode = $checkoutService->placeOrder(
             $request->validated(),

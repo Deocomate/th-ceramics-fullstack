@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Content\Models\PageContact;
-use App\Domains\Identity\Models\User;
+use App\Domains\Content\Infrastructure\Models\ContactPageConfig;
+use App\Domains\Identity\Infrastructure\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use function Pest\Laravel\actingAs;
@@ -12,9 +12,9 @@ beforeEach(function () {
     $this->admin = User::where('role', 'superadmin')->first()
         ?? User::factory()->create(['role' => 'superadmin']);
 
-    // Ensure a PageContact record exists for firstOrFail queries
-    if (PageContact::query()->count() === 0) {
-        PageContact::create([
+    // Ensure a ContactPageConfig record exists for firstOrFail queries
+    if (ContactPageConfig::query()->count() === 0) {
+        ContactPageConfig::create([
             'hotline' => '0000 000 000',
             'form_title' => 'Default Form Title',
         ]);
@@ -36,7 +36,7 @@ test('contact page updates text fields', function () {
         ->assertRedirect()
         ->assertSessionHas('success');
 
-    $contact = PageContact::first();
+    $contact = ContactPageConfig::first();
     expect($contact->hotline)->toBe('0999 999 999');
     expect($contact->form_title)->toBe('Test Form Title');
 });

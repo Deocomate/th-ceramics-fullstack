@@ -30,7 +30,7 @@ class CatalogQueryService implements CatalogQueryPort
             $query->where('category_type', $categoryType);
         }
 
-        if (in_array($type, ['gach_co_bat_trang_ct', 'den_vuon_gom_su_ct'], true)) {
+        if (ProductTypeRegistry::get($type)['list_by_category'] ?? false) {
             $query->orderBy('category_type');
         }
 
@@ -196,7 +196,7 @@ class CatalogQueryService implements CatalogQueryPort
         $variant = null;
         $option = null;
 
-        if ($variantId !== null && $type === 'ngoi_am_duong_ct') {
+        if ($variantId !== null && ($config['options_as_variants'] ?? false)) {
             $option = ProductDisplayOption::findByPublicId($type, $variantId);
             if (! $option) {
                 throw (new ModelNotFoundException)->setModel(ProductDisplayOption::class, [$variantId]);
@@ -209,7 +209,8 @@ class CatalogQueryService implements CatalogQueryPort
             }
         }
 
-        if (($config['requires_variant'] ?? false) && $variant === null) {
+        $hasSelectableVariants = $product->variants->contains(fn ($item) => ! $item->is_default && ! $item->is_delete);
+        if (($config['requires_variant'] ?? false) && $hasSelectableVariants && $variant === null) {
             throw new \InvalidArgumentException('Vui lòng chọn phân loại sản phẩm.');
         }
 
@@ -232,7 +233,7 @@ class CatalogQueryService implements CatalogQueryPort
         $cover = $product->media->firstWhere('kind', 'image')?->path;
         $default = $product->variants->firstWhere('is_default', true) ?? $product->variants->first();
 
-        if ($type === 'ngoi_am_duong_ct') {
+        if ($config['options_as_variants'] ?? false) {
             $variants = ProductDisplayOption::query()->where('type_key', $type)->orderBy('sort_order')->get()
                 ->map(fn ($item) => [
                     'id' => (int) ($item->legacy_id ?? $item->id),
@@ -268,7 +269,7 @@ class CatalogQueryService implements CatalogQueryPort
             'name' => $product->name,
             'image' => $first['image'] ?? $cover,
             'requires_variant' => $requires,
-            'variant_label' => $variants === [] ? null : ($type === 'ngoi_am_duong_ct' || str_starts_with($type, 'ngoi_hai_') ? 'Màu sắc' : 'Phân loại'),
+            'variant_label' => $variants === [] ? null : $config['variant_label'],
             'variants' => $variants,
             'default_variant_id' => $first['id'] ?? null,
             'unit_price' => $price,

@@ -6,8 +6,8 @@ use App\Domains\Catalog\Http\Admin\Concerns\DestroysProductGalleryMedia;
 use App\Domains\Catalog\Http\Admin\Concerns\UploadsProductGalleryMedia;
 use App\Domains\Catalog\Infrastructure\Models\Product;
 use App\Domains\Catalog\Infrastructure\Services\ProductCopyService;
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Catalog\Services\CatalogQueryService;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\Services\CatalogQueryService;
 use App\Domains\Media\Infrastructure\FileUploadHelper;
 use App\Http\Controllers\Controller;
 use App\Rules\YoutubeUrl;
@@ -98,14 +98,21 @@ abstract class BaseProductItemController extends Controller
             $product = $this->queryService->find($this->typeKey, $id);
             $data = $this->validateUpdate($request, $product);
 
+            $oldSizeImage = $product->size_image;
             if ($request->hasFile('size_image')) {
-                if ($product->size_image) {
-                    FileUploadHelper::delete($product->size_image);
-                }
                 $data['size_image'] = FileUploadHelper::upload($request->file('size_image'), $this->sizeDirectory);
             }
 
-            $this->writer->update($product, $data);
+            try {
+                $this->writer->update($product, $data);
+            } catch (\Throwable $e) {
+                FileUploadHelper::delete($data['size_image'] ?? null);
+                throw $e;
+            }
+
+            if (isset($data['size_image']) && $oldSizeImage !== $data['size_image']) {
+                FileUploadHelper::delete($oldSizeImage);
+            }
 
             $this->storeUploadsOnProduct($request, $product);
 
@@ -341,16 +348,15 @@ abstract class BaseProductItemController extends Controller
 
     protected function removeGalleryItems(Product $product, array $imagePaths, array $videoUrls, array $videoPaths): Product
     {
-        foreach ($imagePaths as $path) {
+        foreach ([...$imagePaths, ...$videoPaths] as $path) {
+            if (! $product->media()->where('path', $path)->exists()) {
+                continue;
+            }
             $this->writer->removeMedia($product, $path);
             FileUploadHelper::delete($path);
         }
         foreach ($videoUrls as $url) {
             $this->writer->removeMedia($product, $url);
-        }
-        foreach ($videoPaths as $path) {
-            $this->writer->removeMedia($product, $path);
-            FileUploadHelper::delete($path);
         }
 
         return $product->refresh()->load('media');

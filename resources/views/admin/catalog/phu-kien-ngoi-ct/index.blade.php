@@ -43,7 +43,7 @@
                                 <x-admin.catalog.shared.product-thumbnail :images="$product->images" :is-delete="$product->is_delete" :alt="$product->name" />
                                 <div>
                                     <div class="font-bold text-gray-800 text-sm mb-1 {{ $product->is_delete ? 'text-gray-400 line-through' : '' }}">{{ $product->name }}</div>
-                                    <div class="text-xs text-gray-400">{{ \App\Domains\Catalog\Domain\RoofTileAccessoryCategory::codePrefix($product->category_type) }}{{ $product->phu_kien_ngoi_ct_id }}</div>
+                                    <div class="text-xs text-gray-400">{{ \App\Domains\Catalog\Domain\PhuKienNgoiCategory::codePrefix($product->category_type) }}{{ $product->phu_kien_ngoi_ct_id }}</div>
                                 </div>
                             </div>
                         </td>

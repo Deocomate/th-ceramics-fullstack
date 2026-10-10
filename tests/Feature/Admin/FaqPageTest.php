@@ -1,8 +1,8 @@
 <?php
 
-use App\Domains\Content\Models\Faq;
-use App\Domains\Content\Models\PageFaq;
-use App\Domains\Identity\Models\User;
+use App\Domains\Content\Infrastructure\Models\Faq;
+use App\Domains\Content\Infrastructure\Models\FaqPageConfig;
+use App\Domains\Identity\Infrastructure\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use function Pest\Laravel\actingAs;
@@ -14,9 +14,9 @@ beforeEach(function () {
     $this->admin = User::where('role', 'superadmin')->first()
         ?? User::factory()->create(['role' => 'superadmin']);
 
-    // Ensure a PageFaq record exists for firstOrFail queries
-    if (PageFaq::query()->count() === 0) {
-        PageFaq::create([
+    // Ensure a FaqPageConfig record exists for firstOrFail queries
+    if (FaqPageConfig::query()->count() === 0) {
+        FaqPageConfig::create([
             'banner_image' => 'assets/images/faq-banner.png',
         ]);
     }

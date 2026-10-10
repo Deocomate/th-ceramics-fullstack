@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Catalog\ProductWriter;
-use App\Models\DinhMucNgoiAmDuong;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiAmDuong;
 
 test('ngoi am duong detail renders local calculator applications and installation partials', function () {
     $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [

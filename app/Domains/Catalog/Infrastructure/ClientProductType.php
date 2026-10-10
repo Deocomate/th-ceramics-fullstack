@@ -2,7 +2,7 @@
 
 namespace App\Domains\Catalog\Infrastructure;
 
-use App\Domains\Catalog\ProductTypeRegistry;
+use App\Domains\Catalog\Domain\ProductTypeRegistry;
 use Illuminate\Support\Collection;
 
 final class ClientProductType

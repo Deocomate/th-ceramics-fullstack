@@ -1,8 +1,8 @@
 <?php
 
-use App\Domains\Catalog\Models\ProductDisplayOption;
-use App\Domains\Catalog\ProductWriter;
-use App\Domains\Catalog\PublicIdAllocator;
+use App\Domains\Catalog\Infrastructure\Models\ProductDisplayOption;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
 
 test('product options returns global color palette for ngoi am duong', function () {
     $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [

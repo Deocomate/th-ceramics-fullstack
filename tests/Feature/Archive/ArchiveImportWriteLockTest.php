@@ -6,7 +6,7 @@ use App\Domains\Archive\ContentArchiveService;
 use App\Domains\Archive\Jobs\ContentArchiveJob;
 use App\Domains\Content\Infrastructure\Services\ContentWriteLock;
 use App\Domains\Identity\Infrastructure\Models\User;
-use App\Jobs\ContentArchiveJob as LegacyContentArchiveJob;
+use App\Domains\Archive\Jobs\ContentArchiveJob as LegacyContentArchiveJob;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Queue;

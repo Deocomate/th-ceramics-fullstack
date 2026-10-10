@@ -1,8 +1,8 @@
 <?php
 
-use App\Domains\Catalog\Models\Product;
-use App\Domains\Catalog\ProductWriter;
-use App\Models\GachCoBatTrang;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Catalog\Infrastructure\Models\GachCoBatTrang;
 
 beforeEach(function () {
     GachCoBatTrang::query()->create([

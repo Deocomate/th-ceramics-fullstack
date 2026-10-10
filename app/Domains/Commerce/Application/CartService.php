@@ -78,6 +78,51 @@ class CartService
         $this->session->saveCart($cart);
     }
 
+    /**
+     * Re-read every cart row from the catalog so an order never uses a stale snapshot.
+     * Rows whose product is gone or no longer sellable are dropped.
+     *
+     * @return bool true when a price or a row changed
+     */
+    public function syncWithCatalog(): bool
+    {
+        $cart = $this->getCart();
+        $changed = false;
+
+        foreach ($cart as $rowId => $item) {
+            try {
+                $details = $this->getProductDetails($item['productType'], (int) $item['productId'], $item['variantId'] ?? null);
+            } catch (Exception) {
+                $details = null;
+            }
+
+            if ($details === null || $details['price'] <= 0) {
+                unset($cart[$rowId]);
+                $changed = true;
+
+                continue;
+            }
+
+            if ((int) $item['price'] !== $details['price']) {
+                $changed = true;
+            }
+
+            $cart[$rowId] = [
+                ...$item,
+                'name' => $details['name'],
+                'variantName' => $details['variant_name'],
+                'sku' => $details['sku'],
+                'price' => $details['price'],
+                'image' => $details['image'],
+                'total' => $item['qty'] * $details['price'],
+            ];
+        }
+
+        $this->session->saveCart($cart);
+
+        return $changed;
+    }
+
     public function getCart(): array
     {
         return $this->session->cart();

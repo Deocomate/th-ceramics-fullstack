@@ -1,6 +1,6 @@
 <?php
 
-use App\Domains\Catalog\ProductWriter;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
 
 test('mini cart returns empty payload when session cart is empty', function () {
     $this->getJson(route('client.cart.mini'))
