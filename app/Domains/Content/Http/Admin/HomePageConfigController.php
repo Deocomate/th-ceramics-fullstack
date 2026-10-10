@@ -55,6 +55,8 @@ class HomePageConfigController extends Controller
 
             'showroom_noidung' => ['nullable', 'string'],
             'is_ecommerce_enabled' => ['nullable', 'boolean'],
+            'is_content_protection_enabled' => ['nullable', 'boolean'],
+            'is_devtools_guard_enabled' => ['nullable', 'boolean'],
         ]);
 
         $this->service->update($data);

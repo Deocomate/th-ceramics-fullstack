@@ -4,6 +4,7 @@ use App\Domains\Commerce\Http\Middleware\EnsureEcommerceEnabled;
 use App\Domains\Content\Http\Middleware\EnsureContentWritesOpen;
 use App\Domains\Identity\Http\Middleware\RoleMiddleware;
 use App\Domains\Media\Http\Middleware\SubstituteStagedImages;
+use App\Domains\Protection\Http\Middleware\SecurityHeaders;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Application;
@@ -30,6 +31,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'staged.images' => SubstituteStagedImages::class,
             'content.writes' => EnsureContentWritesOpen::class,
         ]);
+
+        $middleware->web(append: [SecurityHeaders::class]);
 
         $middleware->priority([
             EnsureEcommerceEnabled::class,

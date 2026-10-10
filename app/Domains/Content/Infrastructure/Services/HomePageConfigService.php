@@ -25,6 +25,8 @@ class HomePageConfigService
                 'showroom_images' => [],
                 'showroom_noidung' => null,
                 'is_ecommerce_enabled' => true,
+                'is_content_protection_enabled' => false,
+                'is_devtools_guard_enabled' => false,
             ]);
         }
 
@@ -49,8 +51,10 @@ class HomePageConfigService
             if (array_key_exists('showroom_noidung', $data)) {
                 $fillable['showroom_noidung'] = $data['showroom_noidung'];
             }
-            if (array_key_exists('is_ecommerce_enabled', $data)) {
-                $fillable['is_ecommerce_enabled'] = (bool) $data['is_ecommerce_enabled'];
+            foreach (['is_ecommerce_enabled', 'is_content_protection_enabled', 'is_devtools_guard_enabled'] as $flag) {
+                if (array_key_exists($flag, $data)) {
+                    $fillable[$flag] = (bool) $data[$flag];
+                }
             }
 
             if (isset($data['loi_tri_an']) && is_array($data['loi_tri_an'])) {

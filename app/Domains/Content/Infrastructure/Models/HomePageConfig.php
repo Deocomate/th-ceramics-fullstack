@@ -22,16 +22,20 @@ class HomePageConfig extends Model
         'showroom_images',
         'showroom_noidung',
         'is_ecommerce_enabled',
+        'is_content_protection_enabled',
+        'is_devtools_guard_enabled',
     ];
 
     protected static function booted(): void
     {
         static::saved(static function (): void {
             Cache::forget('site_ecommerce_enabled');
+            Cache::forget('site_content_protection');
         });
 
         static::deleted(static function (): void {
             Cache::forget('site_ecommerce_enabled');
+            Cache::forget('site_content_protection');
         });
     }
 
@@ -39,6 +43,8 @@ class HomePageConfig extends Model
     {
         return [
             'is_ecommerce_enabled' => 'boolean',
+            'is_content_protection_enabled' => 'boolean',
+            'is_devtools_guard_enabled' => 'boolean',
             'banner' => 'array',
             'khach_hang_doi_tac' => 'array',
             'loi_tri_an' => 'array',

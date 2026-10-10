@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
         ->name('verification.send');
 });
 
-Route::name('client.')->group(function () {
+Route::name('client.')->middleware('throttle:client-pages')->group(function () {
 
     // Static & Main Pages
     Route::get('/', [HomeController::class, 'index'])->name('home');

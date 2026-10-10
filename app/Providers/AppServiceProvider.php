@@ -40,7 +40,10 @@ use App\View\Components\Client\Shared\ProductDetailContainer;
 use App\View\Components\Client\Shared\Recommendations;
 use App\View\Components\Client\Shared\Works;
 use App\View\Components\Client\Shared\WorksSimple;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -124,6 +127,12 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view): void {
             $view->with('isEcommerceEnabled', app(EcommerceStatusPort::class)->enabled());
         });
+
+        // Keyed by the connection address only: crawler User-Agents are trivially
+        // spoofed and no trusted proxy is configured, so neither earns an exemption.
+        RateLimiter::for('client-pages', static fn (Request $request) => Limit::perMinute(
+            max(1, (int) config('content_protection.page_rate_limit', 120))
+        )->by($request->ip()));
 
         if ($this->app->runningInConsole()) {
             $this->commands([
