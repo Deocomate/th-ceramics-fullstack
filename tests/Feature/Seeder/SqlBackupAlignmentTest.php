@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Domains\Catalog\Infrastructure\Models\Product;
-use App\Domains\Content\Infrastructure\Models\Project;
 use App\Domains\Catalog\Infrastructure\Models\GachHoaThongGioAnh;
 use App\Domains\Catalog\Infrastructure\Models\GiaTriGachHoaThongGio;
-use App\Domains\Content\Infrastructure\Models\HomePageConfig;
-use App\Domains\Content\Infrastructure\Models\ProjectPageConfig;
+use App\Domains\Catalog\Infrastructure\Models\Product;
 use App\Domains\Content\Infrastructure\Models\AboutPageConfig;
+use App\Domains\Content\Infrastructure\Models\HomePageConfig;
+use App\Domains\Content\Infrastructure\Models\Project;
+use App\Domains\Content\Infrastructure\Models\ProjectPageConfig;
 use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function () {

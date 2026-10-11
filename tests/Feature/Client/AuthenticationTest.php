@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Client;
 
-use App\Domains\Identity\Infrastructure\Notifications\VerifyEmailQueued;
 use App\Domains\Identity\Infrastructure\Models\User;
+use App\Domains\Identity\Infrastructure\Notifications\VerifyEmailQueued;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;

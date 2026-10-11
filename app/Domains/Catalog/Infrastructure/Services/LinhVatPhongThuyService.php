@@ -2,9 +2,9 @@
 
 namespace App\Domains\Catalog\Infrastructure\Services;
 
+use App\Domains\Catalog\Infrastructure\Models\LinhVat;
 use App\Domains\Catalog\Infrastructure\Models\LinhVatPhongThuy;
 use App\Domains\Catalog\Infrastructure\Models\LinhVatPhongThuyAnh;
-use App\Domains\Catalog\Infrastructure\Models\LinhVat;
 use App\Domains\Media\Infrastructure\FileUploadHelper;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;

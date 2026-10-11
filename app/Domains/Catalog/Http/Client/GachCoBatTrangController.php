@@ -4,9 +4,9 @@ namespace App\Domains\Catalog\Http\Client;
 
 use App\Domains\Catalog\Domain\ProductJourneyVideo;
 use App\Domains\Catalog\Infrastructure\Models\GachCoBatTrang;
-use App\Domains\Catalog\Infrastructure\Services\GachCoBatTrangService;
 use App\Domains\Catalog\Infrastructure\Services\CatalogQueryService;
 use App\Domains\Catalog\Infrastructure\Services\DinhMucGachCoBatTrangService;
+use App\Domains\Catalog\Infrastructure\Services\GachCoBatTrangService;
 use App\Domains\Content\Infrastructure\Services\CoreValueService;
 use App\Http\Controllers\Controller;
 use App\Infrastructure\ViewHistoryService;

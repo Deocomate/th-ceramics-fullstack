@@ -3,8 +3,8 @@
 namespace App\Domains\Catalog\Http\Client;
 
 use App\Domains\Catalog\Domain\ProductJourneyVideo;
-use App\Domains\Catalog\Infrastructure\Models\ProductDisplayOption;
 use App\Domains\Catalog\Infrastructure\Models\NgoiAmDuong;
+use App\Domains\Catalog\Infrastructure\Models\ProductDisplayOption;
 use App\Domains\Catalog\Infrastructure\Services\CatalogQueryService;
 use App\Domains\Catalog\Infrastructure\Services\DinhMucNgoiAmDuongService;
 use App\Domains\Catalog\Infrastructure\Services\NgoiAmDuongService;

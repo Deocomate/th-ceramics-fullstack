@@ -4,8 +4,8 @@ namespace App\Domains\Catalog\Infrastructure\Services;
 
 use App\Domains\Catalog\Domain\ProductTypeRegistry;
 use App\Domains\Catalog\Infrastructure\Models\Product;
-use App\Support\AssetPath;
 use App\Domains\Catalog\Infrastructure\ProductGallery;
+use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\Builder;
 use InvalidArgumentException;
 

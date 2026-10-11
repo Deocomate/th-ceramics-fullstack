@@ -1,11 +1,11 @@
 <?php
 
+use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiHaiVanMieu;
 use App\Domains\Catalog\Infrastructure\Models\GachCoBatTrang;
 use App\Domains\Catalog\Infrastructure\Models\GachHoaThongGio;
+use App\Domains\Catalog\Infrastructure\Models\NgoiHaiVanMieu;
 use App\Domains\Catalog\Infrastructure\Models\PhuKienNgoi;
 use App\Domains\Catalog\Infrastructure\ProductWriter;
-use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiHaiVanMieu;
-use App\Domains\Catalog\Infrastructure\Models\NgoiHaiVanMieu;
 use Illuminate\Support\Facades\Blade;
 
 test('quantity calculator renders side-by-side layout on desktop', function () {

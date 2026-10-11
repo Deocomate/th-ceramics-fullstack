@@ -1,8 +1,8 @@
 <?php
 
 use App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter;
-use App\Domains\Catalog\Domain\ProductTypeRegistry;
 use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
+use App\Domains\Catalog\Domain\ProductTypeRegistry;
 use App\Domains\Catalog\Infrastructure\Models\Product;
 use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
 use Illuminate\Contracts\Console\Kernel;

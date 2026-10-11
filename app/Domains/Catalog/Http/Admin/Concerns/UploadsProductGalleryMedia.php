@@ -2,9 +2,9 @@
 
 namespace App\Domains\Catalog\Http\Admin\Concerns;
 
+use App\Domains\Catalog\Infrastructure\ProductGallery;
 use App\Rules\YoutubeUrl;
 use App\Support\AssetPath;
-use App\Domains\Catalog\Infrastructure\ProductGallery;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

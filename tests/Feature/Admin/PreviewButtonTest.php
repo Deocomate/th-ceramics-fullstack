@@ -1,13 +1,13 @@
 <?php
 
 use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
+use App\Domains\Catalog\Infrastructure\Models\NgoiHaiVanMieu;
 use App\Domains\Catalog\Infrastructure\ProductWriter;
-use App\Domains\Content\Infrastructure\Models\ProjectCategory;
+use App\Domains\Content\Infrastructure\Models\NewsArticle;
 use App\Domains\Content\Infrastructure\Models\NewsCategory;
 use App\Domains\Content\Infrastructure\Models\Project;
-use App\Domains\Content\Infrastructure\Models\NewsArticle;
+use App\Domains\Content\Infrastructure\Models\ProjectCategory;
 use App\Domains\Identity\Infrastructure\Models\User;
-use App\Domains\Catalog\Infrastructure\Models\NgoiHaiVanMieu;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 

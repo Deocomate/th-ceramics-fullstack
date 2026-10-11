@@ -3,6 +3,7 @@
 namespace App\Domains\Identity\Http\Admin;
 
 use App\Domains\Identity\Domain\Role;
+use App\Domains\Identity\Infrastructure\Models\User;
 use App\Domains\Identity\Infrastructure\Services\AuthService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -54,7 +55,7 @@ class AuthController extends Controller
     public function dashboard(): View
     {
         $user = auth()->user();
-        $adminCount = ($user && $user->isSuperAdmin()) ? \App\Domains\Identity\Infrastructure\Models\User::allAdmins()->count() : null;
+        $adminCount = ($user && $user->isSuperAdmin()) ? User::allAdmins()->count() : null;
 
         return view('admin.identity.dashboard', [
             'adminCount' => $adminCount,

@@ -1,12 +1,12 @@
 <?php
 
+use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiHaiCo;
+use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiHaiVanMieu;
+use App\Domains\Catalog\Infrastructure\Models\NgoiHaiVanMieu;
 use App\Domains\Catalog\Infrastructure\Models\Product;
 use App\Domains\Catalog\Infrastructure\Models\ProductVariant;
 use App\Domains\Catalog\Infrastructure\ProductWriter;
 use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
-use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiHaiCo;
-use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiHaiVanMieu;
-use App\Domains\Catalog\Infrastructure\Models\NgoiHaiVanMieu;
 use Illuminate\Support\Facades\Blade;
 
 beforeEach(function () {

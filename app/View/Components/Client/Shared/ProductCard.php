@@ -2,8 +2,8 @@
 
 namespace App\View\Components\Client\Shared;
 
-use App\Domains\Catalog\Infrastructure\ClientProductType;
 use App\Domains\Catalog\Domain\ValueObjects\ProductPrice;
+use App\Domains\Catalog\Infrastructure\ClientProductType;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;

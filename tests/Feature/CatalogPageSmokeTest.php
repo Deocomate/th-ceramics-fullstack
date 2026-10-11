@@ -1,8 +1,8 @@
 <?php
 
 use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
-use App\Domains\Catalog\Infrastructure\Models\Product;
 use App\Domains\Catalog\Domain\ProductTypeRegistry;
+use App\Domains\Catalog\Infrastructure\Models\Product;
 use App\Domains\Catalog\Infrastructure\ProductWriter;
 use App\Domains\Identity\Infrastructure\Models\User;
 use Database\Seeders\ProductDetailSeeder;

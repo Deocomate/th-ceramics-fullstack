@@ -2,13 +2,13 @@
 
 namespace App\Domains\Catalog\Http\Client;
 
-use App\Domains\Catalog\Domain\ProductJourneyVideo;
 use App\Domains\Catalog\Domain\PhuKienNgoiCategory;
+use App\Domains\Catalog\Domain\ProductJourneyVideo;
 use App\Domains\Catalog\Infrastructure\Models\PhuKienNgoi;
 use App\Domains\Catalog\Infrastructure\Services\CatalogQueryService;
 use App\Domains\Catalog\Infrastructure\Services\PhuKienNgoiService;
-use App\Http\Controllers\Controller;
 use App\Domains\Catalog\Infrastructure\Services\UnifiedProductCatalog;
+use App\Http\Controllers\Controller;
 use App\Infrastructure\ViewHistoryService;
 use Illuminate\Http\Request;
 

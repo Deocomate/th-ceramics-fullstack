@@ -11,11 +11,12 @@ declare(strict_types=1);
 require __DIR__.'/../vendor/autoload.php';
 
 $app = require __DIR__.'/../bootstrap/app.php';
-$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+$app->make(Kernel::class)->bootstrap();
 
 use App\Domains\Content\Infrastructure\Models\HomePageConfig as TrangChu;
 use App\Domains\Content\Infrastructure\Models\Project as DuAn;
 use Database\Seeders\Support\SeederDataContract;
+use Illuminate\Contracts\Console\Kernel;
 
 $failures = [];
 

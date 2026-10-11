@@ -32,6 +32,7 @@ class CustomerServiceController extends Controller
             if (view()->exists($viewKey)) {
                 return view($viewKey);
             }
+
             return view("clients.dich-vu-khach-hang.{$page}");
         }
 

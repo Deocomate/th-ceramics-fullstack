@@ -49,6 +49,7 @@ foreach ($inserts as $table => $rows) {
 
     if (! isset($columns[$table])) {
         fwrite(STDERR, "Warning: no CREATE TABLE for `{$table}`, skipping\n");
+
         continue;
     }
 
@@ -58,6 +59,7 @@ foreach ($inserts as $table => $rows) {
     foreach ($rows as $values) {
         if (count($values) !== count($cols)) {
             fwrite(STDERR, "Warning: column count mismatch for `{$table}` (".count($cols).' vs '.count($values).")\n");
+
             continue;
         }
         $row = array_combine($cols, $values);
@@ -134,6 +136,7 @@ function parseInsertRows(string $block): array
         }
         if ($block[$i] !== '(') {
             $i++;
+
             continue;
         }
         [$row, $i] = parseRow($block, $i);
@@ -165,6 +168,7 @@ function parseRow(string $block, int $start): array
 
         if ($block[$i] === ',') {
             $i++;
+
             continue;
         }
 
@@ -202,6 +206,7 @@ function parseValue(string $block, int $start): array
                     default => $next,
                 };
                 $i += 2;
+
                 continue;
             }
             if ($ch === "'") {

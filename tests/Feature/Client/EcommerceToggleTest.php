@@ -1,9 +1,9 @@
 <?php
 
-use App\Domains\Catalog\Infrastructure\ProductWriter;
-use App\Domains\Content\Infrastructure\Services\HomePageConfigService;
-use App\Domains\Content\Infrastructure\Models\HomePageConfig;
 use App\Domains\Catalog\Infrastructure\Models\LinhVatPhongThuy;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Content\Infrastructure\Models\HomePageConfig;
+use App\Domains\Content\Infrastructure\Services\HomePageConfigService;
 use Illuminate\Support\Facades\Cache;
 
 function ensureTrangChuRecord(): HomePageConfig

@@ -2,9 +2,9 @@
 
 namespace App\Domains\Catalog\Infrastructure\Services;
 
-use App\Domains\Catalog\Infrastructure\Models\GiaTriGachHoaThongGio;
 use App\Domains\Catalog\Infrastructure\Models\GachHoaThongGio;
 use App\Domains\Catalog\Infrastructure\Models\GachHoaThongGioAnh;
+use App\Domains\Catalog\Infrastructure\Models\GiaTriGachHoaThongGio;
 use App\Domains\Media\Infrastructure\FileUploadHelper;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;

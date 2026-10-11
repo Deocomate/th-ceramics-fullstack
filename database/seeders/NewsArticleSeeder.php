@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Infrastructure\Models\NewsCategory;
 use App\Domains\Content\Infrastructure\Models\NewsArticle;
+use App\Domains\Content\Infrastructure\Models\NewsCategory;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
 

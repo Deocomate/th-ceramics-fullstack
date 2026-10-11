@@ -1,8 +1,8 @@
 <?php
 
-use App\Domains\Content\Infrastructure\Models\NewsCategory;
 use App\Domains\Catalog\Infrastructure\ProductWriter;
 use App\Domains\Content\Infrastructure\Models\NewsArticle;
+use App\Domains\Content\Infrastructure\Models\NewsCategory;
 
 function createNewsArticle(NewsCategory $category, array $overrides = []): NewsArticle
 {

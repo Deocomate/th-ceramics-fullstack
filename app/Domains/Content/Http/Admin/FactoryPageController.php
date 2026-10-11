@@ -5,6 +5,7 @@ namespace App\Domains\Content\Http\Admin;
 use App\Domains\Content\Http\Requests\FactoryPageRequest;
 use App\Domains\Content\Infrastructure\Services\FactoryPageConfigService;
 use App\Http\Controllers\Controller;
+use App\Support\AssetPath;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -35,9 +36,9 @@ class FactoryPageController extends Controller
         return view('admin.content.pages.factory.edit', [
             'factory' => $factory,
             'factoryJson' => $factoryJson,
-            'heroDesktopUrl' => $factory->hero_banner_desktop ? \App\Support\AssetPath::url($factory->hero_banner_desktop) : '',
-            'heroMobileUrl' => $factory->hero_banner_mobile ? \App\Support\AssetPath::url($factory->hero_banner_mobile) : '',
-            'processBottomUrl' => $factory->process_bottom_image ? \App\Support\AssetPath::url($factory->process_bottom_image) : '',
+            'heroDesktopUrl' => $factory->hero_banner_desktop ? AssetPath::url($factory->hero_banner_desktop) : '',
+            'heroMobileUrl' => $factory->hero_banner_mobile ? AssetPath::url($factory->hero_banner_mobile) : '',
+            'processBottomUrl' => $factory->process_bottom_image ? AssetPath::url($factory->process_bottom_image) : '',
         ]);
     }
 

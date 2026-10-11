@@ -3,7 +3,6 @@
 namespace App\Domains\Catalog\Infrastructure\Services;
 
 use App\Domains\Catalog\Infrastructure\Models\Product;
-use App\Domains\Catalog\Infrastructure\Services\CatalogQueryService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 

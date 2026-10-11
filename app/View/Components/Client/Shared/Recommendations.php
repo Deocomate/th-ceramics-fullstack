@@ -2,9 +2,9 @@
 
 namespace App\View\Components\Client\Shared;
 
-use App\Support\AssetPath;
-use App\Domains\Catalog\Infrastructure\ClientProductType;
 use App\Domains\Catalog\Domain\ValueObjects\ProductPrice;
+use App\Domains\Catalog\Infrastructure\ClientProductType;
+use App\Support\AssetPath;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
