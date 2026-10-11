@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Archive\ContentArchiveService;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -225,7 +226,7 @@ it('exports the complete allowlisted schema without business tables', function (
 it('round trips a canonical archive through an empty product catalog', function () {
     config()->set('content_archive.tables', (require config_path('content_archive.php'))['tables']);
     Storage::disk('public')->put('uploads/canon.webp', 'fake image bytes');
-    $product = app(\App\Domains\Catalog\Infrastructure\ProductWriter::class)->create('ngoi_am_duong_ct', [
+    $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
         'code' => 'CANON-001', 'name' => 'Ngói canonical', 'images' => ['uploads/canon.webp'], 'price' => 41000,
         'is_delete' => false,
     ]);
@@ -370,6 +371,57 @@ it('rejects a modified archive and an archive over its configured size limit', f
         $zip->addFromString('data/archive_test_items.ndjson', str_replace('Original', 'Modified', $data));
         $zip->close();
         expect(fn () => $archive->preview($path))->toThrow(RuntimeException::class, 'Checksum không khớp');
+    } finally {
+        @unlink($path);
+    }
+});
+
+it('carries a private catalog file through export and import without making it public', function () {
+    Storage::fake('local');
+    Storage::disk('local')->put('catalog/files/book.pdf', 'private PDF');
+    DB::table('archive_test_items')->insert([
+        'id' => 40, 'name' => 'Private catalog', 'image' => 'catalog/files/book.pdf',
+        'created_at' => '2026-01-01 00:00:00', 'updated_at' => '2026-01-01 00:00:00',
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        $zip = new ZipArchive;
+        expect($zip->open($path))->toBeTrue();
+        expect($zip->getFromName('media/storage/catalog/files/book.pdf'))->toBe('private PDF');
+        $zip->close();
+
+        expect($archive->preview($path)['unchanged'])->toBe(1);
+        DB::table('archive_test_items')->delete();
+        Storage::disk('local')->delete('catalog/files/book.pdf');
+
+        expect($archive->import($path)['added'])->toBe(1);
+        expect(Storage::disk('local')->get('catalog/files/book.pdf'))->toBe('private PDF');
+        Storage::disk('public')->assertMissing('catalog/files/book.pdf');
+    } finally {
+        @unlink($path);
+    }
+});
+
+it('keeps a conflicting private catalog file on the private disk', function () {
+    Storage::fake('local');
+    Storage::disk('local')->put('catalog/files/book.pdf', 'source PDF');
+    DB::table('archive_test_items')->insert([
+        'id' => 41, 'name' => 'Private conflict', 'image' => 'catalog/files/book.pdf',
+        'created_at' => '2026-01-01 00:00:00', 'updated_at' => '2026-01-01 00:00:00',
+    ]);
+    $archive = app(ContentArchiveService::class);
+    $path = $archive->export();
+    try {
+        DB::table('archive_test_items')->delete();
+        Storage::disk('local')->put('catalog/files/book.pdf', 'destination PDF');
+
+        expect($archive->import($path)['added'])->toBe(1);
+        $replacement = 'catalog/files/'.hash('sha256', 'source PDF').'/book.pdf';
+        expect(DB::table('archive_test_items')->value('image'))->toBe($replacement);
+        expect(Storage::disk('local')->get($replacement))->toBe('source PDF');
+        expect(Storage::disk('local')->get('catalog/files/book.pdf'))->toBe('destination PDF');
+        expect(Storage::disk('public')->allFiles())->toBe([]);
     } finally {
         @unlink($path);
     }

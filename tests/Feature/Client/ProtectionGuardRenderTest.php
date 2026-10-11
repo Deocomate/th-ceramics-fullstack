@@ -110,6 +110,9 @@ test('catalog flipbook page carries the guard and a csrf token', function () {
     $catalog = Catalog::query()->create([
         'tieu_de' => 'Sample Catalog',
         'file' => 'catalogs/sample.pdf',
+        'pages' => ['batch' => 'b1', 'items' => [
+            ['path' => 'catalog/pages/1/b1/000.webp', 'w' => 1414, 'h' => 2000, 'pdf_page' => 1, 'side' => 'full'],
+        ]],
         'anh_dai_dien' => null,
     ]);
 

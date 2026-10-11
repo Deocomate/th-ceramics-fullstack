@@ -14,6 +14,7 @@ class FileUploadHelperOptimizationTest extends TestCase
     {
         parent::setUp();
         Storage::fake('public');
+        Storage::fake('local');
     }
 
     public function test_file_upload_helper_optimizes_image_to_webp(): void
@@ -38,9 +39,24 @@ class FileUploadHelperOptimizationTest extends TestCase
 
         $path = FileUploadHelper::upload($file, 'catalog/files', 'catalog-official');
 
-        Storage::disk('public')->assertExists($path);
+        // Catalog files are private, so they never land on the public disk.
+        Storage::disk('local')->assertExists($path);
+        Storage::disk('public')->assertMissing($path);
         $this->assertStringEndsWith('.pdf', $path);
-        $this->assertEquals($content, Storage::disk('public')->get($path));
+        $this->assertEquals($content, Storage::disk('local')->get($path));
+
+        FileUploadHelper::delete($path);
+        Storage::disk('local')->assertMissing($path);
+    }
+
+    public function test_file_upload_helper_keeps_other_documents_on_the_public_disk(): void
+    {
+        $file = UploadedFile::fake()->createWithContent('huong-dan.pdf', '%PDF-1.4 guide');
+
+        $path = FileUploadHelper::upload($file, 'thi_cong/files', 'huong-dan');
+
+        Storage::disk('public')->assertExists($path);
+        Storage::disk('local')->assertMissing($path);
     }
 
     public function test_file_upload_helper_replace_deletes_old_file_and_stores_new(): void

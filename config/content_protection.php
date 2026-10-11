@@ -40,4 +40,15 @@ return [
         // states this retention period.
         'retention_days' => 90,
     ],
+
+    // Catalog readers get page images rendered in the admin browser, never the PDF.
+    'catalog_pages' => [
+        // Long edge of a page image in pixels. A lower value makes copies less useful
+        // and softens the 200% zoom on high-density screens.
+        'max_edge' => 2000,
+        // Target size the admin browser encodes each page under.
+        'max_bytes' => 1_000_000,
+        // PDFs with more pages are refused.
+        'max_pages' => 400,
+    ],
 ];

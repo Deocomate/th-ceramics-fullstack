@@ -254,6 +254,6 @@ class ImageOptimizerService
         $extension = $file->getClientOriginalExtension() ?: 'bin';
         $filename = ($slug ? Str::slug($slug) : Str::random(16)).'_'.time().'.'.$extension;
 
-        return $file->storeAs($directory, $filename, 'public');
+        return $file->storeAs($directory, $filename, MediaDisk::forPath($directory.'/'.$filename));
     }
 }

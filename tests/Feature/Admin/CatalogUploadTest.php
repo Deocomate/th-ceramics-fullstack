@@ -12,6 +12,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Storage::fake('public');
+    Storage::fake('local');
     $this->admin = User::factory()->create(['role' => 'admin']);
 });
 
@@ -45,8 +46,26 @@ test('it stores new catalog via ajax', function () {
 
     $catalog = Catalog::first();
     Storage::disk('public')->assertExists($catalog->anh_dai_dien);
-    Storage::disk('public')->assertExists($catalog->file);
+
+    // The original file is private: it is stored off the public disk and linked through the admin route.
+    expect($catalog->file)->toStartWith('catalog/files/');
+    Storage::disk('local')->assertExists($catalog->file);
+    Storage::disk('public')->assertMissing($catalog->file);
+    $response->assertJsonPath('catalog.file', route('admin.catalog.file', $catalog->catalog_id));
 });
+
+test('it only accepts PDF catalog files', function (string $name, string $mime) {
+    actingAs($this->admin)
+        ->postJson(route('admin.catalog.store'), [
+            'tieu_de' => 'Catalog Title ABC',
+            'file' => UploadedFile::fake()->create($name, 100, $mime),
+        ])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['file']);
+})->with([
+    ['catalog.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+    ['catalog.zip', 'application/zip'],
+]);
 
 test('it rejects invalid image mime via ajax', function () {
     $invalidImage = UploadedFile::fake()->create('test_image.txt', 10);
@@ -87,7 +106,7 @@ test('it updates catalog image via ajax and removes old file', function () {
 
     // Seed fake files to storage to check deletion
     Storage::disk('public')->put('catalog/images/old_image.jpg', 'fake content');
-    Storage::disk('public')->put('catalog/files/old_file.pdf', 'fake content');
+    Storage::disk('local')->put('catalog/files/old_file.pdf', 'fake content');
 
     Storage::disk('public')->assertExists('catalog/images/old_image.jpg');
 
@@ -112,5 +131,5 @@ test('it updates catalog image via ajax and removes old file', function () {
     Storage::disk('public')->assertMissing('catalog/images/old_image.jpg');
     Storage::disk('public')->assertExists($catalog->anh_dai_dien);
     // File remains unchanged
-    Storage::disk('public')->assertExists('catalog/files/old_file.pdf');
+    Storage::disk('local')->assertExists('catalog/files/old_file.pdf');
 });

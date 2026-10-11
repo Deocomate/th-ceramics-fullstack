@@ -91,4 +91,7 @@ Route::prefix('catalog')->name('catalog.')->group(function () {
     Route::post('/', [CatalogController::class, 'store'])->name('store');
     Route::put('/{id}', [CatalogController::class, 'update'])->name('update');
     Route::delete('/{id}', [CatalogController::class, 'destroy'])->name('destroy');
+    Route::get('/{id}/file', [CatalogController::class, 'file'])->name('file');
+    Route::post('/{id}/pages', [CatalogController::class, 'storePage'])->name('pages.store');
+    Route::post('/{id}/pages/finalize', [CatalogController::class, 'finalizePages'])->name('pages.finalize');
 });

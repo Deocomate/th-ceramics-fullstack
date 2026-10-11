@@ -13,9 +13,9 @@ use App\Domains\Commerce\Infrastructure\Models\OrderItem;
 use App\Domains\Content\Domain\ContentPageRegistry;
 use App\Domains\Content\Infrastructure\Mail\ContactFormMail;
 use App\Domains\Content\Infrastructure\Models\Catalog;
+use App\Domains\Identity\Infrastructure\Models\User;
 use App\Domains\Identity\Infrastructure\Notifications\ResetPasswordNotification;
 use App\Domains\Identity\Infrastructure\Notifications\VerifyEmailQueued;
-use App\Domains\Identity\Infrastructure\Models\User;
 use Illuminate\Mail\Markdown;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
@@ -253,6 +253,9 @@ test('all registered customer service pages and flipbook render successfully', f
     $catalog = Catalog::query()->create([
         'tieu_de' => 'Sample Catalog',
         'file' => 'catalogs/sample.pdf',
+        'pages' => ['batch' => 'b1', 'items' => [
+            ['path' => 'catalog/pages/1/b1/000.webp', 'w' => 1414, 'h' => 2000, 'pdf_page' => 1, 'side' => 'full'],
+        ]],
         'anh_dai_dien' => null,
     ]);
     $this->get(route('client.dich-vu.tai-catalog.read', ['id' => $catalog->catalog_id]))->assertSuccessful();

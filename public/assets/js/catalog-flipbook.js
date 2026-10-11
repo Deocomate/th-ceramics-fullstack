@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  const SPREAD_RATIO = 1.25;
   const PRELOAD_AHEAD = 5;
   const PRELOAD_BEHIND = 1;
   const BACKGROUND_CONCURRENCY = 2;
@@ -9,7 +8,6 @@
   const ZOOM_MIN = 1.0;
   const ZOOM_MAX = 2.0;
   const ZOOM_STEP = 0.25;
-  const RENDER_SCALE_CAP = 2; // cap devicePixelRatio contribution
 
   let currentZoom = ZOOM_MIN;
   let panX = 0;
@@ -17,46 +15,30 @@
 
   let pageFlip = null;
   let renderer = null;
-  let pdfDoc = null;
   let flipPlan = [];
   let maxUnitW = 0;
   let maxUnitH = 0;
   let totalPdfPages = 0;
 
-  pdfjsLib.GlobalWorkerOptions.workerSrc =
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-
-  async function analyzePdf(pdf) {
+  // Pages arrive already split: a spread is two entries, `left` then `right`.
+  function buildFlipPlan(pages) {
     const flipPlan = [];
     let maxUnitW = 0;
     let maxUnitH = 0;
+    let totalPdfPages = 0;
 
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const viewport = page.getViewport({ scale: 1 });
-      const ratio = viewport.width / viewport.height;
-      const isSpread = ratio >= SPREAD_RATIO;
+    pages.forEach(function (page) {
+      flipPlan.push({
+        url: page.url,
+        pdfPageNumber: page.pdfPage,
+        side: page.side,
+      });
+      maxUnitW = Math.max(maxUnitW, page.w);
+      maxUnitH = Math.max(maxUnitH, page.h);
+      totalPdfPages = Math.max(totalPdfPages, page.pdfPage);
+    });
 
-      const meta = {
-        pdfPageNumber: i,
-        pdfWidth: viewport.width,
-        pdfHeight: viewport.height,
-        isSpread,
-      };
-
-      if (isSpread) {
-        flipPlan.push({ ...meta, side: 'left' });
-        flipPlan.push({ ...meta, side: 'right' });
-        maxUnitW = Math.max(maxUnitW, viewport.width / 2);
-        maxUnitH = Math.max(maxUnitH, viewport.height);
-      } else {
-        flipPlan.push({ ...meta, side: 'full' });
-        maxUnitW = Math.max(maxUnitW, viewport.width);
-        maxUnitH = Math.max(maxUnitH, viewport.height);
-      }
-    }
-
-    return { flipPlan, maxUnitW, maxUnitH, totalPdfPages: pdf.numPages };
+    return { flipPlan, maxUnitW, maxUnitH, totalPdfPages };
   }
 
   function calcFlipDimensions(maxUnitW, maxUnitH) {
@@ -103,54 +85,8 @@
     return String(entry.pdfPageNumber);
   }
 
-  function getRenderMultiplier() {
-    const dpr = Math.min(window.devicePixelRatio || 1, RENDER_SCALE_CAP);
-    return dpr * ZOOM_MAX; // ensures max zoom (200%) still shows native-res detail
-  }
-
-  function renderPageToCanvas(page, canvas, entry, flipW, flipH) {
-    const mult = getRenderMultiplier();
-    const bufferW = Math.round(flipW * mult);
-    const bufferH = Math.round(flipH * mult);
-
-    const ctx = canvas.getContext('2d');
-    canvas.width = bufferW;
-    canvas.height = bufferH;
-    canvas.style.width = flipW + 'px';
-    canvas.style.height = flipH + 'px';
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, bufferW, bufferH);
-
-    const { side, pdfWidth, pdfHeight } = entry;
-    const isSpread = side === 'left' || side === 'right';
-    const contentW = isSpread ? pdfWidth / 2 : pdfWidth;
-    const contentH = pdfHeight;
-    const renderScale = Math.min(bufferW / contentW, bufferH / contentH);
-    const viewport = page.getViewport({ scale: renderScale });
-    const renderedH = viewport.height;
-    const offsetY = (bufferH - renderedH) / 2;
-
-    let offsetX = 0;
-
-    if (side === 'full') {
-      offsetX = (bufferW - viewport.width) / 2;
-    } else if (side === 'left') {
-      const halfRenderedW = (pdfWidth / 2) * renderScale;
-      offsetX = (bufferW - halfRenderedW) / 2;
-    } else if (side === 'right') {
-      const halfRenderedW = (pdfWidth / 2) * renderScale;
-      offsetX = -(pdfWidth / 2) * renderScale + (bufferW - halfRenderedW) / 2;
-    }
-
-    return page.render({
-      canvasContext: ctx,
-      viewport,
-      transform: [1, 0, 0, 1, offsetX, offsetY],
-    }).promise;
-  }
-
   function showPagePlaceholder(pageDiv) {
-    if (pageDiv.querySelector('canvas') || pageDiv.querySelector('.page-loading')) {
+    if (pageDiv.querySelector('img') || pageDiv.querySelector('.page-loading')) {
       return;
     }
 
@@ -164,21 +100,33 @@
     pageDiv.querySelector('.page-loading')?.remove();
   }
 
-  async function renderFlipEntry(pdf, pageDiv, entry, flipW, flipH) {
-    if (pageDiv.querySelector('canvas')) {
-      return;
+  function renderFlipEntry(pageDiv, entry) {
+    if (pageDiv.querySelector('img')) {
+      return Promise.resolve();
     }
 
     showPagePlaceholder(pageDiv);
 
-    const page = await pdf.getPage(entry.pdfPageNumber);
-    const canvas = document.createElement('canvas');
-    await renderPageToCanvas(page, canvas, entry, flipW, flipH);
-    removePagePlaceholder(pageDiv);
-    pageDiv.appendChild(canvas);
+    // Wait on the load event rather than img.decode(): decode() only settles on a rendered
+    // frame, so a reader opened in a background tab would stay on the loading screen.
+    return new Promise(function (resolve, reject) {
+      const img = document.createElement('img');
+      img.decoding = 'async';
+      img.draggable = false;
+      img.alt = 'Trang ' + entry.pdfPageNumber;
+      img.onload = function () {
+        removePagePlaceholder(pageDiv);
+        pageDiv.appendChild(img);
+        resolve();
+      };
+      img.onerror = function () {
+        reject(new Error('Không tải được ảnh trang ' + entry.pdfPageNumber));
+      };
+      img.src = entry.url;
+    });
   }
 
-  function createPageRenderer(pdf, pageDivs, flipPlan, flipW, flipH) {
+  function createPageRenderer(pageDivs, flipPlan) {
     const rendered = new Set();
     const rendering = new Map();
 
@@ -195,13 +143,7 @@
         return rendering.get(index);
       }
 
-      const promise = renderFlipEntry(
-        pdf,
-        pageDivs[index],
-        flipPlan[index],
-        flipW,
-        flipH
-      )
+      const promise = renderFlipEntry(pageDivs[index], flipPlan[index])
         .then(function () {
           rendered.add(index);
         })
@@ -542,7 +484,7 @@
     applyZoom();
   }
 
-  async function initCatalogFlipbook(pdfUrl) {
+  async function initCatalogFlipbook(pages) {
     const flipbookEl = document.getElementById('flipbook');
     const spinner = document.getElementById('spinner');
 
@@ -551,8 +493,7 @@
     }
 
     try {
-      pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
-      const analysis = await analyzePdf(pdfDoc);
+      const analysis = buildFlipPlan(pages);
       flipPlan = analysis.flipPlan;
       maxUnitW = analysis.maxUnitW;
       maxUnitH = analysis.maxUnitH;
@@ -584,16 +525,21 @@
         return;
       }
 
-      renderer = createPageRenderer(pdfDoc, pageDivs, flipPlan, flipW, flipH);
+      renderer = createPageRenderer(pageDivs, flipPlan);
 
       await renderer.preloadAround(0);
       spinner.style.display = 'none';
+
+      // StPageFlip shows one page at a time only while the book is narrower than two
+      // minimum-width pages, so on phones the minimum is set just above half the book.
+      const availableWidth = (zoomWrapEl && zoomWrapEl.clientWidth) || bookWidth;
+      const minPageWidth = isMobile ? Math.floor(availableWidth / 2) + 1 : 100;
 
       pageFlip = new St.PageFlip(flipbookEl, {
         width: flipW,
         height: flipH,
         size: 'stretch',
-        minWidth: 100,
+        minWidth: minPageWidth,
         maxWidth: 3000,
         minHeight: 100,
         maxHeight: 3000,

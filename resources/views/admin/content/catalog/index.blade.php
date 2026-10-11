@@ -47,9 +47,9 @@
                                 <div id="err-create-tieu_de" class="text-xs text-red-600 mt-2 hidden"></div>
                             </div>
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">File Catalog (PDF, DOCX, ZIP...) <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">File Catalog (PDF) <span class="text-red-500">*</span></label>
                                 <div class="relative">
-                                    <input type="file" name="file" accept=".pdf,.doc,.docx,.zip,.rar" required onchange="validateFileInput(this, 'err-create-file', 200, ['pdf', 'doc', 'docx', 'zip', 'rar'])" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white transition-all">
+                                    <input type="file" name="file" accept=".pdf" required onchange="validateFileInput(this, 'err-create-file', 200, ['pdf'])" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white transition-all">
                                 </div>
                                 <p class="text-xs text-gray-500 mt-2">Dung lượng tối đa: 200MB.</p>
                                 <div id="err-create-file" class="text-xs text-red-600 mt-2 hidden"></div>
@@ -62,7 +62,7 @@
                                 <div id="create-progress-bar" class="bg-blue-600 h-2 rounded-full transition-all" style="width: 0%"></div>
                             </div>
                             <p class="text-xs text-gray-600 mt-1 flex justify-between">
-                                <span>Đang tải lên...</span>
+                                <span id="create-progress-label">Đang tải lên...</span>
                                 <span id="create-progress-text">0%</span>
                             </p>
                         </div>
@@ -86,7 +86,7 @@
                                     data-id="{{ $item->catalog_id }}"
                                     data-name="{{ $item->tieu_de }}"
                                     data-img="{{ asset('storage/' . $item->anh_dai_dien) }}"
-                                    data-file="{{ $item->file ? asset('storage/' . $item->file) : '' }}"
+                                    data-file="{{ $item->file ? route('admin.catalog.file', $item->catalog_id) : '' }}"
                                     onclick="openEditModal(this, '{{ route('admin.catalog.update', $item->catalog_id) }}')"
                                     class="flex items-center gap-1.5 px-6 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-sm w-36 justify-center">
                                     Sửa
@@ -101,10 +101,22 @@
                         <div class="p-4 w-full flex flex-col flex-1 bg-white items-center text-center">
                             <h4 class="font-bold text-gray-800 text-sm mb-2 truncate w-full" title="{{ $item->tieu_de }}">{{ $item->tieu_de ?? 'Chưa có tiêu đề' }}</h4>
                             @if($item->file)
-                                <a href="{{ asset('storage/' . $item->file) }}" target="_blank" class="text-xs font-semibold text-blue-600 hover:underline bg-blue-50 px-3 py-1.5 rounded-full inline-flex items-center gap-1">
+                                <a href="{{ route('admin.catalog.file', $item->catalog_id) }}" target="_blank" class="text-xs font-semibold text-blue-600 hover:underline bg-blue-50 px-3 py-1.5 rounded-full inline-flex items-center gap-1">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                                     Tải file hiện tại
                                 </a>
+                                @if($item->pageItems() === [])
+                                    <span class="mt-3 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">Chưa có ảnh trang</span>
+                                    <button type="button"
+                                        data-file-url="{{ route('admin.catalog.file', $item->catalog_id) }}"
+                                        data-pages-url="{{ route('admin.catalog.pages.store', $item->catalog_id) }}"
+                                        data-finalize-url="{{ route('admin.catalog.pages.finalize', $item->catalog_id) }}"
+                                        onclick="generateCatalogPages(this)"
+                                        class="mt-2 px-4 py-1.5 text-xs font-bold text-white rounded-lg bg-[#A31D1D] hover:bg-[#8a1818] transition-colors shadow-sm disabled:opacity-60 disabled:cursor-wait">
+                                        Tạo ảnh trang
+                                    </button>
+                                    <p class="text-xs text-red-600 mt-2 hidden" data-page-error></p>
+                                @endif
                             @else
                                 <span class="text-xs text-red-500 italic">Không có file đính kèm</span>
                             @endif
@@ -158,7 +170,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Đổi File Mới (Tùy chọn)</label>
-                                <input type="file" name="file" accept=".pdf,.doc,.docx,.zip,.rar" onchange="validateFileInput(this, 'err-edit-file', 200, ['pdf', 'doc', 'docx', 'zip', 'rar'])" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white transition-all">
+                                <input type="file" name="file" accept=".pdf" onchange="validateFileInput(this, 'err-edit-file', 200, ['pdf'])" class="w-full text-sm border border-gray-300 rounded-lg p-1.5 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer bg-white transition-all">
                                 <p class="text-xs text-gray-500 mt-2">Dung lượng tối đa 200MB. Để trống nếu không muốn thay đổi file cũ.</p>
                                 <div id="err-edit-file" class="text-xs text-red-600 mt-2 hidden"></div>
                                 <div class="mt-2 text-sm" id="edit_file_link"></div>
@@ -171,7 +183,7 @@
                                 <div id="edit-progress-bar" class="bg-blue-600 h-2 rounded-full transition-all" style="width: 0%"></div>
                             </div>
                             <p class="text-xs text-gray-600 mt-1 flex justify-between">
-                                <span>Đang tải lên...</span>
+                                <span id="edit-progress-label">Đang tải lên...</span>
                                 <span id="edit-progress-text">0%</span>
                             </p>
                         </div>
@@ -205,7 +217,82 @@
     </div>
 
     @push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="{{ asset('assets/js/admin-catalog-page-renderer.js') }}?v={{ filemtime(public_path('assets/js/admin-catalog-page-renderer.js')) }}"
+        data-max-edge="{{ (int) config('content_protection.catalog_pages.max_edge') }}"
+        data-max-bytes="{{ (int) config('content_protection.catalog_pages.max_bytes') }}"
+        data-max-pages="{{ (int) config('content_protection.catalog_pages.max_pages') }}"></script>
     <script>
+        const catalogCsrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        const catalogPagesUrl = @json(route('admin.catalog.pages.store', '__ID__'));
+        const catalogFinalizeUrl = @json(route('admin.catalog.pages.finalize', '__ID__'));
+
+        // Readers see page images, never the PDF, so a saved file is rendered to images right away.
+        function generatePagesAfterSave(response, file, prefix, submitBtn, done) {
+            const catalogId = response && response.catalog ? response.catalog.catalog_id : null;
+            if (!file || !catalogId) {
+                done();
+                return;
+            }
+
+            const container = document.getElementById(prefix + '-progress-container');
+            const bar = document.getElementById(prefix + '-progress-bar');
+            const text = document.getElementById(prefix + '-progress-text');
+            const label = document.getElementById(prefix + '-progress-label');
+            const source = URL.createObjectURL(file);
+
+            container.classList.remove('hidden');
+            bar.style.width = '0%';
+            text.textContent = '';
+            label.textContent = 'Đang tạo ảnh trang, vui lòng không đóng trang...';
+            submitBtn.disabled = true;
+
+            AdminCatalogPageRenderer.generate({
+                source: source,
+                pagesUrl: catalogPagesUrl.replace('__ID__', catalogId),
+                finalizeUrl: catalogFinalizeUrl.replace('__ID__', catalogId),
+                csrfToken: catalogCsrfToken,
+                onProgress: function (finished, total) {
+                    bar.style.width = Math.round((finished / total) * 100) + '%';
+                    text.textContent = finished + '/' + total + ' trang';
+                },
+            }).then(done).catch(function (error) {
+                container.classList.add('hidden');
+                label.textContent = 'Đang tải lên...';
+                const errorEl = document.getElementById('err-' + prefix + '-general');
+                errorEl.textContent = 'Catalog đã được lưu nhưng chưa tạo được ảnh trang: ' + error.message + ' Tải lại trang rồi bấm "Tạo ảnh trang".';
+                errorEl.classList.remove('hidden');
+            }).finally(function () {
+                submitBtn.disabled = false;
+                URL.revokeObjectURL(source);
+            });
+        }
+
+        function generateCatalogPages(button) {
+            const errorEl = button.parentElement.querySelector('[data-page-error]');
+            const originalText = button.textContent;
+            errorEl.classList.add('hidden');
+            button.disabled = true;
+            button.textContent = 'Đang tạo ảnh trang...';
+
+            AdminCatalogPageRenderer.generate({
+                source: button.dataset.fileUrl,
+                pagesUrl: button.dataset.pagesUrl,
+                finalizeUrl: button.dataset.finalizeUrl,
+                csrfToken: catalogCsrfToken,
+                onProgress: function (finished, total) {
+                    button.textContent = 'Đang tạo ' + finished + '/' + total + ' trang';
+                },
+            }).then(function () {
+                location.reload();
+            }).catch(function (error) {
+                button.disabled = false;
+                button.textContent = originalText;
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+            });
+        }
+
         function previewImage(event, targetId) {
             const file = event.target.files[0];
             if (file) {
@@ -379,11 +466,12 @@
             if (!validateFileInput(imgInput, 'err-create-anh_dai_dien', 5, ['jpg', 'jpeg', 'png', 'webp'])) {
                 return;
             }
-            if (!validateFileInput(fileInput, 'err-create-file', 200, ['pdf', 'doc', 'docx', 'zip', 'rar'])) {
+            if (!validateFileInput(fileInput, 'err-create-file', 200, ['pdf'])) {
                 return;
             }
 
             const submitBtn = this.querySelector('button[type="submit"]');
+            const selectedFile = fileInput.files[0] || null;
             const errorIds = {
                 'tieu_de': 'err-create-tieu_de',
                 'anh_dai_dien': 'err-create-anh_dai_dien',
@@ -399,9 +487,11 @@
                 submitBtn, 
                 errorIds, 
                 function(response) {
-                    document.getElementById('preview-new-catalog').src = "https://placehold.co/600x800?text=Chon+Anh";
-                    document.getElementById('createForm').reset();
-                    location.reload();
+                    generatePagesAfterSave(response, selectedFile, 'create', submitBtn, function() {
+                        document.getElementById('preview-new-catalog').src = "https://placehold.co/600x800?text=Chon+Anh";
+                        document.getElementById('createForm').reset();
+                        location.reload();
+                    });
                 }
             );
         });
@@ -416,11 +506,12 @@
             if (!validateFileInput(imgInput, 'err-edit-anh_dai_dien', 5, ['jpg', 'jpeg', 'png', 'webp'])) {
                 return;
             }
-            if (!validateFileInput(fileInput, 'err-edit-file', 200, ['pdf', 'doc', 'docx', 'zip', 'rar'])) {
+            if (!validateFileInput(fileInput, 'err-edit-file', 200, ['pdf'])) {
                 return;
             }
 
             const submitBtn = this.querySelector('button[type="submit"]');
+            const selectedFile = fileInput.files[0] || null;
             const errorIds = {
                 'tieu_de': 'err-edit-tieu_de',
                 'anh_dai_dien': 'err-edit-anh_dai_dien',
@@ -436,8 +527,10 @@
                 submitBtn, 
                 errorIds, 
                 function(response) {
-                    closeEditModal();
-                    location.reload();
+                    generatePagesAfterSave(response, selectedFile, 'edit', submitBtn, function() {
+                        closeEditModal();
+                        location.reload();
+                    });
                 }
             );
         });
@@ -462,6 +555,7 @@
             if (progressBar) progressBar.style.width = '0%';
             const progressText = document.getElementById('edit-progress-text');
             if (progressText) progressText.textContent = '0%';
+            document.getElementById('edit-progress-label').textContent = 'Đang tải lên...';
 
             document.getElementById('editForm').action = actionUrl;
             document.getElementById('edit_name').value = btnElement.getAttribute('data-name');

@@ -26,14 +26,19 @@ class FileUploadHelper
     }
 
     /**
-     * Delete a file from public disk if it exists.
+     * Delete a file from the disk that owns its path if it exists.
      *
-     * @param  string|null  $path  Path relative to public disk.
+     * @param  string|null  $path  Path relative to its media disk.
      */
     public static function delete(?string $path): void
     {
-        if ($path && Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
+        if (! $path) {
+            return;
+        }
+
+        $disk = Storage::disk(MediaDisk::forPath($path));
+        if ($disk->exists($path)) {
+            $disk->delete($path);
         }
     }
 

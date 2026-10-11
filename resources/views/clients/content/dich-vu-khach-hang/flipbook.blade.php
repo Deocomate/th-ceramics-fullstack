@@ -8,7 +8,6 @@
   <x-client.protection.guard />
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
 
   <style>
@@ -53,8 +52,11 @@
       overflow: hidden;
     }
 
-    .my-page canvas {
+    .my-page img {
       display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .my-page .page-loading {
@@ -153,7 +155,7 @@
       if (typeof lucide !== 'undefined') {
         lucide.createIcons();
       }
-      initCatalogFlipbook(@json(asset('storage/' . $catalog->file)));
+      initCatalogFlipbook(@json($pages));
     });
   </script>
 

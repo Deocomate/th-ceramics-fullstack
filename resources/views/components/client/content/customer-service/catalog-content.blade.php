@@ -24,7 +24,7 @@
           <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">{{ $featuredCatalog->tieu_de }}</h3>
         </div>
         <div>
-          @if($featuredCatalog->file)
+          @if($featuredCatalog->pageItems() !== [])
             <a href="{{ route('client.dich-vu.tai-catalog.read', $featuredCatalog->catalog_id) }}"
               class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
             >
@@ -56,7 +56,7 @@
           <h3 class="text-sm lg:text-base font-semibold text-primary font-archivo">{{ $item->tieu_de }}</h3>
         </div>
         <div>
-          @if($item->file)
+          @if($item->pageItems() !== [])
             <a href="{{ route('client.dich-vu.tai-catalog.read', $item->catalog_id) }}"
               class="flex items-center font-extralight justify-center lg:justify-between gap-4 px-2 py-1.5 border border-primary text-primary text-xs lg:text-sm hover:bg-primary hover:text-white transition-all w-fit min-w-[97px] lg:min-w-[110px]"
             >

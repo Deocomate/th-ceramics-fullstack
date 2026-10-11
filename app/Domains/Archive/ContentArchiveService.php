@@ -4,6 +4,7 @@ namespace App\Domains\Archive;
 
 use App\Domains\Archive\Adapters\LegacyV1ArchiveAdapter;
 use App\Domains\Archive\Application\Ports\CatalogArchivePort;
+use App\Domains\Media\Infrastructure\MediaDisk;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
@@ -462,22 +463,28 @@ class ContentArchiveService
                 continue;
             }
             $original = substr($name, 6);
+            $stored = substr($original, 8);
+            $private = ! str_starts_with($original, 'assets/') && MediaDisk::forPath($stored) !== 'public';
             $local = str_starts_with($original, 'assets/')
                 ? public_path($original)
-                : Storage::disk('public')->path(substr($original, 8));
+                : Storage::disk(MediaDisk::forPath($stored))->path($stored);
             if (is_file($local) && hash_file('sha256', $local) === $info['sha256']) {
                 continue;
             }
             $conflict = is_file($local) || str_starts_with($original, 'assets/');
-            $target = $conflict
-                ? 'imports/'.$info['sha256'].'/'.basename($original)
-                : substr($original, 8);
-            if (! Storage::disk('public')->exists($target)) {
+            // A private file keeps its directory so the renamed copy stays private.
+            $target = match (true) {
+                ! $conflict => $stored,
+                $private => dirname($stored).'/'.$info['sha256'].'/'.basename($original),
+                default => 'imports/'.$info['sha256'].'/'.basename($original),
+            };
+            $disk = Storage::disk(MediaDisk::forPath($target));
+            if (! $disk->exists($target)) {
                 $stream = $zip->getStream($name);
                 if (! $stream) {
                     throw new RuntimeException("Thiếu media {$original}.");
                 }
-                Storage::disk('public')->put($target, $stream);
+                $disk->put($target, $stream);
                 fclose($stream);
             }
             if ($conflict) {
@@ -592,12 +599,12 @@ class ContentArchiveService
             }
             $media[$path] = str_starts_with($path, 'assets/')
                 ? public_path($path)
-                : Storage::disk('public')->path(substr($path, 8));
+                : Storage::disk(MediaDisk::forPath(substr($path, 8)))->path(substr($path, 8));
         } elseif (preg_match('~^(?!https?://|data:|//)[a-zA-Z0-9_-]+/[a-zA-Z0-9_./-]+\.(?:jpe?g|png|webp|gif|svg|mp4|webm|pdf)$~i', $path)) {
             if (str_contains('/'.$path, '/../')) {
                 throw new RuntimeException('Đường dẫn media không an toàn.');
             }
-            $media['storage/'.$path] = Storage::disk('public')->path($path);
+            $media['storage/'.$path] = Storage::disk(MediaDisk::forPath($path))->path($path);
         }
     }
 

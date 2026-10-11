@@ -35,6 +35,7 @@ use App\Domains\Content\Infrastructure\View\ContentViewComposer;
 use App\Domains\Media\Console\CleanStagedImagesCommand;
 use App\Domains\Media\Console\ConvertLegacyImagesCommand;
 use App\Domains\Media\Console\OptimizeMediaCommand;
+use App\Domains\Media\Console\PrivatizeMediaCommand;
 use App\Domains\Protection\Http\Support\ProtectionExemption;
 use App\Domains\Protection\Infrastructure\ProtectionSettings;
 use App\View\Components\Client\Shared\OutstandingValue;
@@ -160,6 +161,7 @@ class AppServiceProvider extends ServiceProvider
                 CleanStagedImagesCommand::class,
                 OptimizeMediaCommand::class,
                 ConvertLegacyImagesCommand::class,
+                PrivatizeMediaCommand::class,
                 ContentArchiveCommand::class,
                 ContentWritesCommand::class,
             ]);
