@@ -1,18 +1,18 @@
 <?php
 
+use App\Domains\Catalog\Infrastructure\Models\DenGomSu;
 use App\Domains\Catalog\Infrastructure\Models\Product;
 use App\Domains\Catalog\Infrastructure\PublicIdAllocator;
 use App\Domains\Identity\Infrastructure\Models\User;
-use App\Domains\Catalog\Infrastructure\Models\DenGomSu;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     DenGomSu::query()->create([
-        'thumbnail_main' => 'assets/images/den-gom-banner.png',
+        'thumbnail_main' => 'assets/images/den-gom-banner.webp',
         'video' => null,
         'image1' => 'assets/images/den-gom-01.png',
-        'image2' => 'assets/images/den-gom-02.png',
+        'image2' => 'assets/images/den-gom-02.webp',
         'title2' => 'ĐÈN GỐM',
         'image3' => 'assets/images/den-gom-bg.png',
         'title3' => 'ĐÈN SỨ',

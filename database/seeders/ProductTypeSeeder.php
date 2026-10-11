@@ -37,13 +37,13 @@ class ProductTypeSeeder extends Seeder
         $parent = LinhVatPhongThuy::firstOrCreate(
             ['linh_vat_phong_thuy_id' => 1],
             [
-                'thumbnail_main' => 'assets/images/linh-vat-banner.png',
+                'thumbnail_main' => 'assets/images/linh-vat-banner.webp',
                 'video' => 'https://www.youtube.com/embed/Win12rIicBI',
             ]
         );
 
         $linhVats = [
-            ['title' => 'Long', 'image' => 'assets/images/dau-rong.png', 'description' => 'Rồng (Long) — linh vật quyền lực nhất trong tứ linh, biểu tượng của sức mạnh và sự uy nghi.'],
+            ['title' => 'Long', 'image' => 'assets/images/dau-rong.webp', 'description' => 'Rồng (Long) — linh vật quyền lực nhất trong tứ linh, biểu tượng của sức mạnh và sự uy nghi.'],
             ['title' => 'Lân', 'image' => 'assets/images/lan-can-01.png', 'description' => 'Lân — linh vật của sự may mắn, bình an, bảo vệ gia chủ khỏi tà khí.'],
         ];
 
@@ -75,20 +75,20 @@ class ProductTypeSeeder extends Seeder
     {
         $parent = DenGomSu::firstOrCreate(
             ['den_gom_su_id' => 1], [
-                'thumbnail_main' => 'assets/images/den-gom-banner.png',
+                'thumbnail_main' => 'assets/images/den-gom-banner.webp',
                 'video' => 'https://www.youtube.com/embed/Win12rIicBI',
                 'title2' => 'Đèn gốm sứ cao cấp',
                 'title3' => 'Sản phẩm tiêu biểu',
                 'image1' => 'assets/images/den-gom-01.png',
-                'image2' => 'assets/images/den-gom-02.png',
+                'image2' => 'assets/images/den-gom-02.webp',
                 'image3' => 'assets/images/den-gom-01.png',
-                'image4' => 'assets/images/den-gom-02.png',
+                'image4' => 'assets/images/den-gom-02.webp',
             ]
         );
 
         $anhs = [
             ['image' => 'assets/images/den-gom-01.png'],
-            ['image' => 'assets/images/den-gom-02.png'],
+            ['image' => 'assets/images/den-gom-02.webp'],
         ];
 
         foreach ($anhs as $anh) {

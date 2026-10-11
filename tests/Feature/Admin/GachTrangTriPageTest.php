@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Identity\Infrastructure\Models\User;
 use App\Domains\Catalog\Infrastructure\Models\GachTrangTri;
+use App\Domains\Identity\Infrastructure\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'superadmin']);
 
     GachTrangTri::query()->create([
-        'thumbnail_main' => 'assets/images/gach-trang-tri-banner.png',
+        'thumbnail_main' => 'assets/images/gach-trang-tri-banner.webp',
         'video' => null,
         'images' => [],
         'ung_dung_da_dang' => null,

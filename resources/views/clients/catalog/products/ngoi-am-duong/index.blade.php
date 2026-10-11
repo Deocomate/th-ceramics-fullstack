@@ -84,7 +84,7 @@
                         </div>
                         <div class="w-1/2 aspect-[167/138] md:aspect-square flex items-center justify-center">
                             <!-- Data binding: $config->thumbnail2 -->
-                            <img src="{{ $config->thumbnail2 ? asset('storage/' . $config->thumbnail2) : asset('assets/images/ngoi-am-duong-02.png') }}"
+                            <img src="{{ $config->thumbnail2 ? asset('storage/' . $config->thumbnail2) : asset('assets/images/ngoi-am-duong-02.webp') }}"
                                 alt="Ngói Âm Dương 02" class="w-full h-full object-cover" />
                         </div>
                     </div>
@@ -106,7 +106,7 @@
             phong phú chọn lựa
         </h2>
         <div class="size-options-scroll mobile-scroll-visible w-full pb-2 overflow-x-scroll md:overflow-x-hidden">
-            <img src="{{ asset('assets/images/ngoi-am-duong-size.png') }}" alt="Đa dạng kích thước ngói âm dương"
+            <img src="{{ asset('assets/images/ngoi-am-duong-size.webp') }}" alt="Đa dạng kích thước ngói âm dương"
                 class="size-img h-auto object-contain max-w-none w-[200%] md:w-full"
                 onload="window.dispatchEvent(new Event('resize'))" />
         </div>

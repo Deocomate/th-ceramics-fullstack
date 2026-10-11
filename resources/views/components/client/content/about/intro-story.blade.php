@@ -5,7 +5,7 @@
   $firstSection = $headItems->get(0, []);
   $secondSection = $headItems->get(1, []);
 
-  $firstImage = \App\Support\AssetPath::url(data_get($firstSection, 'image'), 'assets/images/about-01.png');
+  $firstImage = \App\Support\AssetPath::url(data_get($firstSection, 'image'), 'assets/images/about-01.webp');
   $firstTitle = data_get($firstSection, 'head', 'Những công việc giản dị và ngọn lửa nghề luôn ấm');
   $firstBody = data_get($firstSection, 'body', 'Từ những bàn tay khéo léo của người thợ Việt tới ngôi nhà của bạn.');
 

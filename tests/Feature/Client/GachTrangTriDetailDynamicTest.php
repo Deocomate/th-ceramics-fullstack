@@ -1,11 +1,11 @@
 <?php
 
-use App\Domains\Catalog\Infrastructure\ProductWriter;
 use App\Domains\Catalog\Infrastructure\Models\GachTrangTri;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
 
 test('gach trang tri detail page renders dynamic product data without static dummy content', function () {
     GachTrangTri::query()->create([
-        'thumbnail_main' => 'assets/images/gach-trang-tri-banner.png',
+        'thumbnail_main' => 'assets/images/gach-trang-tri-banner.webp',
         'video' => null,
         'images' => ['assets/images/trang-tri-01.png'],
         'ung_dung_da_dang' => [],

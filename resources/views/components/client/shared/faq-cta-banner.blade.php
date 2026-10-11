@@ -3,7 +3,7 @@
         class="w-[85%] max-w-[1320px] mx-auto grid grid-cols-1 md:grid-cols-[571px_1fr] gap-8 md:gap-[48px] items-center">
         <!-- Left Image -->
         <div class="w-full md:w-[571px] h-auto md:h-[575px]" data-aos="fade-right">
-            <img src="{{ asset('assets/images/faq2.png') }}" alt="FAQ Image" class="w-full h-full object-cover" />
+            <img src="{{ asset('assets/images/faq2.webp') }}" alt="FAQ Image" class="w-full h-full object-cover" />
         </div>
 
         <!-- Right Content -->

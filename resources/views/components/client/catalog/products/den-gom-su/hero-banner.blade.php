@@ -6,7 +6,7 @@
   <!-- Background Image -->
   <div class="relative z-0">
     <img
-      src="{{ $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/den-gom-banner.png') }}"
+      src="{{ $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/den-gom-banner.webp') }}"
       alt="Đèn Gốm Sứ Banner"
       class="w-full h-auto -mt-[60px] md:-mt-[100px] object-cover"
     />

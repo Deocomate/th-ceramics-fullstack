@@ -8,9 +8,9 @@
 <section class="relative w-full h-[300px] md:h-[380px] flex items-center justify-center overflow-hidden">
   <!-- Background image -->
   <div class="absolute inset-0 z-0">
-    <img src="{{ asset('storage/' . ($project->images[0] ?? 'assets/images/factory-01.jpg')) }}"
+    <img src="{{ asset('storage/' . ($project->images[0] ?? 'assets/images/factory-01.webp')) }}"
          alt="{{ $project->ten_du_an }}" class="w-full h-full object-cover"
-         onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'" />
+         onerror="this.src='{{ asset('assets/images/factory-01.webp') }}'" />
     <div class="absolute inset-0 bg-primary/60"></div>
   </div>
 
@@ -84,13 +84,13 @@
       <a href="{{ asset('storage/' . $images[0]) }}" class="glightbox col-span-2 aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $images[0]) }}" alt="{{ $project->ten_du_an }} — ảnh 1"
-          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.webp') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
       <a href="{{ asset('storage/' . $images[1]) }}" class="glightbox aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $images[1]) }}" alt="{{ $project->ten_du_an }} — ảnh 2"
-          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.webp') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
     </div>
@@ -102,7 +102,7 @@
       <a href="{{ asset('storage/' . $images[$i]) }}" class="glightbox aspect-square overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $images[$i]) }}" alt="{{ $project->ten_du_an }} — ảnh {{ $i+1 }}"
-          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.webp') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
       @endfor
@@ -114,13 +114,13 @@
       <a href="{{ asset('storage/' . $images[6]) }}" class="glightbox aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $images[6]) }}" alt="{{ $project->ten_du_an }} — ảnh 7"
-          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.webp') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
       <a href="{{ asset('storage/' . ($images[7] ?? $images[0])) }}" class="glightbox col-span-2 aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . ($images[7] ?? $images[0])) }}" alt="{{ $project->ten_du_an }} — ảnh 8"
-          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.webp') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
     </div>
@@ -132,7 +132,7 @@
       <a href="{{ asset('storage/' . $images[$i]) }}" class="glightbox aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $images[$i]) }}" alt="{{ $project->ten_du_an }} — ảnh {{ $i+1 }}"
-          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.webp') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
       @endfor
@@ -146,7 +146,7 @@
       <a href="{{ asset('storage/' . $img) }}" class="glightbox aspect-[16/9] overflow-hidden block group"
         data-gallery="project-gallery">
         <img src="{{ asset('storage/' . $img) }}" alt="{{ $project->ten_du_an }}"
-          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+          onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.webp') }}'"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
       </a>
       @endforeach
@@ -162,7 +162,7 @@
             <a href="{{ asset('storage/' . $img) }}" class="glightbox h-full w-full block"
               data-gallery="project-gallery-mobile">
               <img src="{{ asset('storage/' . $img) }}" alt="{{ $project->ten_du_an }}"
-                onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+                onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.webp') }}'"
                 class="w-full h-full object-cover" />
             </a>
           </div>
@@ -185,9 +185,9 @@
       <a href="{{ route('client.projects.detail', $related->slug) }}"
          class="group block overflow-hidden shadow-md hover:shadow-lg transition-shadow bg-white">
         <div class="aspect-[4/3] overflow-hidden">
-          <img src="{{ asset('storage/' . ($related->images[0] ?? 'assets/images/factory-01.jpg')) }}"
+          <img src="{{ asset('storage/' . ($related->images[0] ?? 'assets/images/factory-01.webp')) }}"
                alt="{{ $related->ten_du_an }}"
-               onerror="this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+               onerror="this.src='{{ asset('assets/images/factory-01.webp') }}'"
                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
         </div>
         <div class="p-3 text-center">

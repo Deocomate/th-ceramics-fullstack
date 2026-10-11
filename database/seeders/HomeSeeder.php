@@ -19,18 +19,18 @@ class HomeSeeder extends Seeder
 
         $bannerPool = [
             'assets/images/ngoi-am-duong-banner.jpg',
-            'assets/images/home-hero-01.png',
-            'assets/images/factory-01.jpg',
-            'assets/images/factory-02.png',
-            'assets/images/trang-tri-slide-01.jpg',
+            'assets/images/home-hero-01.webp',
+            'assets/images/factory-01.webp',
+            'assets/images/factory-02.webp',
+            'assets/images/trang-tri-slide-01.webp',
         ];
 
         $showroomPool = [
-            'assets/images/showroom-01.png',
-            'assets/images/showroom-02.png',
-            'assets/images/showroom-03.png',
-            'assets/images/factory-03.png',
-            'assets/images/factory-04.jpg',
+            'assets/images/showroom-01.webp',
+            'assets/images/showroom-02.webp',
+            'assets/images/showroom-03.webp',
+            'assets/images/factory-03.webp',
+            'assets/images/factory-04.webp',
         ];
 
         $row['banner'] = SeederDataContract::expandGallery(

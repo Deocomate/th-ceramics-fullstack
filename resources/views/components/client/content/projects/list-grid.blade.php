@@ -19,7 +19,7 @@
         src="{{ asset('storage/' . ($project->images[0] ?? 'assets/images/placeholder.jpg')) }}"
         alt="{{ $project->ten_du_an }}"
         class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-        onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.jpg') }}'"
+        onerror="this.onerror=null;this.src='{{ asset('assets/images/factory-01.webp') }}'"
       />
     </div>
     <div class="p-3 md:p-0 md:pt-[14px] md:pb-[18px] text-center bg-white flex-1 flex flex-col items-center justify-start">

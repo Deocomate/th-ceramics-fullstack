@@ -2,7 +2,7 @@
   class="relative h-[30vh] lg:h-[70vh] xl:h-[95vh] min-h-[400px] max-h-[740px] flex items-center justify-center text-primary overflow-hidden">
   <!-- Background Image -->
   <div class="absolute inset-0 z-0">
-    <img src="{{ asset('assets/images/news-banner.png') }}" alt="News Banner" class="w-full h-full object-cover" />
+    <img src="{{ asset('assets/images/news-banner.webp') }}" alt="News Banner" class="w-full h-full object-cover" />
     <div class="absolute inset-0 bg-white/25 md:bg-white/35"></div>
   </div>
 

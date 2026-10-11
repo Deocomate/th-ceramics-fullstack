@@ -51,7 +51,7 @@
         aria-label="Phát video hành trình chế tác"
       >
         <img
-          src="{{ asset('assets/images/video-placeholder-02.png') }}"
+          src="{{ asset('assets/images/video-placeholder-02.webp') }}"
           alt="Video placeholder"
           class="w-full h-full object-cover brightness-80 group-hover:brightness-[0.6] transition-all duration-300"
         />
@@ -72,7 +72,7 @@
       data-aos-delay="200"
     >
       <img
-        src="{{ asset('assets/images/video-placeholder-02.png') }}"
+        src="{{ asset('assets/images/video-placeholder-02.webp') }}"
         alt="Video placeholder"
         class="w-full h-full object-cover brightness-80 group-hover:brightness-[0.6] transition-all duration-300"
       />

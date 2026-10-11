@@ -7,7 +7,7 @@
 
   <div class="relative w-full overflow-hidden flex flex-col min-h-[511px] md:min-h-[900px]">
     <img
-      src="{{ asset('assets/images/gia-tri-vuot-troi.png') }}"
+      src="{{ asset('assets/images/gia-tri-vuot-troi.webp') }}"
       alt="Giá trị vượt trội nền"
       class="absolute inset-0 w-full h-full object-cover z-0"
     />

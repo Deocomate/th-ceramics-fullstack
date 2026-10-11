@@ -3,7 +3,7 @@
       $firstImage = collect($work->images ?? [])->first();
 
       return [
-          'image' => \App\Support\AssetPath::url($firstImage, 'assets/images/gach-co-work-1.jpg'),
+          'image' => \App\Support\AssetPath::url($firstImage, 'assets/images/gach-co-work-1.webp'),
           'title' => $work->ten_du_an ?? 'Dấu ấn trên những công trình',
       ];
   })->values();
@@ -32,7 +32,7 @@
           @empty
           <div class="swiper-slide transition-all duration-500">
             <div class="aspect-[3/2] md:aspect-[4/3] overflow-hidden rounded-sm shadow-xl">
-              <img src="{{ asset('assets/images/gach-co-work-1.jpg') }}" alt="Dấu ấn trên những công trình" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" />
+              <img src="{{ asset('assets/images/gach-co-work-1.webp') }}" alt="Dấu ấn trên những công trình" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" />
             </div>
           </div>
           @endforelse

@@ -46,7 +46,7 @@
     <section class="relative w-full">
         <div
             class="relative w-full aspect-[4/3] md:aspect-[8/6] lg:aspect-auto h-full lg:[clip-path:inset(40px_0_0_0)] lg:-mt-[40px]">
-            <img src="{{ $assetUrl($config->thumbnail_main, 'assets/images/pk-banner.png') }}" alt="Phụ Kiện Ngói"
+            <img src="{{ $assetUrl($config->thumbnail_main, 'assets/images/pk-banner.webp') }}" alt="Phụ Kiện Ngói"
                 class="w-full h-full object-cover">
             <div class="absolute inset-0 flex flex-col items-center pt-[5%] md:pt-[5%] lg:pt-[5%]" data-aos="fade-up"
                 data-aos-delay="100">
@@ -131,16 +131,16 @@
             @php
                 $galleries = is_array($config->images) ? $config->images : [];
                 $galleryFallbacks = [
-                    'assets/images/pk-07.jpg',
+                    'assets/images/pk-07.webp',
                     'assets/images/pk-08.jpg',
-                    'assets/images/pk-03.jpg',
+                    'assets/images/pk-03.webp',
                     'assets/images/gach-hoa-02.png',
                     'assets/images/dao-kim.png',
-                    'assets/images/pk-04.jpg',
+                    'assets/images/pk-04.webp',
                     'assets/images/pk-01.jpg',
-                    'assets/images/pk-02.jpg',
-                    'assets/images/pk-05.jpg',
-                    'assets/images/pk-06.jpg',
+                    'assets/images/pk-02.webp',
+                    'assets/images/pk-05.webp',
+                    'assets/images/pk-06.webp',
                     'assets/images/lan-can-01.jpg',
                     'assets/images/lan-can-02.jpg',
                 ];

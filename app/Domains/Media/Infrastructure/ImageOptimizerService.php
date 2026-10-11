@@ -25,6 +25,10 @@ class ImageOptimizerService
         'image/avif',
     ];
 
+    protected const MAX_BYTES = 1_000_000;
+
+    public const MAX_PIXELS = 60_000_000;
+
     /**
      * Check if a file is an optimizable raster image.
      */
@@ -74,58 +78,9 @@ class ImageOptimizerService
             $filename = $this->generateSeoFilename($file, $slug, 'webp');
             $targetPath = $directory !== '' ? $directory.'/'.$filename : $filename;
 
-            $realPath = $file->getRealPath() ?: $file->getPathname();
-            $sourceDimensions = @getimagesize($realPath);
-            if ($sourceDimensions === false || ($sourceDimensions[0] * $sourceDimensions[1]) > 60_000_000) {
-                throw new \RuntimeException('The uploaded image is invalid or exceeds the supported pixel limit.');
-            }
-            $image = Image::read($realPath);
+            $encoded = $this->encodeWebpUnderLimit($file->getRealPath() ?: $file->getPathname(), $preset);
 
-            // 1. Auto-orient based on EXIF tag from mobile devices
-            if (config('image_optimizer.auto_orient', true) && method_exists($image, 'orient')) {
-                $image->orient();
-            }
-
-            // 2. Proportional downscale (scaleDown will never upscale smaller images)
-            $maxWidth = (int) ($preset['max_width'] ?? 1600);
-            $maxHeight = (int) ($preset['max_height'] ?? 1600);
-            $image->scaleDown(width: $maxWidth, height: $maxHeight);
-
-            // 3. Reduce quality first, then dimensions, until the SEO size cap is met.
-            $quality = min(90, max(45, (int) ($preset['quality'] ?? 82)));
-            $encoded = null;
-            for ($attempt = 0; $attempt < 40; $attempt++) {
-                $encoded = $image->toWebp(quality: $quality);
-                if (strlen((string) $encoded) < 1_000_000) {
-                    break;
-                }
-
-                if ($quality > 50) {
-                    $quality = max(50, $quality - 8);
-
-                    continue;
-                }
-
-                $width = (int) $image->width();
-                $height = (int) $image->height();
-                if (max($width, $height) <= 320) {
-                    $encoded = null;
-                    break;
-                }
-
-                $image->scaleDown(
-                    width: max(1, (int) round($width * 0.82)),
-                    height: max(1, (int) round($height * 0.82)),
-                );
-                $quality = 74;
-            }
-
-            if ($encoded === null || strlen((string) $encoded) >= 1_000_000) {
-                throw new \RuntimeException('Unable to encode the image below the 1 MB storage limit.');
-            }
-
-            // 4. Save to public disk
-            if (! Storage::disk('public')->put($targetPath, (string) $encoded)) {
+            if (! Storage::disk('public')->put($targetPath, $encoded)) {
                 throw new \RuntimeException('Unable to write the optimized image to public storage.');
             }
 
@@ -141,6 +96,101 @@ class ImageOptimizerService
                 'image' => 'Không thể tối ưu ảnh "'.$file->getClientOriginalName().'" thành WebP dưới 1MB. Hãy chọn ảnh khác hoặc thử lại.',
             ]);
         }
+    }
+
+    /**
+     * Preset for an existing image file, honouring the configured dimension exceptions.
+     *
+     * @return array{max_width: int, max_height: int, quality: int}
+     */
+    public function presetForFile(string $path): array
+    {
+        $preset = $this->resolvePreset(dirname($path));
+        $withoutExtension = preg_replace('~\.[^./]+$~', '', $path);
+
+        if (in_array($withoutExtension, (array) config('image_optimizer.keep_dimensions', []), true)) {
+            $preset['max_width'] = $preset['max_height'] = PHP_INT_MAX;
+        }
+
+        return $preset;
+    }
+
+    /**
+     * Whether a stored image is at or above the size cap or larger than its preset dimensions.
+     *
+     * @param  array{max_width?: int, max_height?: int}  $preset
+     */
+    public function exceedsLimits(string $path, array $preset): bool
+    {
+        if (filesize($path) >= self::MAX_BYTES) {
+            return true;
+        }
+
+        $dimensions = @getimagesize($path);
+
+        return $dimensions !== false
+            && ($dimensions[0] > (int) ($preset['max_width'] ?? 1600) || $dimensions[1] > (int) ($preset['max_height'] ?? 1600));
+    }
+
+    /**
+     * Encode an image file as WebP within the preset dimensions and below the size cap.
+     *
+     * @param  array{max_width?: int, max_height?: int, quality?: int}  $preset
+     *
+     * @throws \RuntimeException when the image is unreadable, too large to decode, or cannot fit the cap
+     */
+    public function encodeWebpUnderLimit(string $sourcePath, array $preset): string
+    {
+        $sourceDimensions = @getimagesize($sourcePath);
+        if ($sourceDimensions === false || ($sourceDimensions[0] * $sourceDimensions[1]) > self::MAX_PIXELS) {
+            throw new \RuntimeException('The image is invalid or exceeds the supported pixel limit.');
+        }
+        $image = Image::read($sourcePath);
+
+        // 1. Auto-orient based on EXIF tag from mobile devices
+        if (config('image_optimizer.auto_orient', true) && method_exists($image, 'orient')) {
+            $image->orient();
+        }
+
+        // 2. Proportional downscale (scaleDown will never upscale smaller images)
+        $maxWidth = (int) ($preset['max_width'] ?? 1600);
+        $maxHeight = (int) ($preset['max_height'] ?? 1600);
+        $image->scaleDown(width: $maxWidth, height: $maxHeight);
+
+        // 3. Reduce quality first, then dimensions, until the SEO size cap is met.
+        $quality = min(90, max(45, (int) ($preset['quality'] ?? 82)));
+        $encoded = null;
+        for ($attempt = 0; $attempt < 40; $attempt++) {
+            $encoded = $image->toWebp(quality: $quality);
+            if (strlen((string) $encoded) < self::MAX_BYTES) {
+                break;
+            }
+
+            if ($quality > 50) {
+                $quality = max(50, $quality - 8);
+
+                continue;
+            }
+
+            $width = (int) $image->width();
+            $height = (int) $image->height();
+            if (max($width, $height) <= 320) {
+                $encoded = null;
+                break;
+            }
+
+            $image->scaleDown(
+                width: max(1, (int) round($width * 0.82)),
+                height: max(1, (int) round($height * 0.82)),
+            );
+            $quality = 74;
+        }
+
+        if ($encoded === null || strlen((string) $encoded) >= self::MAX_BYTES) {
+            throw new \RuntimeException('Unable to encode the image below the 1 MB storage limit.');
+        }
+
+        return (string) $encoded;
     }
 
     /**

@@ -15,7 +15,7 @@
 
             <!-- Cột trái: Hình ảnh Branding (Chỉ hiện trên Desktop) -->
             <div class="hidden lg:flex lg:w-1/2 relative bg-primary items-center justify-center p-12 overflow-hidden">
-                <img src="{{ asset('assets/images/home-hero-01.png') }}" alt="TH Ceramics"
+                <img src="{{ asset('assets/images/home-hero-01.webp') }}" alt="TH Ceramics"
                     class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay transition-transform duration-700 hover:scale-105">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
 

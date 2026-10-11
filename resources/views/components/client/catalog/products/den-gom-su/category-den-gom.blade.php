@@ -26,10 +26,10 @@
     >
       <div class="relative overflow-hidden rounded-2xl shadow-xl">
         <img
-          src="{{ $config->image2 ? asset('storage/' . $config->image2) : asset('assets/images/den-gom-02.png') }}"
+          src="{{ $config->image2 ? asset('storage/' . $config->image2) : asset('assets/images/den-gom-02.webp') }}"
           alt="ĐÈN GỐM"
           class="w-full h-auto aspect-[6/5] object-cover"
-          onerror="this.src = '{{ asset('assets/images/about-01.png') }}'"
+          onerror="this.src = '{{ asset('assets/images/about-01.webp') }}'"
         />
 
         <!-- Khung text trang trí dưới cùng của hình -->

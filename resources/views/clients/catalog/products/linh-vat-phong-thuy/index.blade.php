@@ -41,7 +41,7 @@
                         'image_box' => 'h-full md:aspect-auto',
                         'box_margin' => 'md:ml-[-6%]',
                         'bg' => 'bg-[#5D8482]',
-                        'fallback' => 'assets/images/nghe.png',
+                        'fallback' => 'assets/images/nghe.webp',
                         'fallback_error' => 'assets/images/ngoi-01.jpg',
                     ],
                     [
@@ -51,7 +51,7 @@
                         'image_box' => 'aspect-[6/5] md:aspect-auto',
                         'box_margin' => 'md:mr-[-6%]',
                         'bg' => 'bg-[#D2A35C]',
-                        'fallback' => 'assets/images/phuong.png',
+                        'fallback' => 'assets/images/phuong.webp',
                         'fallback_error' => 'assets/images/ngoi-05.jpg',
                     ],
                     [
@@ -61,7 +61,7 @@
                         'image_box' => 'aspect-[5/6] md:aspect-auto',
                         'box_margin' => 'md:ml-[-6%]',
                         'bg' => 'bg-[#B36E6E]',
-                        'fallback' => 'assets/images/dau-rong.png',
+                        'fallback' => 'assets/images/dau-rong.webp',
                         'fallback_error' => 'assets/images/ngoi-07.jpg',
                     ],
                 ];

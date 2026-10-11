@@ -40,7 +40,7 @@
                         $projectImage = $projectImages[0] ?? null;
                     @endphp
                     <div class="custom-project-slide cursor-pointer" data-index="{{ $index }}">
-                        <img src="{{ $mediaUrl($projectImage, asset('assets/images/trang-tri-slide-01.jpg')) }}"
+                        <img src="{{ $mediaUrl($projectImage, asset('assets/images/trang-tri-slide-01.webp')) }}"
                             alt="{{ $project->ten_du_an ?? 'Công trình' }}"
                             class="w-full h-full object-cover transition-transform duration-1000 ease-out hover:scale-[1.03]" />
                         <div class="absolute inset-0 pointer-events-none z-[2]"

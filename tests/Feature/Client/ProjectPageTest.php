@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Content\Infrastructure\Models\ProjectCategory;
 use App\Domains\Content\Infrastructure\Models\Project;
+use App\Domains\Content\Infrastructure\Models\ProjectCategory;
 
 test('project listing uses custom pagination and preserves category query string', function () {
     $category = ProjectCategory::query()->create([
@@ -15,7 +15,7 @@ test('project listing uses custom pagination and preserves category query string
             'dia_diem' => 'Hà Nội',
             'san_pham' => 'Gốm sứ',
             'nam' => 2026,
-            'images' => ['assets/images/factory-01.jpg'],
+            'images' => ['assets/images/factory-01.webp'],
             'danh_muc_du_an_id' => $category->danh_muc_du_an_id,
             'slug' => 'du-an-phan-trang-'.$i,
         ]);

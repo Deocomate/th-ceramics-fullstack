@@ -142,7 +142,7 @@
 
     <!-- Mobile: image + horizontal scroll (giữ nguyên như trước refactor) -->
     <div class="md:hidden w-full flex justify-start pb-2 mobile-scroll-visible">
-        <img src="{{ asset('assets/images/process.png') }}" alt="Quy trình chế tác gạch"
+        <img src="{{ asset('assets/images/process.webp') }}" alt="Quy trình chế tác gạch"
             class="h-auto object-contain max-w-none w-[200%]" />
     </div>
 

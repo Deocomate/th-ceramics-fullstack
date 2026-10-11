@@ -14,12 +14,12 @@ return [
             ],
         ],
         'gallery_1' => [
-            0 => 'assets/images/trang-tri-slide-01.jpg',
-            1 => 'assets/images/factory-01.jpg',
+            0 => 'assets/images/trang-tri-slide-01.webp',
+            1 => 'assets/images/factory-01.webp',
         ],
         'gallery_2' => [
-            0 => 'assets/images/factory-04.jpg',
-            1 => 'assets/images/trang-tri-slide-02.jpg',
+            0 => 'assets/images/factory-04.webp',
+            1 => 'assets/images/trang-tri-slide-02.webp',
         ],
         'process_title' => 'QUY TRÌNH
 "KHOA HỌC - NGĂN NẮP - TÁCH BIỆT"',
@@ -47,7 +47,7 @@ return [
             ],
         ],
         'process_slider' => [
-            0 => 'assets/images/factory-02.png',
+            0 => 'assets/images/factory-02.webp',
             1 => 'assets/images/den-gom-01.png',
         ],
         'process_bottom_title' => 'SỨC MẠNH CỦA SỰ KẾT HỢP:
@@ -64,9 +64,9 @@ MÁY MÓC HIỆN ĐẠI & BÀN TAY NGHỆ NHÂN',
         ],
         'process_bottom_image' => 'assets/images/gach-co-work-2.jpg',
         'material_slider' => [
-            0 => 'assets/images/factory-03.png',
-            1 => 'assets/images/factory-04.jpg',
-            2 => 'assets/images/factory-04.jpg',
+            0 => 'assets/images/factory-03.webp',
+            1 => 'assets/images/factory-04.webp',
+            2 => 'assets/images/factory-04.webp',
         ],
         'material_steps' => [
             0 => [

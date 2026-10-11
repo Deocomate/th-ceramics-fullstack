@@ -16,7 +16,7 @@
     <div class="relative bg-[#262723] overflow-hidden">
         <div class="hidden md:block absolute inset-0"
             style="
-        background-image: url('{{ asset('assets/images/footer-image-3.png') }}');
+        background-image: url('{{ asset('assets/images/footer-image-3.webp') }}');
         background-size: auto 448px;
         background-position: top center;
         background-repeat: repeat-x;
@@ -152,7 +152,8 @@
                 <div class="flex flex-col-reverse md:flex-row justify-between items-center gap-3 md:gap-6">
                     <p class="text-[#909090] text-sm leading-[26px] text-center md:text-left font-normal"
                         style="font-family: Inter, Archivo, sans-serif;">
-                        Copyright &copy; 2022 . All rights reserved
+                        Copyright &copy; {{ date('Y') }} Thanh Hải Ceramics. Nghiêm cấm sao chép hình ảnh, video
+                        và nội dung khi chưa được đồng ý bằng văn bản.
                     </p>
                     <div class="text-[#909090] text-sm leading-[26px] flex items-center justify-center flex-wrap gap-y-1 font-normal text-center md:text-right"
                         style="font-family: Inter, Archivo, sans-serif;">

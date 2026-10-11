@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Identity\Infrastructure\Models\User;
 use App\Domains\Catalog\Infrastructure\Models\PhuKienNgoi;
+use App\Domains\Identity\Infrastructure\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'superadmin']);
 
     PhuKienNgoi::query()->create([
-        'thumbnail_main' => 'assets/images/pk-banner.png',
+        'thumbnail_main' => 'assets/images/pk-banner.webp',
         'images' => [],
     ]);
 });

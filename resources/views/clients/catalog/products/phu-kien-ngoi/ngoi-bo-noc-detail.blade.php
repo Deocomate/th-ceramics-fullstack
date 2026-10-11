@@ -15,7 +15,7 @@
 <x-client.layouts.main :title="$product->name" :description="implode(', ', $product->des ?? [])" data-page="products" main-class="bg-background-secondary pb-14 md:pb-20" :hide-newsletter="true">
   <section class="relative w-full hidden md:block">
     <div class="relative w-full aspect-[4/3] md:aspect-[8/6] lg:aspect-auto h-full lg:[clip-path:inset(40px_0_0_0)] lg:-mt-[40px]">
-      <img src="{{ $assetUrl($pageConfig->thumbnail_main ?? null, 'assets/images/pk-banner.png') }}" alt="Phụ Kiện Ngói" class="w-full h-full object-cover" />
+      <img src="{{ $assetUrl($pageConfig->thumbnail_main ?? null, 'assets/images/pk-banner.webp') }}" alt="Phụ Kiện Ngói" class="w-full h-full object-cover" />
       <div class="absolute inset-0 flex flex-col items-center pt-[5%] md:pt-[5%] lg:pt-[5%]" data-aos="fade-up" data-aos-delay="100">
         <div class="text-center text-white px-4 w-[85%] max-w-[1320px] mx-auto">
           <h1 class="font-archivo text-[26px] md:text-4xl lg:text-[44px] font-bold uppercase mb-2 md:mb-6 drop-shadow-md break-words">

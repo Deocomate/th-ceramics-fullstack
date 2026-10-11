@@ -44,7 +44,7 @@
       $bgColor = preg_match('/^#[0-9A-Fa-f]{6}$/', $item->background ?? '')
         ? $item->background
         : $bgColors[$loop->index % count($bgColors)];
-      $imageUrl = $mediaUrl($item->image ?? null, $loop->odd ? 'assets/images/gach-hoa-value.png' : 'assets/images/work-03.jpg');
+      $imageUrl = $mediaUrl($item->image ?? null, $loop->odd ? 'assets/images/gach-hoa-value.png' : 'assets/images/work-03.webp');
       $isOdd = $loop->odd;
     @endphp
     <!-- Column {{ $loop->iteration }} -->

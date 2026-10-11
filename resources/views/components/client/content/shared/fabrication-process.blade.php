@@ -6,7 +6,7 @@
         ? $configuredImages->map(fn($image) => ['image' => $image, 'aspect' => 'aspect-[4/6]'])
         : collect([
             ['image' => 'assets/images/cong-doan-01.jpg', 'aspect' => 'aspect-[4/6]'],
-            ['image' => 'assets/images/trang-tri-slide-01.jpg', 'aspect' => 'aspect-[11/10]'],
+            ['image' => 'assets/images/trang-tri-slide-01.webp', 'aspect' => 'aspect-[11/10]'],
             ['image' => null, 'aspect' => 'aspect-[4/6]'],
             ['image' => null, 'aspect' => 'aspect-[4/6]'],
             ['image' => null, 'aspect' => 'aspect-[4/6]'],

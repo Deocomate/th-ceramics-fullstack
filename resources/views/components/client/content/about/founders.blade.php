@@ -1,6 +1,6 @@
 @props(['about' => null])
 @php
-  $founderImage = \App\Support\AssetPath::url($about->gs_nguoi_sang_lap_anh ?? null, 'assets/images/about-01.png');
+  $founderImage = \App\Support\AssetPath::url($about->gs_nguoi_sang_lap_anh ?? null, 'assets/images/about-01.webp');
   $founderContent = $about->gs_nguoi_sang_lap_noi_dung ?? 'Trải qua nhiều thăng trầm của nghề, hai người sáng lập vẫn bền bỉ theo đuổi sản phẩm gốm sứ xây dựng.';
 @endphp
 

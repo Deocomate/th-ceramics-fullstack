@@ -123,9 +123,9 @@
             is_array($product->images) && count($product->images) > 0
                 ? $product->images
                 : [
-                    'assets/images/gach-co-work-1.jpg',
+                    'assets/images/gach-co-work-1.webp',
                     'assets/images/gach-co-work-2.jpg',
-                    'assets/images/trang-tri-slide-01.jpg',
+                    'assets/images/trang-tri-slide-01.webp',
                 ];
     @endphp
     <section class="w-full pb-8 md:pb-16 bg-background-secondary overflow-hidden" data-aos="fade-up">

@@ -25,7 +25,7 @@
     </p>
   </div>
   <img
-    src="{{ asset('assets/images/return-policy.jpg') }}"
+    src="{{ asset('assets/images/return-policy.webp') }}"
     alt="Chính sách đổi trả"
     class="w-full h-auto rounded-sm mt-10 lg:mt-8"
   />

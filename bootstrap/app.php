@@ -3,6 +3,7 @@
 use App\Domains\Commerce\Http\Middleware\EnsureEcommerceEnabled;
 use App\Domains\Content\Http\Middleware\EnsureContentWritesOpen;
 use App\Domains\Identity\Http\Middleware\RoleMiddleware;
+use App\Domains\Media\Http\Middleware\RedirectLegacyImageUrls;
 use App\Domains\Media\Http\Middleware\SubstituteStagedImages;
 use App\Domains\Protection\Http\Middleware\SecurityHeaders;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -31,6 +32,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'staged.images' => SubstituteStagedImages::class,
             'content.writes' => EnsureContentWritesOpen::class,
         ]);
+
+        // Global, because the framework's own storage/{path} route would otherwise answer these paths first.
+        $middleware->prepend(RedirectLegacyImageUrls::class);
 
         $middleware->web(append: [SecurityHeaders::class]);
 

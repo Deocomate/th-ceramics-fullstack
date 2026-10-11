@@ -33,6 +33,7 @@ use App\Domains\Commerce\Infrastructure\Persistence\EloquentOrderCheckoutAdapter
 use App\Domains\Commerce\Infrastructure\Session\LaravelCartSessionAdapter;
 use App\Domains\Content\Infrastructure\View\ContentViewComposer;
 use App\Domains\Media\Console\CleanStagedImagesCommand;
+use App\Domains\Media\Console\ConvertLegacyImagesCommand;
 use App\Domains\Media\Console\OptimizeMediaCommand;
 use App\Domains\Protection\Http\Support\ProtectionExemption;
 use App\Domains\Protection\Infrastructure\ProtectionSettings;
@@ -158,6 +159,7 @@ class AppServiceProvider extends ServiceProvider
             $this->commands([
                 CleanStagedImagesCommand::class,
                 OptimizeMediaCommand::class,
+                ConvertLegacyImagesCommand::class,
                 ContentArchiveCommand::class,
                 ContentWritesCommand::class,
             ]);

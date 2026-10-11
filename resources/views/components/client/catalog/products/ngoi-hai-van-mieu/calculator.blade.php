@@ -16,7 +16,7 @@
                     KÍCH THƯỚC
                 </h2>
                 <div class="w-full max-w-[500px] flex justify-center mb-6">
-                    <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.png') }}"
+                    <img src="{{ isset($image) ? $image : asset('assets/images/gtt-size.webp') }}"
                         alt="Kích thước sản phẩm" class="w-full h-auto object-contain" />
                 </div>
 

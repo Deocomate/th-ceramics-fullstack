@@ -16,7 +16,7 @@ test('phu kien detail routes only render products from the matching category', f
     $chuVan = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Bò nóc chữ vạn đúng',
         'category_type' => PhuKienNgoiCategory::TYPE_CHU_VAN,
-        'images' => ['assets/images/chu-van-1.png'],
+        'images' => ['assets/images/chu-van-1.webp'],
         'des' => ['Mô tả chữ vạn'],
         'is_delete' => 0,
     ]);
@@ -33,7 +33,7 @@ test('cart accepts active phu kien variants and rejects inactive variants', func
     $product = app(ProductWriter::class)->create('phu_kien_ngoi_ct', [
         'name' => 'Phụ kiện có giỏ',
         'category_type' => PhuKienNgoiCategory::TYPE_BO_NOC,
-        'images' => ['assets/images/bo-noc.png'],
+        'images' => ['assets/images/bo-noc.webp'],
         'is_delete' => 0,
     ]);
 

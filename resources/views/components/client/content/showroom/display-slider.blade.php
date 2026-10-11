@@ -6,7 +6,7 @@
 @php
   $slides = collect($showroomImages ?? [])->values();
   if ($slides->isEmpty()) {
-      $slides = collect(['assets/images/showroom-01.jpg', 'assets/images/showroom-02.jpg']);
+      $slides = collect(['assets/images/showroom-01.webp', 'assets/images/showroom-02.webp']);
   }
 @endphp
 
@@ -26,7 +26,7 @@
         @foreach ($slides->reverse()->values() as $index => $slide)
         <div class="swiper-slide w-[85%] sm:w-[75%] h-full {{ $index === 0 ? 'ml-auto' : '' }}">
           <img
-            src="{{ \App\Support\AssetPath::url($slide, 'assets/images/showroom-01.jpg') }}"
+            src="{{ \App\Support\AssetPath::url($slide, 'assets/images/showroom-01.webp') }}"
             alt="Phòng trưng bày {{ $index + 1 }}"
             class="w-full h-full object-cover shadow-2xl"
           />

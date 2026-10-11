@@ -6,7 +6,7 @@
     class="relative w-full min-h-[322px] md:min-h-[500px] lg:min-h-[600px] flex items-center md:pb-8 overflow-hidden">
     <!-- Background Image with Dark Overlay -->
     <div class="absolute inset-0 z-0">
-        <img src="{{ $config && $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/gach-trang-tri-banner.png') }}"
+        <img src="{{ $config && $config->thumbnail_main ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/gach-trang-tri-banner.webp') }}"
             alt="Gạch Trang Trí Banner" class="w-full h-full object-cover object-center" />
         <!-- Slight dark overlay to make text readable -->
         <div class="absolute inset-0 bg-black/30"></div>

@@ -98,4 +98,18 @@ return [
             'quality' => 92,
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Legacy Images Kept At Their Own Dimensions
+    |--------------------------------------------------------------------------
+    |
+    | Paths without extension, relative to public/ or to the public disk.
+    | Full-height mobile layouts whose text becomes unreadable once the height
+    | limit shrinks them to a sliver; converting them only applies the 1 MB cap.
+    |
+    */
+    'keep_dimensions' => [
+        'assets/images/chu-van-mobile',
+    ],
 ];

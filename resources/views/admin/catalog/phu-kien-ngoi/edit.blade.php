@@ -22,7 +22,7 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh banner toàn trang</label>
                         <div class="aspect-video w-full rounded-xl border-2 border-dashed border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group">
-                            <img id="preview-main" src="{{ $assetUrl($phuKienNgoi->thumbnail_main, 'assets/images/pk-banner.png') }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain" alt="Ảnh banner">
+                            <img id="preview-main" src="{{ $assetUrl($phuKienNgoi->thumbnail_main, 'assets/images/pk-banner.webp') }}" onerror="this.src='https://placehold.co/600x400?text=Chua+co+anh'" class="w-full h-full object-contain" alt="Ảnh banner">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                             </div>
@@ -61,7 +61,7 @@
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Ảnh nổi bật 1</label>
                                 <div class="aspect-square w-full rounded-xl border-2 border-dashed border-gray-300 bg-white flex items-center justify-center overflow-hidden relative group">
-                                    <img id="preview-sec1" src="{{ $assetUrl($phuKienNgoi->sec1_image, 'assets/images/bo-noc.png') }}" onerror="this.src='https://placehold.co/400x400?text=Chua+co+anh'" class="w-full h-full object-contain" alt="Ảnh section 1">
+                                    <img id="preview-sec1" src="{{ $assetUrl($phuKienNgoi->sec1_image, 'assets/images/bo-noc.webp') }}" onerror="this.src='https://placehold.co/400x400?text=Chua+co+anh'" class="w-full h-full object-contain" alt="Ảnh section 1">
                                     <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <span class="text-white text-xs font-medium px-3 py-1.5 bg-black/50 rounded-lg">Thay đổi ảnh</span>
                                     </div>

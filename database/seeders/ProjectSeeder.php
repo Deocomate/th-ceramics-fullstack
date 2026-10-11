@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Infrastructure\Models\ProjectCategory;
 use App\Domains\Content\Infrastructure\Models\Project;
+use App\Domains\Content\Infrastructure\Models\ProjectCategory;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
 use Illuminate\Database\Seeder;
@@ -14,15 +14,15 @@ class ProjectSeeder extends Seeder
     use SeedsFromSqlData;
 
     private const IMAGE_POOL = [
-        'assets/images/factory-01.jpg',
-        'assets/images/factory-02.png',
-        'assets/images/factory-03.png',
-        'assets/images/factory-04.jpg',
-        'assets/images/trang-tri-slide-01.jpg',
-        'assets/images/trang-tri-slide-02.jpg',
+        'assets/images/factory-01.webp',
+        'assets/images/factory-02.webp',
+        'assets/images/factory-03.webp',
+        'assets/images/factory-04.webp',
+        'assets/images/trang-tri-slide-01.webp',
+        'assets/images/trang-tri-slide-02.webp',
         'assets/images/trang-tri-slide-03.jpg',
-        'assets/images/trang-tri-slide-04.jpg',
-        'assets/images/gach-co-work-1.jpg',
+        'assets/images/trang-tri-slide-04.webp',
+        'assets/images/gach-co-work-1.webp',
         'assets/images/gach-co-work-2.jpg',
     ];
 

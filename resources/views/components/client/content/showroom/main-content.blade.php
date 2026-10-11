@@ -3,7 +3,7 @@
 @php
   $slides = collect($showroomImages ?? [])->values();
   if ($slides->isEmpty()) {
-      $slides = collect(['assets/images/showroom-01.jpg', 'assets/images/showroom-02.jpg']);
+      $slides = collect(['assets/images/showroom-01.webp', 'assets/images/showroom-02.webp']);
   }
 @endphp
 
@@ -70,7 +70,7 @@
         @foreach ($slides as $index => $slide)
         <div class="swiper-slide w-[85%] sm:w-[75%] h-full">
           <img
-            src="{{ \App\Support\AssetPath::url($slide, 'assets/images/showroom-01.jpg') }}"
+            src="{{ \App\Support\AssetPath::url($slide, 'assets/images/showroom-01.webp') }}"
             alt="Showroom {{ $index + 1 }}"
             class="w-full h-full object-cover shadow-2xl"
           />

@@ -1,9 +1,9 @@
 <?php
 
-use App\Domains\Catalog\Infrastructure\ProductWriter;
-use App\Domains\Content\Infrastructure\Models\ProjectCategory;
-use App\Domains\Content\Infrastructure\Models\Project;
 use App\Domains\Catalog\Infrastructure\Models\GachTrangTri;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
+use App\Domains\Content\Infrastructure\Models\Project;
+use App\Domains\Content\Infrastructure\Models\ProjectCategory;
 
 test('gach trang tri page renders dynamic applications and global projects', function () {
     $category = ProjectCategory::query()->create([
@@ -16,13 +16,13 @@ test('gach trang tri page renders dynamic applications and global projects', fun
         'dia_diem' => 'Hà Nội',
         'san_pham' => 'Gạch trang trí men rạn',
         'nam' => 2026,
-        'images' => ['assets/images/trang-tri-slide-01.jpg'],
+        'images' => ['assets/images/trang-tri-slide-01.webp'],
         'danh_muc_du_an_id' => $category->danh_muc_du_an_id,
         'slug' => 'nha-hang-gom-viet',
     ]);
 
     GachTrangTri::query()->create([
-        'thumbnail_main' => 'assets/images/gach-trang-tri-banner.png',
+        'thumbnail_main' => 'assets/images/gach-trang-tri-banner.webp',
         'video' => null,
         'images' => ['assets/images/trang-tri-01.png', 'assets/images/trang-tri-02.png'],
         'ung_dung_da_dang' => [
@@ -46,7 +46,7 @@ test('gach trang tri page renders dynamic applications and global projects', fun
 
 test('gach trang tri product listing uses custom pagination and eight products per page', function () {
     GachTrangTri::query()->create([
-        'thumbnail_main' => 'assets/images/gach-trang-tri-banner.png',
+        'thumbnail_main' => 'assets/images/gach-trang-tri-banner.webp',
         'video' => null,
         'images' => [],
         'ung_dung_da_dang' => [],

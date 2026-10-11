@@ -57,6 +57,21 @@ class ImageOptimizerServiceTest extends TestCase
         $this->assertEquals(2000, $defaultPreset['max_height']);
     }
 
+    public function test_it_lifts_the_dimension_limits_for_configured_files_only(): void
+    {
+        config(['image_optimizer.keep_dimensions' => ['assets/images/tall-layout']]);
+
+        $kept = $this->service->presetForFile('assets/images/tall-layout.webp');
+        $this->assertSame(PHP_INT_MAX, $kept['max_width']);
+        $this->assertSame(PHP_INT_MAX, $kept['max_height']);
+
+        $this->assertSame(
+            $this->service->resolvePreset('assets/images'),
+            $this->service->presetForFile('assets/images/tall-layout-2.png'),
+        );
+        $this->assertSame(2560, $this->service->presetForFile('trang_chu/banner/hero.jpg')['max_width']);
+    }
+
     public function test_it_generates_clean_seo_filename(): void
     {
         $file = UploadedFile::fake()->image('Ảnh Gốm Sứ Bát Tràng Đẹp 2026.jpg');

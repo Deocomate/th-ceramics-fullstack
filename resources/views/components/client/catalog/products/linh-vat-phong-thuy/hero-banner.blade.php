@@ -5,7 +5,7 @@
 <section class="relative w-full h-[530px] md:h-[720px] lg:h-[840px] overflow-hidden flex items-start md:mb-[40px]">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="{{ !empty($config->thumbnail_main) ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/linh-vat-banner.png') }}"
+        <img src="{{ !empty($config->thumbnail_main) ? asset('storage/' . $config->thumbnail_main) : asset('assets/images/linh-vat-banner.webp') }}"
             alt="Linh Vật Phong Thủy Banner" class="w-full h-full object-cover" />
         <div class="absolute inset-0 bg-black/40"></div>
     </div>

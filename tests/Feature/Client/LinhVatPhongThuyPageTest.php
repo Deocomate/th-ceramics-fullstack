@@ -1,9 +1,9 @@
 <?php
 
-use App\Domains\Catalog\Infrastructure\Models\Product;
-use App\Domains\Catalog\Infrastructure\ProductWriter;
 use App\Domains\Catalog\Infrastructure\Models\LinhVat;
 use App\Domains\Catalog\Infrastructure\Models\LinhVatPhongThuy;
+use App\Domains\Catalog\Infrastructure\Models\Product;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
 
 function createLinhVatPhongThuyPageConfig(): LinhVatPhongThuy
 {
@@ -13,9 +13,9 @@ function createLinhVatPhongThuyPageConfig(): LinhVatPhongThuy
     ]);
 
     foreach ([
-        ['title' => 'Nghê', 'image' => 'assets/images/nghe.png'],
-        ['title' => 'Phượng', 'image' => 'assets/images/phuong.png'],
-        ['title' => 'Đầu rồng', 'image' => 'assets/images/dau-rong.png'],
+        ['title' => 'Nghê', 'image' => 'assets/images/nghe.webp'],
+        ['title' => 'Phượng', 'image' => 'assets/images/phuong.webp'],
+        ['title' => 'Đầu rồng', 'image' => 'assets/images/dau-rong.webp'],
     ] as $item) {
         LinhVat::query()->create([
             'title' => $item['title'],

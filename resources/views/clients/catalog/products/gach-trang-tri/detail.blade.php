@@ -1,5 +1,5 @@
 @php
-    $sizeImage = \App\Support\AssetPath::url($product->size_image, 'assets/images/gtt-size.png');
+    $sizeImage = \App\Support\AssetPath::url($product->size_image, 'assets/images/gtt-size.webp');
     $productTitle = $product->name ?? 'Gạch Trang Trí';
     $productPrice = (float) ($product->price ?? 0);
     $priceFormatted = $productPrice > 0 ? number_format($productPrice, 0, ',', '.') . ' đ/viên' : 'Liên hệ';

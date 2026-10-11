@@ -10,10 +10,10 @@
     <div class="w-full md:w-[70%] lg:w-[68%] relative group" data-aos="fade-up">
       <div class="relative overflow-hidden rounded-2xl shadow-xl">
         <img
-          src="{{ $config->image3 ? asset('storage/' . $config->image3) : asset('assets/images/den-gom-02.png') }}"
+          src="{{ $config->image3 ? asset('storage/' . $config->image3) : asset('assets/images/den-gom-02.webp') }}"
           alt="ĐÈN SỨ"
           class="w-full h-auto aspect-[6/5] object-cover"
-          onerror="this.src = '{{ asset('assets/images/about-01.png') }}'"
+          onerror="this.src = '{{ asset('assets/images/about-01.webp') }}'"
         />
 
         <!-- Khung text trang trí dưới cùng của hình -->

@@ -2,9 +2,9 @@
 @php
   $defaultJourney = [
       ['image' => 'assets/images/about-02.jpg', 'head' => '1985', 'body' => 'Khởi đầu hành trình gìn giữ nghề gốm truyền thống.'],
-      ['image' => 'assets/images/about-01.png', 'head' => '1993', 'body' => 'Mở rộng thị trường với các mẫu sản phẩm thủ công đặc trưng.'],
+      ['image' => 'assets/images/about-01.webp', 'head' => '1993', 'body' => 'Mở rộng thị trường với các mẫu sản phẩm thủ công đặc trưng.'],
       ['image' => 'assets/images/about-02.jpg', 'head' => '2000', 'body' => 'Chính thức vận hành theo mô hình doanh nghiệp chuyên nghiệp.'],
-      ['image' => 'assets/images/about-01.png', 'head' => '2008', 'body' => 'Xây dựng showroom đầu tiên tại Bát Tràng.'],
+      ['image' => 'assets/images/about-01.webp', 'head' => '2008', 'body' => 'Xây dựng showroom đầu tiên tại Bát Tràng.'],
       ['image' => 'assets/images/about-02.jpg', 'head' => '2024', 'body' => 'Mở showroom thế hệ mới và nâng cấp hệ sinh thái sản phẩm.'],
   ];
   $journeyItems = collect($about->gs_hanh_trinh ?? [])->filter(fn ($item) => is_array($item))->values();

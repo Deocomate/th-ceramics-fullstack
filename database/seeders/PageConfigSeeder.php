@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Content\Infrastructure\Models\Faq;
 use App\Domains\Content\Infrastructure\Models\ContactPageConfig;
 use App\Domains\Content\Infrastructure\Models\FactoryPageConfig;
+use App\Domains\Content\Infrastructure\Models\Faq;
 use App\Domains\Content\Infrastructure\Models\FaqPageConfig;
 use Database\Seeders\Support\SeederDataContract;
 use Database\Seeders\Support\SeedsFromSqlData;
@@ -20,24 +20,24 @@ class PageConfigSeeder extends Seeder
 
         $factory = $this->withoutTimestamps($this->seederDataFirst('page_factory') ?? []);
         $galleryPool = [
-            'assets/images/trang-tri-slide-01.jpg',
-            'assets/images/factory-01.jpg',
-            'assets/images/factory-04.jpg',
-            'assets/images/trang-tri-slide-02.jpg',
-            'assets/images/factory-02.png',
+            'assets/images/trang-tri-slide-01.webp',
+            'assets/images/factory-01.webp',
+            'assets/images/factory-04.webp',
+            'assets/images/trang-tri-slide-02.webp',
+            'assets/images/factory-02.webp',
         ];
         $sliderPool = [
-            'assets/images/factory-02.png',
+            'assets/images/factory-02.webp',
             'assets/images/den-gom-01.png',
-            'assets/images/factory-03.png',
-            'assets/images/factory-04.jpg',
+            'assets/images/factory-03.webp',
+            'assets/images/factory-04.webp',
             'assets/images/trang-tri-slide-03.jpg',
         ];
         $materialPool = [
-            'assets/images/factory-03.png',
-            'assets/images/factory-04.jpg',
-            'assets/images/trang-tri-slide-04.jpg',
-            'assets/images/gach-co-work-1.jpg',
+            'assets/images/factory-03.webp',
+            'assets/images/factory-04.webp',
+            'assets/images/trang-tri-slide-04.webp',
+            'assets/images/gach-co-work-1.webp',
             'assets/images/gach-co-work-2.jpg',
         ];
 

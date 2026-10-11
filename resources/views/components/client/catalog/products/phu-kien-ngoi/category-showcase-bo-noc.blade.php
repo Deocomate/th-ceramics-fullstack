@@ -33,7 +33,7 @@
                                         @foreach ($chunk as $product)
                                             <x-client.catalog.shared.product-card
                                                 href="{{ route('client.products.phu-kien-ngoi.ngoi-bo-noc.detail', $product->phu_kien_ngoi_ct_id) }}"
-                                                image="{{ $productImageUrl($product, 'assets/images/bo-noc.png') }}"
+                                                image="{{ $productImageUrl($product, 'assets/images/bo-noc.webp') }}"
                                                 title="{{ $product->name }}" code="MSP: {{ $product->display_code }}"
                                                 price="{{ $product->display_price }}"
                                                 detail-route-name="client.products.phu-kien-ngoi.ngoi-bo-noc.detail"
@@ -65,7 +65,7 @@
                                     @foreach ($chunk as $product)
                                         <x-client.catalog.shared.product-card
                                             href="{{ route('client.products.phu-kien-ngoi.ngoi-bo-noc.detail', $product->phu_kien_ngoi_ct_id) }}"
-                                            image="{{ $productImageUrl($product, 'assets/images/bo-noc.png') }}"
+                                            image="{{ $productImageUrl($product, 'assets/images/bo-noc.webp') }}"
                                             title="{{ $product->name }}"
                                             title-class="font-bold text-[#212121] text-[14px] lg:text-[15px] -mb-[5px] tracking-wide transition-colors group-hover:text-secondary"
                                             code="MSP: {{ $product->display_code }}"
@@ -106,7 +106,7 @@
                 <div class="w-full lg:w-[45%] flex flex-col justify-stretch">
                     <div
                         class="w-full flex-grow relative shadow-lg overflow-hidden bg-black/5 min-h-[400px] lg:min-h-[500px]">
-                        <img src="{{ $assetUrl($config->sec1_image, 'assets/images/bo-noc.png') }}" alt=""
+                        <img src="{{ $assetUrl($config->sec1_image, 'assets/images/bo-noc.webp') }}" alt=""
                             class="absolute inset-0 w-full h-full object-cover">
 
                         <div

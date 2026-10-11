@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Catalog\Infrastructure\ProductWriter;
 use App\Domains\Catalog\Infrastructure\Models\DinhMucNgoiAmDuong;
+use App\Domains\Catalog\Infrastructure\ProductWriter;
 
 test('ngoi am duong detail renders local calculator applications and installation partials', function () {
     $product = app(ProductWriter::class)->create('ngoi_am_duong_ct', [
@@ -11,7 +11,7 @@ test('ngoi am duong detail renders local calculator applications and installatio
         'price' => 862000,
         'des' => ['Mô tả test'],
         'size' => 'L200 x W200',
-        'size_image' => 'assets/images/ngoi-am-duong-size.png',
+        'size_image' => 'assets/images/ngoi-am-duong-size.webp',
         'is_delete' => false,
     ]);
 

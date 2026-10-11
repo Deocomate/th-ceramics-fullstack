@@ -5,7 +5,7 @@ return [
         'trang_chu_id' => 1,
         'banner' => [
             0 => 'assets/images/ngoi-am-duong-banner.jpg',
-            1 => 'assets/images/home-hero-01.png',
+            1 => 'assets/images/home-hero-01.webp',
         ],
         'khach_hang_doi_tac' => [
             0 => 'assets/images/partner-01.png',
@@ -23,9 +23,9 @@ return [
         've_chung_toi_logo' => [
             0 => 'assets/images/news-01.png',
             1 => 'assets/images/news-02.png',
-            2 => 'assets/images/news-03.png',
+            2 => 'assets/images/news-03.webp',
             3 => 'assets/images/news-04.png',
-            4 => 'assets/images/news-05.png',
+            4 => 'assets/images/news-05.webp',
         ],
         'video' => 'https://www.youtube.com/watch?v=yY6m-W6kXEA',
         'nhung_con_so' => [
@@ -51,9 +51,9 @@ return [
             ],
         ],
         'showroom_images' => [
-            0 => 'assets/images/showroom-01.png',
-            1 => 'assets/images/showroom-02.png',
-            2 => 'assets/images/showroom-03.png',
+            0 => 'assets/images/showroom-01.webp',
+            1 => 'assets/images/showroom-02.webp',
+            2 => 'assets/images/showroom-03.webp',
         ],
         'showroom_noidung' => 'Xưởng sản xuất và showroom Thanh Hải Ceramics là nơi quá khứ và hiện tại giao thoa. Từ ngọn lửa lò nung Bát Tràng, những viên ngói âm dương ra đời, mang theo tinh hoa làng nghề, dấu ấn kiến trúc Việt và câu chuyện di sản sống động. Trong từng lớp ngói xếp là ký ức của thời gian, được tiếp nối bằng bàn tay người thợ hôm nay để gìn giữ và lan tỏa giá trị truyền thống.',
         'created_at' => '2026-05-30 02:37:33',
