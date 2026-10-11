@@ -22,6 +22,20 @@ test('a catalog file moves to the private disk under the same path', function ()
     Storage::disk('local')->assertMissing('catalog/images/cover.webp');
 });
 
+test('self-hosted videos move to the private disk whether or not a product references them', function () {
+    Storage::disk('public')->put('x_ct/videos/a.mp4', 'mp4 bytes');
+    Storage::disk('public')->put('x_ct/videos/orphan.WEBM', 'webm bytes');
+    Storage::disk('public')->put('x_ct/images/poster.webp', 'image bytes');
+
+    $this->artisan('media:privatize')->assertSuccessful();
+
+    Storage::disk('public')->assertMissing('x_ct/videos/a.mp4');
+    Storage::disk('public')->assertMissing('x_ct/videos/orphan.WEBM');
+    expect(Storage::disk('local')->get('x_ct/videos/a.mp4'))->toBe('mp4 bytes')
+        ->and(Storage::disk('local')->get('x_ct/videos/orphan.WEBM'))->toBe('webm bytes');
+    Storage::disk('public')->assertExists('x_ct/images/poster.webp');
+});
+
 test('a dry run moves nothing', function () {
     Storage::disk('public')->put('catalog/files/a.pdf', 'pdf bytes');
 

@@ -22,6 +22,9 @@ return [
     // Requests per minute allowed from one IP address across client pages.
     'page_rate_limit' => (int) env('CONTENT_PROTECTION_PAGE_RATE_LIMIT', 120),
 
+    // Minutes a signed video URL stays valid after the page that carries it is rendered.
+    'video_url_ttl_minutes' => (int) env('CONTENT_PROTECTION_VIDEO_URL_TTL_MINUTES', 240),
+
     'devtools' => [
         // Detections inside the window before the visitor is sent to the legal warning page.
         'threshold' => 3,

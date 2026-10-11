@@ -3,7 +3,7 @@
 namespace App\Domains\Catalog\Infrastructure;
 
 use App\Domains\Media\Infrastructure\FileUploadHelper;
-use App\Support\AssetPath;
+use App\Domains\Media\Infrastructure\ProtectedMediaUrl;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 
@@ -427,7 +427,7 @@ class ProductGallery
                 'type' => self::TYPE_VIDEO,
                 'source' => self::SOURCE_FILE,
                 'path' => $path,
-                'display_url' => AssetPath::url($path),
+                'display_url' => ProtectedMediaUrl::video($path),
             ];
         }
 

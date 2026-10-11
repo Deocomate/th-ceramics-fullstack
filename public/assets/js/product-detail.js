@@ -107,6 +107,22 @@ const mountFileVideo = (shell, { autoplay = true, mutedFallback = false } = {}) 
     video.setAttribute("playsinline", "");
     video.setAttribute("webkit-playsinline", "true");
     video.className = "w-full h-full object-cover";
+    video.setAttribute("controlsList", "nodownload noremoteplayback");
+    video.disablePictureInPicture = true;
+    video.setAttribute("disablepictureinpicture", "");
+
+    // The signed source URL expires; a failed load after that needs a fresh page.
+    video.addEventListener("error", () => {
+        if (!video.getAttribute("src") || !host.contains(video)) {
+            return;
+        }
+
+        const notice = document.createElement("p");
+        notice.setAttribute("role", "alert");
+        notice.className = "absolute inset-0 flex items-center justify-center p-6 text-center text-white";
+        notice.textContent = "Phiên xem video đã hết hạn, vui lòng tải lại trang";
+        host.replaceChildren(notice);
+    });
 
     if (autoplay && mutedFallback && needsMutedAutoplay()) {
         video.muted = true;

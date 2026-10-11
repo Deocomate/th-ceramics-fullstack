@@ -30,6 +30,7 @@ use App\Domains\Content\Http\Client\ShippingPolicyController;
 use App\Domains\Content\Http\Client\ShowroomController;
 use App\Domains\Identity\Http\Client\AuthController;
 use App\Domains\Identity\Http\Client\UserProfileController;
+use App\Domains\Media\Http\Client\ProtectedVideoController;
 use App\Domains\Protection\Http\Client\ProtectionNoticeController;
 use App\Domains\Protection\Http\Client\ViolationReportController;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,13 @@ Route::name('client.')->middleware('throttle:client-pages')->group(function () {
         ->name('protection.report');
     Route::get('/noi-dung-duoc-bao-ve', [ProtectionNoticeController::class, 'notice'])->name('protection.notice');
     Route::get('/canh-bao-ban-quyen', [ProtectionNoticeController::class, 'warning'])->name('protection.warning');
+
+    // Video riêng tư: trình phát gửi nhiều request Range khi tua nên không dùng chung bộ giới hạn của trang.
+    Route::get('/media/video/{path}', ProtectedVideoController::class)
+        ->where('path', '.+')
+        ->middleware('signed:relative')
+        ->withoutMiddleware('throttle:client-pages')
+        ->name('media.video');
 
     // Showroom
     Route::get('/showroom', [ShowroomController::class, 'index'])->name('showroom');

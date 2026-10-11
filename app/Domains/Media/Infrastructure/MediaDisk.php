@@ -12,6 +12,11 @@ class MediaDisk
     ];
 
     /**
+     * Self-hosted video formats, served only through expiring signed URLs.
+     */
+    private const PRIVATE_EXTENSIONS = ['mp4', 'webm'];
+
+    /**
      * Disk that owns a stored media path. The path itself is the same on either disk,
      * so database references never change when a file becomes private.
      */
@@ -23,6 +28,10 @@ class MediaDisk
             if (str_starts_with($path, $prefix)) {
                 return 'local';
             }
+        }
+
+        if (in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), self::PRIVATE_EXTENSIONS, true)) {
+            return 'local';
         }
 
         return 'public';

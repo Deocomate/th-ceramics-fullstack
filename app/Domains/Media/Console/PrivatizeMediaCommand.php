@@ -22,7 +22,7 @@ class PrivatizeMediaCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Chuyển các file media riêng tư (file catalog gốc) từ public storage sang disk local, giữ nguyên đường dẫn.';
+    protected $description = 'Chuyển các file media riêng tư (file catalog gốc, video mp4/webm) từ public storage sang disk local, giữ nguyên đường dẫn.';
 
     /**
      * Execute the console command.

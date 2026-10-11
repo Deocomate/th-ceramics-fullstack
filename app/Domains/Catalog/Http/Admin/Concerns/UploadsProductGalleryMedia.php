@@ -3,8 +3,8 @@
 namespace App\Domains\Catalog\Http\Admin\Concerns;
 
 use App\Domains\Catalog\Infrastructure\ProductGallery;
+use App\Domains\Media\Infrastructure\ProtectedMediaUrl;
 use App\Rules\YoutubeUrl;
-use App\Support\AssetPath;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -103,7 +103,7 @@ trait UploadsProductGalleryMedia
         if ($isFileVideo) {
             $path = $item['path'] ?? '';
             $payload['path'] = $path;
-            $payload['url'] = $item['display_url'] ?? AssetPath::url($path);
+            $payload['url'] = $item['display_url'] ?? ProtectedMediaUrl::video($path);
             $payload['display_url'] = $payload['url'];
 
             return $payload;
