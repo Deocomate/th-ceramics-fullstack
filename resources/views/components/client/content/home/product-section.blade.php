@@ -52,7 +52,8 @@
                 return '#';
             }
 
-            return route($detailRouteName, $product->getKey());
+            // Detail routes resolve products by public id, which differs from the row id.
+            return route($detailRouteName, $product->getRouteKey());
         }
     }
 @endphp
