@@ -4,7 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
 
-const source = fs.readFileSync(path.resolve(__dirname, '../../public/assets/js/content-protection.js'), 'utf8');
+const source = fs.readFileSync(path.resolve(__dirname, '../../resources/js/content-protection.js'), 'utf8');
 
 const DEVTOOLS_CONFIG = {
     reportUrl: '/bao-ve-noi-dung/ghi-nhan',

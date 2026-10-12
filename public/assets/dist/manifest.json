@@ -1,0 +1,87 @@
+{
+    "esbuild": "0.28.2",
+    "assets": {
+        "admin-catalog-page-renderer.min.js": {
+            "sha256": "00051f9fce1cee262b1b8eda104991629398ced8b019df110c29477b426d89dc",
+            "sources": {
+                "resources/js/admin-catalog-page-renderer.js": "63d89d1a25270be8787a5ee7661500ea8365c845f187fddd8d456c41c785633c"
+            }
+        },
+        "admin-form-ui.min.js": {
+            "sha256": "9d0fcdd81dcad2c16180d85eba0213495543a5b177d3aea9e8500f0ed87147da",
+            "sources": {
+                "resources/js/admin-form-ui.js": "2b0c9986d11a0f4785e3433651cf992fb0121a9958a19c5403e207647a9b57ed"
+            }
+        },
+        "admin-image-optimizer.min.js": {
+            "sha256": "9fb73b7a20a96605074a7774287cb1ceee8923b6e649a1b2550b81df664f0f40",
+            "sources": {
+                "resources/js/admin-image-optimizer.js": "db3ae7131b48ed1baa9fd09a64b9de7204d395ba84658e9468cb0f48f2956f49"
+            }
+        },
+        "admin-product-priority.min.css": {
+            "sha256": "f26313406ebeb3fe48539d579deda5c261b92244a64ca7f7f39b7ce561d587d2",
+            "sources": {
+                "resources/css/admin-product-priority.css": "d3bd70c38e31c9e7d75634cef299da29749cd3d762e8204ffe4733fe4e2dc8df"
+            }
+        },
+        "admin-product-priority.min.js": {
+            "sha256": "70827d36c2b41cf9f7e01778761e2afde372765eab91f99760bbfbdd71eb4902",
+            "sources": {
+                "resources/js/admin-product-priority.js": "baa7ef6c057f550bc24c30b22908f2ee2214d4e5b762a9142089e008ad575708"
+            }
+        },
+        "admin-product-search.min.js": {
+            "sha256": "cfab9f7167ba25f04ea5f98f294fe2114f1d5df6f2fb41c38a255db2036728de",
+            "sources": {
+                "resources/js/admin-product-search.js": "a5706124535dfb6fb0afa54d5a4517b6e81e654842536a21368646974e6f3a3c"
+            }
+        },
+        "admin-select.min.css": {
+            "sha256": "72d23ff51bdabde2dd49f408c146bd9679e45444d86975011ec4e78fb6fc9d71",
+            "sources": {
+                "resources/css/admin-select.css": "30e4e27d5c18e67a3cbe0c95bb2c12f45fb58924ac1f2e2e341031a017ccb033"
+            }
+        },
+        "admin-select.min.js": {
+            "sha256": "5740cbb1b4bf27a3c9a64d8b477f98cd5e8d9d75f40fa8a76986772cae18eaa1",
+            "sources": {
+                "resources/js/admin-select.js": "f1f876638e7435ba6eac1e237fd9c56612e6fb314e83c33006391df0919f4824"
+            }
+        },
+        "app.min.js": {
+            "sha256": "62943929244d753282479108c2495307f61bb76d6d5cec6091f7182c4d488bae",
+            "sources": {
+                "resources/js/app.js": "1760fb8b561dac0756efde32c2f39e0f93d447f2aae2751e2d46ad0ae76bbb59",
+                "resources/js/cart-ui.js": "da14e1212cbd41064ec6ac97039677f56d783395d99bee9e818cccf255b48bc0",
+                "resources/js/consultation-modal.js": "ddb7a726d5688681a5ef066cbf10836b254ab416adafeae5d565b5ab3b7a2330",
+                "resources/js/lightbox.js": "a1ef4a3eaf76a5ec67ed5eeba1423f9ff6bbc5d6fc994c170a452cddba6b9d04",
+                "resources/js/product-calculators.js": "046a85c5e00528171813a9ea9c413c41a91f737a5dde343a8f44b9d0a0492f1c",
+                "resources/js/product-detail.js": "8db276223f725f267ba4c57ffe2ee0dd8cedb97b25631fc38d36861933b1002b",
+                "resources/js/product-guide-tabs.js": "bd71832ef92186ce74c91942a42f75ad88b53570ee02b8c572ed813453b6ccb5",
+                "resources/js/product-values.js": "cd93eaccebd9eb68cdec02cf3387eccaec06c4fdb309cd84906e1a06cdf9cd50",
+                "resources/js/weight-calculator-sticky-bar.js": "6479d4a79df274ed785fbba4bb23a18f58cc70b92d70c474966c22cc89119284",
+                "resources/js/works-carousel.js": "82da31ffe2f75a29fdd801e9b1897fc81619eab4273c9933688e2afe19a0cfdb",
+                "resources/js/youtube-embed.js": "7429a9efbd800e00d52d6a11061fbdc4c449167cacadff8812f196c2248b622a"
+            }
+        },
+        "catalog-flipbook.min.js": {
+            "sha256": "1341fb21869d0e18ba0002d7017dfc8e91aa939159098a7e3455ede5aec34f31",
+            "sources": {
+                "resources/js/catalog-flipbook.js": "2d0de97f4a6978a01ec92debb24e37b41269e10881941eb4f4988b3fe6453480"
+            }
+        },
+        "content-protection.min.js": {
+            "sha256": "8d62587a885fdbc6f81b06f4ccd16cb77458185df6d9b6a3ebf6e3816435ba3b",
+            "sources": {
+                "resources/js/content-protection.js": "92e84c574d20ce1e672ce0750cd03888b29a31b5c782ed3bd83213b752b64d83"
+            }
+        },
+        "main.min.css": {
+            "sha256": "885fc5495d956b0f0108e51c3728314b7f35382ae6996c8c2ecc67393c085102",
+            "sources": {
+                "resources/css/main.css": "c44044d21c005f435b1c36c3e7f0648efd6543eaec3a5a8ce16065ea6fe7dc0d"
+            }
+        }
+    }
+}

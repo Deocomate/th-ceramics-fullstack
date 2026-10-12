@@ -27,7 +27,7 @@ test('deterrence switch renders the protection script without the devtools detec
 
     $this->get(route('client.home'))
         ->assertOk()
-        ->assertSee('assets/js/content-protection.js', false)
+        ->assertSee('assets/dist/content-protection.min.js', false)
         ->assertSee('-webkit-touch-callout: none', false)
         ->assertSee('"deterrence":true', false)
         ->assertSee('"devtools":null', false)
@@ -39,7 +39,7 @@ test('both switches render the protection script and the devtools detector', fun
 
     $content = $this->get(route('client.home'))
         ->assertOk()
-        ->assertSee('assets/js/content-protection.js', false)
+        ->assertSee('assets/dist/content-protection.min.js', false)
         ->assertSee('assets/js/vendor/disable-devtool.min.js', false)
         ->assertSee('-webkit-touch-callout: none', false)
         ->getContent();
@@ -58,7 +58,7 @@ test('both switches render the protection script and the devtools detector', fun
     ]);
 
     expect(strpos($content, 'disable-devtool.min.js'))
-        ->toBeLessThan(strpos($content, 'assets/js/content-protection.js'));
+        ->toBeLessThan(strpos($content, 'assets/dist/content-protection.min.js'));
 });
 
 test('devtools switch alone renders the detector without the deterrence layer', function () {
@@ -66,7 +66,7 @@ test('devtools switch alone renders the detector without the deterrence layer', 
 
     $this->get(route('client.home'))
         ->assertOk()
-        ->assertSee('assets/js/content-protection.js', false)
+        ->assertSee('assets/dist/content-protection.min.js', false)
         ->assertSee('assets/js/vendor/disable-devtool.min.js', false)
         ->assertSee('"deterrence":false', false)
         ->assertDontSee('-webkit-touch-callout', false);
@@ -101,7 +101,7 @@ test('signed in customers get the protection script', function () {
     $this->actingAs(User::factory()->create(['role' => 'customer']))
         ->get(route('client.home'))
         ->assertOk()
-        ->assertSee('assets/js/content-protection.js', false)
+        ->assertSee('assets/dist/content-protection.min.js', false)
         ->assertSee('assets/js/vendor/disable-devtool.min.js', false);
 });
 
@@ -119,7 +119,7 @@ test('catalog flipbook page carries the guard and a csrf token', function () {
     $this->get(route('client.dich-vu.tai-catalog.read', ['id' => $catalog->catalog_id]))
         ->assertOk()
         ->assertSee('<meta name="csrf-token"', false)
-        ->assertSee('assets/js/content-protection.js', false)
+        ->assertSee('assets/dist/content-protection.min.js', false)
         ->assertSee('assets/js/vendor/disable-devtool.min.js', false);
 });
 

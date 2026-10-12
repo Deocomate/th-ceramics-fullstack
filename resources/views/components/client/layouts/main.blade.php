@@ -61,7 +61,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}" />
+    <link rel="stylesheet" href="{{ \App\Support\AssetPath::built('main.min.css') }}" />
 
     @stack('styles')
     <style>
@@ -150,7 +150,7 @@
         </div>
     </div>
 
-    <script type="module" src="{{ asset('assets/js/app.js') }}"></script>
+    <script type="module" src="{{ \App\Support\AssetPath::built('app.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 

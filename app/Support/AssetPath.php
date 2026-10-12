@@ -25,6 +25,14 @@ class AssetPath
         return self::assetUrl('storage/'.ltrim($candidate, '/'));
     }
 
+    /**
+     * URL of a minified asset produced by `composer run build:assets`.
+     */
+    public static function built(string $name): string
+    {
+        return self::assetUrl('assets/dist/'.$name);
+    }
+
     private static function assetUrl(string $path): string
     {
         try {

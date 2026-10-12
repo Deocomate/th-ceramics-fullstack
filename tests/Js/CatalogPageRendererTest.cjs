@@ -4,7 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
 
-const source = fs.readFileSync(path.resolve(__dirname, '../../public/assets/js/admin-catalog-page-renderer.js'), 'utf8');
+const source = fs.readFileSync(path.resolve(__dirname, '../../resources/js/admin-catalog-page-renderer.js'), 'utf8');
 
 function loadRenderer({ pageSizes = [], blobType = 'image/webp', blobBytes = () => 400_000, failures = {}, dataset = {} } = {}) {
     const requests = [];

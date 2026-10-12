@@ -149,7 +149,7 @@
   </footer>
 
   <script src="https://unpkg.com/lucide@0.468.0"></script>
-  <script src="{{ asset('assets/js/catalog-flipbook.js') }}"></script>
+  <script src="{{ \App\Support\AssetPath::built('catalog-flipbook.min.js') }}"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       if (typeof lucide !== 'undefined') {

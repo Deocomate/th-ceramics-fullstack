@@ -50,6 +50,7 @@
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd\" \"php -d post_max_size=128M -d upload_max_filesize=64M -d max_file_uploads=100 artisan serve\" \"php artisan queue:listen --tries=1\" --names='server,queue'"
         ],
+        "build:assets": "node scripts/build-client-assets.mjs",
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"

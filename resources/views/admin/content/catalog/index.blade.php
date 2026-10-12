@@ -218,7 +218,7 @@
 
     @push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="{{ asset('assets/js/admin-catalog-page-renderer.js') }}?v={{ filemtime(public_path('assets/js/admin-catalog-page-renderer.js')) }}"
+    <script src="{{ \App\Support\AssetPath::built('admin-catalog-page-renderer.min.js') }}?v={{ filemtime(public_path('assets/dist/admin-catalog-page-renderer.min.js')) }}"
         data-max-edge="{{ (int) config('content_protection.catalog_pages.max_edge') }}"
         data-max-bytes="{{ (int) config('content_protection.catalog_pages.max_bytes') }}"
         data-max-pages="{{ (int) config('content_protection.catalog_pages.max_pages') }}"></script>

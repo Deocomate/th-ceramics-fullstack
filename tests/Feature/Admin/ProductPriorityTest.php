@@ -77,7 +77,7 @@ test('product list pages expose drag sorting only for active scoped lists', func
         ->assertOk()
         ->assertSee('data-admin-product-sortable', false)
         ->assertSee('data-can-reorder="true"', false)
-        ->assertSee('assets/js/admin-select.js', false);
+        ->assertSee('assets/dist/admin-select.min.js', false);
 
     $this->get(route('admin.gach-co-bat-trang-ct.index', ['category_type' => 'all']))
         ->assertOk()
