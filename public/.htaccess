@@ -15,14 +15,14 @@
     # Chặn trang khác nhúng ảnh, video, PDF khi trình duyệt gửi Sec-Fetch-Site.
     RewriteCond %{REQUEST_URI} ^/(public/)?(storage|assets/images)/.+\.(jpe?g|png|webp|gif|avif|svg|mp4|webm|pdf)$ [NC]
     RewriteCond %{HTTP:Sec-Fetch-Site} ^cross-site$ [NC]
-    RewriteCond %{HTTP_REFERER} !^https?://([^/]+\.)?(google\.[a-z.]+|bing\.com|coccoc\.com|duckduckgo\.com|facebook\.com|zalo\.me|translate\.goog)(/|$) [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://([^/]+\.)?(google\.([a-z]{2,3}|com?\.[a-z]{2})|bing\.com|coccoc\.com|duckduckgo\.com|facebook\.com|zalo\.me|translate\.goog)(/|$) [NC]
     RewriteRule ^ - [F,L]
 
     # Chặn hotlink theo Referer cho trình duyệt không gửi Sec-Fetch-Site.
     RewriteCond %{REQUEST_URI} ^/(public/)?(storage|assets/images)/.+\.(jpe?g|png|webp|gif|avif|svg|mp4|webm|pdf)$ [NC]
     RewriteCond %{HTTP_REFERER} !^$
     RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} !^([^@]+)@@https?://\1(/|$) [NC]
-    RewriteCond %{HTTP_REFERER} !^https?://([^/]+\.)?(google\.[a-z.]+|bing\.com|coccoc\.com|duckduckgo\.com|facebook\.com|zalo\.me|translate\.goog)(/|$) [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://([^/]+\.)?(google\.([a-z]{2,3}|com?\.[a-z]{2})|bing\.com|coccoc\.com|duckduckgo\.com|facebook\.com|zalo\.me|translate\.goog)(/|$) [NC]
     RewriteRule ^ - [F,L]
     # END content-protection
 

@@ -48,6 +48,28 @@ test('the public block runs before the front controller rule', function () {
         ->toBeLessThan(htaccessLine($lines, 'RewriteRule ^ index.php [L]'));
 });
 
+test('the referer allowlist does not accept look-alike hosts', function (string $referer, bool $allowed) {
+    $conditions = array_values(array_filter(
+        protectionBlock(htaccessLines('.htaccess')),
+        fn (string $line) => str_contains($line, 'google'),
+    ));
+
+    expect($conditions)->toHaveCount(2)
+        ->and($conditions[0])->toBe($conditions[1])
+        ->and(preg_match('~^RewriteCond %\{HTTP_REFERER\} !(\S+) \[NC\]$~', $conditions[0], $match))->toBe(1)
+        ->and(preg_match('~'.$match[1].'~i', $referer) === 1)->toBe($allowed);
+})->with([
+    ['https://www.google.com/', true],
+    ['https://www.google.com.vn/search?q=gom', true],
+    ['https://images.google.co.uk/', true],
+    ['https://l.facebook.com/', true],
+    ['https://chat.zalo.me/', true],
+    ['https://google.example.com/', false],
+    ['https://google.com.example.org/', false],
+    ['https://notgoogle.com/', false],
+    ['https://example.com/?from=google.com/', false],
+]);
+
 test('the same-host rule keeps its backreference and an empty referer is allowed', function () {
     $block = protectionBlock(htaccessLines('.htaccess'));
 
