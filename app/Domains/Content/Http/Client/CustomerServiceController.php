@@ -17,6 +17,11 @@ class CustomerServiceController extends Controller
             return redirect()->route('client.customer-service.show', $cleanPage, 301);
         }
 
+        // The account page reads the signed-in user, so guests go to sign in first.
+        if ($page === 'tai-khoan-cua-toi' && auth()->guest()) {
+            return redirect()->guest(route('client.auth.login'));
+        }
+
         if (ContentPageRegistry::isValidCustomerServicePage($page)) {
             $views = [
                 'bao-mat-thong-tin' => 'clients.content.dich-vu-khach-hang.bao-mat-thong-tin',

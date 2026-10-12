@@ -243,6 +243,11 @@ test('product guide tabs and weight sticky bar expose data hooks', function () {
         ->toContain('data-quantity-calculator');
 });
 
+test('guests opening the account page from customer service are sent to sign in', function () {
+    $this->get(route('client.customer-service.show', 'tai-khoan-cua-toi'))
+        ->assertRedirect(route('client.auth.login'));
+});
+
 test('all registered customer service pages and flipbook render successfully', function () {
     $user = User::factory()->create();
     foreach (ContentPageRegistry::VALID_CUSTOMER_SERVICE_PAGES as $page) {
