@@ -22,6 +22,25 @@ test('home page has no protection script while both switches are off', function 
         ->assertDontSee('__contentProtection', false);
 });
 
+test('visitors without JavaScript are asked to turn it on while a switch is on', function (bool $deterrence, bool $devtoolsGuard) {
+    enableProtection($deterrence, $devtoolsGuard);
+
+    $this->get(route('client.home'))
+        ->assertOk()
+        ->assertSeeInOrder(['<noscript>', 'body > * { display: none !important; }', 'Vui lòng bật JavaScript', '</noscript>'], false);
+})->with([[true, false], [false, true]]);
+
+test('the JavaScript requirement is not sent while both switches are off or to crawlers', function () {
+    enableProtection(false, false);
+    $this->get(route('client.home'))->assertOk()->assertDontSee('Vui lòng bật JavaScript', false);
+
+    enableProtection(true, true);
+    $this->withHeader('User-Agent', 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)')
+        ->get(route('client.home'))
+        ->assertOk()
+        ->assertDontSee('Vui lòng bật JavaScript', false);
+});
+
 test('deterrence switch renders the protection script without the devtools detector', function () {
     enableProtection(true, false);
 

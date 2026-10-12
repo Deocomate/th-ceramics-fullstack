@@ -4,6 +4,7 @@
 
 ### Added
 - **Protection context** (`app/Domains/Protection`): two admin switches on the home page editor for copy deterrence (right-click on the whole page, drag on media, shortcut blocking) and DevTools detection. Detections are stored in `protection_violations` (pruned after 90 days); the third one in 24 hours leads to a legal warning page. Crawlers and admins never receive the scripts.
+- While either switch is on, a browser with JavaScript turned off sees only a request to turn it on; the page content stays hidden. Crawlers and admins are not affected.
 - **Security headers** on every web response: `X-Frame-Options: SAMEORIGIN`, `Content-Security-Policy: frame-ancestors 'self'`, `X-Content-Type-Options`, `Referrer-Policy`.
 - **Rewrite rules** in both `.htaccess` files that refuse site-copy User-Agents and cross-site requests for images, videos and PDFs.
 - **`media:convert-webp`** converts legacy images over 1 MB or over their preset dimensions to WebP, rewrites database references and keeps originals on the private disk, with `--verify` and `--restore`. Old JPG/PNG URLs answer 301 to the WebP file.
