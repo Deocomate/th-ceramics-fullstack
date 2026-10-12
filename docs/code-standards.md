@@ -306,6 +306,7 @@ Views are organized by domain context under `resources/views/`:
 - `clients/{catalog/products,content,commerce,identity}/`: Public-facing storefront pages.
 - `components/`: Reusable Blade components:
   - `admin/{layouts,shared,catalog}/`: Admin layout shell and shared inputs/modals.
+    The topbar tabs, the sidebar and the breadcrumb are all drawn from `config/admin_navigation.php`; a new admin page gets its menu entry there, under the module it belongs to, not in the Blade layout.
   - `client/{layouts,shared,catalog,content,commerce,identity}/`: Client layouts, section partials, and domain components.
   - `emails/{identity,commerce,content}/`: Markdown email templates organized by domain.
   - `vendor/mail/`: Vendor overrides and CSS mail theme.
@@ -368,6 +369,6 @@ Key classes: `resize-none overflow-hidden min-h-[120px]` — prevents manual res
 
 ## 9. Single-Record Pattern
 
-Product section configuration tables use a single record. `HomePageConfigService::getFirstRecord()` creates the initial record when absent; the admin controller edits and updates that record.
+Product section configuration tables use a single record. `HomePageConfigService::getFirstRecord()` creates the initial record when absent; the admin controller edits and updates that record. The site-wide switches kept on the home page record (`is_ecommerce_enabled` and the two content protection flags) are saved through `HomePageConfigService::updateSiteSettings()` from the site settings page, never from the home page form.
 
 These configuration records have no create/destroy routes; the admin form reads the record and submits an update.

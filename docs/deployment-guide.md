@@ -40,7 +40,7 @@ Do not run seeders on the demo database. Check `/up`, public catalog pages, repr
 
 ## Content protection
 
-The protection layers ship switched off where they can misfire: the two client switches (copy deterrence and DevTools detection, on the home page editor in admin) default to off, while the server layers (private files, hotlink rules, headers) are always on. Deploy the code first, turn on deterrence next, and turn on DevTools detection only after Search Console's live URL test renders the home page and a product page normally and the client has approved the wording of the warning page.
+The protection layers ship switched off where they can misfire: the two client switches (copy deterrence and DevTools detection, on the admin page Hệ thống › Cài đặt website, `/admin/cai-dat`) default to off, while the server layers (private files, hotlink rules, headers) are always on. Deploy the code first, turn on deterrence next, and turn on DevTools detection only after Search Console's live URL test renders the home page and a product page normally and the client has approved the wording of the warning page.
 
 ### Rewrite rules
 
@@ -84,7 +84,7 @@ Each option also accepts a path, but Git Bash on Windows rewrites an argument th
 
 | Problem | Way back |
 |---|---|
-| DevTools detection misfires | Turn the switch off on the home page editor in admin; it applies on the next page load. |
+| DevTools detection misfires | Turn the switch off on Hệ thống › Cài đặt website in admin; it applies on the next page load. |
 | Deterrence annoys visitors | Turn the other switch off. |
 | Hotlink rule blocks a legitimate source | Add the source to the allowlist in both `.htaccess` files, or remove the `content-protection` block; restart LiteSpeed or wait for the reload. |
 | Broken images or references after the WebP conversion | `php artisan media:convert-webp --restore=<run> --force` for images in `storage`. For static images: `php artisan migrate:rollback --step=1` while the data migration is the latest one, then redeploy the revision from before the conversion. |

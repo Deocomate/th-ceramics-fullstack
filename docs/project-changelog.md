@@ -3,7 +3,7 @@
 ## 0.7.0 (2026-10-12)
 
 ### Added
-- **Protection context** (`app/Domains/Protection`): two admin switches on the home page editor for copy deterrence (right-click on the whole page, drag on media, shortcut blocking) and DevTools detection. Detections are stored in `protection_violations` (pruned after 90 days); the third one in 24 hours leads to a legal warning page. Crawlers and admins never receive the scripts.
+- **Protection context** (`app/Domains/Protection`): two admin switches on Hệ thống › Cài đặt website for copy deterrence (right-click on the whole page, drag on media, shortcut blocking) and DevTools detection. Detections are stored in `protection_violations` (pruned after 90 days); the third one in 24 hours leads to a legal warning page. Crawlers and admins never receive the scripts.
 - While either switch is on, a browser with JavaScript turned off sees only a request to turn it on; the page content stays hidden. Crawlers and admins are not affected.
 - **Security headers** on every web response: `X-Frame-Options: SAMEORIGIN`, `Content-Security-Policy: frame-ancestors 'self'`, `X-Content-Type-Options`, `Referrer-Policy`.
 - **Rewrite rules** in both `.htaccess` files that refuse site-copy User-Agents and cross-site requests for images, videos and PDFs.
@@ -13,6 +13,8 @@
 - Seven routes: `client.protection.report`, `client.protection.notice`, `client.protection.warning`, `client.media.video`, `admin.catalog.file`, `admin.catalog.pages.store`, `admin.catalog.pages.finalize`. No existing route changed.
 
 ### Changed
+- **Admin navigation** is grouped into six modules shown as topbar tabs (Tổng quan, Bán hàng, Sản phẩm, Nội dung, Giao diện, Hệ thống); the sidebar lists only the current module and the breadcrumb follows the same tree (`config/admin_navigation.php`). FAQ moved under Nội dung, content backup and admin accounts under Hệ thống.
+- **Site settings page** (`/admin/cai-dat`, `admin.settings.*`) now holds the e-commerce switch and the two content protection switches, which left the home page form. Saving either page no longer touches the other's fields.
 - **Catalog reader** shows page images rendered in the admin browser; the original PDF is reachable only by admins and catalog uploads accept PDF only.
 - **Self-hosted product videos** play through expiring signed URLs under `/media/video/`.
 - **Client JS and CSS** moved from `public/assets` to `resources/js` and `resources/css` and are served as committed minified builds (`composer run build:assets`); the old source URLs answer 404.
