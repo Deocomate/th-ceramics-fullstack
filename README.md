@@ -83,7 +83,8 @@ app/
 │   ├── Commerce/              # Carts, orders, coupons, consultation requests, checkout
 │   ├── Content/               # CMS pages, projects, showroom, factory, news, FAQs, policies
 │   ├── Identity/              # Authentication, customer profile, RBAC
-│   ├── Media/                 # Staged image uploads, WebP optimization
+│   ├── Media/                 # Staged image uploads, WebP optimization, private video delivery
+│   ├── Protection/            # Copy deterrence switches, DevTools detection, security headers
 │   └── Archive/               # Database backup and restore
 ├── Infrastructure/            # Cross-cutting infrastructure
 ├── Providers/                 # AppServiceProvider (bindings, aliases, view composers)
@@ -115,6 +116,7 @@ routes/
 - **Showcase mode toggle**: Admin can disable e-commerce (`is_ecommerce_enabled` on `trang_chu`); site switches to B2B catalog with consultation popup and server-blocked cart routes
 - **Order management**: Admin order lifecycle + client order tracking with email notifications
 - **Client authentication**: Login, register, forgot/reset password, Google OAuth (Socialite)
+- **Content copy protection**: Catalog PDFs and self-hosted videos have no public URL (page images and expiring signed video URLs instead), `.htaccess` rules block hotlinking and site-copy tools, and two admin switches on the home page editor turn on right-click/shortcut deterrence and DevTools detection with a legal warning page. See ADR-003 in `docs/system-architecture.md` for the limits
 - **Database queue**: Email dispatch (ShouldQueue mailables) via `jobs` table, no Redis needed
 
 ## Testing

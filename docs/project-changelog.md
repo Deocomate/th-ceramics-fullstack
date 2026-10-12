@@ -1,5 +1,25 @@
 # Project Changelog
 
+## 0.7.0 (2026-10-12)
+
+### Added
+- **Protection context** (`app/Domains/Protection`): two admin switches on the home page editor for copy deterrence (right-click, drag and shortcut blocking on media) and DevTools detection. Detections are stored in `protection_violations` (pruned after 90 days); the third one in 24 hours leads to a legal warning page. Crawlers and admins never receive the scripts.
+- **Security headers** on every web response: `X-Frame-Options: SAMEORIGIN`, `Content-Security-Policy: frame-ancestors 'self'`, `X-Content-Type-Options`, `Referrer-Policy`.
+- **Rewrite rules** in both `.htaccess` files that refuse site-copy User-Agents and cross-site requests for images, videos and PDFs.
+- **`media:convert-webp`** converts legacy images over 1 MB or over their preset dimensions to WebP, rewrites database references and keeps originals on the private disk, with `--verify` and `--restore`. Old JPG/PNG URLs answer 301 to the WebP file.
+- **`media:privatize`** moves catalog PDFs and self-hosted videos to the private disk.
+- **`scripts/verify-content-protection.php`** checks all of the above against a live site.
+- Seven routes: `client.protection.report`, `client.protection.notice`, `client.protection.warning`, `client.media.video`, `admin.catalog.file`, `admin.catalog.pages.store`, `admin.catalog.pages.finalize`. No existing route changed.
+
+### Changed
+- **Catalog reader** shows page images rendered in the admin browser; the original PDF is reachable only by admins and catalog uploads accept PDF only.
+- **Self-hosted product videos** play through expiring signed URLs under `/media/video/`.
+- **Client JS and CSS** moved from `public/assets` to `resources/js` and `resources/css` and are served as committed minified builds (`composer run build:assets`); the old source URLs answer 404.
+- **Per-IP throttle** of 120 requests a minute on client pages (`CONTENT_PROTECTION_PAGE_RATE_LIMIT`).
+
+### Fixed
+- The hotlink allowlist accepted any Referer whose host merely started with `google.` (for example `google.example.com`); it now accepts Google's own domains only.
+
 ## 0.6.0 (2026-09-28)
 
 ### Added

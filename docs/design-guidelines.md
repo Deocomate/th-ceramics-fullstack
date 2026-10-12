@@ -167,7 +167,7 @@ clients/catalog/products/{category}/
 | Alpine.js | 3.x | Admin interactive UI: tab navigation, auto-resize textareas, image galleries, repeater fields |
 | Swiper | 12.x | Image carousels, product galleries (client) |
 | AOS | 2.3.1 | Scroll-triggered animations (client) |
-| PDF.js | 2.16.105 | PDF rendering in catalog flipbook reader |
+| PDF.js | 2.16.105 | Renders catalog PDF pages to images in the admin catalog screen; the public reader loads only those images |
 | StPageFlip | 2.0.7 | 3D page-flip animation for catalog reader |
 | GLightbox | Latest | Image lightbox gallery (project detail pages) |
 | Tailwind CSS | Latest (CDN) | Utility CSS framework |

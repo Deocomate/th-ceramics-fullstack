@@ -38,6 +38,59 @@ The demo has no Supervisor. The deployment account's crontab runs `php artisan q
 
 Do not run seeders on the demo database. Check `/up`, public catalog pages, representative image URLs and the deployed revision. Before deploying a release that renames or moves queued classes, let the worker drain the `jobs` table and clear `failed_jobs`; legacy class aliases no longer exist, so payloads serialized under an old class name cannot be restored. For rollback, retain the prior revision, matching dependencies and verified full dump; follow the catalog runbook instead of migration rollback.
 
+## Content protection
+
+The protection layers ship switched off where they can misfire: the two client switches (copy deterrence and DevTools detection, on the home page editor in admin) default to off, while the server layers (private files, hotlink rules, headers) are always on. Deploy the code first, turn on deterrence next, and turn on DevTools detection only after Search Console's live URL test renders the home page and a product page normally and the client has approved the wording of the warning page.
+
+### Rewrite rules
+
+`.htaccess` and `public/.htaccess` carry the same block between `# BEGIN content-protection` and `# END content-protection` (`HtaccessProtectionBlockTest` keeps them identical). It refuses site-copy User-Agents such as HTTrack, wget and curl everywhere except `/up` and localhost, and refuses image, video and PDF requests that come from another site unless the Referer is a listed search engine or social network. To allow another source, add it to the allowlist in both files.
+
+OpenLiteSpeed picked up a changed `.htaccess` within one to three minutes on the demo without a restart. Restart LiteSpeed from CyberPanel or as root when the rules must apply at once, or wait five minutes before verifying. Because curl is refused, health probes and scripts that call the site must send a browser User-Agent or use `/up`.
+
+The sample Nginx configuration below does not read `.htaccess`, so these rules need a hand translation there. Its static-asset `location` also answers a missing image with 404 directly, so the old JPG/PNG URL of a converted image never reaches the middleware that redirects it to the WebP file; add `try_files $uri /index.php?$query_string;` to that block if old image URLs must keep working.
+
+### One-time media commands
+
+Run these after `migrate` on a database that predates the protection work, inside the maintenance window and after a fresh SQL and media backup.
+
+| Command | Purpose |
+|---|---|
+| `php artisan media:convert-webp --dry-run` | Lists the images over 1 MB or over their preset dimensions and the tables that will be scanned. Writes nothing. |
+| `php artisan media:convert-webp --force` | Converts them to WebP, rewrites every database reference in one transaction and moves the originals to `storage/app/private/media-originals/<run>/`. Add `--include-seeders` when product media points into `seeders/` (it does on the demo). Prints the run id. |
+| `php artisan media:convert-webp --verify=<run>` | Must report a clean result before the site reopens: no old path left in the database, every converted file present, no new dangling reference. |
+| `php artisan media:convert-webp --restore=<run> --force` | Puts the originals and the database references back. |
+| `php artisan media:privatize --dry-run`, then without the flag | Moves catalog PDFs and `.mp4`/`.webm` files to the private disk. `--reverse` moves them back. |
+
+Static images under `public/assets/images` were converted in the repository; the `rewrite_static_asset_image_references` data migration points stored references at them during `migrate`. Do not use `media:optimize` for this: it renames files without updating the database. Record the run id of each conversion in the rollout log; it is the only handle for a restore.
+
+### Verification script
+
+`scripts/verify-content-protection.php` sends real requests and prints one PASS, FAIL or SKIP line per check; it exits with 1 when a check fails. It needs PHP with the curl extension, sends only read requests and uses no credentials. Run it from a machine other than the server (the rules exempt localhost):
+
+```bash
+php scripts/verify-content-protection.php https://<domain> \
+  --detail-url=https://<domain>/san-pham/<category>/<id> \
+  --video-page=https://<domain>/san-pham/<category>/<id-with-video> \
+  --old-image-url=https://<domain>/assets/images/home-hero-01.png \
+  --old-pdf-path=https://<domain>/storage/catalog/files/<name>.pdf \
+  --old-video-path=https://<domain>/storage/<dir>/videos/<name>.mp4 \
+  --guard=off
+```
+
+Each option also accepts a path, but Git Bash on Windows rewrites an argument that starts with `/` into a Windows path, so pass full URLs there. A check whose option is missing is reported as SKIP, not as a pass. `--guard=off` expects no protection script on the home page and `--guard=on` expects it; use `off` before the switches are on and `on` after both are on. Against `php artisan serve` the checks marked `*` fail, because that server does not read `.htaccess`.
+
+### Rollback by layer
+
+| Problem | Way back |
+|---|---|
+| DevTools detection misfires | Turn the switch off on the home page editor in admin; it applies on the next page load. |
+| Deterrence annoys visitors | Turn the other switch off. |
+| Hotlink rule blocks a legitimate source | Add the source to the allowlist in both `.htaccess` files, or remove the `content-protection` block; restart LiteSpeed or wait for the reload. |
+| Broken images or references after the WebP conversion | `php artisan media:convert-webp --restore=<run> --force` for images in `storage`. For static images: `php artisan migrate:rollback --step=1` while the data migration is the latest one, then redeploy the revision from before the conversion. |
+| Flipbook or video fails | `php artisan media:privatize --reverse`, then redeploy the previous revision. The added columns and tables can stay. |
+| Page breaks because of a minified asset | Redeploy the revision from before the asset build. |
+
 ## Environment Configuration
 
 ### 1. Clone and Install

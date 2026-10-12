@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-The Laravel application groups delivery, use cases, business rules, and adapters by six contexts in `app/Domains/`: `Catalog`, `Commerce`, `Content`, `Identity`, `Media`, and `Archive`. Route files in `routes/` preserve public URIs and names while dispatching to context-owned HTTP controllers. The composition root in `bootstrap/app.php` and `app/Providers/AppServiceProvider.php` wires middleware aliases and ports to adapters.
+The Laravel application groups delivery, use cases, business rules, and adapters by seven contexts in `app/Domains/`: `Catalog`, `Commerce`, `Content`, `Identity`, `Media`, `Archive`, and `Protection`. Route files in `routes/` preserve public URIs and names while dispatching to context-owned HTTP controllers. The composition root in `bootstrap/app.php` and `app/Providers/AppServiceProvider.php` wires middleware aliases and ports to adapters.
 
 | Layer | Responsibility | Dependency direction |
 |---|---|---|
@@ -19,8 +19,9 @@ There is no class-alias layer: application code, tests, and seeders import the c
 - **Commerce:** carts, checkout, coupons, orders, consultations, order tracking (`clients/commerce/*`), admin commerce views (`admin/commerce/*`), commerce modals (`components/client/commerce/*`), and commerce mail templates (`components/emails/commerce/*`).
 - **Content:** CMS pages, projects, news, FAQs, policies, showroom, factory (`clients/content/*`), admin CMS editors (`admin/content/*`), content section components (`components/client/content/*`), contact mail templates (`components/emails/content/*`), and the admin content-write gate.
 - **Identity:** users, authentication, role gate, admin dashboard/user management (`admin/identity/*`), client auth/profile (`clients/identity/*`), and auth notification email templates (`components/emails/identity/*`).
-- **Media:** image optimization, staged uploads, and media commands.
+- **Media:** image optimization, staged uploads, media commands, and private media delivery. `MediaDisk::forPath()` decides the disk from the stored path alone: `catalog/files/*` and `.mp4`/`.webm` files live on the private `local` disk, everything else on `public`, so database references are the same on either disk. Videos reach the player through `ProtectedMediaUrl` and `ProtectedVideoController` (`/media/video/{path}`, expiring relative signature). `RedirectLegacyImageUrls` answers the old JPG/PNG URL of a converted image with a 301 to its WebP file.
 - **Archive:** export/import, legacy archive adaptation, content archive admin view (`admin/archive/*`), and the import job. The job owns a tokenized content-write lock for its write window.
+- **Protection:** the two admin switches read through `ProtectionSettings`, the crawler and admin exemption, the client guard component (`components/client/protection/guard`), DevTools violation recording and escalation (`protection_violations`), the notice and warning pages (`clients/protection/*`), and the `SecurityHeaders` middleware. Thresholds, detectors, exempt User-Agents and limits are in `config/content_protection.php`.
 - **Shared / Layouts:** Cross-domain layout shells (`components/client/layouts/`, `components/admin/layouts/`), generic UI (`components/client/shared/`, `components/admin/shared/`), and retained vendor mail overrides (`components/vendor/mail/`).
 
 The root HTTP controller base and compatibility classes are not the owners of domain behavior. Product administration and client controllers live under `app/Domains/Catalog/Http`.
@@ -87,6 +88,7 @@ Canonical Catalog Core Tables (Unified)
 
 - Admin product requests pass through the role and content-write middleware, then a Catalog HTTP controller and Catalog application/infrastructure services. The public route contract remains stable.
 - Client product requests enter Catalog HTTP controllers and render category-specific Blade views. Commerce accesses catalog data through its declared port and adapter.
+- A client page renders the guard component only when a switch is on and the visitor is neither a crawler nor an admin. When the bundled `disable-devtool` detector fires, `content-protection.js` posts to `client.protection.report`; `DevtoolsViolationService` stores the record and counts detections per session and per IP address, and the response sends the browser to the notice page or, from the third detection in 24 hours, to the legal warning page.
 - Archive import runs from `ContentArchiveJob`. It acquires an owner-token lock before importing and releases only its own lock in `finally`. Manual lock commands cannot replace or release the job lock. Legacy catalog rows pass through Archive's `CatalogArchivePort`; its infrastructure adapter owns Catalog persistence and public-ID allocation.
 
 ## Architecture Decision Records (ADR)
@@ -121,3 +123,22 @@ Canonical Catalog Core Tables (Unified)
   - Zero database queries remain in Blade files.
   - Template compile caching (`php artisan view:cache`) verifies syntax cleanly across all 286 views.
   - Full Pest test suite passes (370+ tests) with automated query-count and session-isolation verification.
+
+### ADR-003: Layered Content Copy Protection (2026-10-12)
+
+- **Status**: Accepted.
+- **Context**:
+  - The client asked that images, videos, catalog PDFs and front-end source be hard to copy. The site is public, has no login wall, and depends on search traffic. Hosting is CyberPanel/OpenLiteSpeed without a CDN in front, and OpenLiteSpeed honours only rewrite directives in `.htaccess`.
+- **Decisions**:
+  1. **Originals have no public URL**: catalog PDFs are rendered to page images in the admin browser and the file moves to the private disk; self-hosted videos are streamed by PHP behind expiring signed URLs. Legacy images are converted to WebP inside the preset dimensions and under 1 MB, with originals kept on the private disk.
+  2. **Server rules stay in `mod_rewrite`**: the `content-protection` block, identical in `.htaccess` and `public/.htaccess`, refuses site-copy User-Agents and media requests from other sites (by `Sec-Fetch-Site` and by Referer, with a search and social allowlist). Response headers are set by Laravel middleware.
+  3. **Client deterrence and DevTools detection are two independent switches**, off by default, stored on the home page config. The server counts detections and decides the destination page; crawlers and admins never receive the scripts.
+  4. **Source JS/CSS lives outside `public/`** and is served only as committed minified builds.
+  5. **A new `Protection` context** owns the switches, detection and violation log, which are not a `Media` responsibility.
+- **Rejected options**: visible watermarks (declined by the client), DRM and a login wall (out of proportion for a public catalogue and harmful to SEO), CDN-level blocking (no CDN in front of the host), blocking direct image navigation by `Sec-Fetch-Dest` (the image is already in the browser cache and the rule needs a `Vary` header the host cannot set).
+- **Known limits**:
+  - Nothing here stops a screenshot, a screen recording, or a person who sends browser-like headers from a command-line tool. The aim is to raise the cost of copying, lower the value of a copy and keep evidence.
+  - DevTools detection depends on browser behaviour and can stop working or misfire after a browser update; the detector list is configuration and the switch can be turned off at once.
+  - Violation counts per IP address can escalate visitors who share one carrier address; `content_protection.devtools.count_by_ip` turns that off.
+  - Signed video URLs expire (240 minutes by default), so a page left open longer must be reloaded before its video plays.
+  - `scripts/verify-content-protection.php` is the acceptance check for the server rules, because they cannot be exercised by the test suite.

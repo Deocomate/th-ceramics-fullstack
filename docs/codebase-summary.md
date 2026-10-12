@@ -9,6 +9,7 @@ Features include:
 - **Data Portability**: Full backup and restore via `database.zip` through the Archive Domain, with two-way backward compatibility for legacy exports.
 - **E-commerce & Consultation**: Global toggle (`is_ecommerce_enabled`) switching between session-based cart/checkout (with coupon discounts and queued order status emails) and B2B consultation request mode.
 - **Dynamic CMS**: Home page hero banner, project showcase (`du_an`), factory tour, FAQ, installation guides (`thi_cong`), and PDF flipbook catalog reader (`catalog`).
+- **Content Copy Protection**: Private catalog PDFs and videos, hotlink and site-copy blocking in `.htaccess`, and admin-switched deterrence and DevTools detection (`app/Domains/Protection`, `config/content_protection.php`).
 - **Role-Based Auth**: Custom RBAC (`superadmin`, `admin`, `customer`) with throttled logins, Google OAuth, and queued branded Vietnamese password reset notifications.
 
 ## Directory Tree
@@ -22,7 +23,8 @@ th-ceramics-fullstack/
 │   │   ├── Commerce/                     # Cart, Orders, Coupons, consultations (Domain, Application, Infrastructure, Http)
 │   │   ├── Content/                      # CMS pages, projects, customer services (Domain, Application, Infrastructure, Http)
 │   │   ├── Identity/                     # Authentication & User Management (Domain, Application, Infrastructure, Http)
-│   │   └── Media/                        # Media upload pipeline & WebP optimization (Console, Http, Infrastructure)
+│   │   ├── Media/                        # Media upload pipeline, WebP optimization, private video delivery (Console, Http, Infrastructure)
+│   │   └── Protection/                   # Copy deterrence switches, DevTools detection, security headers (Http, Infrastructure)
 │   ├── Http/                             # Shared controller base
 │   ├── Infrastructure/                   # Shared infrastructure such as view history
 │   ├── Providers/                        # AppServiceProvider
@@ -71,7 +73,7 @@ Single-row configuration records controlling the marketing intro and landing sec
 - `HomePageConfig`: Home page dynamic configuration (hero slides, partner logos, statistics, showroom gallery).
 - `Project` & `ProjectCategory`: Portfolio project showcase with category filtering and gallery images.
 - `InstallationGuide`: Technical installation guides with YouTube video links.
-- `Catalog`: Downloadable PDF product catalogs with an integrated flipbook reader.
+- `Catalog`: PDF product catalogs read through a flipbook of page images; the original file is private and not downloadable.
 - `PageFactory`, `PageContact`, `PageFaq`, `Faq`: Static and informational page configurations.
 
 ---
