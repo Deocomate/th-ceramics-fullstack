@@ -117,7 +117,7 @@ test('client linh vat phong thuy index sorts products by price ascending', funct
 test('client linh vat phong thuy index paginates products and preserves filters', function () {
     createLinhVatPhongThuyPageConfig();
 
-    for ($i = 1; $i <= 9; $i++) {
+    for ($i = 1; $i <= 13; $i++) {
         createLinhVatPhongThuyProduct([
             'code' => 'PAGED-'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
             'name' => 'Paged linh vật '.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
@@ -143,6 +143,6 @@ test('client linh vat phong thuy index paginates products and preserves filters'
         'page' => 2,
     ]))
         ->assertOk()
-        ->assertSee('Paged linh vật 09')
+        ->assertSee('Paged linh vật 13')
         ->assertDontSee('Paged linh vật 01');
 });

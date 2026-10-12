@@ -2,6 +2,7 @@
 
 namespace App\Domains\Catalog\Infrastructure\Services;
 
+use App\Domains\Catalog\Application\Ports\CatalogQueryPort;
 use App\Domains\Catalog\Infrastructure\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -37,7 +38,7 @@ class UnifiedProductCatalog
     public function paginate(
         string $type,
         array $filters,
-        int $perPage = 8,
+        int $perPage = CatalogQueryPort::PRODUCTS_PER_PAGE,
         ?string $categoryType = null,
         string $pageName = 'page'
     ): LengthAwarePaginator {

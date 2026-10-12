@@ -59,7 +59,7 @@ class CatalogQueryService implements CatalogQueryPort
     public function paginate(
         string $type,
         array $filters,
-        int $perPage = 8,
+        int $perPage = self::PRODUCTS_PER_PAGE,
         ?string $categoryType = null,
         string $pageName = 'page'
     ): LengthAwarePaginator {

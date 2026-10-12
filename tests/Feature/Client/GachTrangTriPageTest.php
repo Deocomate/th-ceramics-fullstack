@@ -44,7 +44,7 @@ test('gach trang tri page renders dynamic applications and global projects', fun
         ->assertDontSee('Dấu Ấn Gạch Trang Trí');
 });
 
-test('gach trang tri product listing uses custom pagination and eight products per page', function () {
+test('gach trang tri product listing uses custom pagination and twelve products per page', function () {
     GachTrangTri::query()->create([
         'thumbnail_main' => 'assets/images/gach-trang-tri-banner.webp',
         'video' => null,
@@ -52,7 +52,7 @@ test('gach trang tri product listing uses custom pagination and eight products p
         'ung_dung_da_dang' => [],
     ]);
 
-    for ($i = 1; $i <= 9; $i++) {
+    for ($i = 1; $i <= 13; $i++) {
         app(ProductWriter::class)->create('gach_trang_tri_ct', [
             'code' => 'GTT-PAGED-'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
             'name' => 'Sản phẩm giới hạn '.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
@@ -71,6 +71,6 @@ test('gach trang tri product listing uses custom pagination and eight products p
         ->assertSee('sort=name_asc', false)
         ->assertSee('page=2', false)
         ->assertSee('Sản phẩm giới hạn 01')
-        ->assertSee('Sản phẩm giới hạn 08')
-        ->assertDontSee('Sản phẩm giới hạn 09');
+        ->assertSee('Sản phẩm giới hạn 12')
+        ->assertDontSee('Sản phẩm giới hạn 13');
 });

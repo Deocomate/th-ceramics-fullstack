@@ -4,6 +4,9 @@ namespace App\Domains\Catalog\Application\Ports;
 
 interface CatalogQueryPort
 {
+    /** Products per page on paginated storefront lists: 3 rows of the 4-column desktop grid. */
+    public const PRODUCTS_PER_PAGE = 12;
+
     public function all(string $type, string $status = 'active', ?string $categoryType = null): mixed;
 
     public function find(string $type, int $publicId): mixed;
@@ -13,7 +16,7 @@ interface CatalogQueryPort
     public function paginate(
         string $type,
         array $filters,
-        int $perPage = 8,
+        int $perPage = self::PRODUCTS_PER_PAGE,
         ?string $categoryType = null,
         string $pageName = 'page'
     ): mixed;

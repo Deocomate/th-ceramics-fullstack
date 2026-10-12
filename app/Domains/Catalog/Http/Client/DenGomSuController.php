@@ -24,16 +24,14 @@ class DenGomSuController extends Controller
         $denGomProducts = $this->catalogQuery->paginate(
             'den_vuon_gom_su_ct',
             $filters,
-            8,
-            'den_gom',
-            'gom_page'
+            categoryType: 'den_gom',
+            pageName: 'gom_page'
         );
         $denSuProducts = $this->catalogQuery->paginate(
             'den_vuon_gom_su_ct',
             $filters,
-            8,
-            'den_su',
-            'su_page'
+            categoryType: 'den_su',
+            pageName: 'su_page'
         );
         $relatedProducts = $historyService->recentProducts(6);
 

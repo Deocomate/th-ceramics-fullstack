@@ -13,6 +13,7 @@
 - Seven routes: `client.protection.report`, `client.protection.notice`, `client.protection.warning`, `client.media.video`, `admin.catalog.file`, `admin.catalog.pages.store`, `admin.catalog.pages.finalize`. No existing route changed.
 
 ### Changed
+- **Product lists** on Ngói âm dương, Ngói hài văn miếu, Gạch hoa thông gió, Gạch trang trí, Linh vật phong thủy and both Đèn gốm sứ lists show 12 products per page (three rows of the four-column desktop grid) instead of 8; the value lives in `CatalogQueryPort::PRODUCTS_PER_PAGE`.
 - **Admin navigation** is grouped into six modules shown as topbar tabs (Tổng quan, Bán hàng, Sản phẩm, Nội dung, Giao diện, Hệ thống); the sidebar lists only the current module and the breadcrumb follows the same tree (`config/admin_navigation.php`). FAQ moved under Nội dung, content backup and admin accounts under Hệ thống.
 - **Site settings page** (`/admin/cai-dat`, `admin.settings.*`) now holds the e-commerce switch and the two content protection switches, which left the home page form. Saving either page no longer touches the other's fields.
 - **Catalog reader** shows page images rendered in the admin browser; the original PDF is reachable only by admins and catalog uploads accept PDF only.

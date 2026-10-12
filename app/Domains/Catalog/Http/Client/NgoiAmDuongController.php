@@ -25,7 +25,7 @@ class NgoiAmDuongController extends Controller
     public function index(Request $request)
     {
         $config = $this->ngoiAmDuongService->getFirstRecord();
-        $products = $this->catalogQuery->paginate('ngoi_am_duong_ct', $request->only(['search', 'sort']), 8);
+        $products = $this->catalogQuery->paginate('ngoi_am_duong_ct', $request->only(['search', 'sort']));
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();
 
         return view('clients.catalog.products.ngoi-am-duong.index', compact(

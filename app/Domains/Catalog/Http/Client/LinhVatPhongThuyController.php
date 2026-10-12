@@ -20,7 +20,7 @@ class LinhVatPhongThuyController extends Controller
     public function index(Request $request)
     {
         $config = $this->linhVatPhongThuyService->getFirstRecord();
-        $products = $this->catalogQuery->paginate('linh_vat_phong_thuy_ct', $request->only(['search', 'sort']), 8);
+        $products = $this->catalogQuery->paginate('linh_vat_phong_thuy_ct', $request->only(['search', 'sort']));
 
         return view('clients.catalog.products.linh-vat-phong-thuy.index', compact(
             'config', 'products'

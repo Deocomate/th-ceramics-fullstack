@@ -94,7 +94,7 @@ test('client page renders separate dynamic grids for den gom and den su', functi
 });
 
 test('gom pagination does not change den su page', function () {
-    foreach (range(1, 9) as $index) {
+    foreach (range(1, 13) as $index) {
         createDenGomSuProduct(['name' => sprintf('Đèn Gốm %02d', $index), 'category_type' => 'den_gom'], [
             ['code' => sprintf('GOM-%02d', $index), 'price' => 300000 + $index],
         ]);
@@ -106,12 +106,12 @@ test('gom pagination does not change den su page', function () {
     $this->get(route('client.products.den-gom-su.index', ['gom_page' => 2]))
         ->assertOk()
         ->assertSee('Đèn Gốm 01')
-        ->assertSee('Đèn Sứ 09')
+        ->assertSee('Đèn Sứ 13')
         ->assertDontSee('Đèn Sứ 01');
 });
 
 test('su pagination does not change den gom page', function () {
-    foreach (range(1, 9) as $index) {
+    foreach (range(1, 13) as $index) {
         createDenGomSuProduct(['name' => sprintf('Đèn Gốm %02d', $index), 'category_type' => 'den_gom'], [
             ['code' => sprintf('GOM-%02d', $index), 'price' => 300000 + $index],
         ]);
@@ -123,7 +123,7 @@ test('su pagination does not change den gom page', function () {
     $this->get(route('client.products.den-gom-su.index', ['su_page' => 2]))
         ->assertOk()
         ->assertSee('Đèn Sứ 01')
-        ->assertSee('Đèn Gốm 09')
+        ->assertSee('Đèn Gốm 13')
         ->assertDontSee('Đèn Gốm 01');
 });
 

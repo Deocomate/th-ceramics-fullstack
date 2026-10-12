@@ -22,7 +22,7 @@ class GachHoaThongGioController extends Controller
     public function index(Request $request)
     {
         $config = $this->gachHoaThongGioService->getFirstRecord();
-        $products = $this->catalogQuery->paginate('gach_hoa_thong_gio_ct', $request->only(['search', 'sort']), 8);
+        $products = $this->catalogQuery->paginate('gach_hoa_thong_gio_ct', $request->only(['search', 'sort']));
 
         return view('clients.catalog.products.gach-hoa-thong-gio.index', compact(
             'config', 'products'

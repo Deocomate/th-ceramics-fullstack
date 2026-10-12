@@ -24,7 +24,7 @@ class GachTrangTriController extends Controller
     {
         $config = $this->gachTrangTriService->getFirstRecord();
         $projects = Project::query()->latest()->take(6)->get();
-        $products = $this->catalogQuery->paginate('gach_trang_tri_ct', $request->only(['search', 'sort']), 8);
+        $products = $this->catalogQuery->paginate('gach_trang_tri_ct', $request->only(['search', 'sort']));
 
         return view('clients.catalog.products.gach-trang-tri.index', compact(
             'config', 'products', 'projects'

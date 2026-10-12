@@ -26,7 +26,7 @@ class NgoiHaiVanMieuController extends Controller
     public function index(Request $request)
     {
         $config = $this->ngoiHaiVanMieuService->getFirstRecord();
-        $products = $this->catalogQuery->paginate('ngoi_hai_van_mieu_ct', $request->only(['search', 'sort']), 8);
+        $products = $this->catalogQuery->paginate('ngoi_hai_van_mieu_ct', $request->only(['search', 'sort']));
         $giaTriVuotTroi = $this->giaTriVuotTroiService->getAll();
 
         return view('clients.catalog.products.ngoi-hai-van-mieu.index', compact(
