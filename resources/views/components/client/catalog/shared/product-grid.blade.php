@@ -6,7 +6,7 @@
     $resolvedProductType = $productType ?: ClientProductType::fromDetailRoute($routeName);
 @endphp
 
-<section class="w-[85%] max-w-[1320px] mx-auto pb-[43px] md:pb-16 animate-fade-in-up">
+<section class="w-[85%] max-w-[1320px] mx-auto pb-[43px] md:pb-16 animate-fade-in-up" data-pagination-region="products">
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-[16px] gap-y-[30px] sm:gap-x-6 sm:gap-y-14"
         data-aos="fade-up" data-aos-delay="200">
         @forelse ($products as $product)

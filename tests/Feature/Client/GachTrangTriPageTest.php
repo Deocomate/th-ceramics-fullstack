@@ -67,6 +67,7 @@ test('gach trang tri product listing uses custom pagination and eight products p
     $this->get(route('client.products.gach-trang-tri.index', ['sort' => 'name_asc']))
         ->assertOk()
         ->assertSee('aria-label="Pagination"', false)
+        ->assertSee('data-pagination-region="products"', false)
         ->assertSee('sort=name_asc', false)
         ->assertSee('page=2', false)
         ->assertSee('Sản phẩm giới hạn 01')

@@ -11,7 +11,7 @@
       && method_exists($products, 'url');
 @endphp
 
-<section class="w-full md:pb-16 animate-fade-in-up" data-product-section>
+<section class="w-full md:pb-16 animate-fade-in-up" data-product-section data-pagination-region="products">
   @if($featuredProducts->isEmpty())
   <div class="py-12 text-center text-primary/70">
     Không tìm thấy sản phẩm phù hợp với bộ lọc.

@@ -10,7 +10,7 @@
   $sectionId = $sectionId ?? 'den-gom-su-products';
 @endphp
 
-<section class="w-[85%] max-w-[1320px] mx-auto pb-[43px] md:pb-16 animate-fade-in-up" data-product-section id="{{ $sectionId }}">
+<section class="w-[85%] max-w-[1320px] mx-auto pb-[43px] md:pb-16 animate-fade-in-up" data-product-section data-pagination-region="{{ $sectionId }}" id="{{ $sectionId }}">
   <div class="lg:hidden" data-product-carousel-shell>
     @if($items->isNotEmpty())
     <div

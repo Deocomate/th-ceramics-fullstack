@@ -24,6 +24,7 @@ test('project listing uses custom pagination and preserves category query string
     $this->get(route('client.projects.index', ['category' => 'gom-viet']))
         ->assertOk()
         ->assertSee('aria-label="Pagination"', false)
+        ->assertSee('data-pagination-region="projects"', false)
         ->assertSee('category=gom-viet', false)
         ->assertSee('page=2', false);
 });

@@ -116,6 +116,7 @@ test('news category pagination uses custom pagination and preserves query string
     $this->get(route('client.news.index', ['category' => $category->danh_muc_tin_tuc_id]))
         ->assertOk()
         ->assertSee('aria-label="Pagination"', false)
+        ->assertSee('data-pagination-region="news"', false)
         ->assertSee('category='.$category->danh_muc_tin_tuc_id, false)
         ->assertSee('page=2', false);
 });
@@ -154,6 +155,7 @@ test('news detail paginates related articles in the same category', function () 
         ->assertOk()
         ->assertSee('Bài viết liên quan')
         ->assertSee('aria-label="Pagination"', false)
+        ->assertSee('data-pagination-region="related-news"', false)
         ->assertSee('related_page=2', false);
 
     $this->get(route('client.news.detail', [

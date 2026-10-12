@@ -18,6 +18,7 @@
 - **Catalog reader** shows page images rendered in the admin browser; the original PDF is reachable only by admins and catalog uploads accept PDF only.
 - **Self-hosted product videos** play through expiring signed URLs under `/media/video/`.
 - **Client JS and CSS** moved from `public/assets` to `resources/js` and `resources/css` and are served as committed minified builds (`composer run build:assets`); the old source URLs answer 404.
+- **Client pagination** (product lists, projects, news category, related news) swaps the list in place instead of reloading the page: the next page is fetched when the visitor aims at a link, the URL and browser history are kept in step, and the links still navigate normally without JavaScript (`resources/js/pagination-navigation.js`, lists marked with `data-pagination-region`).
 - **Per-IP throttle** of 120 requests a minute on client pages (`CONTENT_PROTECTION_PAGE_RATE_LIMIT`).
 
 ### Fixed

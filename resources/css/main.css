@@ -419,3 +419,16 @@ html.has-weight-calculator-bar body {
 .product-guide-tabs-swiper .swiper-pagination-bullet-active {
   opacity: 1;
 }
+
+[data-pagination-region] {
+  transition: opacity 0.2s ease;
+}
+
+[data-pagination-region].is-pagination-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+[data-pagination-region]:focus {
+  outline: none;
+}

@@ -131,6 +131,7 @@ test('client linh vat phong thuy index paginates products and preserves filters'
         ->assertOk()
         ->assertSee('Paged linh vật 01')
         ->assertSee('aria-label="Pagination"', false)
+        ->assertSee('data-pagination-region="products"', false)
         ->assertSee('border-b-[3px] border-black', false)
         ->assertSee('search=Paged', false)
         ->assertSee('sort=name_asc', false)

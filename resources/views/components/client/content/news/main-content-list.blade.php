@@ -7,7 +7,7 @@
 <section class="py-16 md:py-24 bg-neutral-2">
   <div class="w-[85%] max-w-[1320px] mx-auto flex flex-col gap-[60px]">
     @if (($categoryId ?? 0) > 0)
-      <div class="news-category-section">
+      <div class="news-category-section" data-pagination-region="news">
         <h2 class="text-2xl md:text-4xl font-arima font-semibold text-secondary uppercase mb-8 md:mb-12 tracking-wide" data-aos="fade-right">
           {{ $currentCategory->ten_danh_muc ?? 'Tin tức' }}
         </h2>

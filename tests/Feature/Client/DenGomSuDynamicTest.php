@@ -89,7 +89,8 @@ test('client page renders separate dynamic grids for den gom and den su', functi
         ->assertSee('Sản phẩm Đèn Sứ')
         ->assertSee('GOM-001')
         ->assertSee('SU-001')
-        ->assertSee('aria-label="Pagination"', false);
+        ->assertSee('aria-label="Pagination"', false)
+        ->assertSee('data-pagination-region="den-su-products"', false);
 });
 
 test('gom pagination does not change den su page', function () {
