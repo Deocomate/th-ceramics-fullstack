@@ -53,7 +53,7 @@
                     <div>
                         <span class="text-sm font-semibold text-gray-800">Chặn thao tác sao chép ảnh và video</span>
                         <p class="text-xs text-gray-500 mt-1 leading-relaxed">
-                            Khi bật, khách xem website không dùng được chuột phải, kéo thả hay nhấn giữ để lưu ảnh và video.
+                            Khi bật, khách xem website không dùng được chuột phải trên toàn trang, cũng không kéo thả hay nhấn giữ được để lưu ảnh và video.
                         </p>
                     </div>
                 </label>
@@ -66,7 +66,7 @@
                     <div>
                         <span class="text-sm font-semibold text-gray-800">Phát hiện công cụ nhà phát triển</span>
                         <p class="text-xs text-gray-500 mt-1 leading-relaxed">
-                            Khi bật, website phát hiện khách mở công cụ nhà phát triển (DevTools) và chuyển sang trang thông báo.
+                            Khi bật, website phát hiện khách mở công cụ nhà phát triển (DevTools) và chuyển sang trang thông báo. Chuột phải cũng bị chặn trên toàn trang để khách không mở được Inspect.
                         </p>
                     </div>
                 </label>

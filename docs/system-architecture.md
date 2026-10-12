@@ -88,7 +88,7 @@ Canonical Catalog Core Tables (Unified)
 
 - Admin product requests pass through the role and content-write middleware, then a Catalog HTTP controller and Catalog application/infrastructure services. The public route contract remains stable.
 - Client product requests enter Catalog HTTP controllers and render category-specific Blade views. Commerce accesses catalog data through its declared port and adapter.
-- A client page renders the guard component only when a switch is on and the visitor is neither a crawler nor an admin. When the bundled `disable-devtool` detector fires, `content-protection.js` posts to `client.protection.report`; `DevtoolsViolationService` stores the record and counts detections per session and per IP address, and the response sends the browser to the notice page or, from the third detection in 24 hours, to the legal warning page.
+- A client page renders the guard component only when a switch is on and the visitor is neither a crawler nor an admin. Either switch also blocks the context menu on the whole page. When the bundled `disable-devtool` detector or the script's own console-timing check fires, `content-protection.js` posts to `client.protection.report`; `DevtoolsViolationService` stores the record and counts detections per session and per IP address, and the response sends the browser to the notice page or, from the third detection in 24 hours, to the legal warning page.
 - Archive import runs from `ContentArchiveJob`. It acquires an owner-token lock before importing and releases only its own lock in `finally`. Manual lock commands cannot replace or release the job lock. Legacy catalog rows pass through Archive's `CatalogArchivePort`; its infrastructure adapter owns Catalog persistence and public-ID allocation.
 
 ## Architecture Decision Records (ADR)
@@ -138,6 +138,7 @@ Canonical Catalog Core Tables (Unified)
 - **Rejected options**: visible watermarks (declined by the client), DRM and a login wall (out of proportion for a public catalogue and harmful to SEO), CDN-level blocking (no CDN in front of the host), blocking direct image navigation by `Sec-Fetch-Dest` (the image is already in the browser cache and the rule needs a `Vary` header the host cannot set).
 - **Known limits**:
   - Nothing here stops a screenshot, a screen recording, or a person who sends browser-like headers from a command-line tool. The aim is to raise the cost of copying, lower the value of a copy and keep evidence.
+  - On current Chrome and Edge the only signal left is timing: `console.table` is far slower than `console.log` while developer tools are open. The script checks that every second and reports after three consecutive slow ticks, so detection takes about three seconds.
   - DevTools detection depends on browser behaviour and can stop working or misfire after a browser update; the detector list is configuration and the switch can be turned off at once.
   - Violation counts per IP address can escalate visitors who share one carrier address; `content_protection.devtools.count_by_ip` turns that off.
   - Signed video URLs expire (240 minutes by default), so a page left open longer must be reloaded before its video plays.

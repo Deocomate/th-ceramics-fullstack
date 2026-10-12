@@ -13,8 +13,11 @@ const DEVTOOLS_CONFIG = {
     interval: 1000,
 };
 
-function loadProtection(config, { fetchImpl } = {}) {
+// `timing` gives the page a console whose calls advance a fake clock by the given milliseconds.
+function loadProtection(config, { fetchImpl, timing, withoutLibrary = false } = {}) {
     const listeners = {};
+    const ticks = [];
+    let now = 0;
     const fetchCalls = [];
     const replaced = [];
     let devtoolOptions = null;
@@ -27,7 +30,12 @@ function loadProtection(config, { fetchImpl } = {}) {
     };
     const window = {
         __contentProtection: config,
-        DisableDevtool: (options) => { devtoolOptions = options; },
+        DisableDevtool: withoutLibrary ? undefined : (options) => { devtoolOptions = options; },
+        ...(timing ? {
+            console: { table: () => { now += timing.table; }, log: () => { now += timing.log; } },
+            performance: { now: () => now },
+            setInterval: (callback) => { ticks.push(callback); },
+        } : {}),
         location: { pathname: '/san-pham/ngoi-am-duong', replace: (url) => replaced.push(url) },
         fetch: (url, options) => {
             fetchCalls.push({ url, options });
@@ -46,7 +54,9 @@ function loadProtection(config, { fetchImpl } = {}) {
         return prevented;
     };
 
-    return { listeners, fetchCalls, replaced, document, dispatch, devtoolOptions: () => devtoolOptions };
+    const tick = (times = 1) => { for (let i = 0; i < times; i++) ticks.forEach((callback) => callback()); };
+
+    return { listeners, fetchCalls, replaced, document, dispatch, tick, devtoolOptions: () => devtoolOptions };
 }
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 5));
@@ -105,7 +115,7 @@ test('copy, select all, find, print, reload and plain typing stay available', ()
     }
 });
 
-test('context menu and drag are blocked on media but not on text', () => {
+test('the context menu is blocked everywhere and drag only on media', () => {
     const { dispatch, listeners } = loadProtection({ deterrence: true, devtools: null });
 
     for (const tagName of ['IMG', 'VIDEO', 'CANVAS', 'PICTURE']) {
@@ -113,19 +123,68 @@ test('context menu and drag are blocked on media but not on text', () => {
         assert.equal(dispatch('dragstart', { target: { tagName } }), true, `dragstart on ${tagName}`);
     }
     for (const tagName of ['P', 'A', 'SPAN', 'INPUT']) {
-        assert.equal(dispatch('contextmenu', { target: { tagName } }), false, `contextmenu on ${tagName}`);
+        assert.equal(dispatch('contextmenu', { target: { tagName } }), true, `contextmenu on ${tagName}`);
         assert.equal(dispatch('dragstart', { target: { tagName } }), false, `dragstart on ${tagName}`);
     }
-    assert.equal(dispatch('contextmenu', { target: null }), false);
+    assert.equal(dispatch('contextmenu', { target: null }), true);
 
     assert.deepEqual(Object.keys(listeners).sort(), ['contextmenu', 'dragstart', 'keydown']);
 });
 
-test('deterrence listeners are not attached while that layer is off', () => {
-    const { listeners, devtoolOptions } = loadProtection({ deterrence: false, devtools: DEVTOOLS_CONFIG });
+test('the devtools guard alone blocks the context menu but adds no other deterrence', () => {
+    const { dispatch, listeners, devtoolOptions } = loadProtection({ deterrence: false, devtools: DEVTOOLS_CONFIG });
 
-    assert.deepEqual(Object.keys(listeners), []);
+    assert.deepEqual(Object.keys(listeners), ['contextmenu']);
+    assert.equal(dispatch('contextmenu', { target: { tagName: 'P' } }), true);
     assert.ok(devtoolOptions(), 'detector should still start');
+});
+
+test('a console.table that stays far slower than console.log is reported as open devtools', async () => {
+    const { tick, fetchCalls, replaced } = loadProtection(
+        { deterrence: false, devtools: DEVTOOLS_CONFIG },
+        { timing: { table: 40, log: 0.3 } },
+    );
+
+    tick(2);
+    assert.equal(fetchCalls.length, 0, 'two slow ticks are not enough');
+    tick(3);
+    await settle();
+
+    assert.equal(fetchCalls.length, 1);
+    assert.deepEqual(JSON.parse(fetchCalls[0].options.body), { detector: 6, path: '/san-pham/ngoi-am-duong' });
+    assert.deepEqual(replaced, ['/canh-bao-ban-quyen']);
+});
+
+test('console timing without open devtools is never reported', () => {
+    const fast = loadProtection({ deterrence: false, devtools: DEVTOOLS_CONFIG }, { timing: { table: 0.2, log: 0.1 } });
+    // A slow device or a busy page slows both calls alike.
+    const busy = loadProtection({ deterrence: false, devtools: DEVTOOLS_CONFIG }, { timing: { table: 30, log: 20 } });
+
+    fast.tick(20);
+    busy.tick(20);
+
+    assert.equal(fast.fetchCalls.length, 0);
+    assert.equal(busy.fetchCalls.length, 0);
+});
+
+test('console timing still detects when the detector library failed to load', async () => {
+    const { tick, fetchCalls } = loadProtection(
+        { deterrence: false, devtools: DEVTOOLS_CONFIG },
+        { timing: { table: 40, log: 0.3 }, withoutLibrary: true },
+    );
+
+    tick(3);
+    await settle();
+
+    assert.equal(fetchCalls.length, 1);
+});
+
+test('console timing does not start without devtools configuration', () => {
+    const { tick, fetchCalls } = loadProtection({ deterrence: true, devtools: null }, { timing: { table: 40, log: 0.3 } });
+
+    tick(5);
+
+    assert.equal(fetchCalls.length, 0);
 });
 
 test('detector starts with the configured detectors and leaves menu and console alone', () => {

@@ -36,8 +36,15 @@
         return primary && !event.shiftKey && !event.altKey && (letter === 'u' || letter === 's');
     }
 
+    // The context menu is closed everywhere, not just on media: its Inspect entry opens
+    // the developer tools on any element.
+    if (config.deterrence || config.devtools) {
+        document.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+        }, true);
+    }
+
     if (config.deterrence) {
-        document.addEventListener('contextmenu', blockOnMedia, true);
         document.addEventListener('dragstart', blockOnMedia, true);
         document.addEventListener('keydown', function (event) {
             if (isBlockedShortcut(event)) event.preventDefault();
@@ -45,7 +52,7 @@
     }
 
     var devtools = config.devtools;
-    if (!devtools || typeof window.DisableDevtool !== 'function') return;
+    if (!devtools) return;
 
     // The detector calls back on every interval while the tools stay open.
     var reported = false;
@@ -88,6 +95,49 @@
             window.location.replace(devtools.noticeUrl);
         });
     }
+
+    // Detector type the server knows as "performance".
+    var CONSOLE_TIMING_DETECTOR = 6;
+    var SLOW_TABLE_MS = 5;
+    var SLOW_TABLE_RATIO = 10;
+    var SLOW_TABLE_STREAK = 3;
+
+    // Open developer tools make console.table serialise every row while console.log stays
+    // cheap. Each tick compares the two calls of that same tick: the library's own timing
+    // detector compares against the slowest console.log of the whole page life, so a single
+    // slow call before the tools open blinds it until the next page load.
+    function watchConsoleTiming() {
+        var console = window.console;
+        var performance = window.performance;
+        if (!console || typeof console.table !== 'function' || !performance || typeof window.setInterval !== 'function') return;
+
+        var row = {};
+        for (var column = 0; column < 500; column++) row[column] = String(column);
+        var rows = [];
+        for (var index = 0; index < 50; index++) rows.push(row);
+
+        function elapsed(method) {
+            var startedAt = performance.now();
+            console[method](rows);
+
+            return performance.now() - startedAt;
+        }
+
+        var streak = 0;
+        window.setInterval(function () {
+            if (reported || document.hidden) return;
+
+            var table = elapsed('table');
+            var log = elapsed('log');
+            streak = table > SLOW_TABLE_MS && table > SLOW_TABLE_RATIO * log ? streak + 1 : 0;
+
+            if (streak >= SLOW_TABLE_STREAK) reportDetection(CONSOLE_TIMING_DETECTOR);
+        }, devtools.interval || 1000);
+    }
+
+    watchConsoleTiming();
+
+    if (typeof window.DisableDevtool !== 'function') return;
 
     window.DisableDevtool({
         disableMenu: false,

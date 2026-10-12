@@ -72,9 +72,9 @@
             }
         },
         "content-protection.min.js": {
-            "sha256": "8d62587a885fdbc6f81b06f4ccd16cb77458185df6d9b6a3ebf6e3816435ba3b",
+            "sha256": "152bbcbc112c8c2fc9fa54cc5c33f3a14d4f9db8449854c722765e54908726db",
             "sources": {
-                "resources/js/content-protection.js": "92e84c574d20ce1e672ce0750cd03888b29a31b5c782ed3bd83213b752b64d83"
+                "resources/js/content-protection.js": "0652803575e607dc5db5bb6acdba5294b3a0008b1f8ea76c055e01e94d3ce8b3"
             }
         },
         "main.min.css": {
