@@ -51,7 +51,7 @@ test('admin can toggle both content protection flags independently', function ()
     expect(protectionSettingsForNewRequest()->deterrenceEnabled())->toBeFalse();
 
     $this->actingAs($admin)
-        ->put(route('admin.trang_chu.update'), [
+        ->put(route('admin.settings.update'), [
             'is_content_protection_enabled' => '1',
             'is_devtools_guard_enabled' => '1',
         ])
@@ -64,7 +64,7 @@ test('admin can toggle both content protection flags independently', function ()
         ->and($settings->devtoolsGuardEnabled())->toBeTrue();
 
     $this->actingAs($admin)
-        ->put(route('admin.trang_chu.update'), [
+        ->put(route('admin.settings.update'), [
             'is_content_protection_enabled' => '1',
             'is_devtools_guard_enabled' => '0',
         ])
@@ -77,9 +77,9 @@ test('admin can toggle both content protection flags independently', function ()
         ->and($settings->devtoolsGuardEnabled())->toBeFalse();
 });
 
-test('admin home page form shows both content protection switches', function () {
+test('admin site settings form shows both content protection switches', function () {
     $this->actingAs(User::factory()->create())
-        ->get(route('admin.trang_chu.edit'))
+        ->get(route('admin.settings.edit'))
         ->assertOk()
         ->assertSee('Bảo vệ nội dung')
         ->assertSee('name="is_content_protection_enabled"', false)

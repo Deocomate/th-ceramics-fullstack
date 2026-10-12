@@ -65,26 +65,12 @@
     <div class="flex h-full min-h-screen">
 
         {{-- Sidebar --}}
-        <x-admin.layouts.sidebar />
+        <x-admin.layouts.sidebar :nav="$adminNav" />
 
         {{-- Main content --}}
-        <div class="flex-1 flex flex-col min-h-screen" style="margin-left:16rem;">
+        <div class="flex-1 flex flex-col min-w-0 min-h-screen" style="margin-left:16rem;">
 
-            {{-- Top Header --}}
-            <header
-                class="sticky top-0 z-30 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-                <div>
-                    <h1 class="text-base font-semibold text-gray-800">{{ $title ?? 'Dashboard' }}</h1>
-                    @isset($breadcrumb)
-                        <p class="text-xs text-gray-400 mt-0.5">{{ $breadcrumb }}</p>
-                    @endisset
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-gray-400">
-                        {{ now()->format('d/m/Y') }}
-                    </span>
-                </div>
-            </header>
+            <x-admin.layouts.topbar :nav="$adminNav" :title="$title ?? 'Dashboard'" :breadcrumb="$breadcrumb ?? null" />
 
             {{-- Flash messages --}}
             @if (session('success'))

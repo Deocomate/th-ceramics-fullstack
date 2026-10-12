@@ -54,9 +54,6 @@ class HomePageConfigController extends Controller
             'delete_showroom_images.*' => ['integer'],
 
             'showroom_noidung' => ['nullable', 'string'],
-            'is_ecommerce_enabled' => ['nullable', 'boolean'],
-            'is_content_protection_enabled' => ['nullable', 'boolean'],
-            'is_devtools_guard_enabled' => ['nullable', 'boolean'],
         ]);
 
         $this->service->update($data);

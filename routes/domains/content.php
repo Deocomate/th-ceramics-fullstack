@@ -13,11 +13,16 @@ use App\Domains\Content\Http\Admin\NewsCategoryController;
 use App\Domains\Content\Http\Admin\ProjectCategoryController;
 use App\Domains\Content\Http\Admin\ProjectController;
 use App\Domains\Content\Http\Admin\ProjectPageConfigController;
+use App\Domains\Content\Http\Admin\SiteSettingsController;
 use Illuminate\Support\Facades\Route;
 
 // ── Trang Chủ Configuration ─────────────────────────────────────────────
 Route::get('trang-chu', [HomePageConfigController::class, 'edit'])->name('trang_chu.edit');
 Route::put('trang-chu', [HomePageConfigController::class, 'update'])->name('trang_chu.update');
+
+// ── Cài đặt website: chế độ bán hàng, bảo vệ nội dung ───────────────────
+Route::get('cai-dat', [SiteSettingsController::class, 'edit'])->name('settings.edit');
+Route::put('cai-dat', [SiteSettingsController::class, 'update'])->name('settings.update');
 
 // ── Page Configuration: single-page config panels ──────────────────────
 Route::prefix('pages')->name('pages.')->group(function () {

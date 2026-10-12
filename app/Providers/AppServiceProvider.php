@@ -38,6 +38,7 @@ use App\Domains\Media\Console\OptimizeMediaCommand;
 use App\Domains\Media\Console\PrivatizeMediaCommand;
 use App\Domains\Protection\Http\Support\ProtectionExemption;
 use App\Domains\Protection\Infrastructure\ProtectionSettings;
+use App\Support\AdminNavigation;
 use App\View\Components\Client\Shared\OutstandingValue;
 use App\View\Components\Client\Shared\ProductCard;
 use App\View\Components\Client\Shared\ProductDetailContainer;
@@ -119,11 +120,13 @@ class AppServiceProvider extends ServiceProvider
             $view->with('cartCount', app(CartService::class)->getCount());
         });
 
-        View::composer('components.admin.layouts.sidebar', function ($view): void {
-            $view->with(
-                'pendingConsult',
-                ConsultationRequest::where('status', 'pending')->count()
-            );
+        View::composer('components.admin.layouts.app', function ($view): void {
+            $view->with('adminNav', AdminNavigation::resolve(
+                request(),
+                (bool) auth()->user()?->isSuperAdmin(),
+                badges: ['consultation-requests' => ConsultationRequest::where('status', 'pending')->count()],
+                hints: ['orders' => app(EcommerceStatusPort::class)->enabled() ? null : 'đã tắt'],
+            ));
         });
 
         // Crawlers render JavaScript, so exempt visitors get no protection script at all.

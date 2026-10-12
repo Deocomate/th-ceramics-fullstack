@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 class HomePageConfigService
 {
+    private const SITE_FLAGS = ['is_ecommerce_enabled', 'is_content_protection_enabled', 'is_devtools_guard_enabled'];
+
     public function getFirstRecord(): HomePageConfig
     {
         $record = HomePageConfig::query()->first();
@@ -33,6 +35,20 @@ class HomePageConfigService
         return $record;
     }
 
+    /**
+     * Site-wide switches share the home page record but are saved on their own,
+     * so the home page content is left as it is.
+     *
+     * @param  array<string, mixed>  $flags
+     */
+    public function updateSiteSettings(array $flags): HomePageConfig
+    {
+        $model = $this->getFirstRecord();
+        $model->update(array_map('boolval', array_intersect_key($flags, array_flip(self::SITE_FLAGS))));
+
+        return $model->fresh();
+    }
+
     /** @param array<string, mixed> $data */
     public function update(array $data): HomePageConfig
     {
@@ -51,7 +67,7 @@ class HomePageConfigService
             if (array_key_exists('showroom_noidung', $data)) {
                 $fillable['showroom_noidung'] = $data['showroom_noidung'];
             }
-            foreach (['is_ecommerce_enabled', 'is_content_protection_enabled', 'is_devtools_guard_enabled'] as $flag) {
+            foreach (self::SITE_FLAGS as $flag) {
                 if (array_key_exists($flag, $data)) {
                     $fillable[$flag] = (bool) $data[$flag];
                 }
