@@ -123,7 +123,7 @@ php artisan view:cache
 # The initial migrations already create jobs and failed_jobs.
 ```
 
-Frontend assets are served from `public/assets/` and CDN endpoints; deployment has no npm build step. For an existing database, back it up before running migrations or seeders.
+Frontend assets are served from `public/assets/` and CDN endpoints. Hand-written JS and CSS are kept in `resources/js` and `resources/css` and reach the server only as the committed minified builds, so deployment itself runs no build step and needs no Node.js. Run `composer run build:assets` on a dev machine before committing a JS or CSS change; `BuiltAssetsFreshnessTest` fails when the committed builds are stale. After a deploy, confirm that `/assets/js/app.js` answers 404. For an existing database, back it up before running migrations or seeders.
 
 ## Web Server Configuration
 

@@ -41,7 +41,7 @@ components/client/layouts/main.blade.php
 │   ├── Tailwind CDN (cdn.tailwindcss.com)
 │   ├── Swiper.js CSS (cdn.jsdelivr.net)
 │   ├── AOS CSS (unpkg.com)
-│   └── Custom CSS (assets/css/main.css)
+│   └── Custom CSS (minified build of resources/css/main.css)
 ├── <body class="min-h-screen flex flex-col font-archivo text-primary">
 │   ├── <x-header />           # Navigation + branding
 │   ├── <main>                 # Page content ($slot)
@@ -172,12 +172,12 @@ clients/catalog/products/{category}/
 | GLightbox | Latest | Image lightbox gallery (project detail pages) |
 | Tailwind CSS | Latest (CDN) | Utility CSS framework |
 
-All loaded via CDN. No bundler or build step for production assets (main client layout uses Tailwind CDN; Vite used for auth layout only).
+All loaded via CDN. Hand-written JS and CSS are minified with esbuild on a dev machine (`composer run build:assets`) and committed; the server runs no build step.
 
 ### Styling Approach
 
 1. **Tailwind utility classes** in Blade templates for 95% of styling
-2. **Custom CSS** in `public/assets/css/main.css` for complex animations and overrides
+2. **Custom CSS** in `resources/css/main.css` for complex animations and overrides
 3. **Inline Tailwind config** in layout files for theme customization (no tailwind.config.js file)
 4. **No CSS preprocessors** (SASS/LESS) — Tailwind CDN provides all needed utilities
 

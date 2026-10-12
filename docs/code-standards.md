@@ -327,7 +327,7 @@ Views are organized by domain context under `resources/views/`:
 ### 7.2 JavaScript & Assets
 
 - **Asset Path Resolution**: All asset URLs must be resolved through `\App\Support\AssetPath::url($path, $fallback)` to ensure consistent fallback handling.
-- **Modular JavaScript**: UI behaviors are separated into dedicated scripts under `public/assets/js/`:
+- **Modular JavaScript**: UI behaviors are separated into dedicated source scripts under `resources/js/`. Views never reference a source file; they load the minified build through `AppSupportAssetPath::built('<name>.min.js')`:
   - `admin-form-ui.js`: Admin image optimization, gallery uploads, auto-resize textareas, dynamic repeaters.
   - `cart-ui.js`, `consultation-modal.js`: Commerce modals and mini-cart handlers.
   - `product-calculators.js`, `product-detail.js`, `weight-calculator-sticky-bar.js`: Product estimation tools and tab controls.
@@ -351,8 +351,8 @@ Key classes: `resize-none overflow-hidden min-h-[120px]` — prevents manual res
 ### 7.3 CSS & Build Architecture
 
 - Tailwind CSS via CDN (`cdn.tailwindcss.com`) with custom layout configuration scripts.
-- Additional styling in `public/assets/css/main.css`.
-- **No NPM Build Step**: The repository does not include `package.json` or run `npm run build`. All frontend assets are served statically from `public/assets/` and CDN endpoints.
+- Additional styling in `resources/css/main.css`.
+- **Committed minified builds**: `composer run build:assets` (see `scripts/build-client-assets.mjs`) minifies `resources/js` and `resources/css` with a pinned esbuild and records source and output hashes in a manifest next to the builds. Run it after every JS or CSS change and commit the result; `BuiltAssetsFreshnessTest` fails on a stale build. There is no `package.json`, and the server runs no build.
 
 ## 8. Testing Standards
 

@@ -64,7 +64,7 @@ php artisan queue:listen --tries=1
 php artisan test
 ```
 
-`composer run dev` starts the web server and queue listener together using `npx concurrently`; this optional runner requires Node.js/npm and may download `concurrently`. The separate PHP commands above do not require Node.js. Frontend assets have no npm build step.
+`composer run dev` starts the web server and queue listener together using `npx concurrently`; this optional runner requires Node.js/npm and may download `concurrently`. The separate PHP commands above do not require Node.js. Hand-written JS and CSS live in `resources/js` and `resources/css`; after editing them run `composer run build:assets` (Node.js with `npx`, downloads a pinned esbuild) and commit the regenerated minified files together with the source. The server needs no Node.js.
 
 ## Default Admin Access
 
