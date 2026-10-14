@@ -310,6 +310,9 @@ const initProductGallery = (container) => {
     const options = {
         slidesPerView: 1,
         spaceBetween: 0,
+        // Vuốt/kéo/bấm next ở ảnh cuối quay về ảnh đầu (và ngược lại). Dùng rewind thay vì loop
+        // để activeIndex, thumbs, lightbox và video vẫn khớp với thứ tự slide thật.
+        rewind: true,
         observer: true,
         observeParents: true,
         on: {

@@ -50,7 +50,7 @@
             }
         },
         "app.min.js": {
-            "sha256": "c1ec23995443c52797a909fbf31523701662c9d160e3a98d10182804421eeb25",
+            "sha256": "808cdde3032fe7ad72b763e9a25a0c955433a5a257f10c7b389cff26c4c53cd5",
             "sources": {
                 "resources/js/app.js": "c0bc1c7b10e5562d51ee9470b361fd47e9cf5962b54912c2f2dddaa983244d40",
                 "resources/js/cart-ui.js": "da14e1212cbd41064ec6ac97039677f56d783395d99bee9e818cccf255b48bc0",
@@ -58,7 +58,7 @@
                 "resources/js/lightbox.js": "a1ef4a3eaf76a5ec67ed5eeba1423f9ff6bbc5d6fc994c170a452cddba6b9d04",
                 "resources/js/pagination-navigation.js": "16b1069b6d5e33f3977d742d0616017b77192395f3e39b1f7a40c10b8d7d3ff1",
                 "resources/js/product-calculators.js": "046a85c5e00528171813a9ea9c413c41a91f737a5dde343a8f44b9d0a0492f1c",
-                "resources/js/product-detail.js": "8db276223f725f267ba4c57ffe2ee0dd8cedb97b25631fc38d36861933b1002b",
+                "resources/js/product-detail.js": "4e51604c6236ba8fd58cd213a0800281523bd194ea087ab1615e3e6d49ba9c87",
                 "resources/js/product-guide-tabs.js": "bd71832ef92186ce74c91942a42f75ad88b53570ee02b8c572ed813453b6ccb5",
                 "resources/js/product-values.js": "cd93eaccebd9eb68cdec02cf3387eccaec06c4fdb309cd84906e1a06cdf9cd50",
                 "resources/js/weight-calculator-sticky-bar.js": "6479d4a79df274ed785fbba4bb23a18f58cc70b92d70c474966c22cc89119284",
