@@ -81,7 +81,7 @@
         "main.min.css": {
             "sha256": "46e7f3728b9892cc0ca132ca0579b44f1378f5df24e11492168c268ed9b70a9d",
             "sources": {
-                "resources/css/main.css": "0dba6d21d8934fac6dacadc6dce7ed9a9996f5b7c0625aaf4f01f8b76533d714"
+                "resources/css/main.css": "59baa1cc96dc857d26a83ac16b39252bfa7a3123d51dc10c1fb4922fbaf17518"
             }
         }
     }

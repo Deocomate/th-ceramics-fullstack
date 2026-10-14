@@ -396,8 +396,9 @@ html:has([data-weight-calculator-bar]:not([hidden])) [data-quick-actions] {
 
 /*
   Reserve room under the last content so the bar never covers it. The space
-  goes inside the footer, not on body, so it keeps the footer's dark
-  background instead of showing a white strip below it.
+  goes inside the footer block that carries the darkening overlay, not on
+  body or <footer>, so it matches the copyright row instead of showing a
+  white or lighter strip below it.
 */
 html.has-weight-calculator-bar {
   scroll-padding-bottom: 9.5rem;
