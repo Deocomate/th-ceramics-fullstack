@@ -152,8 +152,7 @@
                 <div class="flex flex-col-reverse lg:flex-row justify-between items-center gap-3 lg:gap-6">
                     <p class="text-[#909090] text-sm leading-[26px] text-center lg:text-left font-normal"
                         style="font-family: Inter, Archivo, sans-serif;">
-                        Copyright &copy; {{ date('Y') }} Thanh Hải Ceramics. Nghiêm cấm sao chép hình ảnh, video
-                        và nội dung khi chưa được đồng ý bằng văn bản.
+                        Copyright &copy; {{ date('Y') }} Thanh Hải Ceramics.
                     </p>
                     <div class="text-[#909090] text-sm leading-[26px] flex items-center justify-center flex-wrap sm:flex-nowrap sm:whitespace-nowrap lg:shrink-0 gap-y-1 font-normal text-center lg:text-right"
                         style="font-family: Inter, Archivo, sans-serif;">
