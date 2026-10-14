@@ -152,7 +152,7 @@
                                     alt="{{ $section['label'] }}"
                                     class="w-full aspect-[1.1/1] h-auto object-cover rounded-sm shadow-md" />
                                 <img src="{{ asset($section['ellipse']) }}" alt=""
-                                    class="hidden md:block absolute top-1/2 -translate-y-1/2 {{ $section['reverse'] ? '-left-12 md:-left-20' : '-right-12 md:-right-20' }} max-w-[220px] aspect-square object-contain drop-shadow-2xl z-10"
+                                    class="hidden md:block absolute top-1/2 -translate-y-1/2 {{ $section['reverse'] ? '-left-12 lg:-left-20' : '-right-12 lg:-right-20' }} max-w-[220px] aspect-square object-contain drop-shadow-2xl z-10"
                                     onerror="this.style.display = 'none'" />
                             </div>
                             <div class="grid grid-cols-3 gap-[10px] md:gap-7">

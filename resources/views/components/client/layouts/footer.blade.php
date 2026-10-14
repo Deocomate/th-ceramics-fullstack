@@ -11,7 +11,7 @@
     $zaloLink = data_get($globalContact, 'zalo_link', 'https://zalo.me/0966558808');
 @endphp
 
-<footer class="bg-[#262723] text-white font-archivo">
+<footer class="bg-[#262723] text-white font-archivo" data-site-footer>
     <!-- Main Footer -->
     <div class="relative bg-[#262723] overflow-hidden">
         <div class="hidden md:block absolute inset-0"

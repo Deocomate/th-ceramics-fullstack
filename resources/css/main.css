@@ -369,40 +369,61 @@
 }
 
 /*
-  Keep Zalo / back-to-top above the weight bar. :has() works before JS
-  and drops the FABs back when the bar is dismissed ([hidden]).
+  The bar is 3.5rem tall. Below md it spans most of the width, so the FABs
+  stack above it with the same 0.75rem gap they use between themselves and
+  share its 5% right inset. From md the bar is narrow enough to share a row
+  with the FABs, so the back-to-top button is centred on the bar's vertical
+  midline instead. :has() works before JS and drops the FABs back when the
+  bar is dismissed.
 */
 html:has([data-weight-calculator-bar]:not([hidden])) [data-quick-actions] {
-  bottom: 9.5rem;
+  right: 5%;
+  bottom: 9.25rem;
 }
 
 @media (min-width: 640px) {
   html:has([data-weight-calculator-bar]:not([hidden])) [data-quick-actions] {
-    bottom: 10.5rem;
+    bottom: 10.25rem;
   }
 }
 
 @media (min-width: 768px) {
   html:has([data-weight-calculator-bar]:not([hidden])) [data-quick-actions] {
-    bottom: 6.5rem;
+    right: 2rem;
+    bottom: 2.25rem;
   }
 }
 
+/*
+  Reserve room under the last content so the bar never covers it. The space
+  goes inside the footer, not on body, so it keeps the footer's dark
+  background instead of showing a white strip below it.
+*/
 html.has-weight-calculator-bar {
-  scroll-padding-bottom: 9rem;
+  scroll-padding-bottom: 9.5rem;
 }
 
-html.has-weight-calculator-bar body {
-  padding-bottom: 8rem;
+html.has-weight-calculator-bar [data-site-footer] {
+  padding-bottom: 9.5rem;
+}
+
+@media (min-width: 640px) {
+  html.has-weight-calculator-bar {
+    scroll-padding-bottom: 10.5rem;
+  }
+
+  html.has-weight-calculator-bar [data-site-footer] {
+    padding-bottom: 10.5rem;
+  }
 }
 
 @media (min-width: 768px) {
   html.has-weight-calculator-bar {
-    scroll-padding-bottom: 7rem;
+    scroll-padding-bottom: 6.5rem;
   }
 
-  html.has-weight-calculator-bar body {
-    padding-bottom: 6rem;
+  html.has-weight-calculator-bar [data-site-footer] {
+    padding-bottom: 6.5rem;
   }
 }
 

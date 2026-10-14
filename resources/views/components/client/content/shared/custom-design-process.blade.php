@@ -130,7 +130,7 @@
     <div class="w-full mb-[10px] md:mb-10">
         <div class="flex flex-col w-full">
             <h2
-                class="text-nowrap text-secondary font-italianno font-normal text-[25px] sm:text-[28px] leading-[45px] md:text-[60px] md:leading-none text-left drop-shadow-sm">
+                class="text-nowrap md:text-wrap xl:text-nowrap text-secondary font-italianno font-normal text-[25px] sm:text-[28px] leading-[45px] md:text-[60px] md:leading-none text-left drop-shadow-sm">
                 Cùng chúng tôi hiện thực hóa mẫu gạch trong mơ...
             </h2>
             <h2

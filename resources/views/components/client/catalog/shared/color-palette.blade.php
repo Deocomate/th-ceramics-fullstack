@@ -10,7 +10,7 @@
     {{ $title }}
   </h2>
 
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-6 md:gap-x-28 md:gap-y-14">
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-6 md:gap-x-10 md:gap-y-14 xl:gap-x-16 2xl:gap-x-28">
     @foreach ($colorItems as $color)
       @php
         $name = data_get($color, 'name', '');
@@ -23,7 +23,7 @@
             <img src="{{ \App\Support\AssetPath::url($image) }}" alt="{{ $name }}" class="w-full h-full object-cover" />
           @endif
         </div>
-        <span class="w-full text-center px-1 text-[20px] md:text-3xl lg:text-[40px] text-primary leading-[28px] md:leading-normal md:whitespace-nowrap" style="font-family: 'Italianno', cursive">
+        <span class="w-full text-center px-1 text-[20px] md:text-3xl lg:text-[40px] text-primary leading-[28px] md:leading-normal xl:whitespace-nowrap" style="font-family: 'Italianno', cursive">
           {{ $name }}
         </span>
       </div>

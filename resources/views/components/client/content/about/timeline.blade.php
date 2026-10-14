@@ -22,7 +22,7 @@
     HÀNH TRÌNH CỦA CHÚNG TÔI
   </h3>
   <div
-    class="relative z-10 mt-4 md:mt-[60px] md:mb-[60px] flex flex-col md:flex-row gap-8 md:gap-[148px]"
+    class="relative z-10 mt-4 md:mt-[60px] md:mb-[60px] flex flex-col md:flex-row gap-8 md:gap-12 lg:gap-20 xl:gap-[148px]"
   >
     <div
       class="w-full md:flex-1 min-w-0 flex flex-row md:flex-col overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none gap-6 md:gap-0 space-y-0 md:space-y-[50vh] py-4 md:py-[20vh] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] items-stretch"
@@ -58,7 +58,7 @@
       @endforeach
     </div>
     <div
-      class="hidden md:flex w-full md:w-[565px] md:shrink-0 sticky top-[94px] h-[calc(100vh-94px)] items-start justify-end"
+      class="hidden md:flex w-full md:w-[45%] xl:w-[565px] md:shrink-0 sticky top-[94px] h-[calc(100vh-94px)] items-start justify-end"
     >
       <div
         class="w-full h-full relative overflow-hidden shadow-2xl rounded-sm bg-gray-100"

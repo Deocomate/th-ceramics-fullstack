@@ -56,7 +56,7 @@
                     @endif
                 </div>
                 <p
-                    class="mt-0 sm:mt-[11px] flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-left text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
+                    class="mt-0 sm:mt-[11px] flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:max-w-[286px] flex-col justify-center text-left text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
                     {{ $mainItem['title'] ?? $applicationSlots['main'] }}
                 </p>
             </div>
@@ -78,7 +78,7 @@
                                     @endif
                                 </div>
                                 <p
-                                    class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
+                                    class="mt-0 sm:mt-[11px] mx-auto flex h-[44px] sm:h-[50px] md:h-[55px] w-full md:max-w-[286px] flex-col justify-center text-center text-[14px] leading-[20px] sm:text-base md:text-lg lg:text-xl font-archivo font-semibold uppercase text-primary">
                                     {{ $item['title'] ?? $applicationSlots[$slot] }}
                                 </p>
                             </div>

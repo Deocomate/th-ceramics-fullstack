@@ -9,7 +9,7 @@
     data-target="#cach-tinh-khoi-luong"
 >
     <div
-        class="pointer-events-auto flex w-full items-center gap-3 rounded-full border border-primary/15 bg-white px-3 py-2 shadow-[0_12px_32px_rgba(15,23,42,0.16)]">
+        class="pointer-events-auto flex h-14 w-full items-center gap-3 rounded-full border border-primary/15 bg-white px-2 shadow-[0_12px_32px_rgba(15,23,42,0.16)]">
         <a href="#cach-tinh-khoi-luong"
             class="flex min-w-0 flex-1 items-center gap-3 no-underline"
             data-weight-bar-scroll>

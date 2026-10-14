@@ -79,9 +79,9 @@
             }
         },
         "main.min.css": {
-            "sha256": "dd8904a5db5598fdd994ea762d426d8982180918616b9316e19d483a299e3faa",
+            "sha256": "46e7f3728b9892cc0ca132ca0579b44f1378f5df24e11492168c268ed9b70a9d",
             "sources": {
-                "resources/css/main.css": "8580228058a5dd36f24361e8dd844d8ee644665630d7d6d0813925bf985a58a6"
+                "resources/css/main.css": "0dba6d21d8934fac6dacadc6dce7ed9a9996f5b7c0625aaf4f01f8b76533d714"
             }
         }
     }
